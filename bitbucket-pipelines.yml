@@ -1,0 +1,21 @@
+definitions:
+  caches:
+    pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
+
+pipelines:
+  pull-requests:
+    "**":
+      - step:
+          name: Setup and install
+          image: node:20
+          script:
+            - corepack enable
+            - corepack prepare pnpm@9.1.1 --activate
+            - pnpm add -g turbo
+            - pnpm install
+            - cp .env.example .env
+            - pnpm lint && pnpm lint:ws
+            - pnpm format
+            - pnpm typecheck
+          caches:
+            - pnpm
