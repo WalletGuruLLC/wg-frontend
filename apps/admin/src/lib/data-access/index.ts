@@ -94,7 +94,8 @@ const MODULES_MAP = {
   U783: "users",
   SP95: "serviceProviders",
   SE37: "settings",
-  TR91: "transactions",
+  TR91: "reports",
+  PY38: "payments",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -168,7 +169,8 @@ export function useGetAuthedUserAccessLevelsQuery(
                 users: [],
                 serviceProviders: [],
                 settings: [],
-                transactions: [],
+                reports: [],
+                payments: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
                   numberToAccessLevels(numericAccessLevel),
