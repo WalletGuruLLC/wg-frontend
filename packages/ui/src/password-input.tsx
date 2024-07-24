@@ -13,9 +13,18 @@ const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="relative">
+        <label className="block">
+          <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Password
+          </span>
+        </label>
         <Input
           type={showPassword ? "text" : "password"}
-          className={cn("pr-10", className)}
+          className={cn(
+            "flex h-9 w-full border-0 border-b-2 bg-transparent px-3 py-1 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+            className,
+          )}
+          //className={cn("pr-10", className)}
           ref={ref}
           {...props}
         />
@@ -24,7 +33,11 @@ const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
           variant="ghost"
           size="sm"
           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-          onClick={() => setShowPassword((prev) => !prev)}
+          onClick={() => {
+            console.log('Button clicked'); // Debugging line
+            setShowPassword((prev) => !prev);
+          }}
+         // onClick={() => setShowPassword((prev) => !prev)}
           disabled={props.value === "" || props.disabled}
         >
           {showPassword ? (
