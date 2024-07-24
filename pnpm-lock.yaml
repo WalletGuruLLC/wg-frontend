@@ -8,12 +8,12 @@ importers:
 
   .:
     devDependencies:
-      '@paystreme/prettier-config':
-        specifier: workspace:*
-        version: link:tooling/prettier
       '@turbo/gen':
         specifier: ^2.0.9
         version: 2.0.9(@types/node@20.14.11)(typescript@5.5.4)
+      '@wg-frontend/prettier-config':
+        specifier: workspace:*
+        version: link:tooling/prettier
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -24,38 +24,23 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
 
-  apps/admin:
+  apps/admin-main:
     dependencies:
-      '@paystreme/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@paystreme/validators':
-        specifier: workspace:*
-        version: link:../../packages/validators
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.5.4)(zod@3.23.8)
       '@tanstack/react-query':
         specifier: ^5.49.2
         version: 5.51.11(react@18.3.1)
-      '@trpc/client':
-        specifier: 11.0.0-rc.364
-        version: 11.0.0-rc.364(@trpc/server@11.0.0-rc.364)
-      '@trpc/react-query':
-        specifier: 11.0.0-rc.364
-        version: 11.0.0-rc.364(@tanstack/react-query@5.51.11(react@18.3.1))(@trpc/client@11.0.0-rc.364(@trpc/server@11.0.0-rc.364))(@trpc/server@11.0.0-rc.364)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@trpc/server':
-        specifier: 11.0.0-rc.364
-        version: 11.0.0-rc.364
-      date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
+      '@wg-frontend/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
+      '@wg-frontend/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       geist:
         specifier: ^1.3.0
         version: 1.3.1(next@14.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      lucide-react:
-        specifier: ^0.399.0
-        version: 0.399.0(react@18.3.1)
       next:
         specifier: ^14.2.4
         version: 14.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -65,28 +50,10 @@ importers:
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
-      stripe:
-        specifier: ^16.1.0
-        version: 16.2.0
-      superjson:
-        specifier: 2.2.1
-        version: 2.2.1
       zod:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
-      '@paystreme/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint
-      '@paystreme/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier
-      '@paystreme/tailwind-config':
-        specifier: workspace:*
-        version: link:../../tooling/tailwind
-      '@paystreme/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/typescript
       '@types/node':
         specifier: ^20.14.9
         version: 20.14.11
@@ -96,6 +63,18 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@wg-frontend/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@wg-frontend/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@wg-frontend/tailwind-config':
+        specifier: workspace:*
+        version: link:../../tooling/tailwind
+      '@wg-frontend/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
@@ -111,6 +90,33 @@ importers:
       tailwindcss:
         specifier: ^3.4.6
         version: 3.4.6(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.4))
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+
+  packages/hooks:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
+      '@wg-frontend/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@wg-frontend/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@wg-frontend/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.7.0
+        version: 9.7.0
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -181,21 +187,21 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.6(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.4)))
     devDependencies:
-      '@paystreme/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint
-      '@paystreme/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier
-      '@paystreme/tailwind-config':
-        specifier: workspace:*
-        version: link:../../tooling/tailwind
-      '@paystreme/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/typescript
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
+      '@wg-frontend/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@wg-frontend/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@wg-frontend/tailwind-config':
+        specifier: workspace:*
+        version: link:../../tooling/tailwind
+      '@wg-frontend/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
       eslint:
         specifier: ^9.7.0
         version: 9.7.0
@@ -214,31 +220,6 @@ importers:
       zod:
         specifier: ^3.23.8
         version: 3.23.8
-
-  packages/validators:
-    dependencies:
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-    devDependencies:
-      '@paystreme/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint
-      '@paystreme/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier
-      '@paystreme/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/typescript
-      eslint:
-        specifier: ^9.7.0
-        version: 9.7.0
-      prettier:
-        specifier: ^3.3.3
-        version: 3.3.3
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
 
   tooling/eslint:
     dependencies:
@@ -264,10 +245,10 @@ importers:
         specifier: ^7.17.0
         version: 7.17.0(eslint@9.7.0)(typescript@5.5.4)
     devDependencies:
-      '@paystreme/prettier-config':
+      '@wg-frontend/prettier-config':
         specifier: workspace:*
         version: link:../prettier
-      '@paystreme/tsconfig':
+      '@wg-frontend/tsconfig':
         specifier: workspace:*
         version: link:../typescript
       eslint:
@@ -292,7 +273,7 @@ importers:
         specifier: ^0.6.5
         version: 0.6.5(@ianvs/prettier-plugin-sort-imports@4.3.1(prettier@3.3.3))(prettier@3.3.3)
     devDependencies:
-      '@paystreme/tsconfig':
+      '@wg-frontend/tsconfig':
         specifier: workspace:*
         version: link:../typescript
       typescript:
@@ -311,13 +292,13 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.6(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.4)))
     devDependencies:
-      '@paystreme/eslint-config':
+      '@wg-frontend/eslint-config':
         specifier: workspace:*
         version: link:../eslint
-      '@paystreme/prettier-config':
+      '@wg-frontend/prettier-config':
         specifier: workspace:*
         version: link:../prettier
-      '@paystreme/tsconfig':
+      '@wg-frontend/tsconfig':
         specifier: workspace:*
         version: link:../typescript
       eslint:
@@ -1214,23 +1195,6 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@trpc/client@11.0.0-rc.364':
-    resolution: {integrity: sha512-k9ZH7I0OOBFME9fZJ1JI0ZjvPEV64bvoT20kWHkFeMH5trJmK1tzcc/q7c7cLBY4pziLPqBDPFw2qax09vyRTg==}
-    peerDependencies:
-      '@trpc/server': 11.0.0-rc.364+d95fb467b
-
-  '@trpc/react-query@11.0.0-rc.364':
-    resolution: {integrity: sha512-updB1uOVHS/1NK+hclt8OK/Im0GYD8mIRTxs96hZhfaT6tqUhij/wWWG0U6OofxPGC/MZs75ojQeq8Uag9Tr5g==}
-    peerDependencies:
-      '@tanstack/react-query': ^5.25.0
-      '@trpc/client': 11.0.0-rc.364+d95fb467b
-      '@trpc/server': 11.0.0-rc.364+d95fb467b
-      react: '>=18.2.0'
-      react-dom: '>=18.2.0'
-
-  '@trpc/server@11.0.0-rc.364':
-    resolution: {integrity: sha512-sGlrb2jSCiU74TrJ+N+WxIcJIUDyo0WOy0y30vIArw6oHFXjeithgxjvIu+PbN+VWt/Gt4ee8kVhnmxCW4X/Qw==}
-
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
 
@@ -1610,10 +1574,6 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  copy-anything@3.0.5:
-    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
-    engines: {node: '>=12.13'}
-
   core-js-pure@3.37.1:
     resolution: {integrity: sha512-J/r5JTHSmzTxbiYYrzXg9w1VpqrYt+gexenBE9pugeyhwPZTAEJddyiReJWsLO6uNQ8xJZFbod6XC7KKwatCiA==}
 
@@ -1650,9 +1610,6 @@ packages:
   data-view-byte-offset@1.0.0:
     resolution: {integrity: sha512-t/Ygsytq+R995EJ5PZlD4Cu56sWa8InXySaViRzw9apusqsOO2bQP+SbYzAhR0pFKoB+43lYy8rWban9JSuXnA==}
     engines: {node: '>= 0.4'}
-
-  date-fns@3.6.0:
-    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -2308,10 +2265,6 @@ packages:
     resolution: {integrity: sha512-LvIm3/KWzS9oRFHugab7d+M/GcBXuXX5xZkzPmN+NxihdQlZUQ4dWuSV1xR/sq6upL1TJEDrfBgRepHFdBtSNQ==}
     engines: {node: '>= 0.4'}
 
-  is-what@4.1.16:
-    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
-    engines: {node: '>=12.13'}
-
   isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
 
@@ -2813,10 +2766,6 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  qs@6.12.3:
-    resolution: {integrity: sha512-AWJm14H1vVaO/iNZ4/hO+HyaTehuy9nRqVdkTqlJt0HWvBiBIEXFmb4C0DGeYo3Xes9rrEW+TxHsaigCbN5ICQ==}
-    engines: {node: '>=0.6'}
-
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -3106,10 +3055,6 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  stripe@16.2.0:
-    resolution: {integrity: sha512-kNHb5x6mlQJ8V92Afn+F+uyHG3U0+Mc1pOYxDkbEh/kI3oF63URnUt6dwTQthELYWBy04arerm2XjwgtzEPDEA==}
-    engines: {node: '>=12.*'}
-
   styled-jsx@5.1.1:
     resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
     engines: {node: '>= 12.0.0'}
@@ -3127,10 +3072,6 @@ packages:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
-
-  superjson@2.2.1:
-    resolution: {integrity: sha512-8iGv75BYOa0xRJHK5vRLEjE2H/i4lulTjzpUXic3Eg8akftYjkmQDa8JARQ42rlczXyFR3IeRoeFCc7RxHsYZA==}
-    engines: {node: '>=16'}
 
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -4335,20 +4276,6 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trpc/client@11.0.0-rc.364(@trpc/server@11.0.0-rc.364)':
-    dependencies:
-      '@trpc/server': 11.0.0-rc.364
-
-  '@trpc/react-query@11.0.0-rc.364(@tanstack/react-query@5.51.11(react@18.3.1))(@trpc/client@11.0.0-rc.364(@trpc/server@11.0.0-rc.364))(@trpc/server@11.0.0-rc.364)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@tanstack/react-query': 5.51.11(react@18.3.1)
-      '@trpc/client': 11.0.0-rc.364(@trpc/server@11.0.0-rc.364)
-      '@trpc/server': 11.0.0-rc.364
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
-  '@trpc/server@11.0.0-rc.364': {}
-
   '@tsconfig/node10@1.0.11': {}
 
   '@tsconfig/node12@1.0.11': {}
@@ -4826,10 +4753,6 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  copy-anything@3.0.5:
-    dependencies:
-      is-what: 4.1.16
-
   core-js-pure@3.37.1: {}
 
   create-require@1.1.1: {}
@@ -4865,8 +4788,6 @@ snapshots:
       call-bind: 1.0.7
       es-errors: 1.3.0
       is-data-view: 1.0.1
-
-  date-fns@3.6.0: {}
 
   debug@3.2.7:
     dependencies:
@@ -5714,8 +5635,6 @@ snapshots:
       call-bind: 1.0.7
       get-intrinsic: 1.2.4
 
-  is-what@4.1.16: {}
-
   isarray@2.0.5: {}
 
   isbinaryfile@4.0.10: {}
@@ -6184,10 +6103,6 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  qs@6.12.3:
-    dependencies:
-      side-channel: 1.0.6
-
   queue-microtask@1.2.3: {}
 
   rc@1.2.8:
@@ -6510,11 +6425,6 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@16.2.0:
-    dependencies:
-      '@types/node': 20.14.11
-      qs: 6.12.3
-
   styled-jsx@5.1.1(react@18.3.1):
     dependencies:
       client-only: 0.0.1
@@ -6529,10 +6439,6 @@ snapshots:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
-
-  superjson@2.2.1:
-    dependencies:
-      copy-anything: 3.0.5
 
   supports-color@5.5.0:
     dependencies:

@@ -1,12 +1,11 @@
 /* eslint-disable no-restricted-properties */
 import { createEnv } from "@t3-oss/env-nextjs";
-import { vercel } from "@t3-oss/env-nextjs/presets";
 import { z } from "zod";
 
 export const env = createEnv({
-  extends: [vercel()],
   server: {
-    EXAMPLE_ENV: z.string().min(1),
+    ADMIN_AUTH_URL: z.string().min(1),
+    ADMIN_AUTH_PORT: z.string().min(1),
   },
   shared: {
     NODE_ENV: z

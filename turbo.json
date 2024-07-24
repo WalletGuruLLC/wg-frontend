@@ -39,7 +39,5 @@
       "cache": false
     }
   },
-  "globalEnv": [
-    "EXAMPLE_ENV"
-  ]
+  "globalEnv": ["ADMIN_AUTH_URL", "ADMIN_AUTH_PORT"]
 }

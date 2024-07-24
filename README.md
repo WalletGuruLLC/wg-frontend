@@ -65,7 +65,7 @@ tooling
       └─ shared tsconfig you can extend from
 ```
 
-> In this template, we use `@paystreme` as a placeholder for package names. As a user, you might want to replace it with your own organization or project name. You can use find-and-replace to change all the instances of `@paystreme` to something like `@my-company` or `@project-name`.
+> In this template, we use `@wg-frontend` as a placeholder for package names. As a user, you might want to replace it with your own organization or project name. You can use find-and-replace to change all the instances of `@wg-frontend` to something like `@my-company` or `@project-name`.
 
 ## Quick Start
 

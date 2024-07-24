@@ -10,13 +10,13 @@ interface PackageJson {
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator("init", {
-    description: "Generate a new package for the paystreme Monorepo",
+    description: "Generate a new package for the wg-frontend Monorepo",
     prompts: [
       {
         type: "input",
         name: "name",
         message:
-          "What is the name of the package? (You can skip the `@paystreme/` prefix)",
+          "What is the name of the package? (You can skip the `@wg-frontend/` prefix)",
       },
       {
         type: "input",
@@ -28,8 +28,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     actions: [
       (answers) => {
         if ("name" in answers && typeof answers.name === "string") {
-          if (answers.name.startsWith("@paystreme/")) {
-            answers.name = answers.name.replace("@paystreme/", "");
+          if (answers.name.startsWith("@wg-frontend/")) {
+            answers.name = answers.name.replace("@wg-frontend/", "");
           }
         }
         return "Config sanitized";

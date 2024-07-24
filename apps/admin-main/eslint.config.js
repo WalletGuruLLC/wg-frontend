@@ -1,6 +1,6 @@
-import baseConfig, { restrictEnvAccess } from "@paystreme/eslint-config/base";
-import nextjsConfig from "@paystreme/eslint-config/nextjs";
-import reactConfig from "@paystreme/eslint-config/react";
+import baseConfig, { restrictEnvAccess } from "@wg-frontend/eslint-config/base";
+import nextjsConfig from "@wg-frontend/eslint-config/nextjs";
+import reactConfig from "@wg-frontend/eslint-config/react";
 
 /** @type {import('typescript-eslint').Config} */
 export default [
