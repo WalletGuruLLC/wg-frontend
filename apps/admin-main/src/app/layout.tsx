@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { cn } from "@wg-frontend/ui";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+
+import { cn } from "@wg-frontend/ui";
 
 import "~/app/globals.css";
 
