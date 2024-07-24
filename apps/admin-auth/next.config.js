@@ -16,20 +16,6 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-
-  // Map microfrontends to their respective paths
-  rewrites: async () => {
-    return [
-      {
-        source: "/auth",
-        destination: `${ADMIN_AUTH_URL}/`,
-      },
-      {
-        source: "/auth/:path*",
-        destination: `${ADMIN_AUTH_URL}/:path*`,
-      },
-    ];
-  },
 };
 
 export default config;

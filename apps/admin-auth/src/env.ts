@@ -3,9 +3,7 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 export const env = createEnv({
-  server: {
-    ADMIN_AUTH_URL: z.string().min(1),
-  },
+  server: {},
   shared: {
     NODE_ENV: z
       .enum(["development", "production", "test"])
