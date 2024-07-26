@@ -8,10 +8,8 @@ It uses [Turborepo](https://turborepo.org) and contains:
 .vscode
   └─ Recommended extensions and settings for VSCode users
 apps
-  ├─ <app>-main
-  |   └─ Next.js app that maps every microfrontend to its correspondant url
-  ├─ <app>-<microfronted>
-  |   └─ Next.js app that serves a specific microfrontend
+  ├─ admin
+  |   └─ Next.js app that serves the admin webapp
   └─ more...
 packages
   ├─ ui
@@ -54,15 +52,6 @@ pnpm dev
 Each app can be deployed independently and without any restriction for the technology or the deployment platform. You can use Vercel, Netlify, AWS, or any other platform you prefer.
 
 ## FAQ
-
-### How to add a microfrontend
-
-1. Copy one of the example apps located in `base-apps` and paste it into the `apps` directory.
-2. Rename the `package.json` name and the folder to `<app>-<microfrontend>`.
-3. Update the port number in the `dev` and `start` scripts in the `package.json` to a unique one. (e.g. `3001`, see other apps for reference)
-4. Update the `<app>-main` app to include the new microfrontend in the `next.config.js` file.
-5. Create the env variables in the `.env`, the `.env.example` and the `turbo.json` file for the new microfrontend.
-6. Run `pnpm dev` and navigate to the new microfrontend to see it running.
 
 ### Other technologies
 

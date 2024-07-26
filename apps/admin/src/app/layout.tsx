@@ -6,6 +6,8 @@ import { cn } from "@wg-frontend/ui";
 
 import "~/app/globals.css";
 
+import { env } from "~/env";
+
 export const metadata: Metadata = {
   title: "wg-frontend",
   description: "desc",
@@ -33,11 +35,13 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "bg-background text-foreground min-h-screen font-sans antialiased",
+          "min-h-screen bg-background font-sans text-foreground antialiased",
           GeistSans.variable,
           GeistMono.variable,
         )}
       >
+        {env.NODE_ENV}
+        {env.NEXT_PUBLIC_MICROSERVICE1_URL}
         {props.children}
       </body>
     </html>
