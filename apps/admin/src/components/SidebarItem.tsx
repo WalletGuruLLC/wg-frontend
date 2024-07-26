@@ -1,24 +1,29 @@
-import {BookmarkCheck as CiBookmarkCheck } from 'lucide-react';
+"use client";
 
-export const SidebarItem = () => {
-  {
-    /* Active className: text-white bg-gradient-to-r from-sky-600 to-cyan-400 
-    <li>
-          <a href="#" className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
-            <CiBookmarkCheck size={30} />
-            <span className="group-hover:text-gray-700">Categories</span>
-          </a>
-        </li> */
-  }
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+interface Props {
+  icon: React.ReactNode;
+  path: string;
+  title: string;
+}
+
+export const SidebarItem = ({ icon, path, title }: Props) => {
+  const pathName = usePathname();
   return (
     <li>
-      <a
-        href="#"
-        className="relative flex items-center space-x-4 rounded-xl bg-gradient-to-r from-blue-950 to-cyan-400 px-4 py-3 text-white"
+      <Link
+        href={path}
+        className={
+          path == pathName
+            ? "relative flex items-center space-x-4 rounded-xl bg-gradient-to-r from-blue-950 to-cyan-400 px-4 py-3 text-white"
+            : "group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600"
+        }
       >
-        <CiBookmarkCheck size={30} />
-        <span className="-mr-1 font-medium">Dashboard</span>
-      </a>
+        {icon}
+        <span className="-mr-1 font-medium">{title}</span>
+      </Link>
     </li>
   );
 };

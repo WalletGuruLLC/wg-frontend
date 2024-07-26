@@ -1,8 +1,24 @@
-import {LogOut as CiLogout } from 'lucide-react';
+import {
+  LogOut as CiLogout,
+  UserRoundCog,
+  Building2
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SidebarItem } from './SidebarItem';
 
+const menuitem = [
+  {
+    icon: <UserRoundCog size={30} />,
+    title: 'Users',
+    path: '/users'
+  },
+  {
+    icon: <Building2 size={30} />,
+    title: 'Service Providers',
+    path: '/sp'
+  },
+]
 
 export const Sidebar = () => {
   return (
@@ -29,9 +45,11 @@ export const Sidebar = () => {
       </div>
 
       <ul className="space-y-2 tracking-wide mt-8">
-        <SidebarItem />
-        <SidebarItem />
-        <SidebarItem />
+        {
+          menuitem.map( item => (
+            <SidebarItem key={item.path} {...item} />
+          ))
+        }
       </ul>
     </div>
 
