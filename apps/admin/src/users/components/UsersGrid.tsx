@@ -11,7 +11,6 @@ interface Props {
 }
 
 export const UsersGrid = ({ users = [] }: Props) => {
-  console.log(users);
   return (
     <div>
       <div className="grid grid-cols-5 gap-4">
