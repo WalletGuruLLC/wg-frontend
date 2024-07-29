@@ -11,12 +11,12 @@ const menuitem = [
   {
     icon: <UserRoundCog size={30} />,
     title: 'Users',
-    path: '/users'
+    path: '/dashboard/users'
   },
   {
     icon: <Building2 size={30} />,
     title: 'Service Providers',
-    path: '/sp'
+    path: '/dashboard/sp'
   },
 ]
 
