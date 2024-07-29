@@ -1,16 +1,18 @@
 import {
-    Bell as CiBellOn,
-    MessageSquare as CiChat1,
-    Menu as CiMenuBurger,
-    Search as CiSearch,
-  } from "lucide-react";
-  
+  Bell as CiBellOn,
+  MessageSquare as CiChat1,
+  Menu as CiMenuBurger,
+  Search as CiSearch,
+} from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@wg-frontend/ui/avatar";
+
 export const TopMenu = () => {
   return (
     <div className="sticky top-0 z-10 h-16 border-b bg-white lg:py-2.5">
       <div className="flex items-center justify-between space-x-4 px-6">
         <h5 hidden className="text-2xl font-medium text-gray-600 lg:block">
-          Admin Dashboard
+          Wallet Guru Admin
         </h5>
         <button className="-mr-2 h-16 w-12 border-r lg:hidden">
           <CiMenuBurger size={30} />
@@ -40,6 +42,10 @@ export const TopMenu = () => {
           <button className="flex h-10 w-10 items-center justify-center rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
             <CiBellOn size={25} />
           </button>
+          <Avatar>
+            <AvatarImage src="/images/avatar.png" />
+            <AvatarFallback>David J. Watts</AvatarFallback>
+          </Avatar>
         </div>
       </div>
     </div>

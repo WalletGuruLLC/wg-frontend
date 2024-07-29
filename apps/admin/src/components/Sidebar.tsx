@@ -11,12 +11,12 @@ const menuitem = [
   {
     icon: <UserRoundCog size={30} />,
     title: 'Users',
-    path: '/dashboard/users'
+    path: '/users'
   },
   {
     icon: <Building2 size={30} />,
     title: 'Service Providers',
-    path: '/dashboard/sp'
+    path: '/sp'
   },
 ]
 
@@ -32,16 +32,9 @@ export const Sidebar = () => {
           />
         </Link>
       </div>
-
+      
       <div className="mt-8 text-center">
-        <Image src="/images/avatar.png" 
-        alt="" 
-        className="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
-        width={150}
-        height={150}
-        />
-          <h5 className="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">David J. Watts</h5>
-          <span className="hidden text-gray-400 lg:block">Admin</span>
+       <span className="hidden text-gray-400 lg:block">Admin</span>
       </div>
 
       <ul className="space-y-2 tracking-wide mt-8">
@@ -54,10 +47,13 @@ export const Sidebar = () => {
     </div>
 
     <div className="px-6 -mx-6 pt-4 flex justify-between items-center border-t">
-      <button className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
-        <CiLogout />
-        <span className="group-hover:text-gray-700">Logout</span>
-      </button>
+      <Link
+          href='/'
+          className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+        >
+          <CiLogout />
+          <span className="group-hover:text-gray-700">Logout</span>
+        </Link>
     </div>
   </aside>
   )

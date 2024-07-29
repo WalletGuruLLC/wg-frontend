@@ -6,7 +6,6 @@ import { cn } from "@wg-frontend/ui";
 
 import "~/app/globals.css";
 
-import { env } from "~/env";
 
 export const metadata: Metadata = {
   title: "wg-frontend",
@@ -40,8 +39,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        {env.NODE_ENV}
-        {env.NEXT_PUBLIC_MICROSERVICE1_URL}
         {props.children}
       </body>
     </html>
