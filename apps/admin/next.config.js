@@ -37,6 +37,10 @@ const config = {
         source: "/users",
         destination: `${ADMIN_USERS_URL}/`,
       },
+      {
+        source: "/users",
+        destination: `${ADMIN_USERS_URL}/`,
+      },
     ];
   },
 >>>>>>> 04abd4b (initial commit  users managment micro frontend):apps/admin-main/next.config.js
