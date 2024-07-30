@@ -1,9 +1,9 @@
 "use client";
 
+import { ServiceProvidersGrid } from "~/service-providers";
+
 export default function ServiceProvidersPage() {
   return (
-    <div>
-      <h1>Hello Service providers Page</h1>
-    </div>
+    <ServiceProvidersGrid/>
   );
 }
