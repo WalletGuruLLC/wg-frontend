@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CirclePlus as CiAdd } from "lucide-react";
 
 import type { User } from "../interfaces/users";
-import { UserItem } from "./UserItem";
+import { UsersTable } from "./UsersTable";
 
 interface Props {
   users?: User[];
@@ -25,11 +25,10 @@ export const UsersGrid = ({ users = [] }: Props) => {
           </Link>
         </div>
       </div>
-
+      <br/>
       <div className="grid grid-cols-1 gap-2">
-        {users.map((user) => (
-          <UserItem key={user.id} user={user} />
-        ))}
+        <UsersTable users={users}/>
+        
       </div>
     </div>
   );

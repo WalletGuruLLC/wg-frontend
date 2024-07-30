@@ -1,7 +1,8 @@
 import {
   LogOut as CiLogout,
   UserRoundCog,
-  Building2
+  Building2,
+  Wallet
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,6 +18,11 @@ const menuitem = [
     icon: <Building2 size={30} />,
     title: 'Service Providers',
     path: '/sp'
+  },
+  {
+    icon: <Wallet size={30} />,
+    title: 'Wallets',
+    path: '/wallets'
   },
 ]
 
