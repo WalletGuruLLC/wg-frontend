@@ -39,5 +39,5 @@
       "cache": false
     }
   },
-  "globalEnv": ["ADMIN_AUTH_URL", "ADMIN_AUTH_PORT"]
+  "globalEnv": ["NEXT_PUBLIC_MICROSERVICE1_URL"]
 }
