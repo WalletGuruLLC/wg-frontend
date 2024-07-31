@@ -6,6 +6,7 @@ import { cn } from "@wg-frontend/ui";
 
 import "~/app/globals.css";
 
+import { I18nProvider } from "~/lib/i18n";
 
 export const metadata: Metadata = {
   title: "wg-frontend",
@@ -14,11 +15,6 @@ export const metadata: Metadata = {
     title: "wg-frontend",
     description: "desc",
     siteName: "wg-frontend",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@rbestardpino",
-    creator: "@rbestardpino",
   },
 };
 
@@ -39,7 +35,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        {props.children}
+        <I18nProvider>{props.children}</I18nProvider>
       </body>
     </html>
   );
