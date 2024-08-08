@@ -2,6 +2,15 @@ definitions:
   caches:
     pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
 
+  scripts:
+    setup: &setup cp .env.example .env
+      && corepack enable
+      && corepack prepare pnpm@~9.5.0 --activate
+      && export PNPM_HOME="/root/.local/share/pnpm"
+      && export PATH="$PNPM_HOME:$PATH"
+      && pnpm add -g turbo
+      && pnpm install
+
 pipelines:
   pull-requests:
     "**":
@@ -10,13 +19,7 @@ pipelines:
               name: Lint
               image: node:20
               script:
-                - corepack enable
-                - corepack prepare pnpm@9.1.1 --activate
-                - export PNPM_HOME="/root/.local/share/pnpm"
-                - export PATH="$PNPM_HOME:$PATH"
-                - pnpm add -g turbo
-                - pnpm install
-                - cp .env.example .env
+                - *setup
                 - pnpm lint && pnpm lint:ws
               caches:
                 - pnpm
@@ -24,13 +27,7 @@ pipelines:
               name: Format
               image: node:20
               script:
-                - corepack enable
-                - corepack prepare pnpm@9.1.1 --activate
-                - export PNPM_HOME="/root/.local/share/pnpm"
-                - export PATH="$PNPM_HOME:$PATH"
-                - pnpm add -g turbo
-                - pnpm install
-                - cp .env.example .env
+                - *setup
                 - pnpm format
               caches:
                 - pnpm
@@ -38,13 +35,7 @@ pipelines:
               name: Typecheck
               image: node:20
               script:
-                - corepack enable
-                - corepack prepare pnpm@9.1.1 --activate
-                - export PNPM_HOME="/root/.local/share/pnpm"
-                - export PATH="$PNPM_HOME:$PATH"
-                - pnpm add -g turbo
-                - pnpm install
-                - cp .env.example .env
+                - *setup
                 - pnpm typecheck
               caches:
                 - pnpm
