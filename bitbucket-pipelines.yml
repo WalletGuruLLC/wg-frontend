@@ -5,7 +5,7 @@ definitions:
   scripts:
     setup: &setup cp .env.example .env
       && corepack enable
-      && corepack prepare pnpm@~9.5.0 --activate
+      && corepack prepare pnpm@9.1.1 --activate
       && export PNPM_HOME="/root/.local/share/pnpm"
       && export PATH="$PNPM_HOME:$PATH"
       && pnpm add -g turbo
