@@ -2,20 +2,43 @@ definitions:
   caches:
     pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
 
+  scripts:
+    setup: &setup cp .env.example .env
+      && corepack enable
+      && corepack prepare pnpm@9.1.1 --activate
+      && export PNPM_HOME="/root/.local/share/pnpm"
+      && export PATH="$PNPM_HOME:$PATH"
+      && pnpm add -g turbo
+      && pnpm install
+
+  step: &lint
+    name: Lint
+    script:
+      - *setup
+      - pnpm lint && pnpm lint:ws
+    caches:
+      - pnpm
+
+  step: &format
+    name: Format
+    script:
+      - *setup
+      - pnpm format
+    caches:
+      - pnpm
+
+  step: &typecheck
+    name: Typecheck
+    script:
+      - *setup
+      - pnpm typecheck
+    caches:
+      - pnpm
+
 pipelines:
   pull-requests:
     "**":
-      - step:
-          name: CI
-          image: node:20
-          script:
-            - corepack enable
-            - corepack prepare pnpm@9.1.1 --activate
-            - pnpm add -g turbo
-            - pnpm install
-            - cp .env.example .env
-            - pnpm lint && pnpm lint:ws
-            - pnpm format
-            - pnpm typecheck
-          caches:
-            - pnpm
+      - parallel:
+        - step: *lint
+        - step: *format
+        - step: *typecheck
