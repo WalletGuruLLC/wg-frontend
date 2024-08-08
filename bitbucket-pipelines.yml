@@ -11,6 +11,7 @@ pipelines:
           script:
             - corepack enable
             - corepack prepare pnpm@9.1.1 --activate
+            - pnpm config set store-dir $BITBUCKET_CLONE_DIR/.pnpm-store
             - pnpm add -g turbo
             - pnpm install
             - cp .env.example .env
