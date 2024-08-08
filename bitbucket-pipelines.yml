@@ -1,3 +1,5 @@
+image: node:20
+
 definitions:
   caches:
     pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
@@ -17,7 +19,6 @@ pipelines:
       - parallel:
           - step:
               name: Lint
-              image: node:20
               script:
                 - *setup
                 - pnpm lint && pnpm lint:ws
@@ -25,7 +26,6 @@ pipelines:
                 - pnpm
           - step:
               name: Format
-              image: node:20
               script:
                 - *setup
                 - pnpm format
@@ -33,7 +33,6 @@ pipelines:
                 - pnpm
           - step:
               name: Typecheck
-              image: node:20
               script:
                 - *setup
                 - pnpm typecheck
