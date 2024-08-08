@@ -8,6 +8,7 @@ pipelines:
       - parallel:
           - step:
               name: Lint
+              image: node:20
               script:
                 - corepack enable
                 - corepack prepare pnpm@9.1.1 --activate
@@ -21,6 +22,7 @@ pipelines:
                 - pnpm
           - step:
               name: Format
+              image: node:20
               script:
                 - corepack enable
                 - corepack prepare pnpm@9.1.1 --activate
@@ -34,6 +36,7 @@ pipelines:
                 - pnpm
           - step:
               name: Typecheck
+              image: node:20
               script:
                 - corepack enable
                 - corepack prepare pnpm@9.1.1 --activate
