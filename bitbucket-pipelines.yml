@@ -16,7 +16,7 @@ pipelines:
                 - export PATH="$PNPM_HOME:$PATH"
                 - pnpm add -g turbo
                 - pnpm install
-                - cp .env.test .env
+                - cp .env.example .env
                 - pnpm lint && pnpm lint:ws
               caches:
                 - pnpm
@@ -30,7 +30,7 @@ pipelines:
                 - export PATH="$PNPM_HOME:$PATH"
                 - pnpm add -g turbo
                 - pnpm install
-                - cp .env.test .env
+                - cp .env.example .env
                 - pnpm format
               caches:
                 - pnpm
@@ -44,7 +44,7 @@ pipelines:
                 - export PATH="$PNPM_HOME:$PATH"
                 - pnpm add -g turbo
                 - pnpm install
-                - cp .env.test .env
+                - cp .env.example .env
                 - pnpm typecheck
               caches:
                 - pnpm
