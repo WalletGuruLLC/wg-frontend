@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { z } from "zod";
 
 import { Button } from "@wg-frontend/ui/button";
@@ -14,29 +15,33 @@ import {
 } from "@wg-frontend/ui/form";
 import { Input } from "@wg-frontend/ui/input";
 import { PasswordInput } from "@wg-frontend/ui/password-input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@wg-frontend/ui/select";
-import Link from "next/link";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 
 const validator = z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(8),
-    phone: z.string(),
-    access: z.string()
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(8),
+  phone: z.string(),
+  access: z.string(),
+});
+
+export default function UserAdd() {
+  const form = useForm({
+    schema: validator,
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+      access: "1",
+    },
   });
-  
-  export default function UserAdd() {
-    const form = useForm({
-      schema: validator,
-      defaultValues: {
-        name: "",
-        email: "",
-        password: "",
-        phone: "",
-        access: "1"
-      },
-    });
 
   return (
     <Form {...form}>
@@ -98,38 +103,39 @@ const validator = z.object({
           )}
         />
         <FormField
-            control={form.control}
-            name="access"
-            render={({field}) => (
-                <FormItem>
-                  <FormLabel>Access</FormLabel>
-      <Select onValueChange={field.onChange} defaultValue={field.value}>
-        <FormControl>
-          <SelectTrigger>
-            <SelectValue>{field.value}</SelectValue>
-          </SelectTrigger>
-        </FormControl>
-        <SelectContent>
-          {["Admin", "Super Admin"].map((item) => (
-            <SelectItem key={item} value={item}>
-              {item}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <FormMessage />
-      <br/>
-    </FormItem>
-            )}
+          control={form.control}
+          name="access"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Access</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue>{field.value}</SelectValue>
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {["Admin", "Super Admin"].map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+              <br />
+            </FormItem>
+          )}
         />
         <div className="grid grid-cols-2">
-        <Button type="submit">Save</Button>
-        <Link className="w-full whitespace-normal" href="/users">
-          <Button className="w-full" type="submit">Cancel</Button>
-        </Link>
+          <Button type="submit">Save</Button>
+          <Link className="w-full whitespace-normal" href="/users">
+            <Button className="w-full" type="submit">
+              Cancel
+            </Button>
+          </Link>
         </div>
-        
       </form>
     </Form>
   );
-};
+}
