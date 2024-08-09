@@ -28,6 +28,12 @@ tooling
       └─ shared tsconfig you can extend from
 ```
 
+## Prerequisites
+
+- [Node.js](https://nodejs.org/en/download/) `v20.15`
+- [pnpm](https://pnpm.io/installation) `v9.1.1`
+- (Optional) [Docker](https://docs.docker.com/get-docker/) `v27 or higher`
+
 ## Quick Start
 
 To get it running, follow the steps below:
@@ -39,9 +45,8 @@ pnpm i
 # Configure environment variables
 # There is an `.env.example` in the root directory you can use for reference
 cp .env.example .env
-# See the package.json for the required port number of each frontend
 
-# Start the development server for all apps (main and microfrontends)
+# Start the development server for all apps
 pnpm dev
 ```
 
