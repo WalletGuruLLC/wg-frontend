@@ -1,1 +1,1 @@
-export {ServiceProvidersGrid} from './components/ServiceProvidersGrid';
+export { ServiceProvidersGrid } from "./components/ServiceProvidersGrid";

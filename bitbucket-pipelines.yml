@@ -1,22 +1,40 @@
+image: node:20
+
 definitions:
   caches:
     pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
 
+  scripts:
+    setup: &setup cp .env.example .env
+      && corepack enable
+      && corepack prepare pnpm@9.1.1 --activate
+      && export PNPM_HOME="/root/.local/share/pnpm"
+      && export PATH="$PNPM_HOME:$PATH"
+      && pnpm add -g turbo
+      && pnpm install
+
 pipelines:
   pull-requests:
     "**":
-      - step:
-          name: Setup and install
-          image: node:20
-          script:
-            - corepack enable
-            - corepack prepare pnpm@9.1.1 --activate
-            - pnpm config set store-dir $BITBUCKET_CLONE_DIR/.pnpm-store
-            - pnpm add -g turbo
-            - pnpm install
-            - cp .env.example .env
-            - pnpm lint && pnpm lint:ws
-            - pnpm format
-            - pnpm typecheck
-          caches:
-            - pnpm
+      - parallel:
+          - step:
+              name: Lint
+              script:
+                - *setup
+                - pnpm lint && pnpm lint:ws
+              caches:
+                - pnpm
+          - step:
+              name: Format
+              script:
+                - *setup
+                - pnpm format
+              caches:
+                - pnpm
+          - step:
+              name: Typecheck
+              script:
+                - *setup
+                - pnpm typecheck
+              caches:
+                - pnpm

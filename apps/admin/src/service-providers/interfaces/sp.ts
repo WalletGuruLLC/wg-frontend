@@ -1,7 +1,7 @@
 export interface ServiceProvider {
-    id: string,
-    name: string,
-    adress: string,
-    phone: string,
-    ein: string
+  id: string;
+  name: string;
+  adress: string;
+  phone: string;
+  ein: string;
 }
