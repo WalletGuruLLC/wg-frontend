@@ -25,10 +25,9 @@ export const UsersGrid = ({ users = [] }: Props) => {
           </Link>
         </div>
       </div>
-      <br/>
+      <br />
       <div className="grid grid-cols-1 gap-2">
-        <UsersTable users={users}/>
-        
+        <UsersTable users={users} />
       </div>
     </div>
   );
