@@ -10,6 +10,9 @@ export * from "@tanstack/react-query";
 export default function createQueryClientProvider(config?: QueryClientConfig) {
   const queryClient = new QueryClient(config);
 
+  /**
+   * @see https://tanstack.com/query/latest/docs/framework/react/reference/QueryClientProvider
+   */
   function QueryClientProvider({ children }: { children: ReactNode }) {
     return (
       <_QueryClientProvider client={queryClient}>
