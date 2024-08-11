@@ -6,6 +6,7 @@ import { cn } from "@wg-frontend/ui";
 
 import "~/app/globals.css";
 
+import QueryClientProvider from "~/lib/data-access/provider";
 import { I18nProvider } from "~/lib/i18n";
 
 export const metadata: Metadata = {
@@ -35,7 +36,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        <I18nProvider>{props.children}</I18nProvider>
+        <QueryClientProvider>
+          <I18nProvider>{props.children}</I18nProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
