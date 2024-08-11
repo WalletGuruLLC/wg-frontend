@@ -1,4 +1,5 @@
-import pluginQuery from '@tanstack/eslint-plugin-query';
+import pluginQuery from "@tanstack/eslint-plugin-query";
+
 import baseConfig from "@wg-frontend/eslint-config/base";
 import reactConfig from "@wg-frontend/eslint-config/react";
 
@@ -9,5 +10,5 @@ export default [
   },
   ...baseConfig,
   ...reactConfig,
-  ...pluginQuery.configs['flat/recommended'],
+  ...pluginQuery.configs["flat/recommended"],
 ];
