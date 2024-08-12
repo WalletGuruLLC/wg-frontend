@@ -1,7 +1,6 @@
 "use client";
 
 import Head from "next/head";
-import logo from "public/logos/main.png";
 
 import { env } from "~/env";
 
@@ -15,10 +14,11 @@ interface Props {
 export default function Metatags({
   title = "WG Admin",
   description = "WG Admin",
-  image = logo.src,
+  image = "logos/main.png",
   ogEndpoint = "",
 }: Props) {
   const ogURL = env.NEXT_PUBLIC_ADMIN_BASE_URL + ogEndpoint;
+  const imageUrl = env.NEXT_PUBLIC_ADMIN_BASE_URL + image;
   return (
     <Head>
       <title>{title}</title>
@@ -32,14 +32,14 @@ export default function Metatags({
       <meta property="og:url" content={ogURL} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={imageUrl} />
       <meta property="og:type" content="website" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:domain" content={env.NEXT_PUBLIC_ADMIN_BASE_URL} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={imageUrl} />
     </Head>
   );
 }
