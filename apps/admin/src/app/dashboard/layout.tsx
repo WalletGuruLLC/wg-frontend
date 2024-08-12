@@ -70,7 +70,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             </div>
             <Separator className="ml-4 w-1/2" />
             <div className="flex-1 pt-8">
-              <nav className="grid items-start gap-4 px-2 lg:px-4">
+              <nav className="grid items-start gap-4 px-4">
                 {NAV.map((page) => (
                   <Link
                     key={page.id}
@@ -88,7 +88,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               </nav>
             </div>
             <Separator className="ml-4 w-1/2" />
-            <div className="px-5 py-4 pb-12 lg:px-7">
+            <div className="px-7 py-4 pb-12">
               <Link
                 href="/logout"
                 className="flex flex-row items-center gap-3 text-xs font-light"
