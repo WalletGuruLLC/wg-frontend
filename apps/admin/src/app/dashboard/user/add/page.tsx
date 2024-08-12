@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardTitle } from "@wg-frontend/ui/card";
 import { Separator } from "@wg-frontend/ui/separator";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import type { User } from "~/users/interfaces/users";
 import { UsersGrid } from "~/users";
 

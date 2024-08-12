@@ -1,4 +1,6 @@
-import type { Metadata, Viewport } from "next";
+"use client";
+
+import type { Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
@@ -8,16 +10,6 @@ import "~/app/globals.css";
 
 import QueryClientProvider from "~/lib/data-access/provider";
 import { I18nProvider } from "~/lib/i18n";
-
-export const metadata: Metadata = {
-  title: "wg-frontend",
-  description: "desc",
-  openGraph: {
-    title: "wg-frontend",
-    description: "desc",
-    siteName: "wg-frontend",
-  },
-};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -36,9 +28,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        <QueryClientProvider>
-          <I18nProvider>{props.children}</I18nProvider>
-        </QueryClientProvider>
+        <I18nProvider>
+          <QueryClientProvider>{props.children}</QueryClientProvider>
+        </I18nProvider>
       </body>
     </html>
   );

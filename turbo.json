@@ -39,5 +39,5 @@
       "cache": false
     }
   },
-  "globalEnv": ["NEXT_PUBLIC_MICROSERVICE1_URL"]
+  "globalEnv": ["NEXT_PUBLIC_ADMIN_BASE_URL", "NEXT_PUBLIC_MICROSERVICE1_URL"]
 }
