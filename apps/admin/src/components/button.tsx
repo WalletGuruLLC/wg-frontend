@@ -13,6 +13,7 @@ const buttonVariants = cva(
         default: "bg-[#3678B1] text-white shadow hover:border-white",
         outline: "border-white bg-transparent shadow-sm hover:border-[#3C93BE]",
         secondary: "border-white bg-[#EBEBEB] shadow-sm hover:border-[#3C93BE]",
+        link: "px-0 text-[#3678B1] underline-offset-4 hover:underline",
       },
     },
     defaultVariants: {

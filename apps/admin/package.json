@@ -20,6 +20,7 @@
     "@wg-frontend/data-access": "workspace:*",
     "@wg-frontend/i18n": "workspace:*",
     "geist": "^1.3.0",
+    "lucide-react": "^0.399.0",
     "next": "^14.2.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
