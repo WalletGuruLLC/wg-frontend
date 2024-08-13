@@ -28,6 +28,14 @@ const dict = {
       "An e-mail has been sent with a verification code",
     "auth.forgot-password.primary-button": "Verify",
     "auth.forgot-password.secondary-button": "Cancel",
+    "auth.2fa.title": "Two-Factor Authentication",
+    "auth.2fa.subtitle":
+      "A unique code has been sent to your email address. Please check your inbox and enter the code",
+    "auth.2fa.code.placeholder": "Enter your authentication code",
+    "auth.2fa.code.valid-for": "Your code is valid up to",
+    "auth.2fa.primary-button": "Verify",
+    "auth.2fa.secondary-button": "Resend Code",
+    "auth.2fa.code.errors.invalid": "Invalid code, please try again",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -53,6 +61,15 @@ const dict = {
       "Se ha enviado un correo electrónico con un código de verificación",
     "auth.forgot-password.primary-button": "Verificar",
     "auth.forgot-password.secondary-button": "Cancelar",
+    "auth.2fa.title": "Autenticación de dos factores",
+    "auth.2fa.subtitle":
+      "Se ha enviado un código único a tu dirección de correo electrónico. Por favor revisa tu bandeja de entrada e ingresa el código",
+    "auth.2fa.code.placeholder": "Ingresa tu código de autenticación",
+    "auth.2fa.code.valid-for": "Tu código es válido por",
+    "auth.2fa.primary-button": "Verificar",
+    "auth.2fa.secondary-button": "Reenviar código",
+    "auth.2fa.code.errors.invalid":
+      "Código inválido, por favor inténtalo de nuevo",
   },
 } satisfies I18nDictionary;
 

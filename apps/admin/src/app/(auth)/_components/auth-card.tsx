@@ -19,8 +19,8 @@ export default function AuthCard(props: {
       </div>
       <div>{props.content}</div>
       <div className="space-y-4">
-        {props.primaryButton}
-        {props.secondaryButton}
+        <div>{props.primaryButton}</div>
+        <div>{props.secondaryButton}</div>
       </div>
     </Card>
   );
