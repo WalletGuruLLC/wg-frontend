@@ -14,7 +14,7 @@ interface Props {
 export default function Metatags({
   title = "WG Admin",
   description = "WG Admin",
-  image = "logos/main.png",
+  image = "logos/imagotype.png",
   ogEndpoint = "",
 }: Props) {
   const ogURL = env.NEXT_PUBLIC_ADMIN_BASE_URL + ogEndpoint;

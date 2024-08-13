@@ -60,12 +60,11 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             <div className="flex h-24 items-center px-4">
               <Link href="/" className="flex items-center gap-2 font-semibold">
                 <Image
-                  src="/logos/main.png"
+                  src="/logos/imagotype.png"
                   alt="Logo"
-                  width={38}
-                  height={38}
+                  width={225}
+                  height={52}
                 />
-                <span className="text-lg font-light">wallet guru</span>
               </Link>
             </div>
             <Separator className="ml-4 w-1/2" />
@@ -122,12 +121,11 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                     className="flex items-center gap-2 py-4 font-semibold"
                   >
                     <Image
-                      src="/logos/main.png"
+                      src="/logos/imagotype.png"
                       alt="Logo"
-                      width={38}
-                      height={38}
+                      width={225}
+                      height={52}
                     />
-                    <span className="text-lg font-light">wallet guru</span>
                   </Link>
                   {NAV.map((page) => (
                     <Link
