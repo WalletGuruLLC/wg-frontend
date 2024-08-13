@@ -9,14 +9,31 @@
  * const data = await customFetch<{ name: string }>("https://api.example.com/user-data/123");
  * console.log(data.name);
  */
-export default function customFetch<ResponseType>(
+export default async function customFetch<ResponseType>(
   ...params: Parameters<typeof fetch>
 ) {
-  return fetch(params[0], {
+  const res = await fetch(params[0], {
     ...params[1],
     headers: {
       ...params[1]?.headers,
       Authorization: `Bearer ${localStorage.getItem("access-token")}`,
     },
-  }).then((res) => res.json()) as Promise<ResponseType>;
+  }).catch((err) => {
+    throw new Error("UE1", {
+      cause: err,
+    });
+  });
+
+  if (!res.ok) throw new Error("UE2");
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const json = await res.json();
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (json.statusCode !== 200)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    throw new Error(json.customCode, { cause: json });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  return json.data as ResponseType;
 }

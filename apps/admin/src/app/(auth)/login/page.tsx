@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { User } from "lucide-react";
-import { z } from "zod";
 
 import { Checkbox } from "@wg-frontend/ui/checkbox";
 import {
@@ -18,25 +17,16 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
+import { useLogin } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
+import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
-
-const validator = z.object({
-  email: z.string().email("auth.login.email.errors.invalid"),
-  password: z
-    .string()
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/,
-      "auth.login.password.errors.invalid",
-    ),
-  rememberMe: z.boolean().default(false).optional(),
-});
 
 export default function LoginPage() {
   const { values } = useI18n();
 
   const form = useForm({
-    schema: validator,
+    schema: loginValidator,
     defaultValues: {
       email: "",
       password: "",
@@ -44,17 +34,20 @@ export default function LoginPage() {
     },
   });
 
+  const { mutate, error, isPending } = useLogin();
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log(data);
-        })}
-      >
+      <form onSubmit={form.handleSubmit((data) => mutate(data))}>
         <AuthCard
           title={values["auth.login.title"]}
           content={
             <div className="space-y-6 text-white">
+              {error !== null && (
+                <p className="text-lg text-[#E21D1D]">
+                  {values[("errors." + error.message) as keyof typeof values]}
+                </p>
+              )}
               <FormField
                 control={form.control}
                 name="email"
@@ -113,8 +106,8 @@ export default function LoginPage() {
             </div>
           }
           primaryButton={
-            <Button type="submit" className="w-full">
-              {values["auth.login.title"]}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {values[isPending ? "loading" : "auth.login.title"]}
             </Button>
           }
           secondaryButton={
