@@ -1,0 +1,12 @@
+**/Dockerfile*
+**/README.md*
+.dockerignore
+**/node_modules
+npm-debug.log
+**/.next
+**/next-env.d.ts
+.git
+.env
+.vscode
+!**/.next/static
+!**/.next/standalone

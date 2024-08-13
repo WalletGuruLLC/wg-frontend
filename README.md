@@ -54,7 +54,17 @@ pnpm dev
 
 ## Deployment
 
-Each app can be deployed independently and without any restriction for the technology or the deployment platform. You can use Vercel, Netlify, AWS, or any other platform you prefer.
+The default deployment is done using Docker. You can use the already configured Dockerfiles in each app to build and run the app on any platform that supports Docker. Replace <app> for the name of the app you want to deploy.
+
+> **Important**: Some apps validate the environment variables at runtime AND at build time, so make sure to provide the required environment variables when running the Docker image AND when building the image.
+
+```bash
+# Build the Docker image
+docker build -f apps/<app>/Dockerfile . --no-cache --build-arg <EXAMPLE_ENV_VAR1>=<VAR_VALUE1> --build-arg <EXAMPLE_ENV_VAR2>=<VAR_VALUE2> -t <app>
+
+# Run the Docker image
+docker run -p 3000:3000 <app>
+```
 
 ## FAQ
 
