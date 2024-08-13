@@ -54,8 +54,8 @@ pipelines:
                   - aws configure set aws_access_key_id "${AWS_KEY}"
                   - aws configure set aws_secret_access_key "${AWS_SECRET}"
                   - eval $(aws ecr get-login --no-include-email --region us-east-2 | sed 's;https://;;g')
-                  - docker build --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL -t ${IMAGE}:$TAG .
-                  - docker build --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL -t ${IMAGE}:$TAG_LATEST .
+                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL -t ${IMAGE}:$TAG
+                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL -t ${IMAGE}:$TAG_LATEST
                   - docker push ${IMAGE}:$TAG
                   - docker push ${IMAGE}:$TAG_LATEST
                 caches:
@@ -75,6 +75,6 @@ pipelines:
                       KUBECTL_ARGS:
                         - "image"
                         - "--namespace=dev"
-                        - "deployment/backend-auth"
-                        - "backend-auth=${IMAGE}:${BITBUCKET_BRANCH}-${BITBUCKET_BUILD_NUMBER}"
+                        - "deployment/frontend-admin"
+                        - "frontend-admin=${IMAGE}:${BITBUCKET_BRANCH}-${BITBUCKET_BUILD_NUMBER}"
                       DEBUG: "true"
