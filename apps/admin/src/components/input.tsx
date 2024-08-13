@@ -25,7 +25,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type="button"
             variant="ghost"
             size="sm"
-            className="absolute right-0 top-0 h-full cursor-default px-3 py-2 hover:bg-transparent hover:text-white"
+            tabIndex={-1}
+            className="t-inde absolute right-0 top-0 h-full cursor-default px-3 py-2 hover:bg-transparent hover:text-white"
             disabled={props.value === "" || props.disabled}
           >
             {props.icon}

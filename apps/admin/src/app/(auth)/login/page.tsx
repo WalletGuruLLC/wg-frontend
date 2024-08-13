@@ -86,7 +86,9 @@ export default function LoginPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>
+                      {values["auth.login.password.errors.invalid"]}
+                    </FormMessage>
                   </FormItem>
                 )}
               />
@@ -105,7 +107,6 @@ export default function LoginPage() {
                     <FormLabel className="text-[#3678B1]">
                       {values["auth.login.remember-me"]}
                     </FormLabel>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
