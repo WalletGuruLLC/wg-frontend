@@ -1,0 +1,11 @@
+services:
+  server:
+    build:
+        context: .
+        dockerfile: apps/admin/Dockerfile
+        args:
+          NEXT_PUBLIC_MICROSERVICE1_URL: https://dev.auth.walletguru.co
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
