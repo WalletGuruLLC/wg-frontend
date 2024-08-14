@@ -1,0 +1,33 @@
+{
+  "name": "@wg-frontend/data-access",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.51.23"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@wg-frontend/eslint-config": "workspace:*",
+    "@wg-frontend/prettier-config": "workspace:*",
+    "@wg-frontend/tsconfig": "workspace:*",
+    "eslint": "^9.7.0",
+    "prettier": "^3.3.3",
+    "@tanstack/eslint-plugin-query": "5.51.15",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "react": "18.3.1"
+  },
+  "prettier": "@wg-frontend/prettier-config"
+}

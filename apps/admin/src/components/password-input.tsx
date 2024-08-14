@@ -2,9 +2,9 @@ import * as React from "react";
 import { Eye as EyeIcon, EyeOff as EyeOffIcon } from "lucide-react";
 
 import { cn } from "@wg-frontend/ui";
+import { Button } from "@wg-frontend/ui/button";
 
 import type { InputProps } from "./input";
-import { Button } from "./button";
 import { Input } from "./input";
 
 const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
@@ -23,14 +23,22 @@ const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
           type="button"
           variant="ghost"
           size="sm"
-          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent hover:text-[#3678B1]"
           onClick={() => setShowPassword((prev) => !prev)}
           disabled={props.value === "" || props.disabled}
         >
           {showPassword ? (
-            <EyeIcon className="h-4 w-4" aria-hidden="true" />
+            <EyeIcon
+              strokeWidth={0.75}
+              className="h-4 w-4"
+              aria-hidden="true"
+            />
           ) : (
-            <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
+            <EyeOffIcon
+              strokeWidth={0.75}
+              className="h-4 w-4"
+              aria-hidden="true"
+            />
           )}
           <span className="sr-only">
             {showPassword ? "Hide password" : "Show password"}
