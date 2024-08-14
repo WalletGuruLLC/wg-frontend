@@ -2,6 +2,7 @@
 
 import type { I18nDictionary } from "@wg-frontend/i18n";
 
+// https://scrummers.atlassian.net/wiki/spaces/PWG/pages/2026045479/Status+Codes
 export const errorsDict = {
   en: {
     "errors.UE1": "An unexpected error occurred. Please try again later.",
