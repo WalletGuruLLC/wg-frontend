@@ -43,19 +43,15 @@ FROM base AS runner
 WORKDIR /app
 
 # Don't run production as root
+RUN npm install -g pnpm@^9.1.1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-COPY --from=installer /app/apps/admin/next.config.js .
-COPY --from=installer /app/apps/admin/package.json .
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/admin/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/admin/.next/static ./apps/admin/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/admin/public ./apps/admin/public
+COPY --from=installer --chown=nextjs:nodejs /app/ ./
 
 EXPOSE 3000
 
-CMD ["node", "apps/admin/server.js"]
+CMD ["pnpm", "-F", "admin", "start"]

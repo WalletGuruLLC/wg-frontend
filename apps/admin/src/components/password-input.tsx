@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Eye as EyeIcon, EyeOff as EyeOffIcon } from "lucide-react";
 
