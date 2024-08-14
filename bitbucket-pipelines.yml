@@ -15,10 +15,11 @@ definitions:
 
   services:
     docker:
-      memory: 4000
+      memory: 4096
 
 options:
   docker: true
+  size: 2x
 
 
 
