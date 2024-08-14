@@ -6,7 +6,7 @@ import type {
 } from "@wg-frontend/data-access";
 import { useMutation, useQuery } from "@wg-frontend/data-access";
 
-import type { loginValidator } from "../validators";
+import type { loginValidator, resetPasswordValidator } from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
@@ -66,6 +66,27 @@ export function useLogin(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/signin",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+  });
+}
+
+export function useResetPassword(
+  options: UseMutationOptions<
+    z.infer<typeof resetPasswordValidator>,
+    undefined
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["use-reset-password"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
         {
           method: "POST",
           body: JSON.stringify(input),

@@ -16,7 +16,7 @@ export const loginValidator = z.object({
 
 export const resetPasswordValidator = z
   .object({
-    currentPassword: validPassword(),
+    currentPassword: z.string().min(1),
     newPassword: validPassword("auth.login.password.errors.invalid"),
     confirmPassword: validPassword("auth.login.password.errors.invalid"),
   })

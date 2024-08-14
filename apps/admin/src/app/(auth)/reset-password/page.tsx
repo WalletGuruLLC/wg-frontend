@@ -11,6 +11,7 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { PasswordInput } from "~/components/password-input";
+import { useResetPassword } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { resetPasswordValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
@@ -27,13 +28,24 @@ export default function ResetPasswordPage() {
     },
   });
 
+  const { mutate, isPending, error } = useResetPassword({
+    onSuccess: () => {
+      console.log("Password reset successfully");
+    },
+  });
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+      <form onSubmit={form.handleSubmit((data) => mutate(data))}>
         <AuthCard
           title={values["auth.reset-password.title"]}
           content={
             <div className="space-y-6 text-white">
+              {error !== null && (
+                <p className="text-lg text-[#E21D1D]">
+                  {values[("errors." + error.message) as keyof typeof values]}
+                </p>
+              )}
               <FormField
                 control={form.control}
                 name="currentPassword"
@@ -50,7 +62,6 @@ export default function ResetPasswordPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>{/* TODO */}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -110,8 +121,12 @@ export default function ResetPasswordPage() {
             </div>
           }
           primaryButton={
-            <Button type="submit" className="w-full">
-              {values["auth.reset-password.primary-button"]}
+            <Button type="submit" disabled={isPending} className="w-full">
+              {
+                values[
+                  isPending ? "loading" : "auth.reset-password.primary-button"
+                ]
+              }
             </Button>
           }
         />
