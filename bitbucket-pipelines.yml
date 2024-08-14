@@ -48,7 +48,7 @@ pipelines:
             - step:
                 name: Build with Docker
                 image: python:3.7.4-alpine3.10
-                size: 16x
+                size: 8x
                 script:
                   - pip3 install awscli
                   - TAG=${BITBUCKET_BRANCH}-${BITBUCKET_BUILD_NUMBER}
