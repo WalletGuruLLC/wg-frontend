@@ -13,10 +13,6 @@ definitions:
       && pnpm add -g turbo
       && pnpm install
 
-  services:
-    docker:
-      memory: 5120
-
 pipelines:
   pull-requests:
     "**":
@@ -47,6 +43,7 @@ pipelines:
       - stage:
           name: Build with Docker
           deployment: Dev
+          size: 4x
           steps:
             - step:
                 name: Build with Docker
