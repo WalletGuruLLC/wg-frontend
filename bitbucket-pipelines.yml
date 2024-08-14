@@ -47,6 +47,7 @@ pipelines:
             - step:
                 name: Build with Docker
                 image: python:3.7.4-alpine3.10
+                size: 4x
                 script:
                   - pip3 install awscli
                   - TAG=${BITBUCKET_BRANCH}-${BITBUCKET_BUILD_NUMBER}
@@ -54,8 +55,8 @@ pipelines:
                   - aws configure set aws_access_key_id "${AWS_KEY}"
                   - aws configure set aws_secret_access_key "${AWS_SECRET}"
                   - eval $(aws ecr get-login --no-include-email --region us-east-2 | sed 's;https://;;g')
-                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL -t ${IMAGE}:$TAG
-                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL -t ${IMAGE}:$TAG_LATEST
+                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL --build-arg NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL --build-arg NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL -t ${IMAGE}:$TAG
+                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL --build-arg NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL --build-arg NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL -t ${IMAGE}:$TAG_LATEST
                   - docker push ${IMAGE}:$TAG
                   - docker push ${IMAGE}:$TAG_LATEST
                 caches:
