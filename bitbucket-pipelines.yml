@@ -13,6 +13,10 @@ definitions:
       && pnpm add -g turbo
       && pnpm install
 
+  services:
+    docker:
+      memory: 8192
+
 pipelines:
   pull-requests:
     "**":
@@ -47,7 +51,6 @@ pipelines:
             - step:
                 name: Build with Docker
                 image: python:3.7.4-alpine3.10
-                size: 8x
                 script:
                   - pip3 install awscli
                   - TAG=${BITBUCKET_BRANCH}-${BITBUCKET_BUILD_NUMBER}
