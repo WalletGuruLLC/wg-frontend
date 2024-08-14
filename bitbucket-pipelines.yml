@@ -15,7 +15,7 @@ definitions:
 
   services:
     docker:
-      memory: 8192
+      memory: 5120
 
 pipelines:
   pull-requests:
