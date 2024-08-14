@@ -6,7 +6,11 @@ import type {
 } from "@wg-frontend/data-access";
 import { useMutation, useQuery } from "@wg-frontend/data-access";
 
-import type { loginValidator, resetPasswordValidator } from "../validators";
+import type {
+  loginValidator,
+  resetPasswordValidator,
+  twoFactorAuthenticationValidator,
+} from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
@@ -87,6 +91,27 @@ export function useResetPassword(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+  });
+}
+
+export function useTwoFactorAuthentication(
+  options: UseMutationOptions<
+    z.infer<typeof twoFactorAuthenticationValidator>,
+    undefined
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["use-two-factor-authentication"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/verify/otp/mfa",
         {
           method: "POST",
           body: JSON.stringify(input),

@@ -24,3 +24,7 @@ export const resetPasswordValidator = z
     message: "auth.reset-password.confirm-password.errors.passwords-not-match",
     path: ["confirmPassword"],
   });
+
+export const twoFactorAuthenticationValidator = z.object({
+  code: z.string().min(1, "auth.2fa.code.errors.invalid"),
+});

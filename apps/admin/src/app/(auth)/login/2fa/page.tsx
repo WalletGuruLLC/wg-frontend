@@ -1,6 +1,6 @@
 "use client";
 
-import { z } from "zod";
+import Link from "next/link";
 
 import {
   Form,
@@ -13,35 +13,36 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
+import { useTwoFactorAuthentication } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
+import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
-
-const validator = z.object({
-  code: z.string().min(1, "auth.2fa.code.errors.invalid"),
-});
 
 export default function TwoFactorAuthenticationPage() {
   const { values } = useI18n();
 
   const form = useForm({
-    schema: validator,
+    schema: twoFactorAuthenticationValidator,
     defaultValues: {
       code: "",
     },
   });
 
+  const { mutate, isPending, error } = useTwoFactorAuthentication();
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log(data);
-        })}
-      >
+      <form onSubmit={form.handleSubmit((data) => mutate(data))}>
         <AuthCard
           title={values["auth.2fa.title"]}
           subtitle={values["auth.2fa.subtitle"]}
           content={
             <div className="space-y-6 text-white">
+              {error !== null && (
+                <p className="text-lg text-[#E21D1D]">
+                  {values[("errors." + error.message) as keyof typeof values]}
+                </p>
+              )}
               <FormField
                 control={form.control}
                 name="code"
@@ -67,14 +68,21 @@ export default function TwoFactorAuthenticationPage() {
             </div>
           }
           primaryButton={
-            <Button type="submit" className="w-full">
-              {values["auth.2fa.primary-button"]}
+            <Button type="submit" disabled={isPending} className="w-full">
+              {values[isPending ? "loading" : "auth.2fa.primary-button"]}
             </Button>
           }
           secondaryButton={
-            <Button variant="link">
-              {values["auth.2fa.secondary-button"]}
-            </Button>
+            <Link
+              href="/login"
+              onClick={() => {
+                localStorage.removeItem("access-token");
+              }}
+            >
+              <Button variant="link">
+                {values["auth.2fa.secondary-button"]}
+              </Button>
+            </Link>
           }
         />
       </form>
