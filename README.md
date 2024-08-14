@@ -63,7 +63,7 @@ The default deployment is done using Docker. You can use the already configured 
 docker build -f apps/<app>/Dockerfile . --no-cache --build-arg <EXAMPLE_ENV_VAR1>=<VAR_VALUE1> --build-arg <EXAMPLE_ENV_VAR2>=<VAR_VALUE2> -t <app>
 
 # Run the Docker image
-docker run -p 3000:3000 <app>
+docker run -p 3000:3000 --env-file ./.env <app>
 ```
 
 ## FAQ
