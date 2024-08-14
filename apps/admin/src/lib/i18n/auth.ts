@@ -28,6 +28,19 @@ export const authDict = {
     "auth.2fa.primary-button": "Verify",
     "auth.2fa.secondary-button": "Resend Code",
     "auth.2fa.code.errors.invalid": "Invalid code, please try again",
+    "auth.reset-password.title": "Reset Password",
+    "auth.reset-password.primary-button": "Save",
+    "auth.reset-password.current-password.placeholder":
+      "Enter the current password",
+    "auth.reset-password.new-password.placeholder": "Enter your new password",
+    "auth.reset-password.new-password.errors.invalid":
+      "The new password you entered doesn't meet our requirements. Please try a different one.",
+    "auth.reset-password.confirm-password.placeholder":
+      "Confirm your new password",
+    "auth.reset-password.confirm-password.errors.passwords-not-match":
+      "Passwords do not match",
+    "auth.reset-password.information-label":
+      "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
   },
   es: {
     "auth.login.title": "Iniciar sesión",
@@ -55,5 +68,19 @@ export const authDict = {
     "auth.2fa.secondary-button": "Reenviar código",
     "auth.2fa.code.errors.invalid":
       "Código inválido, por favor inténtalo de nuevo",
+    "auth.reset-password.title": "Restablecer contraseña",
+    "auth.reset-password.primary-button": "Guardar",
+    "auth.reset-password.current-password.placeholder":
+      "Ingresa la contraseña actual",
+    "auth.reset-password.new-password.placeholder":
+      "Ingresa tu nueva contraseña",
+    "auth.reset-password.new-password.errors.invalid":
+      "La nueva contraseña que ingresaste no cumple con nuestros requisitos. Por favor, intenta con otra.",
+    "auth.reset-password.confirm-password.placeholder":
+      "Confirma tu nueva contraseña",
+    "auth.reset-password.confirm-password.errors.passwords-not-match":
+      "Las contraseñas no coinciden",
+    "auth.reset-password.information-label":
+      "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
   },
 } satisfies I18nDictionary;
