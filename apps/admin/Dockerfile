@@ -24,8 +24,14 @@ RUN npm install -g pnpm@^9.1.1
 RUN pnpm install
 
 # Add the environment variables needed
-ARG NEXT_PUBLIC_MICROSERVICE1_URL
-ENV NEXT_PUBLIC_MICROSERVICE1_URL=$NEXT_PUBLIC_MICROSERVICE1_URL
+ARG NEXT_PUBLIC_ADMIN_BASE_URL
+ENV NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL
+
+ARG NEXT_PUBLIC_AUTH_MICROSERVICE_URL
+ENV NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL
+
+ARG NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL
+ENV NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL
 
 # Build the project
 COPY --from=builder /app/out/full/ .
@@ -34,22 +40,29 @@ COPY turbo.json turbo.json
 RUN pnpm -F admin build
 
 FROM base AS runner
+
+# Add the environment variables needed
+ARG NEXT_PUBLIC_ADMIN_BASE_URL
+ENV NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL
+
+ARG NEXT_PUBLIC_AUTH_MICROSERVICE_URL
+ENV NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL
+
+ARG NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL
+ENV NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL
+
 WORKDIR /app
 
 # Don't run production as root
+RUN npm install -g pnpm@^9.1.1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-COPY --from=installer /app/apps/admin/next.config.js .
-COPY --from=installer /app/apps/admin/package.json .
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/admin/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/admin/.next/static ./apps/admin/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/admin/public ./apps/admin/public
+COPY --from=installer --chown=nextjs:nodejs /app/ ./
 
 EXPOSE 3000
 
-CMD ["node", "apps/admin/server.js"]
+CMD ["pnpm", "-F", "admin", "start"]

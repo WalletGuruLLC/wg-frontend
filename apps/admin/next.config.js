@@ -9,14 +9,16 @@ const config = {
   reactStrictMode: true,
 
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ["@wg-frontend/ui", "@wg-frontend/hooks"],
+  transpilePackages: [
+    "@wg-frontend/ui",
+    "@wg-frontend/hooks",
+    "@wg-frontend/data-access",
+    "@wg-frontend/i18n",
+  ],
 
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-
-  // For docker, we need to build the app as a standalone app
-  output: "standalone",
 };
 
 export default config;
