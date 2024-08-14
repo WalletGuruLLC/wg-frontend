@@ -23,6 +23,16 @@ COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN npm install -g pnpm@^9.1.1
 RUN pnpm install
 
+
+
+# Build the project
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+
+RUN pnpm -F admin build
+
+FROM base AS runner
+
 # Add the environment variables needed
 ARG NEXT_PUBLIC_ADMIN_BASE_URL
 ENV NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL
@@ -33,13 +43,6 @@ ENV NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL
 ARG NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL
 ENV NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL
 
-# Build the project
-COPY --from=builder /app/out/full/ .
-COPY turbo.json turbo.json
-
-RUN pnpm -F admin build
-
-FROM base AS runner
 WORKDIR /app
 
 # Don't run production as root
