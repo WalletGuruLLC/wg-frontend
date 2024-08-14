@@ -20,7 +20,7 @@ const validator = z.object({
   code: z.string().min(1, "auth.2fa.code.errors.invalid"),
 });
 
-export default function ForgotPasswordPage() {
+export default function TwoFactorAuthenticationPage() {
   const { values } = useI18n();
 
   const form = useForm({
