@@ -15,11 +15,15 @@ definitions:
 
   services:
     docker:
-      memory: 5120
+      memory: 4000
+
+options:
+  docker: true
 
 
 
 pipelines:
+
   pull-requests:
     "**":
       - parallel:
