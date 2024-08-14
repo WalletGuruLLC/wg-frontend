@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import Metatags from "~/components/metatags";
