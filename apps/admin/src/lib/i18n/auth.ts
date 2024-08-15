@@ -12,14 +12,6 @@ export const authDict = {
       "Your password must contain 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character",
     "auth.login.remember-me": "Remember me",
     "auth.login.forgot-password": "Forgot password?",
-    "auth.forgot-password.code.errors.invalid":
-      "Invalid code, please try again",
-    "auth.forgot-password.code.placeholder": "Code",
-    "auth.forgot-password.title": "Enter Recovery Code",
-    "auth.forgot-password.subtitle":
-      "An e-mail has been sent with a verification code",
-    "auth.forgot-password.primary-button": "Verify",
-    "auth.forgot-password.secondary-button": "Cancel",
     "auth.2fa.title": "Two-Factor Authentication",
     "auth.2fa.subtitle":
       "A unique code has been sent to your email address. Please check your inbox and enter the code",
@@ -41,6 +33,21 @@ export const authDict = {
       "Passwords do not match",
     "auth.reset-password.information-label":
       "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
+    "auth.forgot-password.email-step.title": "Forgot Your Password?",
+    "auth.forgot-password.email-step.subtitle":
+      "Enter your email address below, and we'll send you a code to reset your password.",
+    "auth.forgot-password.email-step.email.placeholder": "Email",
+    "auth.forgot-password.email-step.primary-button": "Request",
+    "auth.forgot-password.code-step.title": "Reset Password",
+    "auth.forgot-password.code-step.code.placeholder": "Enter the code sent",
+    "auth.forgot-password.code-step.new-password.placeholder":
+      "Enter your new password",
+    "auth.forgot-password.code-step.confirm-password.placeholder":
+      "Confirm your new password",
+    "auth.forgot-password.code-step.information-label":
+      "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
+    "auth.forgot-password.code-step.primary-button": "Save",
+    "auth.forgot-password.code-step.secondary-button": "Cancel",
   },
   es: {
     "auth.login.title": "Iniciar sesión",
@@ -51,14 +58,6 @@ export const authDict = {
       "Tu contraseña debe contener de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial",
     "auth.login.remember-me": "Recuérdame",
     "auth.login.forgot-password": "¿Olvidaste tu contraseña?",
-    "auth.forgot-password.code.errors.invalid":
-      "Código inválido, por favor inténtalo de nuevo",
-    "auth.forgot-password.code.placeholder": "Código",
-    "auth.forgot-password.title": "Ingresa el código de recuperación",
-    "auth.forgot-password.subtitle":
-      "Se ha enviado un correo electrónico con un código de verificación",
-    "auth.forgot-password.primary-button": "Verificar",
-    "auth.forgot-password.secondary-button": "Cancelar",
     "auth.2fa.title": "Autenticación de dos factores",
     "auth.2fa.subtitle":
       "Se ha enviado un código único a tu dirección de correo electrónico. Por favor revisa tu bandeja de entrada e ingresa el código",
@@ -82,5 +81,21 @@ export const authDict = {
       "Las contraseñas no coinciden",
     "auth.reset-password.information-label":
       "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
+    "auth.forgot-password.email-step.title": "¿Olvidaste tu contraseña?",
+    "auth.forgot-password.email-step.subtitle":
+      "Ingresa tu dirección de correo electrónico a continuación, y te enviaremos un código para restablecer tu contraseña.",
+    "auth.forgot-password.email-step.email.placeholder": "Email",
+    "auth.forgot-password.email-step.primary-button": "Solicitar",
+    "auth.forgot-password.code-step.title": "Restablecer contraseña",
+    "auth.forgot-password.code-step.code.placeholder":
+      "Ingresa el código enviado",
+    "auth.forgot-password.code-step.new-password.placeholder":
+      "Ingresa tu nueva contraseña",
+    "auth.forgot-password.code-step.confirm-password.placeholder":
+      "Confirma tu nueva contraseña",
+    "auth.forgot-password.code-step.information-label":
+      "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
+    "auth.forgot-password.code-step.primary-button": "Guardar",
+    "auth.forgot-password.code-step.secondary-button": "Cancelar",
   },
 } satisfies I18nDictionary;

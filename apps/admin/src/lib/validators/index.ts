@@ -28,3 +28,13 @@ export const resetPasswordValidator = z
 export const twoFactorAuthenticationValidator = z.object({
   code: z.string().min(1, "auth.2fa.code.errors.invalid"),
 });
+
+export const forgotPasswordEmailStepValidator = z.object({
+  email: z.string().email("auth.login.email.errors.invalid"),
+});
+
+export const forgotPasswordCodeStepValidator = z.object({
+  confirmationCode: z.string().min(1, "auth.2fa.code.errors.invalid"),
+  newPassword: validPassword("auth.login.password.errors.invalid"),
+  confirmPassword: validPassword("auth.login.password.errors.invalid"),
+});

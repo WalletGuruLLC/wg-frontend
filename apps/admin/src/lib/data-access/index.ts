@@ -7,6 +7,8 @@ import type {
 import { useMutation, useQuery } from "@wg-frontend/data-access";
 
 import type {
+  forgotPasswordCodeStepValidator,
+  forgotPasswordEmailStepValidator,
   loginValidator,
   resetPasswordValidator,
   twoFactorAuthenticationValidator,
@@ -112,6 +114,48 @@ export function useTwoFactorAuthentication(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/verify/otp/mfa",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+  });
+}
+
+export function useForgotPasswordEmailStep(
+  options: UseMutationOptions<
+    z.infer<typeof forgotPasswordEmailStepValidator>,
+    undefined
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["use-forgot-password-email-step"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/forgot-password",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+  });
+}
+
+export function useForgotPasswordCodeStep(
+  options: UseMutationOptions<
+    z.infer<typeof forgotPasswordCodeStepValidator>,
+    undefined
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["use-forgot-password-code-step"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/confirm-password",
         {
           method: "POST",
           body: JSON.stringify(input),
