@@ -1,46 +1,44 @@
 "use client";
 
-import Link from "next/link";
-import { User } from "lucide-react";
-
-import { Checkbox } from "@wg-frontend/ui/checkbox";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   useForm,
 } from "@wg-frontend/ui/form";
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
-import { useLogin } from "~/lib/data-access";
+import { useResetPassword } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
-import { loginValidator } from "~/lib/validators";
+import { resetPasswordValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const { values } = useI18n();
 
   const form = useForm({
-    schema: loginValidator,
+    schema: resetPasswordValidator,
     defaultValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
-  const { mutate, error, isPending } = useLogin();
+  const { mutate, isPending, error } = useResetPassword({
+    onSuccess: () => {
+      console.log("Password reset successfully");
+    },
+  });
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((data) => mutate(data))}>
         <AuthCard
-          title={values["auth.login.title"]}
+          title={values["auth.reset-password.title"]}
           content={
             <div className="space-y-6 text-white">
               {error !== null && (
@@ -50,29 +48,33 @@ export default function LoginPage() {
               )}
               <FormField
                 control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder={values["auth.login.email.placeholder"]}
-                        required
-                        icon={<User strokeWidth={0.75} className="h-4 w-4" />}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
+                name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <PasswordInput
-                        placeholder={values["auth.login.password.placeholder"]}
+                        placeholder={
+                          values[
+                            "auth.reset-password.current-password.placeholder"
+                          ]
+                        }
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="newPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder={
+                          values["auth.reset-password.new-password.placeholder"]
+                        }
                         required
                         {...field}
                       />
@@ -83,35 +85,37 @@ export default function LoginPage() {
               />
               <FormField
                 control={form.control}
-                name="rememberMe"
+                name="confirmPassword"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-1 space-y-0">
+                  <FormItem>
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="rounded-md border-white hover:border-[#3678B1] data-[state=checked]:bg-[#3678B1] data-[state=checked]:text-white"
+                      <PasswordInput
+                        placeholder={
+                          values[
+                            "auth.reset-password.confirm-password.placeholder"
+                          ]
+                        }
+                        required
+                        {...field}
                       />
                     </FormControl>
-                    <FormLabel className="text-[#3678B1]">
-                      {values["auth.login.remember-me"]}
-                    </FormLabel>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+              <p className="text-base text-[#3678B1]">
+                {values["auth.reset-password.information-label"]}
+              </p>
             </div>
           }
           primaryButton={
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {values[isPending ? "loading" : "auth.login.title"]}
+            <Button type="submit" disabled={isPending} className="w-full">
+              {
+                values[
+                  isPending ? "loading" : "auth.reset-password.primary-button"
+                ]
+              }
             </Button>
-          }
-          secondaryButton={
-            <Link href="/forgot-password">
-              <Button variant="link">
-                {values["auth.login.forgot-password"]}
-              </Button>
-            </Link>
           }
         />
       </form>

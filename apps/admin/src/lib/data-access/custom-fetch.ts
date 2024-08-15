@@ -26,14 +26,14 @@ export default async function customFetch<ResponseType>(
 
   if (!res.ok) throw new Error("UE2");
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const json = await res.json();
+  const json = (await res.json()) as {
+    statusCode: number;
+    customCode: string;
+    data?: ResponseType;
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (json.statusCode !== 200)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     throw new Error(json.customCode, { cause: json });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return json.data as ResponseType;
+  return json.data as ResponseType; // double cast to avoid TS thinking its undefined
 }
