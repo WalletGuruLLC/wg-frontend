@@ -55,9 +55,7 @@ export default function TwoFactorAuthenticationPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>
-                      {values["auth.2fa.code.errors.invalid"]}
-                    </FormMessage>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

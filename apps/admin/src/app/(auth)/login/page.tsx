@@ -61,9 +61,7 @@ export default function LoginPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>
-                      {values["auth.login.email.errors.invalid"]}
-                    </FormMessage>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -79,9 +77,7 @@ export default function LoginPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>
-                      {values["auth.login.password.errors.invalid"]}
-                    </FormMessage>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

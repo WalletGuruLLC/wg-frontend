@@ -57,9 +57,7 @@ export default function ForgotPasswordPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>
-                      {values["auth.forgot-password.code.errors.invalid"]}
-                    </FormMessage>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

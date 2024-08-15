@@ -79,13 +79,7 @@ export default function ResetPasswordPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>
-                      {
-                        values[
-                          "auth.reset-password.new-password.errors.invalid"
-                        ]
-                      }
-                    </FormMessage>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -105,13 +99,7 @@ export default function ResetPasswordPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>
-                      {
-                        values[
-                          "auth.reset-password.confirm-password.errors.passwords-not-match"
-                        ]
-                      }
-                    </FormMessage>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
