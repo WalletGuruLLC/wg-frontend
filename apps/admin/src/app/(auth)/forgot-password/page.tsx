@@ -13,6 +13,7 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
+import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
 import {
   useForgotPasswordCodeStep,
@@ -31,7 +32,7 @@ export default function ForgotPasswordPage() {
   return email === null ? (
     <EmailStep setEmail={setEmail} />
   ) : (
-    <CodeStep setEmail={setEmail} />
+    <CodeStep setEmail={setEmail} email={email} />
   );
 }
 
@@ -74,7 +75,7 @@ function EmailStep({ setEmail }: Props) {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <PasswordInput
+                      <Input
                         placeholder={
                           values[
                             "auth.forgot-password.email-step.email.placeholder"
@@ -107,12 +108,18 @@ function EmailStep({ setEmail }: Props) {
   );
 }
 
-function CodeStep({ setEmail }: Props) {
+function CodeStep({
+  setEmail,
+  email,
+}: Props & {
+  email: string;
+}) {
   const { values } = useI18n();
 
   const form = useForm({
     schema: forgotPasswordCodeStepValidator,
     defaultValues: {
+      email,
       confirmationCode: "",
       newPassword: "",
       confirmPassword: "",
@@ -139,7 +146,7 @@ function CodeStep({ setEmail }: Props) {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <PasswordInput
+                      <Input
                         placeholder={
                           values[
                             "auth.forgot-password.code-step.code.placeholder"
@@ -199,7 +206,7 @@ function CodeStep({ setEmail }: Props) {
             </div>
           }
           primaryButton={
-            <Button type="submit" className="w-full">
+            <Button type="submit" disabled={isPending} className="w-full">
               {
                 values[
                   isPending

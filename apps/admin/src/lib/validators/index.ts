@@ -33,8 +33,14 @@ export const forgotPasswordEmailStepValidator = z.object({
   email: z.string().email("auth.login.email.errors.invalid"),
 });
 
-export const forgotPasswordCodeStepValidator = z.object({
-  confirmationCode: z.string().min(1, "auth.2fa.code.errors.invalid"),
-  newPassword: validPassword("auth.login.password.errors.invalid"),
-  confirmPassword: validPassword("auth.login.password.errors.invalid"),
-});
+export const forgotPasswordCodeStepValidator = z
+  .object({
+    email: z.string().email("auth.login.email.errors.invalid"),
+    confirmationCode: z.string().min(1, "auth.2fa.code.errors.invalid"),
+    newPassword: validPassword("auth.login.password.errors.invalid"),
+    confirmPassword: validPassword("auth.login.password.errors.invalid"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "auth.reset-password.confirm-password.errors.passwords-not-match",
+    path: ["confirmPassword"],
+  });
