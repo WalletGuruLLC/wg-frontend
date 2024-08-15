@@ -26,7 +26,6 @@ export default function Metatags({
       <meta name="author" content="WG Admin" />
       <meta name="copyright" content="WG Admin" />
       <meta name="robots" content="index" />
-      <link rel="canonical" href={env.NEXT_PUBLIC_ADMIN_BASE_URL} />
 
       <meta property="og:site_name" content="WG Admin" />
       <meta property="og:url" content={ogURL} />
