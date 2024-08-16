@@ -99,14 +99,11 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               <div
                 className="flex flex-row items-center gap-3 text-xs font-light"
                 onClick={() => {
-                  void cq
-                    .invalidateQueries({
-                      queryKey: ["authed-user-info"],
-                    })
-                    .then(() => {
-                      localStorage.removeItem("access-token");
-                      router.refresh();
-                    });
+                  localStorage.removeItem("access-token");
+                  void cq.invalidateQueries({
+                    queryKey: ["authed-user-info"],
+                  });
+                  router.refresh();
                 }}
               >
                 <LogOut className="size-6" strokeWidth={0.75} />
@@ -161,14 +158,11 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                   <div className="px-3 py-12">
                     <div
                       onClick={() => {
-                        void cq
-                          .invalidateQueries({
-                            queryKey: ["authed-user-info"],
-                          })
-                          .then(() => {
-                            localStorage.removeItem("access-token");
-                            router.refresh();
-                          });
+                        localStorage.removeItem("access-token");
+                        void cq.invalidateQueries({
+                          queryKey: ["authed-user-info"],
+                        });
+                        router.refresh();
                       }}
                       className="flex flex-row items-center gap-3 text-xs font-light"
                     >

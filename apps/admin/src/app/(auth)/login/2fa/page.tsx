@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -24,16 +25,22 @@ import AuthCard from "../../_components/auth-card";
 
 export default function TwoFactorAuthenticationPage() {
   const { data, isLoading } = useAuthedUserInfoQuery();
+  const router = useRouter();
 
   const { values } = useI18n();
 
   const form = useForm({
     schema: twoFactorAuthenticationValidator,
     defaultValues: {
-      email: localStorage.getItem("email") ?? "",
+      email: "",
       otp: "",
     },
   });
+
+  useEffect(() => {
+    if (localStorage.getItem("email") === null) return router.replace("/login");
+    form.setValue("email", localStorage.getItem("email") ?? "");
+  }, [form, router]);
 
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
     onSuccess: (data) => {
@@ -43,9 +50,8 @@ export default function TwoFactorAuthenticationPage() {
     },
   });
 
-  if (!isLoading && data?.First) redirect("/reset-password");
-  if (!isLoading && data !== undefined && !data.First) redirect("/");
-  if (localStorage.getItem("email") === null) redirect("/login");
+  if (!isLoading && data?.First) router.replace("/reset-password");
+  if (!isLoading && data !== undefined && !data.First) router.replace("/");
 
   return (
     <Form {...form}>
