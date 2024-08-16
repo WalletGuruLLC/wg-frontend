@@ -16,8 +16,8 @@ import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
 import {
-  useForgotPasswordCodeStep,
-  useForgotPasswordEmailStep,
+  useForgotPasswordCodeStepMutation,
+  useForgotPasswordEmailStepMutation,
 } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import {
@@ -50,7 +50,7 @@ function EmailStep({ setEmail }: Props) {
     },
   });
 
-  const { mutate, isPending, error } = useForgotPasswordEmailStep({
+  const { mutate, isPending, error } = useForgotPasswordEmailStepMutation({
     onSuccess: () => {
       setEmail(form.getValues().email);
     },
@@ -126,7 +126,7 @@ function CodeStep({
     },
   });
 
-  const { mutate, isPending, error } = useForgotPasswordCodeStep();
+  const { mutate, isPending, error } = useForgotPasswordCodeStepMutation();
 
   return (
     <Form {...form}>

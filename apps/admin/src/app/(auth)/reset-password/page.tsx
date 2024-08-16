@@ -11,7 +11,7 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { PasswordInput } from "~/components/password-input";
-import { useResetPassword } from "~/lib/data-access";
+import { useResetPasswordMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { resetPasswordValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
     },
   });
 
-  const { mutate, isPending, error } = useResetPassword({
+  const { mutate, isPending, error } = useResetPasswordMutation({
     onSuccess: () => {
       console.log("Password reset successfully");
     },

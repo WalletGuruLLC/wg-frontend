@@ -13,7 +13,7 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
-import { useTwoFactorAuthentication } from "~/lib/data-access";
+import { useTwoFactorAuthenticationMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
@@ -28,7 +28,7 @@ export default function TwoFactorAuthenticationPage() {
     },
   });
 
-  const { mutate, isPending, error } = useTwoFactorAuthentication();
+  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation();
 
   return (
     <Form {...form}>

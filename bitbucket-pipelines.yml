@@ -21,10 +21,7 @@ options:
   docker: true
   size: 2x
 
-
-
 pipelines:
-
   pull-requests:
     "**":
       - parallel:

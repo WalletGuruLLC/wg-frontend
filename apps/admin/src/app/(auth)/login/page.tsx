@@ -17,7 +17,7 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
-import { useLogin } from "~/lib/data-access";
+import { useLoginMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
@@ -34,7 +34,9 @@ export default function LoginPage() {
     },
   });
 
-  const { mutate, error, isPending } = useLogin();
+  const { mutate, error, isPending } = useLoginMutation({
+    onSuccess: (data) => console.log("succ:data", data),
+  });
 
   return (
     <Form {...form}>

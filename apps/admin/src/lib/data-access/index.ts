@@ -45,7 +45,7 @@ export function useUserData(
   });
 }
 
-export function useLogin(
+export function useLoginMutation(
   options: UseMutationOptions<
     z.infer<typeof loginValidator>,
     {
@@ -71,7 +71,7 @@ export function useLogin(
     mutationKey: ["use-login"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/signin",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/signin",
         {
           method: "POST",
           body: JSON.stringify(input),
@@ -81,7 +81,7 @@ export function useLogin(
   });
 }
 
-export function useResetPassword(
+export function useResetPasswordMutation(
   options: UseMutationOptions<
     z.infer<typeof resetPasswordValidator>,
     undefined
@@ -102,7 +102,7 @@ export function useResetPassword(
   });
 }
 
-export function useTwoFactorAuthentication(
+export function useTwoFactorAuthenticationMutation(
   options: UseMutationOptions<
     z.infer<typeof twoFactorAuthenticationValidator>,
     undefined
@@ -123,7 +123,7 @@ export function useTwoFactorAuthentication(
   });
 }
 
-export function useForgotPasswordEmailStep(
+export function useForgotPasswordEmailStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordEmailStepValidator>,
     undefined
@@ -144,7 +144,7 @@ export function useForgotPasswordEmailStep(
   });
 }
 
-export function useForgotPasswordCodeStep(
+export function useForgotPasswordCodeStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordCodeStepValidator>,
     undefined

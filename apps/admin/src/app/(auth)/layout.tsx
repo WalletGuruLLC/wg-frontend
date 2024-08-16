@@ -17,6 +17,7 @@ export default function AuthLayot(props: { children: React.ReactNode }) {
             alt="Logo"
             width={213}
             height={48}
+            priority
           />
           <div className="w-[500px]">{props.children}</div>
         </div>
