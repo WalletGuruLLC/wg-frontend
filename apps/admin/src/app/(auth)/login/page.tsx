@@ -46,7 +46,7 @@ export default function LoginPage() {
   });
 
   if (!isLoading && data?.First) router.replace("/reset-password");
-  if (!isLoading && data !== undefined && !data.First) router.replace("/");
+  // if (!isLoading && data !== undefined && !data.First) router.replace("/");
 
   return (
     <Form {...form}>

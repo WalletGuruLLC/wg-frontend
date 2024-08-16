@@ -46,12 +46,11 @@ export default function TwoFactorAuthenticationPage() {
     onSuccess: (data) => {
       localStorage.removeItem("email");
       localStorage.setItem("access-token", data.token);
-      console.log("data,", data);
     },
   });
 
   if (!isLoading && data?.First) router.replace("/reset-password");
-  if (!isLoading && data !== undefined && !data.First) router.replace("/");
+  // if (!isLoading && data !== undefined && !data.First) router.replace("/");
 
   return (
     <Form {...form}>
