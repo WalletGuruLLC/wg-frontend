@@ -72,8 +72,8 @@ export function useLoginMutation(
   options: UseMutationOptions<z.infer<typeof loginValidator>, undefined> = {},
 ) {
   const cq = useQueryClient();
-
   return useMutation({
+    ...options,
     mutationKey: ["login"],
     mutationFn: (input) => {
       return customFetch(
@@ -88,12 +88,11 @@ export function useLoginMutation(
       );
     },
     onSuccess: (...input) => {
+      options.onSuccess?.(...input);
       void cq.invalidateQueries({
         queryKey: ["authed-user-info"],
       });
-      options.onSuccess?.(...input);
     },
-    ...options,
   });
 }
 
@@ -121,20 +120,30 @@ export function useResetPasswordMutation(
 export function useTwoFactorAuthenticationMutation(
   options: UseMutationOptions<
     z.infer<typeof twoFactorAuthenticationValidator>,
-    undefined
+    {
+      token: string;
+      user: unknown;
+    }
   > = {},
 ) {
+  const cq = useQueryClient();
   return useMutation({
     ...options,
     mutationKey: ["two-factor-authentication"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/verify/otp/mfa",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/verify/otp/mfa",
         {
           method: "POST",
           body: JSON.stringify(input),
         },
       );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
     },
   });
 }
@@ -146,6 +155,7 @@ export function useForgotPasswordEmailStepMutation(
   > = {},
 ) {
   return useMutation({
+    ...options,
     mutationKey: ["forgot-password-email-step"],
     mutationFn: (input) => {
       return customFetch(
@@ -156,7 +166,6 @@ export function useForgotPasswordEmailStepMutation(
         },
       );
     },
-    ...options,
   });
 }
 
@@ -167,6 +176,7 @@ export function useForgotPasswordCodeStepMutation(
   > = {},
 ) {
   return useMutation({
+    ...options,
     mutationKey: ["forgot-password-code-step"],
     mutationFn: (input) => {
       return customFetch(
@@ -177,6 +187,5 @@ export function useForgotPasswordCodeStepMutation(
         },
       );
     },
-    ...options,
   });
 }

@@ -30,14 +30,21 @@ export default function TwoFactorAuthenticationPage() {
   const form = useForm({
     schema: twoFactorAuthenticationValidator,
     defaultValues: {
+      email: localStorage.getItem("email") ?? "",
       code: "",
     },
   });
 
-  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation();
+  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
+    onSuccess: (data) => {
+      localStorage.removeItem("email");
+      localStorage.setItem("access-token", data.token);
+    },
+  });
 
   if (!isLoading && data?.First) redirect("/reset-password");
   if (!isLoading && data !== undefined && !data.First) redirect("/");
+  if (localStorage.getItem("email") === null) redirect("/login");
 
   return (
     <Form {...form}>
