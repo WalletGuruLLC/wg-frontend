@@ -1,10 +1,16 @@
+"use client";
+
 import type { z } from "zod";
 
 import type {
   UseMutationOptions as _UseMutationOptions,
   UseQueryOptions as _UseQueryOptions,
 } from "@wg-frontend/data-access";
-import { useMutation, useQuery } from "@wg-frontend/data-access";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@wg-frontend/data-access";
 
 import type {
   forgotPasswordCodeStepValidator,
@@ -52,7 +58,7 @@ export function useAuthedUserInfoQuery<
 >(options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
-    queryKey: ["use-user-info"],
+    queryKey: ["authed-user-info"],
     queryFn: () => {
       return customFetch<TOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/get/info/access",
@@ -63,28 +69,12 @@ export function useAuthedUserInfoQuery<
 }
 
 export function useLoginMutation(
-  options: UseMutationOptions<
-    z.infer<typeof loginValidator>,
-    {
-      token: string;
-      user: {
-        id: string;
-        userName: string;
-        email: string;
-        type: string;
-        roleId: number;
-        active: boolean;
-        state: number;
-        first: boolean;
-        serviceProviderId: number;
-        lastLogin: string;
-        accessLevel: number;
-      };
-    }
-  > = {},
+  options: UseMutationOptions<z.infer<typeof loginValidator>, undefined> = {},
 ) {
+  const cq = useQueryClient();
+
   return useMutation({
-    mutationKey: ["use-login"],
+    mutationKey: ["login"],
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/signin",
@@ -96,6 +86,12 @@ export function useLoginMutation(
           },
         },
       );
+    },
+    onSuccess: (...input) => {
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
+      options.onSuccess?.(...input);
     },
     ...options,
   });
@@ -109,7 +105,7 @@ export function useResetPasswordMutation(
 ) {
   return useMutation({
     ...options,
-    mutationKey: ["use-reset-password"],
+    mutationKey: ["reset-password"],
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
@@ -130,7 +126,7 @@ export function useTwoFactorAuthenticationMutation(
 ) {
   return useMutation({
     ...options,
-    mutationKey: ["use-two-factor-authentication"],
+    mutationKey: ["two-factor-authentication"],
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/verify/otp/mfa",
@@ -150,7 +146,7 @@ export function useForgotPasswordEmailStepMutation(
   > = {},
 ) {
   return useMutation({
-    mutationKey: ["use-forgot-password-email-step"],
+    mutationKey: ["forgot-password-email-step"],
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/forgot-password",
@@ -171,7 +167,7 @@ export function useForgotPasswordCodeStepMutation(
   > = {},
 ) {
   return useMutation({
-    mutationKey: ["use-forgot-password-code-step"],
+    mutationKey: ["forgot-password-code-step"],
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/confirm-password",

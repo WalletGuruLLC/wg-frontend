@@ -37,7 +37,7 @@ export default function TwoFactorAuthenticationPage() {
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation();
 
   if (!isLoading && data?.First) redirect("/reset-password");
-  if (!isLoading && !data?.First) redirect("/");
+  if (!isLoading && data !== undefined && !data.First) redirect("/");
 
   return (
     <Form {...form}>

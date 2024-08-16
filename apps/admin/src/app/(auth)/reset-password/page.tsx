@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
     },
   });
 
-  if (!isLoading && !data?.First) redirect("/");
+  if (!isLoading && data !== undefined && !data.First) redirect("/");
 
   return (
     <Form {...form}>

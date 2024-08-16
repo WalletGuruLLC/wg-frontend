@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState<string | null>(null);
 
   if (!isLoading && data?.First) redirect("/reset-password");
-  if (!isLoading && !data?.First) redirect("/");
+  if (!isLoading && data !== undefined && !data.First) redirect("/");
 
   return email === null ? (
     <EmailStep setEmail={setEmail} />
