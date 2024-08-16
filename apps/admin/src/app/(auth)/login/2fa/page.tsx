@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -26,6 +26,7 @@ import AuthCard from "../../_components/auth-card";
 export default function TwoFactorAuthenticationPage() {
   const { data, isLoading } = useAuthedUserInfoQuery();
   const router = useRouter();
+  const [countDown, setCountDown] = useState(60 * 5); // 5 minutes
 
   const { values } = useI18n();
 
@@ -37,11 +38,6 @@ export default function TwoFactorAuthenticationPage() {
     },
   });
 
-  useEffect(() => {
-    if (localStorage.getItem("email") === null) return router.replace("/login");
-    form.setValue("email", localStorage.getItem("email") ?? "");
-  }, [form, router]);
-
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
     onSuccess: (data) => {
       localStorage.removeItem("email");
@@ -52,6 +48,22 @@ export default function TwoFactorAuthenticationPage() {
 
   if (!isLoading && data?.First) router.replace("/reset-password");
   // if (!isLoading && data !== undefined && !data.First) router.replace("/");
+
+  useEffect(() => {
+    if (localStorage.getItem("email") === null) return router.replace("/login");
+    form.setValue("email", localStorage.getItem("email") ?? "");
+  }, [form, router]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountDown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const minutesRemaining = Math.floor(countDown / 60);
+  const secondsRemaining = countDown % 60;
 
   return (
     <Form {...form}>
@@ -83,8 +95,10 @@ export default function TwoFactorAuthenticationPage() {
                 )}
               />
               <p className="text-base text-[#3678B1]">
-                {values["auth.2fa.code.valid-for"]}
-                {" 05:00"}
+                {values["auth.2fa.code.valid-for"]}{" "}
+                {minutesRemaining.toString().padStart(2, "0")}
+                {":"}
+                {secondsRemaining.toString().padStart(2, "0")}
               </p>
             </div>
           }

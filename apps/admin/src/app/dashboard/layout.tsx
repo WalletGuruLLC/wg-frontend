@@ -96,7 +96,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             <Separator className="ml-4 w-1/2" />
             <div className="px-7 py-4 pb-12">
               <Link
-                href="login"
+                href="/login"
                 className="flex flex-row items-center gap-3 text-xs font-light"
                 onClick={() => {
                   localStorage.removeItem("access-token");
