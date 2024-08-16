@@ -16,11 +16,9 @@ import type {
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
-// TODO
-type UseQueryOptions<TInput = unknown, TOutput = unknown> = _UseQueryOptions<
-  TInput,
-  Error,
-  TOutput
+type UseQueryOptions<TOutput> = Omit<
+  _UseQueryOptions<TOutput>,
+  "queryFn" | "queryKey"
 >;
 
 type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
@@ -28,20 +26,39 @@ type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
   "mutationFn" | "mutationKey"
 >;
 
-export function useUserData(
-  input: {
-    id: string;
+export function useAuthedUserInfoQuery<
+  TOutput = {
+    PrivacyPolicy: boolean;
+    MfaEnabled: boolean;
+    CreateDate: string;
+    TermsConditions: boolean;
+    Otp: string;
+    SendSms: boolean;
+    State: 1 | 2 | 3;
+    Email: string;
+    MfaType: "TOTP" | "SMS";
+    First: boolean;
+    RoleId: string;
+    SendEmails: boolean;
+    UpdateDate: string;
+    Picture: string;
+    ServiceProviderId: string;
+    FirstName: string;
+    Id: string;
+    Active: boolean;
+    LastName: string;
+    type: "PLATFORM" | "PROVIDER" | "WALLET";
   },
-  options: Omit<UseQueryOptions, "queryFn" | "queryKey"> = {},
-) {
+>(options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
-    ...options,
-    queryKey: ["use-user-data"],
+    retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
+    queryKey: ["use-user-info"],
     queryFn: () => {
-      return customFetch<{ name: string }>(
-        "https://api.example.com/user-data/" + input.id,
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/get/info/access",
       );
     },
+    ...options,
   });
 }
 
@@ -67,7 +84,6 @@ export function useLoginMutation(
   > = {},
 ) {
   return useMutation({
-    ...options,
     mutationKey: ["use-login"],
     mutationFn: (input) => {
       return customFetch(
@@ -75,9 +91,13 @@ export function useLoginMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
     },
+    ...options,
   });
 }
 
@@ -130,7 +150,6 @@ export function useForgotPasswordEmailStepMutation(
   > = {},
 ) {
   return useMutation({
-    ...options,
     mutationKey: ["use-forgot-password-email-step"],
     mutationFn: (input) => {
       return customFetch(
@@ -141,6 +160,7 @@ export function useForgotPasswordEmailStepMutation(
         },
       );
     },
+    ...options,
   });
 }
 
@@ -151,7 +171,6 @@ export function useForgotPasswordCodeStepMutation(
   > = {},
 ) {
   return useMutation({
-    ...options,
     mutationKey: ["use-forgot-password-code-step"],
     mutationFn: (input) => {
       return customFetch(
@@ -162,5 +181,6 @@ export function useForgotPasswordCodeStepMutation(
         },
       );
     },
+    ...options,
   });
 }

@@ -3,10 +3,12 @@ import { z } from "zod";
 const validPassword = (err?: string) =>
   z
     .string()
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/,
-      err,
-    );
+    .min(8, err)
+    .max(12, err)
+    .refine((value) => value.match(/[a-z]/), err)
+    .refine((value) => value.match(/[A-Z]/), err)
+    .refine((value) => value.match(/\d/), err)
+    .refine((value) => value.match(/[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/), err); // https://owasp.org/www-community/password-special-characters
 
 export const loginValidator = z.object({
   email: z.string().email("auth.login.email.errors.invalid"),

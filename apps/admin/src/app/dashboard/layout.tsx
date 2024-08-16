@@ -11,6 +11,7 @@ import { Separator } from "@wg-frontend/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
 
 import Metatags from "~/components/metatags";
+import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 
 const NAV = [
@@ -47,8 +48,12 @@ const NAV = [
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
+  const loading = useAuthGuard();
+
   const pathname = usePathname();
   const { values } = useI18n();
+
+  if (loading) return null;
 
   return (
     <main>

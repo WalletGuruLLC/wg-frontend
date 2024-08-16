@@ -3,8 +3,12 @@
 import Image from "next/image";
 
 import Metatags from "~/components/metatags";
+import { useAuthedUserInfoQuery } from "~/lib/data-access";
 
 export default function AuthLayot(props: { children: React.ReactNode }) {
+  const { data, error, isLoading } = useAuthedUserInfoQuery();
+  console.log({ data, error, isLoading });
+
   return (
     <main>
       <Metatags />
