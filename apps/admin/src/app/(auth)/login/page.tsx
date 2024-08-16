@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { User } from "lucide-react";
 
 import { Checkbox } from "@wg-frontend/ui/checkbox";
@@ -17,12 +18,14 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
-import { useLoginMutation } from "~/lib/data-access";
+import { useAuthedUserInfoQuery, useLoginMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
 
 export default function LoginPage() {
+  const { data, isLoading } = useAuthedUserInfoQuery();
+
   const { values } = useI18n();
 
   const form = useForm({
@@ -37,6 +40,9 @@ export default function LoginPage() {
   const { mutate, error, isPending } = useLoginMutation({
     onSuccess: (data) => console.log("succ:data", data),
   });
+
+  if (!isLoading && data?.First) redirect("/reset-password");
+  if (!isLoading && !data?.First) redirect("/");
 
   return (
     <Form {...form}>

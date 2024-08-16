@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import {
   Form,
@@ -13,12 +14,17 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
-import { useTwoFactorAuthenticationMutation } from "~/lib/data-access";
+import {
+  useAuthedUserInfoQuery,
+  useTwoFactorAuthenticationMutation,
+} from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
 
 export default function TwoFactorAuthenticationPage() {
+  const { data, isLoading } = useAuthedUserInfoQuery();
+
   const { values } = useI18n();
 
   const form = useForm({
@@ -29,6 +35,9 @@ export default function TwoFactorAuthenticationPage() {
   });
 
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation();
+
+  if (!isLoading && data?.First) redirect("/reset-password");
+  if (!isLoading && !data?.First) redirect("/");
 
   return (
     <Form {...form}>
