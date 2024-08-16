@@ -9,7 +9,7 @@ export default function AuthLayot(props: { children: React.ReactNode }) {
     <main>
       <Metatags />
 
-      <div className="flex h-screen items-center justify-center bg-black text-white">
+      <div className="flex h-screen items-center justify-center overflow-auto bg-black text-white">
         <div className="flex flex-col items-center space-y-12">
           <Image
             src="/logos/imagotype.png"
@@ -17,6 +17,7 @@ export default function AuthLayot(props: { children: React.ReactNode }) {
             alt="Logo"
             width={213}
             height={48}
+            priority
           />
           <div className="w-[500px]">{props.children}</div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import {
   Form,
@@ -13,22 +14,38 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
-import { useTwoFactorAuthentication } from "~/lib/data-access";
+import {
+  useAuthedUserInfoQuery,
+  useTwoFactorAuthenticationMutation,
+} from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
 
 export default function TwoFactorAuthenticationPage() {
+  const { data, isLoading } = useAuthedUserInfoQuery();
+
   const { values } = useI18n();
 
   const form = useForm({
     schema: twoFactorAuthenticationValidator,
     defaultValues: {
-      code: "",
+      email: localStorage.getItem("email") ?? "",
+      otp: "",
     },
   });
 
-  const { mutate, isPending, error } = useTwoFactorAuthentication();
+  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
+    onSuccess: (data) => {
+      localStorage.removeItem("email");
+      localStorage.setItem("access-token", data.token);
+      console.log("data,", data);
+    },
+  });
+
+  if (!isLoading && data?.First) redirect("/reset-password");
+  if (!isLoading && data !== undefined && !data.First) redirect("/");
+  if (localStorage.getItem("email") === null) redirect("/login");
 
   return (
     <Form {...form}>
@@ -45,7 +62,7 @@ export default function TwoFactorAuthenticationPage() {
               )}
               <FormField
                 control={form.control}
-                name="code"
+                name="otp"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -61,7 +78,7 @@ export default function TwoFactorAuthenticationPage() {
               />
               <p className="text-base text-[#3678B1]">
                 {values["auth.2fa.code.valid-for"]}
-                {" 00:30"}
+                {" 05:00"}
               </p>
             </div>
           }
@@ -74,7 +91,7 @@ export default function TwoFactorAuthenticationPage() {
             <Link
               href="/login"
               onClick={() => {
-                localStorage.removeItem("access-token");
+                localStorage.removeItem("email");
               }}
             >
               <Button variant="link">

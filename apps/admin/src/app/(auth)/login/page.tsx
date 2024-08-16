@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
 import { User } from "lucide-react";
 
 import { Checkbox } from "@wg-frontend/ui/checkbox";
@@ -17,12 +18,15 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
-import { useLogin } from "~/lib/data-access";
+import { useAuthedUserInfoQuery, useLoginMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { data, isLoading } = useAuthedUserInfoQuery();
+
   const { values } = useI18n();
 
   const form = useForm({
@@ -34,7 +38,15 @@ export default function LoginPage() {
     },
   });
 
-  const { mutate, error, isPending } = useLogin();
+  const { mutate, error, isPending } = useLoginMutation({
+    onSuccess: () => {
+      localStorage.setItem("email", form.getValues().email);
+      router.push("/login/2fa");
+    },
+  });
+
+  if (!isLoading && data?.First) redirect("/reset-password");
+  if (!isLoading && data !== undefined && !data.First) redirect("/");
 
   return (
     <Form {...form}>

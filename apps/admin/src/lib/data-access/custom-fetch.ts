@@ -18,22 +18,15 @@ export default async function customFetch<ResponseType>(
       ...params[1]?.headers,
       Authorization: `Bearer ${localStorage.getItem("access-token")}`,
     },
-  }).catch((err) => {
-    throw new Error("UE1", {
-      cause: err,
-    });
   });
-
-  if (!res.ok) throw new Error("UE2");
 
   const json = (await res.json()) as {
     statusCode: number;
     customCode: string;
-    data?: ResponseType;
+    data: ResponseType;
   };
 
-  if (json.statusCode !== 200)
-    throw new Error(json.customCode, { cause: json });
+  if (!res.ok) throw new Error(json.customCode, { cause: json });
 
-  return json.data as ResponseType; // double cast to avoid TS thinking its undefined
+  return json.data;
 }

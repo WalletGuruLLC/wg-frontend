@@ -2,6 +2,7 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -16,8 +17,9 @@ import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
 import {
-  useForgotPasswordCodeStep,
-  useForgotPasswordEmailStep,
+  useAuthedUserInfoQuery,
+  useForgotPasswordCodeStepMutation,
+  useForgotPasswordEmailStepMutation,
 } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import {
@@ -27,7 +29,12 @@ import {
 import AuthCard from "../_components/auth-card";
 
 export default function ForgotPasswordPage() {
+  const { data, isLoading } = useAuthedUserInfoQuery();
+
   const [email, setEmail] = useState<string | null>(null);
+
+  if (!isLoading && data?.First) redirect("/reset-password");
+  if (!isLoading && data !== undefined && !data.First) redirect("/");
 
   return email === null ? (
     <EmailStep setEmail={setEmail} />
@@ -50,7 +57,7 @@ function EmailStep({ setEmail }: Props) {
     },
   });
 
-  const { mutate, isPending, error } = useForgotPasswordEmailStep({
+  const { mutate, isPending, error } = useForgotPasswordEmailStepMutation({
     onSuccess: () => {
       setEmail(form.getValues().email);
     },
@@ -115,6 +122,7 @@ function CodeStep({
   email: string;
 }) {
   const { values } = useI18n();
+  const router = useRouter();
 
   const form = useForm({
     schema: forgotPasswordCodeStepValidator,
@@ -126,7 +134,13 @@ function CodeStep({
     },
   });
 
-  const { mutate, isPending, error } = useForgotPasswordCodeStep();
+  const { mutate, isPending, error } = useForgotPasswordCodeStepMutation({
+    onSuccess: () => {
+      setEmail(null);
+      localStorage.removeItem("access-token");
+      void router.replace("/login");
+    },
+  });
 
   return (
     <Form {...form}>

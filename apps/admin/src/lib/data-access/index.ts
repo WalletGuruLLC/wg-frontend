@@ -1,10 +1,16 @@
+"use client";
+
 import type { z } from "zod";
 
 import type {
   UseMutationOptions as _UseMutationOptions,
   UseQueryOptions as _UseQueryOptions,
 } from "@wg-frontend/data-access";
-import { useMutation, useQuery } from "@wg-frontend/data-access";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@wg-frontend/data-access";
 
 import type {
   forgotPasswordCodeStepValidator,
@@ -16,11 +22,9 @@ import type {
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
-// TODO
-type UseQueryOptions<TInput = unknown, TOutput = unknown> = _UseQueryOptions<
-  TInput,
-  Error,
-  TOutput
+type UseQueryOptions<TOutput> = Omit<
+  _UseQueryOptions<TOutput>,
+  "queryFn" | "queryKey"
 >;
 
 type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
@@ -28,102 +32,154 @@ type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
   "mutationFn" | "mutationKey"
 >;
 
-export function useUserData(
-  input: {
-    id: string;
+export function useAuthedUserInfoQuery<
+  TOutput = {
+    PrivacyPolicy: boolean;
+    MfaEnabled: boolean;
+    CreateDate: string;
+    TermsConditions: boolean;
+    Otp: string;
+    SendSms: boolean;
+    State: 1 | 2 | 3;
+    Email: string;
+    MfaType: "TOTP" | "SMS";
+    First: boolean;
+    RoleId: string;
+    SendEmails: boolean;
+    UpdateDate: string;
+    Picture: string;
+    ServiceProviderId: string;
+    FirstName: string;
+    Id: string;
+    Active: boolean;
+    LastName: string;
+    type: "PLATFORM" | "PROVIDER" | "WALLET";
   },
-  options: Omit<UseQueryOptions, "queryFn" | "queryKey"> = {},
-) {
+>(options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
     ...options,
-    queryKey: ["use-user-data"],
+    retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
+    queryKey: ["authed-user-info"],
     queryFn: () => {
-      return customFetch<{ name: string }>(
-        "https://api.example.com/user-data/" + input.id,
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/get/info/access",
       );
     },
   });
 }
 
-export function useLogin(
+export function useLoginMutation(
+  options: UseMutationOptions<z.infer<typeof loginValidator>, undefined> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["login"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/signin",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
+    },
+  });
+}
+
+export function useTwoFactorAuthenticationMutation(
   options: UseMutationOptions<
-    z.infer<typeof loginValidator>,
+    z.infer<typeof twoFactorAuthenticationValidator>,
     {
       token: string;
       user: {
-        id: string;
-        userName: string;
-        email: string;
-        type: string;
-        roleId: number;
-        active: boolean;
-        state: number;
-        first: boolean;
-        serviceProviderId: number;
-        lastLogin: string;
-        accessLevel: number;
+        PrivacyPolicy: boolean;
+        MfaEnabled: boolean;
+        CreateDate: string;
+        TermsConditions: boolean;
+        Otp: string;
+        SendSms: boolean;
+        State: 0 | 2 | 3;
+        Email: string;
+        MfaType: "TOTP" | "SMS";
+        First: boolean;
+        SendEmails: boolean;
+        UpdateDate: string;
+        Picture: string;
+        RoleId: string;
+        ServiceProviderId: string;
+        Active: boolean;
+        type: "PLATFORM" | "PROVIDER" | "WALLET";
       };
     }
   > = {},
 ) {
+  const cq = useQueryClient();
   return useMutation({
     ...options,
-    mutationKey: ["use-login"],
+    mutationKey: ["two-factor-authentication"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/signin",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/verify/otp/mfa",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
     },
   });
 }
 
-export function useResetPassword(
+export function useResetPasswordMutation(
   options: UseMutationOptions<
     z.infer<typeof resetPasswordValidator>,
     undefined
   > = {},
 ) {
+  const cq = useQueryClient();
   return useMutation({
     ...options,
-    mutationKey: ["use-reset-password"],
+    mutationKey: ["reset-password"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/change-password",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
     },
   });
 }
 
-export function useTwoFactorAuthentication(
-  options: UseMutationOptions<
-    z.infer<typeof twoFactorAuthenticationValidator>,
-    undefined
-  > = {},
-) {
-  return useMutation({
-    ...options,
-    mutationKey: ["use-two-factor-authentication"],
-    mutationFn: (input) => {
-      return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/verify/otp/mfa",
-        {
-          method: "POST",
-          body: JSON.stringify(input),
-        },
-      );
-    },
-  });
-}
-
-export function useForgotPasswordEmailStep(
+export function useForgotPasswordEmailStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordEmailStepValidator>,
     undefined
@@ -131,36 +187,50 @@ export function useForgotPasswordEmailStep(
 ) {
   return useMutation({
     ...options,
-    mutationKey: ["use-forgot-password-email-step"],
+    mutationKey: ["forgot-password-email-step"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/forgot-password",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/forgot-password",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
     },
   });
 }
 
-export function useForgotPasswordCodeStep(
+export function useForgotPasswordCodeStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordCodeStepValidator>,
     undefined
   > = {},
 ) {
+  const cq = useQueryClient();
   return useMutation({
     ...options,
-    mutationKey: ["use-forgot-password-code-step"],
+    mutationKey: ["forgot-password-code-step"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/confirm-password",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/confirm-password",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
     },
   });
 }
