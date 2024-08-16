@@ -96,27 +96,6 @@ export function useLoginMutation(
   });
 }
 
-export function useResetPasswordMutation(
-  options: UseMutationOptions<
-    z.infer<typeof resetPasswordValidator>,
-    undefined
-  > = {},
-) {
-  return useMutation({
-    ...options,
-    mutationKey: ["reset-password"],
-    mutationFn: (input) => {
-      return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
-        {
-          method: "POST",
-          body: JSON.stringify(input),
-        },
-      );
-    },
-  });
-}
-
 export function useTwoFactorAuthenticationMutation(
   options: UseMutationOptions<
     z.infer<typeof twoFactorAuthenticationValidator>,
@@ -144,6 +123,27 @@ export function useTwoFactorAuthenticationMutation(
       void cq.invalidateQueries({
         queryKey: ["authed-user-info"],
       });
+    },
+  });
+}
+
+export function useResetPasswordMutation(
+  options: UseMutationOptions<
+    z.infer<typeof resetPasswordValidator>,
+    undefined
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["reset-password"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
     },
   });
 }
