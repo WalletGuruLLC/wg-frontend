@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LogOut, Menu, User, Users, Wallet } from "lucide-react";
 
+import { useQueryClient } from "@wg-frontend/data-access";
 import { cn } from "@wg-frontend/ui";
 import { Button } from "@wg-frontend/ui/button";
 import { Separator } from "@wg-frontend/ui/separator";
@@ -48,6 +49,7 @@ const NAV = [
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
+  const cq = useQueryClient();
   const loading = useAuthGuard();
 
   const pathname = usePathname();
@@ -94,8 +96,14 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             <Separator className="ml-4 w-1/2" />
             <div className="px-7 py-4 pb-12">
               <Link
-                href="/logout"
+                href="/login"
                 className="flex flex-row items-center gap-3 text-xs font-light"
+                onClick={() => {
+                  localStorage.removeItem("access-token");
+                  void cq.invalidateQueries({
+                    queryKey: ["authed-user-info"],
+                  });
+                }}
               >
                 <LogOut className="size-6" strokeWidth={0.75} />
                 {values["dashboard.layout.logout"]}
@@ -148,7 +156,13 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                   ))}
                   <div className="px-3 py-12">
                     <Link
-                      href="/logout"
+                      href="/login"
+                      onClick={() => {
+                        localStorage.removeItem("access-token");
+                        void cq.invalidateQueries({
+                          queryKey: ["authed-user-info"],
+                        });
+                      }}
                       className="flex flex-row items-center gap-3 text-xs font-light"
                     >
                       <LogOut className="size-6" strokeWidth={0.75} />

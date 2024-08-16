@@ -31,7 +31,7 @@ export default function TwoFactorAuthenticationPage() {
     schema: twoFactorAuthenticationValidator,
     defaultValues: {
       email: localStorage.getItem("email") ?? "",
-      code: "",
+      otp: "",
     },
   });
 
@@ -39,6 +39,7 @@ export default function TwoFactorAuthenticationPage() {
     onSuccess: (data) => {
       localStorage.removeItem("email");
       localStorage.setItem("access-token", data.token);
+      console.log("data,", data);
     },
   });
 
@@ -61,7 +62,7 @@ export default function TwoFactorAuthenticationPage() {
               )}
               <FormField
                 control={form.control}
-                name="code"
+                name="otp"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -77,7 +78,7 @@ export default function TwoFactorAuthenticationPage() {
               />
               <p className="text-base text-[#3678B1]">
                 {values["auth.2fa.code.valid-for"]}
-                {" 00:30"}
+                {" 05:00"}
               </p>
             </div>
           }

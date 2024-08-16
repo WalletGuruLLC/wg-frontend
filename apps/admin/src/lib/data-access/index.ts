@@ -115,6 +115,9 @@ export function useTwoFactorAuthenticationMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
     },
@@ -133,17 +136,27 @@ export function useResetPasswordMutation(
     undefined
   > = {},
 ) {
+  const cq = useQueryClient();
   return useMutation({
     ...options,
     mutationKey: ["reset-password"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/change-password",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/change-password",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
     },
   });
 }
@@ -159,10 +172,13 @@ export function useForgotPasswordEmailStepMutation(
     mutationKey: ["forgot-password-email-step"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/forgot-password",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/forgot-password",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
     },
@@ -175,17 +191,28 @@ export function useForgotPasswordCodeStepMutation(
     undefined
   > = {},
 ) {
+  const cq = useQueryClient();
   return useMutation({
     ...options,
     mutationKey: ["forgot-password-code-step"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/user/confirm-password",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/confirm-password",
         {
           method: "POST",
           body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["authed-user-info"],
+      });
     },
   });
 }

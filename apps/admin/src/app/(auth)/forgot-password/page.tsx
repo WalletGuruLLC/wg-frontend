@@ -2,7 +2,7 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -122,6 +122,7 @@ function CodeStep({
   email: string;
 }) {
   const { values } = useI18n();
+  const router = useRouter();
 
   const form = useForm({
     schema: forgotPasswordCodeStepValidator,
@@ -133,7 +134,13 @@ function CodeStep({
     },
   });
 
-  const { mutate, isPending, error } = useForgotPasswordCodeStepMutation();
+  const { mutate, isPending, error } = useForgotPasswordCodeStepMutation({
+    onSuccess: () => {
+      setEmail(null);
+      localStorage.removeItem("access-token");
+      void router.replace("/login");
+    },
+  });
 
   return (
     <Form {...form}>

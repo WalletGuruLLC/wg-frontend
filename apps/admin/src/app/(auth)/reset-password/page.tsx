@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -23,6 +23,7 @@ import AuthCard from "../_components/auth-card";
 
 export default function ResetPasswordPage() {
   const { data, isLoading } = useAuthedUserInfoQuery();
+  const router = useRouter();
 
   const { values } = useI18n();
 
@@ -37,12 +38,14 @@ export default function ResetPasswordPage() {
 
   const { mutate, isPending, error } = useResetPasswordMutation({
     onSuccess: () => {
-      console.log("Password reset successfully");
+      localStorage.removeItem("access-token");
+      router.replace("/login");
     },
   });
 
-  if (!isLoading && data !== undefined && !data.First) redirect("/");
   if (!isLoading && !data) redirect("/login");
+
+  console.log(data);
 
   return (
     <Form {...form}>

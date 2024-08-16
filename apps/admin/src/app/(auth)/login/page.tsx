@@ -41,7 +41,7 @@ export default function LoginPage() {
   const { mutate, error, isPending } = useLoginMutation({
     onSuccess: () => {
       localStorage.setItem("email", form.getValues().email);
-      router.push("./2fa");
+      router.push("/login/2fa");
     },
   });
 

@@ -4,7 +4,7 @@ const validPassword = (err?: string) =>
   z
     .string()
     .min(8, err)
-    .max(12, err)
+    .max(16, err)
     .refine((value) => value.match(/[a-z]/), err)
     .refine((value) => value.match(/[A-Z]/), err)
     .refine((value) => value.match(/\d/), err)
@@ -29,7 +29,7 @@ export const resetPasswordValidator = z
 
 export const twoFactorAuthenticationValidator = z.object({
   email: z.string().email("auth.login.email.errors.invalid"),
-  code: z.string().min(1, "auth.2fa.code.errors.invalid"),
+  otp: z.string().min(1, "auth.2fa.code.errors.invalid"),
 });
 
 export const forgotPasswordEmailStepValidator = z.object({
