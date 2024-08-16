@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
@@ -17,6 +16,7 @@ import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import {
   useAuthedUserInfoQuery,
+  useResendCodeMutation,
   useTwoFactorAuthenticationMutation,
 } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
@@ -45,6 +45,7 @@ export default function TwoFactorAuthenticationPage() {
       router.replace("/dashboard");
     },
   });
+  const { mutate: resendCode, isPending: isSending } = useResendCodeMutation();
 
   if (!isLoading && data?.First) router.replace("/reset-password");
   // if (!isLoading && data !== undefined && !data.First) router.replace("/");
@@ -108,16 +109,17 @@ export default function TwoFactorAuthenticationPage() {
             </Button>
           }
           secondaryButton={
-            <Link
-              href="/login"
+            <Button
+              variant="link"
+              disabled={isSending}
+              type="button"
               onClick={() => {
-                localStorage.removeItem("email");
+                const email = localStorage.getItem("email");
+                if (email) resendCode({ email });
               }}
             >
-              <Button variant="link">
-                {values["auth.2fa.secondary-button"]}
-              </Button>
-            </Link>
+              {values[isSending ? "loading" : "auth.2fa.secondary-button"]}
+            </Button>
           }
         />
       </form>

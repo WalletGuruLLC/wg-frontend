@@ -148,6 +148,27 @@ export function useTwoFactorAuthenticationMutation(
   });
 }
 
+export function useResendCodeMutation(
+  options: UseMutationOptions<{ email: string }, undefined> = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["resend-code"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/send-otp",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    },
+  });
+}
+
 export function useResetPasswordMutation(
   options: UseMutationOptions<
     z.infer<typeof resetPasswordValidator>,
