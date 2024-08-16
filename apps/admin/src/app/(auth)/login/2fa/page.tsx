@@ -90,7 +90,7 @@ export default function TwoFactorAuthenticationPage() {
             <Link
               href="/login"
               onClick={() => {
-                localStorage.removeItem("access-token");
+                localStorage.removeItem("email");
               }}
             >
               <Button variant="link">
