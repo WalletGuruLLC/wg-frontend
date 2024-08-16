@@ -55,7 +55,7 @@ export default function UserAdd() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name User</FormLabel>
               <FormControl>
                 <Input required {...field} />
               </FormControl>
