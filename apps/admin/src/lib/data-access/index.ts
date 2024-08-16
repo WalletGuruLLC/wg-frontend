@@ -57,6 +57,7 @@ export function useAuthedUserInfoQuery<
   },
 >(options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
+    ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
     queryKey: ["authed-user-info"],
     queryFn: () => {
@@ -64,7 +65,6 @@ export function useAuthedUserInfoQuery<
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/get/info/access",
       );
     },
-    ...options,
   });
 }
 
@@ -101,7 +101,25 @@ export function useTwoFactorAuthenticationMutation(
     z.infer<typeof twoFactorAuthenticationValidator>,
     {
       token: string;
-      user: unknown;
+      user: {
+        PrivacyPolicy: boolean;
+        MfaEnabled: boolean;
+        CreateDate: string;
+        TermsConditions: boolean;
+        Otp: string;
+        SendSms: boolean;
+        State: 0 | 2 | 3;
+        Email: string;
+        MfaType: "TOTP" | "SMS";
+        First: boolean;
+        SendEmails: boolean;
+        UpdateDate: string;
+        Picture: string;
+        RoleId: string;
+        ServiceProviderId: string;
+        Active: boolean;
+        type: "PLATFORM" | "PROVIDER" | "WALLET";
+      };
     }
   > = {},
 ) {

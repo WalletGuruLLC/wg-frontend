@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Home, LogOut, Menu, User, Users, Wallet } from "lucide-react";
 
 import { useQueryClient } from "@wg-frontend/data-access";
@@ -50,6 +50,7 @@ const NAV = [
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
   const cq = useQueryClient();
+  const router = useRouter();
   const loading = useAuthGuard();
 
   const pathname = usePathname();
@@ -95,19 +96,22 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             </div>
             <Separator className="ml-4 w-1/2" />
             <div className="px-7 py-4 pb-12">
-              <Link
-                href="/login"
+              <div
                 className="flex flex-row items-center gap-3 text-xs font-light"
                 onClick={() => {
-                  localStorage.removeItem("access-token");
-                  void cq.invalidateQueries({
-                    queryKey: ["authed-user-info"],
-                  });
+                  void cq
+                    .invalidateQueries({
+                      queryKey: ["authed-user-info"],
+                    })
+                    .then(() => {
+                      localStorage.removeItem("access-token");
+                      router.refresh();
+                    });
                 }}
               >
                 <LogOut className="size-6" strokeWidth={0.75} />
                 {values["dashboard.layout.logout"]}
-              </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -155,19 +159,22 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                     </Link>
                   ))}
                   <div className="px-3 py-12">
-                    <Link
-                      href="/login"
+                    <div
                       onClick={() => {
-                        localStorage.removeItem("access-token");
-                        void cq.invalidateQueries({
-                          queryKey: ["authed-user-info"],
-                        });
+                        void cq
+                          .invalidateQueries({
+                            queryKey: ["authed-user-info"],
+                          })
+                          .then(() => {
+                            localStorage.removeItem("access-token");
+                            router.refresh();
+                          });
                       }}
                       className="flex flex-row items-center gap-3 text-xs font-light"
                     >
                       <LogOut className="size-6" strokeWidth={0.75} />
                       {values["dashboard.layout.logout"]}
-                    </Link>
+                    </div>
                   </div>
                 </nav>
               </SheetContent>
