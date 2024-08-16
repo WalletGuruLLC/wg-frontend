@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 
 import { Checkbox } from "@wg-frontend/ui/checkbox";
@@ -45,8 +45,8 @@ export default function LoginPage() {
     },
   });
 
-  if (!isLoading && data?.First) redirect("/reset-password");
-  if (!isLoading && data !== undefined && !data.First) redirect("/");
+  if (!isLoading && data?.First) router.replace("/reset-password");
+  if (!isLoading && data !== undefined && !data.First) router.replace("/");
 
   return (
     <Form {...form}>
