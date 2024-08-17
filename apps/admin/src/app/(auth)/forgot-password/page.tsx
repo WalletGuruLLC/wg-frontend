@@ -2,7 +2,7 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -17,7 +17,6 @@ import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
 import {
-  useAuthedUserInfoQuery,
   useForgotPasswordCodeStepMutation,
   useForgotPasswordEmailStepMutation,
 } from "~/lib/data-access";
@@ -29,12 +28,7 @@ import {
 import AuthCard from "../_components/auth-card";
 
 export default function ForgotPasswordPage() {
-  const { data, isLoading } = useAuthedUserInfoQuery();
-
   const [email, setEmail] = useState<string | null>(null);
-
-  if (!isLoading && data?.First) redirect("/reset-password");
-  if (!isLoading && data !== undefined && !data.First) redirect("/");
 
   return email === null ? (
     <EmailStep setEmail={setEmail} />

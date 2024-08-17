@@ -15,7 +15,6 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import {
-  useAuthedUserInfoQuery,
   useResendCodeMutation,
   useTwoFactorAuthenticationMutation,
 } from "~/lib/data-access";
@@ -24,7 +23,6 @@ import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
 
 export default function TwoFactorAuthenticationPage() {
-  const { data, isLoading } = useAuthedUserInfoQuery();
   const router = useRouter();
   const [countDown, setCountDown] = useState(60 * 5); // 5 minutes
 
@@ -46,9 +44,6 @@ export default function TwoFactorAuthenticationPage() {
     },
   });
   const { mutate: resendCode, isPending: isSending } = useResendCodeMutation();
-
-  if (!isLoading && data?.First) router.replace("/reset-password");
-  // if (!isLoading && data !== undefined && !data.First) router.replace("/");
 
   useEffect(() => {
     if (localStorage.getItem("email") === null) return router.replace("/login");

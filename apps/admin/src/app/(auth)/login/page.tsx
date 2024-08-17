@@ -18,15 +18,13 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
 import { PasswordInput } from "~/components/password-input";
-import { useAuthedUserInfoQuery, useLoginMutation } from "~/lib/data-access";
+import { useLoginMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { data, isLoading } = useAuthedUserInfoQuery();
-
   const { values } = useI18n();
 
   const form = useForm({
@@ -44,9 +42,6 @@ export default function LoginPage() {
       router.push("/login/2fa");
     },
   });
-
-  if (!isLoading && data?.First) router.replace("/reset-password");
-  // if (!isLoading && data !== undefined && !data.First) router.replace("/");
 
   return (
     <Form {...form}>
