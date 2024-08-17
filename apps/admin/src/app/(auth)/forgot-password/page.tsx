@@ -14,8 +14,6 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { Input } from "~/components/input";
-import { PasswordInput } from "~/components/password-input";
 import {
   useForgotPasswordCodeStepMutation,
   useForgotPasswordEmailStepMutation,
@@ -26,6 +24,8 @@ import {
   forgotPasswordEmailStepValidator,
 } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
+import { Input } from "../_components/auth-input";
+import { PasswordInput } from "../_components/auth-password-input";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState<string | null>(null);

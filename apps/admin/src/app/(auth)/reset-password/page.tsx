@@ -12,12 +12,12 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { PasswordInput } from "~/components/password-input";
 import { useResetPasswordMutation } from "~/lib/data-access";
 import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { resetPasswordValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
+import { PasswordInput } from "../_components/auth-password-input";
 
 export default function ResetPasswordPage() {
   const loading = useAuthGuard();

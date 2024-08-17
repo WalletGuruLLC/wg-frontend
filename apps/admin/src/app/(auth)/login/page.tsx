@@ -16,12 +16,12 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { Input } from "~/components/input";
-import { PasswordInput } from "~/components/password-input";
 import { useLoginMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
+import { Input } from "../_components/auth-input";
+import { PasswordInput } from "../_components/auth-password-input";
 
 export default function LoginPage() {
   const router = useRouter();

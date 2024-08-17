@@ -6,8 +6,8 @@ import { Eye as EyeIcon, EyeOff as EyeOffIcon } from "lucide-react";
 import { cn } from "@wg-frontend/ui";
 import { Button } from "@wg-frontend/ui/button";
 
-import type { InputProps } from "./input";
-import { Input } from "./input";
+import type { InputProps } from "./auth-input";
+import { Input } from "./auth-input";
 
 const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, ...props }, ref) => {
