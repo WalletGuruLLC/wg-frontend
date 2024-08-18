@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { CircleCheck, TriangleAlert } from "lucide-react";
+import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
 import { z } from "zod";
 
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
@@ -17,7 +17,28 @@ import { Switch } from "../_components/dashboard-switch";
 
 export default function RolesPage() {
   return (
-    <div>
+    <div className="w-full space-y-10">
+      <h1 className="text-2xl font-semibold text-[#3A3A3A]">Roles</h1>
+      <div className="flex flex-row items-center space-x-6">
+        <div className="relative flex-1">
+          <Input
+            placeholder="Search"
+            className="rounded-full border border-black"
+          />
+          <Search
+            className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
+            strokeWidth={0.75}
+          />
+        </div>
+        <AddOrEditDialog
+          trigger={
+            <Button className="flex h-max w-48 flex-row items-center">
+              <p className="flex-1 text-lg font-light">Add Role</p>
+              <PlusCircle strokeWidth={0.75} className="size-6" />
+            </Button>
+          }
+        />
+      </div>
       <div>
         <AddOrEditDialog
           role={{
@@ -27,7 +48,6 @@ export default function RolesPage() {
           }}
           trigger={<Button>Open Edit</Button>}
         />
-        <AddOrEditDialog trigger={<Button>Open Add</Button>} />
       </div>
       <div>
         <SwitchActiveStatusDialog
@@ -151,10 +171,10 @@ function SwitchActiveStatusDialog(props: {
     <ConfirmDialog
       trigger={<Switch checked={props.role.isActive} />}
       actions={[
-        <Button className="w-full" type="submit" key="yes">
+        <Button className="w-full" key="yes">
           {values[`${valuesPrexif}.primary-button`]}
         </Button>,
-        <Button className="w-full" type="submit" variant="secondary" key="no">
+        <Button className="w-full" variant="secondary" key="no">
           {values[`${valuesPrexif}.secondary-button`]}
         </Button>,
       ]}

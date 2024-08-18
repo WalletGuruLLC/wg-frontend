@@ -181,7 +181,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </header>
-          {props.children}
+          <div className="px-4 pt-8">{props.children}</div>
         </div>
       </div>
     </main>
