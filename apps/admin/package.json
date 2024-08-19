@@ -15,17 +15,18 @@
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.10.1",
-    "@wg-frontend/ui": "workspace:*",
-    "@wg-frontend/hooks": "workspace:*",
+    "@tanstack/react-table": "^8.20.1",
     "@wg-frontend/data-access": "workspace:*",
+    "@wg-frontend/hooks": "workspace:*",
     "@wg-frontend/i18n": "workspace:*",
+    "@wg-frontend/ui": "workspace:*",
     "geist": "^1.3.0",
     "lucide-react": "^0.399.0",
     "next": "^14.2.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "zod": "^3.23.8",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",

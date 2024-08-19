@@ -1,6 +1,12 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
 import { z } from "zod";
 
@@ -14,8 +20,97 @@ import Dialog from "../_components/dashboard-dialog";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
+import Table from "../_components/dashboard-table";
+
+interface Role {
+  id: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+}
+
+const roles: Role[] = [
+  {
+    id: "Admin",
+    name: "Admin",
+    description: "Admin Desc",
+    isActive: true,
+  },
+  {
+    id: "Marketing",
+    name: "Marketing",
+    description: "Marketing Desc",
+    isActive: true,
+  },
+  {
+    id: "Sales",
+    name: "Sales",
+    description: "Sales Desc",
+    isActive: false,
+  },
+  {
+    id: "Support",
+    name: "Support",
+    description: "Support Desc",
+    isActive: true,
+  },
+];
+
+const columnHelper = createColumnHelper<Role>();
+
+const columns = [
+  columnHelper.accessor("name", {
+    cell: (info) => info.getValue(),
+    header: "Role",
+    meta: {
+      main: true,
+    },
+  }),
+  columnHelper.accessor("isActive", {
+    header: "Active",
+    cell: (info) => (
+      <SwitchActiveStatusDialog
+        role={{
+          id: info.row.original.id,
+          name: info.row.original.name,
+          isActive: info.getValue(),
+        }}
+      />
+    ),
+  }),
+  columnHelper.display({
+    header: "Actions",
+    cell: (info) => (
+      <div className="flex flex-row space-x-4">
+        <AddOrEditDialog
+          role={{
+            id: info.row.original.id,
+            name: info.row.original.name,
+            description: info.row.original.description,
+          }}
+          trigger={
+            <Button className="font-semibold no-underline" variant="link">
+              Edit
+            </Button>
+          }
+        />
+        <Link href={`/dashboard/roles/${info.row.original.id}`}>
+          <Button className="font-semibold no-underline" variant="link">
+            Access
+          </Button>
+        </Link>
+      </div>
+    ),
+  }),
+];
 
 export default function RolesPage() {
+  const table = useReactTable({
+    data: roles,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   return (
     <div className="w-full space-y-10">
       <h1 className="text-2xl font-semibold text-[#3A3A3A]">Roles</h1>
@@ -39,6 +134,7 @@ export default function RolesPage() {
           }
         />
       </div>
+      <Table table={table} />
       <div>
         <AddOrEditDialog
           role={{
