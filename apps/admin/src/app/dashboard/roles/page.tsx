@@ -12,6 +12,7 @@ import { z } from "zod";
 
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
 
+import type { I18NValue } from "~/lib/i18n";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { useI18n } from "~/lib/i18n";
@@ -58,16 +59,50 @@ const roles: Role[] = [
 
 const columnHelper = createColumnHelper<Role>();
 
+function Header({ i18nValue }: { i18nValue: I18NValue }) {
+  const { value } = useI18n(i18nValue);
+  return value;
+}
+
+function Actions({
+  role,
+}: {
+  role: {
+    id: string;
+    name: string;
+    description: string;
+  };
+}) {
+  const { values } = useI18n();
+  return (
+    <div className="flex flex-row space-x-4">
+      <AddOrEditDialog
+        role={role}
+        trigger={
+          <Button className="font-semibold no-underline" variant="link">
+            {values["dashboard.roles.table.actions.edit"]}
+          </Button>
+        }
+      />
+      <Link href={`/dashboard/roles/${role.id}`}>
+        <Button className="font-semibold no-underline" variant="link">
+          {values["dashboard.roles.table.actions.access"]}
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
 const columns = [
   columnHelper.accessor("name", {
     cell: (info) => info.getValue(),
-    header: "Role",
+    header: () => <Header i18nValue="dashboard.roles.table.header.role" />,
     meta: {
       main: true,
     },
   }),
   columnHelper.accessor("isActive", {
-    header: "Active",
+    header: () => <Header i18nValue="dashboard.roles.table.header.is-active" />,
     cell: (info) => (
       <SwitchActiveStatusDialog
         role={{
@@ -79,27 +114,16 @@ const columns = [
     ),
   }),
   columnHelper.display({
-    header: "Actions",
+    id: "actions",
+    header: () => <Header i18nValue="dashboard.roles.table.header.actions" />,
     cell: (info) => (
-      <div className="flex flex-row space-x-4">
-        <AddOrEditDialog
-          role={{
-            id: info.row.original.id,
-            name: info.row.original.name,
-            description: info.row.original.description,
-          }}
-          trigger={
-            <Button className="font-semibold no-underline" variant="link">
-              Edit
-            </Button>
-          }
-        />
-        <Link href={`/dashboard/roles/${info.row.original.id}`}>
-          <Button className="font-semibold no-underline" variant="link">
-            Access
-          </Button>
-        </Link>
-      </div>
+      <Actions
+        role={{
+          id: info.row.original.id,
+          name: info.row.original.name,
+          description: info.row.original.description,
+        }}
+      />
     ),
   }),
 ];
@@ -135,32 +159,6 @@ export default function RolesPage() {
         />
       </div>
       <Table table={table} />
-      <div>
-        <AddOrEditDialog
-          role={{
-            id: "1",
-            name: "Admin",
-            description: "Admin role",
-          }}
-          trigger={<Button>Open Edit</Button>}
-        />
-      </div>
-      <div>
-        <SwitchActiveStatusDialog
-          role={{
-            id: "1",
-            name: "Admin",
-            isActive: true,
-          }}
-        />
-        <SwitchActiveStatusDialog
-          role={{
-            id: "2",
-            name: "Admin2",
-            isActive: false,
-          }}
-        />
-      </div>
     </div>
   );
 }

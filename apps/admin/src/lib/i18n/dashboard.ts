@@ -38,6 +38,11 @@ export const dashboardDict = {
       " Role, you are granting them system privileges. Proceed?",
     "dashboard.roles.activate-dialog.primary-button": "Yes",
     "dashboard.roles.activate-dialog.secondary-button": "No",
+    "dashboard.roles.table.header.role": "Role",
+    "dashboard.roles.table.header.is-active": "Active",
+    "dashboard.roles.table.header.actions": "Actions",
+    "dashboard.roles.table.actions.edit": "Edit",
+    "dashboard.roles.table.actions.access": "Access",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -75,5 +80,10 @@ export const dashboardDict = {
       " se le otorgarán privilegios en el sistema. ¿Desea continuar?",
     "dashboard.roles.activate-dialog.primary-button": "Sí",
     "dashboard.roles.activate-dialog.secondary-button": "No",
+    "dashboard.roles.table.header.role": "Rol",
+    "dashboard.roles.table.header.is-active": "Activo",
+    "dashboard.roles.table.header.actions": "Acciones",
+    "dashboard.roles.table.actions.edit": "Editar",
+    "dashboard.roles.table.actions.access": "Acceder",
   },
 } satisfies I18nDictionary;
