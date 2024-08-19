@@ -22,4 +22,6 @@ const dict = {
   },
 } satisfies I18nDictionary;
 
+export type I18NValue = keyof (typeof dict)[keyof typeof dict];
+
 export const { I18nProvider, useI18n } = createI18nHandlers(dict, "en");

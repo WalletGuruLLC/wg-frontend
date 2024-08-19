@@ -13,7 +13,6 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { Input } from "~/components/input";
 import {
   useResendCodeMutation,
   useTwoFactorAuthenticationMutation,
@@ -21,6 +20,7 @@ import {
 import { useI18n } from "~/lib/i18n";
 import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
+import { Input } from "../../_components/auth-input";
 
 export default function TwoFactorAuthenticationPage() {
   const router = useRouter();
