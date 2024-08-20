@@ -22,9 +22,11 @@ import { twoFactorAuthenticationValidator } from "~/lib/validators";
 import AuthCard from "../../_components/auth-card";
 import { Input } from "../../_components/auth-input";
 
+const COUNTDOWN_TIME = 60 * 5; // 5 minutes
+
 export default function TwoFactorAuthenticationPage() {
   const router = useRouter();
-  const [countDown, setCountDown] = useState(60 * 5); // 5 minutes
+  const [countDown, setCountDown] = useState(COUNTDOWN_TIME);
 
   const { values } = useI18n();
 
@@ -43,7 +45,11 @@ export default function TwoFactorAuthenticationPage() {
       router.replace("/dashboard");
     },
   });
-  const { mutate: resendCode, isPending: isSending } = useResendCodeMutation();
+  const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({
+    onSuccess: () => {
+      setCountDown(COUNTDOWN_TIME);
+    },
+  });
 
   useEffect(() => {
     if (localStorage.getItem("email") === null) return router.replace("/login");
