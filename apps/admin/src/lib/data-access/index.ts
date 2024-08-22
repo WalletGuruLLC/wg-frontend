@@ -62,7 +62,7 @@ export function useAuthedUserInfoQuery<
     queryKey: ["authed-user-info"],
     queryFn: () => {
       return customFetch<TOutput>(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/get/info/access",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
       );
     },
   });
