@@ -48,8 +48,31 @@ export const forgotPasswordCodeStepValidator = z
     path: ["confirmPassword"],
   });
 
-export const addRoleValidator = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1),
+export const paginationAndSearchValidator = z.object({
+  page: z.string().optional(),
+  items: z.string().optional(),
+  search: z.string().optional(),
+});
+
+export const addOrEditRoleValidator = z.object({
+  name: z
+    .string()
+    .min(1)
+    .max(20, "dashboard.roles.edit-dialog.name.error")
+    .refine((v) => !/\d/.test(v), {
+      message: "dashboard.roles.edit-dialog.name.error",
+    }),
+  description: z
+    .string()
+    .min(1)
+    .max(50, "dashboard.roles.edit-dialog.description.error")
+    .refine((v) => !/\d/.test(v), {
+      message: "dashboard.roles.edit-dialog.description.error",
+    }),
   providerId: z.string().min(1),
+  roleId: z.string().optional(),
+});
+
+export const toggleRoleStatusValidator = z.object({
+  roleId: z.string().min(1),
 });

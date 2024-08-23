@@ -1,68 +1,49 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { z } from "zod";
+import { useEffect } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
+import {
+  CircleCheck,
+  Loader2,
+  PlusCircle,
+  Search,
+  TriangleAlert,
+} from "lucide-react";
 
+import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
+import type { Role } from "~/lib/data-access";
 import type { I18nKey } from "~/lib/i18n";
+import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
+import {
+  useAddOrEditRoleMutation,
+  useGetRolesQuery,
+  useToggleRoleStatusMutation,
+} from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
-import { addRoleValidator } from "~/lib/validators";
+import { addOrEditRoleValidator } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
 import Dialog from "../_components/dashboard-dialog";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
-import Table from "../_components/dashboard-table";
-
-interface Role {
-  id: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-}
-
-const roles: Role[] = [
-  {
-    id: "Admin",
-    name: "Admin",
-    description: "Admin Desc",
-    isActive: true,
-  },
-  {
-    id: "Marketing",
-    name: "Marketing",
-    description: "Marketing Desc",
-    isActive: true,
-  },
-  {
-    id: "Sales",
-    name: "Sales",
-    description: "Sales Desc",
-    isActive: false,
-  },
-  {
-    id: "Support",
-    name: "Support",
-    description: "Support Desc",
-    isActive: true,
-  },
-];
-
-const columnHelper = createColumnHelper<Role>();
-
-function Header({ i18nValue }: { i18nValue: I18nKey }) {
-  const { value } = useI18n(i18nValue);
-  return value;
-}
+import Table, {
+  ColumnHeader,
+  PaginationFooter,
+} from "../_components/dashboard-table";
 
 function Actions({
   role,
@@ -93,16 +74,20 @@ function Actions({
   );
 }
 
+const columnHelper = createColumnHelper<Role>();
+
 const columns = [
   columnHelper.accessor("name", {
     cell: (info) => info.getValue(),
-    header: () => <Header i18nValue="dashboard.roles.table.header.role" />,
+    header: () => <ColumnHeader i18nKey="dashboard.roles.table.header.role" />,
     meta: {
       main: true,
     },
   }),
-  columnHelper.accessor("isActive", {
-    header: () => <Header i18nValue="dashboard.roles.table.header.is-active" />,
+  columnHelper.accessor("active", {
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.roles.table.header.is-active" />
+    ),
     cell: (info) => (
       <SwitchActiveStatusDialog
         role={{
@@ -114,8 +99,10 @@ const columns = [
     ),
   }),
   columnHelper.display({
-    id: "actions",
-    header: () => <Header i18nValue="dashboard.roles.table.header.actions" />,
+    id: "Actions",
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.roles.table.header.actions" />
+    ),
     cell: (info) => (
       <Actions
         role={{
@@ -129,20 +116,68 @@ const columns = [
 ];
 
 export default function RolesPage() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
+    page: searchParams.get("page") ?? "1",
+    items: searchParams.get("items") ?? "10",
+    search: searchParams.get("query") ?? "",
+  };
+
+  const { data, isLoading } = useGetRolesQuery(paginationAndSearch);
+
   const table = useReactTable({
-    data: roles,
+    data: data?.roles ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
   });
 
+  function handlePaginationAndSearchChange(
+    newPaginationAndSearch: Partial<
+      z.infer<typeof paginationAndSearchValidator>
+    >,
+  ) {
+    const params = new URLSearchParams(searchParams);
+    for (const key in newPaginationAndSearch) {
+      const val =
+        newPaginationAndSearch[key as keyof typeof newPaginationAndSearch];
+      if (val) {
+        params.set(key, val);
+      } else {
+        params.delete(key);
+      }
+    }
+    router.replace(`${pathname}?${params.toString()}`, {
+      scroll: false,
+    });
+  }
+
+  const firstRowIdx =
+    Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
+    Number(paginationAndSearch.items) +
+    1;
+  const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
+
   return (
-    <div className="w-full space-y-10">
-      <h1 className="text-2xl font-semibold text-[#3A3A3A]">Roles</h1>
+    <div className="w-full space-y-10 pb-4">
+      <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
+        <span>Roles</span>
+        {isLoading && <Loader2 className="animate-spin" />}
+      </h1>
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
             placeholder="Search"
             className="rounded-full border border-black"
+            onChange={(e) =>
+              handlePaginationAndSearchChange({
+                ...paginationAndSearch,
+                search: e.target.value,
+              })
+            }
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
@@ -159,6 +194,31 @@ export default function RolesPage() {
         />
       </div>
       <Table table={table} />
+      <PaginationFooter
+        count={{
+          total: data?.total ?? 0,
+          firstRowIdx,
+          lastRowIdx,
+        }}
+        items={paginationAndSearch.items ?? "10"}
+        onItemsChange={(items) =>
+          handlePaginationAndSearchChange({ ...paginationAndSearch, items })
+        }
+        canPreviousPage={paginationAndSearch.page !== "1"}
+        canNextPage={data?.roles.length === Number(paginationAndSearch.items)}
+        onPreviousPage={() =>
+          handlePaginationAndSearchChange({
+            ...paginationAndSearch,
+            page: String(Number(paginationAndSearch.page) - 1),
+          })
+        }
+        onNextPage={() =>
+          handlePaginationAndSearchChange({
+            ...paginationAndSearch,
+            page: String(Number(paginationAndSearch.page) + 1),
+          })
+        }
+      />
     </div>
   );
 }
@@ -172,25 +232,49 @@ function AddOrEditDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
 
   const form = useForm({
-    schema: addRoleValidator,
+    schema: addOrEditRoleValidator,
     defaultValues: {
       name: props.role?.name ?? "",
       description: props.role?.description ?? "",
+      providerId: "EMPTY",
+      roleId: props.role?.id,
     },
   });
+
+  const { mutate, isPending } = useAddOrEditRoleMutation({
+    onError: (error) => {
+      toast.error(values[`errors.${error.message}` as I18nKey]);
+    },
+    onSuccess: () => {
+      close();
+      form.reset();
+    },
+  });
+
   const valuesPrefix =
     `dashboard.roles.${props.role ? "edit" : "add"}-dialog` as const;
 
+  // This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
+  useEffect(() => {
+    if (props.role) {
+      form.reset({
+        name: props.role.name,
+        description: props.role.description,
+        providerId: "EMPTY",
+        roleId: props.role.id,
+      });
+    }
+  }, [props.role, form]);
+
   return (
     <Dialog
+      key={props.role?.id ?? "add"}
+      isOpen={isOpen}
+      toggleOpen={toggle}
       trigger={props.trigger}
-      actions={[
-        <Button className="w-full" type="submit" key="1">
-          {values[`${valuesPrefix}.primary-button`]}
-        </Button>,
-      ]}
       ariaDescribedBy="add-or-edit-dialog"
     >
       <div className="space-y-9">
@@ -199,7 +283,7 @@ function AddOrEditDialog(props: {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit((data) => mutate(data))}
             className="space-y-9"
           >
             <FormField
@@ -240,6 +324,17 @@ function AddOrEditDialog(props: {
                 </FormItem>
               )}
             />
+            <DialogFooter className="pt-9">
+              <Button className="w-full" type="submit" disabled={isPending}>
+                {
+                  values[
+                    isPending
+                      ? "loading"
+                      : (`${valuesPrefix}.primary-button` as const)
+                  ]
+                }
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
       </div>
@@ -255,17 +350,48 @@ function SwitchActiveStatusDialog(props: {
   };
 }) {
   const { values } = useI18n();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+
+  const { mutate, isPending } = useToggleRoleStatusMutation({
+    onSuccess: () => {
+      close();
+    },
+    onError: (error) => {
+      toast.error(values[`errors.${error.message}` as I18nKey]);
+    },
+  });
+
   const valuesPrexif =
     `dashboard.roles.${props.role.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog
+      key={props.role.id}
+      isOpen={isOpen}
+      toggleOpen={toggle}
       trigger={<Switch checked={props.role.isActive} />}
       actions={[
-        <Button className="w-full" key="yes">
-          {values[`${valuesPrexif}.primary-button`]}
+        <Button
+          className="w-full"
+          key="yes"
+          onClick={() => mutate({ roleId: props.role.id })}
+          disabled={isPending}
+        >
+          {
+            values[
+              isPending
+                ? "loading"
+                : (`${valuesPrexif}.primary-button` as const)
+            ]
+          }
         </Button>,
-        <Button className="w-full" variant="secondary" key="no">
+        <Button
+          className="w-full"
+          variant="secondary"
+          key="no"
+          onClick={close}
+          disabled={isPending}
+        >
           {values[`${valuesPrexif}.secondary-button`]}
         </Button>,
       ]}

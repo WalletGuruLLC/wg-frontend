@@ -3,8 +3,8 @@
 import type { z } from "zod";
 
 import type {
-  UseMutationOptions as _UseMutationOptions,
-  UseQueryOptions as _UseQueryOptions,
+  UseMutationOptions,
+  UseQueryOptions,
 } from "@wg-frontend/data-access";
 import {
   useMutation,
@@ -13,27 +13,20 @@ import {
 } from "@wg-frontend/data-access";
 
 import type {
-  addRoleValidator,
+  addOrEditRoleValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
+  paginationAndSearchValidator,
   resetPasswordValidator,
+  toggleRoleStatusValidator,
   twoFactorAuthenticationValidator,
 } from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
-type UseQueryOptions<TOutput> = Omit<
-  _UseQueryOptions<TOutput>,
-  "queryFn" | "queryKey"
->;
-
-type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
-  _UseMutationOptions<TOutput, Error, TInput>,
-  "mutationFn" | "mutationKey"
->;
-
 export function useGetAuthedUserInfoQuery<
+  TInput = undefined,
   TOutput = {
     PrivacyPolicy: boolean;
     MfaEnabled: boolean;
@@ -56,7 +49,7 @@ export function useGetAuthedUserInfoQuery<
     LastName: string;
     type: "PLATFORM" | "PROVIDER" | "WALLET";
   },
->(options: UseQueryOptions<TOutput> = {}) {
+>(_: TInput, options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
     ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
@@ -272,19 +265,83 @@ export function useForgotPasswordCodeStepMutation(
   });
 }
 
-export function useAddRoleMutation(
-  options: UseMutationOptions<z.infer<typeof addRoleValidator>, undefined> = {},
+export interface Role {
+  createDate: string;
+  updateDate: string;
+  modules: unknown;
+  description: string;
+  id: string;
+  providerId: string;
+  active: boolean;
+  name: string;
+}
+export function useGetRolesQuery<
+  TInput = z.infer<typeof paginationAndSearchValidator>,
+  TOutput = {
+    roles: Role[];
+    total: number;
+  },
+>(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-roles", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export function useAddOrEditRoleMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditRoleValidator>,
+    undefined
+  > = {},
 ) {
   const cq = useQueryClient();
   return useMutation({
     ...options,
-    mutationKey: ["add-role"],
+    mutationKey: ["add-or-edit-role"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/roles",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles/" +
+          (input.roleId ?? ""),
         {
-          method: "POST",
+          method: input.roleId ? "PUT" : "POST",
           body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-roles"],
+      });
+    },
+  });
+}
+
+export function useToggleRoleStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleRoleStatusValidator>,
+    undefined
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-role-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/roles/${input.roleId}/toggle`,
+        {
+          method: "PATCH",
         },
       );
     },

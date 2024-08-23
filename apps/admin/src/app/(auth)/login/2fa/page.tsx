@@ -42,6 +42,7 @@ export default function TwoFactorAuthenticationPage() {
     onSuccess: (data) => {
       localStorage.removeItem("email");
       localStorage.setItem("access-token", data.token);
+      console.log(data);
       if (data.user.First) return router.replace("/reset-password");
       return router.replace("/dashboard");
     },

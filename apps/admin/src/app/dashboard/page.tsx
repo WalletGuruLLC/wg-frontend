@@ -4,7 +4,7 @@ import { useGetAuthedUserInfoQuery } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 
 export default function DashboardPage() {
-  const { data } = useGetAuthedUserInfoQuery();
+  const { data } = useGetAuthedUserInfoQuery(undefined);
   const { value } = useI18n("dashboard.home.title");
 
   return (

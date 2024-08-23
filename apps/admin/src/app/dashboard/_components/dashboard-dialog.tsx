@@ -3,11 +3,9 @@
 import type { ReactNode } from "react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
-import { cn } from "@wg-frontend/ui";
 import {
   Dialog as _Dialog,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,15 +13,17 @@ import {
 
 import { DialogContent } from "~/components/dialog";
 
-export default function Dialog(props: {
+export interface Props {
+  isOpen: boolean;
+  toggleOpen: () => void;
   trigger: ReactNode;
   children: ReactNode;
-  actions?: ReactNode[];
-  showCloseButton?: boolean;
   ariaDescribedBy: string;
-}) {
+}
+
+export default function Dialog(props: Props) {
   return (
-    <_Dialog>
+    <_Dialog open={props.isOpen} onOpenChange={props.toggleOpen}>
       <DialogTrigger asChild>{props.trigger}</DialogTrigger>
       <VisuallyHidden.Root>
         <DialogHeader>
@@ -31,14 +31,7 @@ export default function Dialog(props: {
           <DialogDescription>{props.ariaDescribedBy}</DialogDescription>
         </DialogHeader>
       </VisuallyHidden.Root>
-      <DialogContent>
-        <div className={cn(props.actions?.length !== 0 && "pb-12")}>
-          {props.children}
-        </div>
-        {props.actions?.length !== 0 && (
-          <DialogFooter>{props.actions}</DialogFooter>
-        )}
-      </DialogContent>
+      <DialogContent>{props.children}</DialogContent>
     </_Dialog>
   );
 }

@@ -3,7 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, LogOut, Menu, User, Users, Wallet } from "lucide-react";
+import {
+  Home,
+  LogOut,
+  Menu,
+  SquareUserRound,
+  User,
+  Users,
+  Wallet,
+} from "lucide-react";
 
 import { cn } from "@wg-frontend/ui";
 import { Button } from "@wg-frontend/ui/button";
@@ -43,7 +51,7 @@ const NAV = [
     id: "users",
   },
   {
-    Icon: Users,
+    Icon: SquareUserRound,
     i18nTitleKey: "dashboard.layout.nav.roles",
     path: "/dashboard/roles",
     id: "roles",
