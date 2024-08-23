@@ -2,10 +2,10 @@
 
 import { redirect } from "next/navigation";
 
-import { useAuthedUserInfoQuery } from "./data-access";
+import { useGetAuthedUserInfoQuery } from "./data-access";
 
 export function useAuthGuard() {
-  const { data, isLoading } = useAuthedUserInfoQuery();
+  const { data, isLoading } = useGetAuthedUserInfoQuery();
 
   if (!isLoading && !data) return redirect("/login");
 

@@ -8,6 +8,8 @@ import { cn } from "@wg-frontend/ui";
 
 import "~/app/globals.css";
 
+import { Toaster } from "@wg-frontend/ui/toast";
+
 import QueryClientProvider from "~/lib/data-access/provider";
 import { I18nProvider } from "~/lib/i18n";
 
@@ -31,6 +33,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <I18nProvider>
           <QueryClientProvider>{props.children}</QueryClientProvider>
         </I18nProvider>
+        <Toaster position="top-right" richColors theme="light" />
       </body>
     </html>
   );

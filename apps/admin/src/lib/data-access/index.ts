@@ -13,6 +13,7 @@ import {
 } from "@wg-frontend/data-access";
 
 import type {
+  addRoleValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -32,7 +33,7 @@ type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
   "mutationFn" | "mutationKey"
 >;
 
-export function useAuthedUserInfoQuery<
+export function useGetAuthedUserInfoQuery<
   TOutput = {
     PrivacyPolicy: boolean;
     MfaEnabled: boolean;
@@ -59,10 +60,10 @@ export function useAuthedUserInfoQuery<
   return useQuery({
     ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
-    queryKey: ["authed-user-info"],
+    queryKey: ["get-authed-user-info"],
     queryFn: () => {
       return customFetch<TOutput>(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/get/info/access",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
       );
     },
   });
@@ -81,16 +82,13 @@ export function useLoginMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
       });
     },
   });
@@ -103,6 +101,9 @@ export function useTwoFactorAuthenticationMutation(
       token: string;
       user: {
         PrivacyPolicy: boolean;
+        FirstName: string;
+        LastName: string;
+        Id: string;
         MfaEnabled: boolean;
         CreateDate: string;
         TermsConditions: boolean;
@@ -119,6 +120,12 @@ export function useTwoFactorAuthenticationMutation(
         ServiceProviderId: string;
         Active: boolean;
         type: "PLATFORM" | "PROVIDER" | "WALLET";
+        AccessLevel: {
+          R949: number;
+          SP95: number;
+          U783: number;
+          W325: number;
+        };
       };
     }
   > = {},
@@ -133,16 +140,37 @@ export function useTwoFactorAuthenticationMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
+      });
+    },
+  });
+}
+
+export function useLogoutMutation(
+  options: UseMutationOptions<null, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["logout"],
+    mutationFn: () => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/logout",
+        {
+          method: "POST",
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
       });
     },
   });
@@ -160,9 +188,6 @@ export function useResendCodeMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
@@ -185,16 +210,13 @@ export function useResetPasswordMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
       });
     },
   });
@@ -215,9 +237,6 @@ export function useForgotPasswordEmailStepMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
@@ -241,16 +260,38 @@ export function useForgotPasswordCodeStepMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
+      });
+    },
+  });
+}
+
+export function useAddRoleMutation(
+  options: UseMutationOptions<z.infer<typeof addRoleValidator>, undefined> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-role"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/roles",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-roles"],
       });
     },
   });

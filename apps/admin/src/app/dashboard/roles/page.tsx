@@ -8,14 +8,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
-import { z } from "zod";
 
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
 
-import type { I18NValue } from "~/lib/i18n";
+import type { I18nKey } from "~/lib/i18n";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { useI18n } from "~/lib/i18n";
+import { addRoleValidator } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
 import Dialog from "../_components/dashboard-dialog";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
@@ -59,7 +59,7 @@ const roles: Role[] = [
 
 const columnHelper = createColumnHelper<Role>();
 
-function Header({ i18nValue }: { i18nValue: I18NValue }) {
+function Header({ i18nValue }: { i18nValue: I18nKey }) {
   const { value } = useI18n(i18nValue);
   return value;
 }
@@ -174,10 +174,7 @@ function AddOrEditDialog(props: {
   const { values } = useI18n();
 
   const form = useForm({
-    schema: z.object({
-      name: z.string().min(1),
-      description: z.string().min(1),
-    }),
+    schema: addRoleValidator,
     defaultValues: {
       name: props.role?.name ?? "",
       description: props.role?.description ?? "",

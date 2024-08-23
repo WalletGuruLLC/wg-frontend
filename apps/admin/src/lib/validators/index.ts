@@ -47,3 +47,9 @@ export const forgotPasswordCodeStepValidator = z
     message: "auth.reset-password.confirm-password.errors.passwords-not-match",
     path: ["confirmPassword"],
   });
+
+export const addRoleValidator = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+  providerId: z.string().min(1),
+});

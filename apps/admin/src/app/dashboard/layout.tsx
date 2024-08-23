@@ -2,16 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Home, LogOut, Menu, User, Users, Wallet } from "lucide-react";
 
-import { useQueryClient } from "@wg-frontend/data-access";
 import { cn } from "@wg-frontend/ui";
 import { Button } from "@wg-frontend/ui/button";
 import { Separator } from "@wg-frontend/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
+import { toast } from "@wg-frontend/ui/toast";
 
+import type { I18nKey } from "~/lib/i18n";
 import Metatags from "~/components/metatags";
+import { useLogoutMutation } from "~/lib/data-access";
 import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 
@@ -49,11 +51,21 @@ const NAV = [
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
-  const cq = useQueryClient();
   const loading = useAuthGuard();
 
   const pathname = usePathname();
+  const router = useRouter();
   const { values } = useI18n();
+
+  const { mutate } = useLogoutMutation({
+    onError: (error) => {
+      toast.error(values[`errors.${error.message}` as I18nKey]);
+    },
+    onSuccess: () => {
+      localStorage.removeItem("access-token");
+      router.replace("/login");
+    },
+  });
 
   if (loading) return null;
 
@@ -95,19 +107,13 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             </div>
             <Separator className="ml-4 w-1/2" />
             <div className="px-7 py-4 pb-12">
-              <Link
-                href="/login"
-                className="flex flex-row items-center gap-3 text-xs font-light"
-                onClick={() => {
-                  localStorage.removeItem("access-token");
-                  void cq.invalidateQueries({
-                    queryKey: ["authed-user-info"],
-                  });
-                }}
+              <div
+                className="flex cursor-pointer flex-row items-center gap-3 text-xs font-light"
+                onClick={() => void mutate(null)}
               >
                 <LogOut className="size-6" strokeWidth={0.75} />
                 {values["dashboard.layout.logout"]}
-              </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -155,19 +161,13 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                     </Link>
                   ))}
                   <div className="px-3 py-12">
-                    <Link
-                      href="/login"
-                      onClick={() => {
-                        localStorage.removeItem("access-token");
-                        void cq.invalidateQueries({
-                          queryKey: ["authed-user-info"],
-                        });
-                      }}
-                      className="flex flex-row items-center gap-3 text-xs font-light"
+                    <div
+                      onClick={() => void mutate(null)}
+                      className="flex cursor-pointer flex-row items-center gap-3 text-xs font-light"
                     >
                       <LogOut className="size-6" strokeWidth={0.75} />
                       {values["dashboard.layout.logout"]}
-                    </Link>
+                    </div>
                   </div>
                 </nav>
               </SheetContent>

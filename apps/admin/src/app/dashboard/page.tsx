@@ -1,10 +1,10 @@
 "use client";
 
-import { useAuthedUserInfoQuery } from "~/lib/data-access";
+import { useGetAuthedUserInfoQuery } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 
 export default function DashboardPage() {
-  const { data } = useAuthedUserInfoQuery();
+  const { data } = useGetAuthedUserInfoQuery();
   const { value } = useI18n("dashboard.home.title");
 
   return (

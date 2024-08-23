@@ -17,6 +17,7 @@ export default async function customFetch<ResponseType>(
     headers: {
       ...params[1]?.headers,
       Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+      "Content-Type": "application/json",
     },
   });
 

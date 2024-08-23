@@ -42,7 +42,8 @@ export default function TwoFactorAuthenticationPage() {
     onSuccess: (data) => {
       localStorage.removeItem("email");
       localStorage.setItem("access-token", data.token);
-      router.replace("/dashboard");
+      if (data.user.First) return router.replace("/reset-password");
+      return router.replace("/dashboard");
     },
   });
   const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({

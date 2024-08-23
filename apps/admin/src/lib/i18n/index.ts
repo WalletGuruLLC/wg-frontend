@@ -1,6 +1,6 @@
 "use client";
 
-import type { I18nDictionary } from "@wg-frontend/i18n";
+import type { I18nDictionary, I18nKeyHelper } from "@wg-frontend/i18n";
 import createI18nHandlers from "@wg-frontend/i18n";
 
 import { authDict } from "./auth";
@@ -22,6 +22,6 @@ const dict = {
   },
 } satisfies I18nDictionary;
 
-export type I18NValue = keyof (typeof dict)[keyof typeof dict];
+export type I18nKey = I18nKeyHelper<typeof dict>;
 
 export const { I18nProvider, useI18n } = createI18nHandlers(dict, "en");
