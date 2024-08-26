@@ -28,26 +28,32 @@ import customFetch from "./custom-fetch";
 export function useGetAuthedUserInfoQuery<
   TInput = undefined,
   TOutput = {
-    PrivacyPolicy: boolean;
-    MfaEnabled: boolean;
-    CreateDate: string;
-    TermsConditions: boolean;
-    Otp: string;
-    SendSms: boolean;
-    State: 1 | 2 | 3;
-    Email: string;
-    MfaType: "TOTP" | "SMS";
-    First: boolean;
-    RoleId: string;
-    SendEmails: boolean;
-    UpdateDate: string;
-    Picture: string;
-    ServiceProviderId: string;
-    FirstName: string;
-    Id: string;
-    Active: boolean;
-    LastName: string;
-    type: "PLATFORM" | "PROVIDER" | "WALLET";
+    privacyPolicy: boolean;
+    mfaEnabled: boolean;
+    createDate: unknown;
+    termsConditions: boolean;
+    otp: string;
+    sendSms: boolean;
+    state: 0 | 1 | 2 | 3;
+    type: "PLATFORM" | "WALLET" | "PROVIDER";
+    email: string;
+    mfaType: "TOTP" | "SMS";
+    first: boolean;
+    roleId: string;
+    sendEmails: boolean;
+    updateDate: unknown;
+    picture: string;
+    serviceProviderId: string;
+    firstName: string;
+    id: string;
+    active: boolean;
+    lastName: string;
+    accessLevel: {
+      R949: number;
+      SP95: number;
+      U783: number;
+      W325: number;
+    };
   },
 >(_: TInput, options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
@@ -63,7 +69,7 @@ export function useGetAuthedUserInfoQuery<
 }
 
 export function useLoginMutation(
-  options: UseMutationOptions<z.infer<typeof loginValidator>, undefined> = {},
+  options: UseMutationOptions<z.infer<typeof loginValidator>, unknown> = {},
 ) {
   const cq = useQueryClient();
   return useMutation({
@@ -91,35 +97,35 @@ export function useTwoFactorAuthenticationMutation(
   options: UseMutationOptions<
     z.infer<typeof twoFactorAuthenticationValidator>,
     {
-      token: string;
       user: {
-        PrivacyPolicy: boolean;
-        FirstName: string;
-        LastName: string;
-        Id: string;
-        MfaEnabled: boolean;
-        CreateDate: string;
-        TermsConditions: boolean;
-        Otp: string;
-        SendSms: boolean;
-        State: 0 | 2 | 3;
-        Email: string;
-        MfaType: "TOTP" | "SMS";
-        First: boolean;
-        SendEmails: boolean;
-        UpdateDate: string;
-        Picture: string;
-        RoleId: string;
-        ServiceProviderId: string;
-        Active: boolean;
-        type: "PLATFORM" | "PROVIDER" | "WALLET";
-        AccessLevel: {
+        privacyPolicy: boolean;
+        mfaEnabled: boolean;
+        createDate: unknown;
+        termsConditions: boolean;
+        otp: string;
+        sendSms: boolean;
+        state: 0 | 1 | 2 | 3;
+        type: "PLATFORM" | "WALLET" | "PROVIDER";
+        email: string;
+        mfaType: "TOTP" | "SMS";
+        first: boolean;
+        roleId: string;
+        sendEmails: boolean;
+        updateDate: unknown;
+        picture: "";
+        serviceProviderId: string;
+        firstName: string;
+        id: string;
+        active: boolean;
+        lastName: string;
+        accessLevel: {
           R949: number;
           SP95: number;
           U783: number;
           W325: number;
         };
       };
+      token: string;
     }
   > = {},
 ) {
@@ -170,7 +176,7 @@ export function useLogoutMutation(
 }
 
 export function useResendCodeMutation(
-  options: UseMutationOptions<{ email: string }, undefined> = {},
+  options: UseMutationOptions<{ email: string }, unknown> = {},
 ) {
   return useMutation({
     ...options,
@@ -190,7 +196,7 @@ export function useResendCodeMutation(
 export function useResetPasswordMutation(
   options: UseMutationOptions<
     z.infer<typeof resetPasswordValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   const cq = useQueryClient();
@@ -218,7 +224,7 @@ export function useResetPasswordMutation(
 export function useForgotPasswordEmailStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordEmailStepValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   return useMutation({
@@ -239,7 +245,7 @@ export function useForgotPasswordEmailStepMutation(
 export function useForgotPasswordCodeStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordCodeStepValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   const cq = useQueryClient();
@@ -299,7 +305,7 @@ export function useGetRolesQuery<
 export function useAddOrEditRoleMutation(
   options: UseMutationOptions<
     z.infer<typeof addOrEditRoleValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   const cq = useQueryClient();
@@ -329,7 +335,7 @@ export function useAddOrEditRoleMutation(
 export function useToggleRoleStatusMutation(
   options: UseMutationOptions<
     z.infer<typeof toggleRoleStatusValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   const cq = useQueryClient();
