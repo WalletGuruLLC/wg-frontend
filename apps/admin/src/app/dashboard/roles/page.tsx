@@ -33,6 +33,7 @@ import {
   useGetRolesQuery,
   useToggleRoleStatusMutation,
 } from "~/lib/data-access";
+import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { addOrEditRoleValidator } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
@@ -116,6 +117,7 @@ const columns = [
 ];
 
 export default function RolesPage() {
+  const loading = useAccessLevelGuard("roles");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -160,6 +162,8 @@ export default function RolesPage() {
     Number(paginationAndSearch.items) +
     1;
   const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
+
+  if (loading) return null;
 
   return (
     <div className="w-full space-y-10 pb-4">

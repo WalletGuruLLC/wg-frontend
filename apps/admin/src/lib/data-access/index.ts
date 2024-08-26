@@ -68,6 +68,66 @@ export function useGetAuthedUserInfoQuery<
   });
 }
 
+const ACCESS_LEVELS_MAP = {
+  R949: "roles",
+  W325: "wallets",
+  U783: "users",
+  SP95: "serviceProviders",
+} as const;
+export type AccessLevelModule =
+  (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
+const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
+  "view",
+  "add",
+  "edit",
+  "inactive",
+] as const;
+type AccessLevels = {
+  [key in AccessLevelModule]: (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[number][];
+};
+// Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
+export function useGetAuthedUserAccessLevelsQuery<
+  TInput = undefined,
+  TOutput = AccessLevels,
+>(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
+    queryKey: ["get-authed-user-access-levels"],
+    queryFn: async () => {
+      const data = await customFetch<{
+        accessLevel: {
+          R949: number;
+          SP95: number;
+          U783: number;
+          W325: number;
+        };
+      }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
+
+      const accessLevels: AccessLevels = {
+        roles: [],
+        wallets: [],
+        users: [],
+        serviceProviders: [],
+      };
+
+      for (const [key, value] of Object.entries(data.accessLevel)) {
+        const bin = value.toString(2).padStart(4, "0");
+        for (let i = 0; i < ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length; i++) {
+          if (bin[i] === "1") {
+            accessLevels[
+              ACCESS_LEVELS_MAP[key as keyof typeof ACCESS_LEVELS_MAP]
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ].push(ACCESS_LEVELS_ACTIONS_BINARY_ORDERED[i]!);
+          }
+        }
+      }
+
+      return accessLevels as TOutput; // We know it's TOutput but TS does not
+    },
+  });
+}
+
 export function useLoginMutation(
   options: UseMutationOptions<z.infer<typeof loginValidator>, unknown> = {},
 ) {

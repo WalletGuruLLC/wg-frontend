@@ -2,13 +2,25 @@
 
 import { redirect } from "next/navigation";
 
-import { useGetAuthedUserInfoQuery } from "./data-access";
+import type { AccessLevelModule } from "./data-access";
+import {
+  useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
+} from "./data-access";
 
 export function useAuthGuard() {
   const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
-  console.log(data);
 
   if (!isLoading && !data) return redirect("/login");
+
+  return isLoading;
+}
+
+export function useAccessLevelGuard(module: AccessLevelModule) {
+  const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
+
+  if (!isLoading && !data?.[module].includes("view"))
+    return redirect("/dashboard");
 
   return isLoading;
 }
