@@ -30,6 +30,7 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import {
   useAddOrEditRoleMutation,
+  useGetAuthedUserAccessLevelsQuery,
   useGetRolesQuery,
   useToggleRoleStatusMutation,
 } from "~/lib/data-access";
@@ -56,6 +57,7 @@ function Actions({
   };
 }) {
   const { values } = useI18n();
+
   return (
     <div className="flex flex-row space-x-4">
       <AddOrEditDialog
@@ -79,6 +81,7 @@ const columnHelper = createColumnHelper<Role>();
 
 const columns = [
   columnHelper.accessor("name", {
+    id: "name",
     cell: (info) => info.getValue(),
     header: () => <ColumnHeader i18nKey="dashboard.roles.table.header.role" />,
     meta: {
@@ -86,6 +89,7 @@ const columns = [
     },
   }),
   columnHelper.accessor("active", {
+    id: "active",
     header: () => (
       <ColumnHeader i18nKey="dashboard.roles.table.header.is-active" />
     ),
@@ -100,7 +104,7 @@ const columns = [
     ),
   }),
   columnHelper.display({
-    id: "Actions",
+    id: "actions",
     header: () => (
       <ColumnHeader i18nKey="dashboard.roles.table.header.actions" />
     ),
@@ -129,10 +133,18 @@ export default function RolesPage() {
   };
 
   const { data, isLoading } = useGetRolesQuery(paginationAndSearch);
+  const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
 
   const table = useReactTable({
     data: data?.roles ?? [],
-    columns,
+    columns: columns.filter(
+      (c) =>
+        c.id === "name" ||
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        (c.id === "actions" && accessLevelsData?.roles.includes("edit")) ||
+        (c.id === "active" && accessLevelsData?.roles.includes("inactive")),
+    ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
@@ -163,7 +175,7 @@ export default function RolesPage() {
     1;
   const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
 
-  if (loading) return null;
+  if (loading || isLoadingAccessLevels) return null;
 
   return (
     <div className="w-full space-y-10 pb-4">
@@ -188,14 +200,16 @@ export default function RolesPage() {
             strokeWidth={0.75}
           />
         </div>
-        <AddOrEditDialog
-          trigger={
-            <Button className="flex h-max w-48 flex-row items-center">
-              <p className="flex-1 text-lg font-light">Add Role</p>
-              <PlusCircle strokeWidth={0.75} className="size-6" />
-            </Button>
-          }
-        />
+        {accessLevelsData?.roles.includes("add") && (
+          <AddOrEditDialog
+            trigger={
+              <Button className="flex h-max w-48 flex-row items-center">
+                <p className="flex-1 text-lg font-light">Add Role</p>
+                <PlusCircle strokeWidth={0.75} className="size-6" />
+              </Button>
+            }
+          />
+        )}
       </div>
       <Table table={table} />
       <PaginationFooter

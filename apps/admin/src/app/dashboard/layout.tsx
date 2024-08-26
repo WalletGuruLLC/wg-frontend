@@ -169,20 +169,27 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                       height={52}
                     />
                   </Link>
-                  {NAV.map((page) => (
-                    <Link
-                      key={page.id}
-                      href={page.path}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
-                        page.path === pathname &&
-                          "border-transparent bg-[#3678B1]",
-                      )}
-                    >
-                      <page.Icon className="size-6" strokeWidth={0.75} />
-                      {values[page.i18nTitleKey]}
-                    </Link>
-                  ))}
+                  {NAV.map((page) => {
+                    if (
+                      page.moduleId &&
+                      !data?.[page.moduleId].includes("view")
+                    )
+                      return null;
+                    return (
+                      <Link
+                        key={page.id}
+                        href={page.path}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
+                          page.path === pathname &&
+                            "border-transparent bg-[#3678B1]",
+                        )}
+                      >
+                        <page.Icon className="size-6" strokeWidth={0.75} />
+                        {values[page.i18nTitleKey]}
+                      </Link>
+                    );
+                  })}
                   <div className="px-3 py-12">
                     <div
                       onClick={() => void mutate(null)}
