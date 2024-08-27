@@ -10,7 +10,7 @@ export default function DashboardPage() {
   return (
     <div className="flex h-screen items-center justify-center">
       <h1 className="font-base text-4xl">
-        {value} {data?.FirstName} {data?.LastName}
+        {value} {data?.firstName} {data?.lastName}
       </h1>
     </div>
   );
