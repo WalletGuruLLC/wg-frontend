@@ -342,6 +342,8 @@ function AddOrEditDialog(props: {
                         values[`${valuesPrefix}.description.placeholder`]
                       }
                       required
+                      type="textarea"
+                      className="h-32"
                       {...field}
                     />
                   </FormControl>
