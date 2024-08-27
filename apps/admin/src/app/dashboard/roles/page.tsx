@@ -220,7 +220,11 @@ export default function RolesPage() {
         }}
         items={paginationAndSearch.items ?? "10"}
         onItemsChange={(items) =>
-          handlePaginationAndSearchChange({ ...paginationAndSearch, items })
+          handlePaginationAndSearchChange({
+            ...paginationAndSearch,
+            items,
+            page: "1",
+          })
         }
         canPreviousPage={paginationAndSearch.page !== "1"}
         canNextPage={data?.roles.length === Number(paginationAndSearch.items)}
