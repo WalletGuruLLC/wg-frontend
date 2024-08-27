@@ -33,7 +33,14 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <I18nProvider>
           <QueryClientProvider>{props.children}</QueryClientProvider>
         </I18nProvider>
-        <Toaster position="top-right" richColors theme="light" />
+        <Toaster
+          position="top-right"
+          theme="light"
+          className="mt-20"
+          toastOptions={{
+            className: "bg-black text-white border-none",
+          }}
+        />
       </body>
     </html>
   );

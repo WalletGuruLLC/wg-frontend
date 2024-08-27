@@ -267,6 +267,7 @@ function AddOrEditDialog(props: {
       toast.error(values[`errors.${error.message}` as I18nKey]);
     },
     onSuccess: () => {
+      toast.success(values[`${valuesPrefix}.toast.success` as const]);
       close();
       form.reset();
     },
@@ -372,6 +373,7 @@ function SwitchActiveStatusDialog(props: {
 
   const { mutate, isPending } = useToggleRoleStatusMutation({
     onSuccess: () => {
+      toast.success(values[`${valuesPrexif}.toast.success` as const]);
       close();
     },
     onError: (error) => {
