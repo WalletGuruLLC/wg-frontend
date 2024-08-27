@@ -298,7 +298,10 @@ function AddOrEditDialog(props: {
     <Dialog
       key={props.role?.id ?? "add"}
       isOpen={isOpen}
-      toggleOpen={toggle}
+      toggleOpen={() => {
+        form.reset();
+        toggle();
+      }}
       trigger={props.trigger}
       ariaDescribedBy="add-or-edit-dialog"
     >
