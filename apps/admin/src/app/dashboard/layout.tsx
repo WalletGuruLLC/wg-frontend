@@ -2,16 +2,30 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, LogOut, Menu, User, Users, Wallet } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Home,
+  LogOut,
+  Menu,
+  SquareUserRound,
+  User,
+  Users,
+  Wallet,
+} from "lucide-react";
 
-import { useQueryClient } from "@wg-frontend/data-access";
 import { cn } from "@wg-frontend/ui";
 import { Button } from "@wg-frontend/ui/button";
 import { Separator } from "@wg-frontend/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
+import { toast } from "@wg-frontend/ui/toast";
 
+import type { AccessLevelModule } from "~/lib/data-access";
+import type { I18nKey } from "~/lib/i18n";
 import Metatags from "~/components/metatags";
+import {
+  useGetAuthedUserAccessLevelsQuery,
+  useLogoutMutation,
+} from "~/lib/data-access";
 import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 
@@ -21,41 +35,58 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.home",
     path: "/dashboard",
     id: "home",
+    moduleId: null,
   },
   {
     Icon: Wallet,
     i18nTitleKey: "dashboard.layout.nav.wallet-management",
     path: "/dashboard/wallet-management",
     id: "wallet-management",
+    moduleId: "wallets" satisfies AccessLevelModule,
   },
   {
     Icon: User,
     i18nTitleKey: "dashboard.layout.nav.service-providers",
     path: "/dashboard/service-providers",
     id: "service-providers",
+    moduleId: "serviceProviders" satisfies AccessLevelModule,
   },
   {
     Icon: Users,
     i18nTitleKey: "dashboard.layout.nav.users",
     path: "/dashboard/users",
     id: "users",
+    moduleId: "users" satisfies AccessLevelModule,
   },
   {
-    Icon: Users,
+    Icon: SquareUserRound,
     i18nTitleKey: "dashboard.layout.nav.roles",
     path: "/dashboard/roles",
     id: "roles",
+    moduleId: "roles" satisfies AccessLevelModule,
   },
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
-  const cq = useQueryClient();
   const loading = useAuthGuard();
 
+  const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
+
   const pathname = usePathname();
+  const router = useRouter();
   const { values } = useI18n();
 
-  if (loading) return null;
+  const { mutate } = useLogoutMutation({
+    onError: (error) => {
+      toast.error(values[`errors.${error.message}` as I18nKey]);
+    },
+    onSuccess: () => {
+      localStorage.removeItem("access-token");
+      router.replace("/login");
+    },
+  });
+
+  if (loading || isLoading) return null;
 
   return (
     <main>
@@ -77,37 +108,35 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             <Separator className="ml-4 w-1/2" />
             <div className="flex-1 pt-8">
               <nav className="grid items-start gap-4 px-4">
-                {NAV.map((page) => (
-                  <Link
-                    key={page.id}
-                    href={page.path}
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
-                      page.path === pathname &&
-                        "border-transparent bg-[#3678B1]",
-                    )}
-                  >
-                    <page.Icon className="size-6" strokeWidth={0.75} />
-                    {values[page.i18nTitleKey]}
-                  </Link>
-                ))}
+                {NAV.map((page) => {
+                  if (page.moduleId && !data?.[page.moduleId].includes("view"))
+                    return null;
+                  return (
+                    <Link
+                      key={page.id}
+                      href={page.path}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
+                        page.path === pathname &&
+                          "border-transparent bg-[#3678B1]",
+                      )}
+                    >
+                      <page.Icon className="size-6" strokeWidth={0.75} />
+                      {values[page.i18nTitleKey]}
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
             <Separator className="ml-4 w-1/2" />
             <div className="px-7 py-4 pb-12">
-              <Link
-                href="/login"
-                className="flex flex-row items-center gap-3 text-xs font-light"
-                onClick={() => {
-                  localStorage.removeItem("access-token");
-                  void cq.invalidateQueries({
-                    queryKey: ["authed-user-info"],
-                  });
-                }}
+              <div
+                className="flex cursor-pointer flex-row items-center gap-3 text-xs font-light"
+                onClick={() => void mutate(null)}
               >
                 <LogOut className="size-6" strokeWidth={0.75} />
                 {values["dashboard.layout.logout"]}
-              </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -140,34 +169,35 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                       height={52}
                     />
                   </Link>
-                  {NAV.map((page) => (
-                    <Link
-                      key={page.id}
-                      href={page.path}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
-                        page.path === pathname &&
-                          "border-transparent bg-[#3678B1]",
-                      )}
-                    >
-                      <page.Icon className="size-6" strokeWidth={0.75} />
-                      {values[page.i18nTitleKey]}
-                    </Link>
-                  ))}
+                  {NAV.map((page) => {
+                    if (
+                      page.moduleId &&
+                      !data?.[page.moduleId].includes("view")
+                    )
+                      return null;
+                    return (
+                      <Link
+                        key={page.id}
+                        href={page.path}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
+                          page.path === pathname &&
+                            "border-transparent bg-[#3678B1]",
+                        )}
+                      >
+                        <page.Icon className="size-6" strokeWidth={0.75} />
+                        {values[page.i18nTitleKey]}
+                      </Link>
+                    );
+                  })}
                   <div className="px-3 py-12">
-                    <Link
-                      href="/login"
-                      onClick={() => {
-                        localStorage.removeItem("access-token");
-                        void cq.invalidateQueries({
-                          queryKey: ["authed-user-info"],
-                        });
-                      }}
-                      className="flex flex-row items-center gap-3 text-xs font-light"
+                    <div
+                      onClick={() => void mutate(null)}
+                      className="flex cursor-pointer flex-row items-center gap-3 text-xs font-light"
                     >
                       <LogOut className="size-6" strokeWidth={0.75} />
                       {values["dashboard.layout.logout"]}
-                    </Link>
+                    </div>
                   </div>
                 </nav>
               </SheetContent>

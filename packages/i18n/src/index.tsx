@@ -98,3 +98,12 @@ export default function createI18nHandlers<
     useI18n,
   };
 }
+
+/**
+ * A fully typed key to get a translation from the dictionary.
+ *
+ * @example
+ * type MyKeys = I18nKeyHelper<typeof dictionary>;
+ */
+export type I18nKeyHelper<Dictionary extends I18nDictionary> =
+  keyof Dictionary[keyof Dictionary];

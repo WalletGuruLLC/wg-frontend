@@ -3,8 +3,8 @@
 import type { z } from "zod";
 
 import type {
-  UseMutationOptions as _UseMutationOptions,
-  UseQueryOptions as _UseQueryOptions,
+  UseMutationOptions,
+  UseQueryOptions,
 } from "@wg-frontend/data-access";
 import {
   useMutation,
@@ -13,53 +13,53 @@ import {
 } from "@wg-frontend/data-access";
 
 import type {
+  addOrEditRoleValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
+  paginationAndSearchValidator,
   resetPasswordValidator,
+  toggleRoleStatusValidator,
   twoFactorAuthenticationValidator,
 } from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
-type UseQueryOptions<TOutput> = Omit<
-  _UseQueryOptions<TOutput>,
-  "queryFn" | "queryKey"
->;
-
-type UseMutationOptions<TInput = unknown, TOutput = unknown> = Omit<
-  _UseMutationOptions<TOutput, Error, TInput>,
-  "mutationFn" | "mutationKey"
->;
-
-export function useAuthedUserInfoQuery<
+export function useGetAuthedUserInfoQuery<
+  TInput = undefined,
   TOutput = {
-    PrivacyPolicy: boolean;
-    MfaEnabled: boolean;
-    CreateDate: string;
-    TermsConditions: boolean;
-    Otp: string;
-    SendSms: boolean;
-    State: 1 | 2 | 3;
-    Email: string;
-    MfaType: "TOTP" | "SMS";
-    First: boolean;
-    RoleId: string;
-    SendEmails: boolean;
-    UpdateDate: string;
-    Picture: string;
-    ServiceProviderId: string;
-    FirstName: string;
-    Id: string;
-    Active: boolean;
-    LastName: string;
-    type: "PLATFORM" | "PROVIDER" | "WALLET";
+    privacyPolicy: boolean;
+    mfaEnabled: boolean;
+    createDate: unknown;
+    termsConditions: boolean;
+    otp: string;
+    sendSms: boolean;
+    state: 0 | 1 | 2 | 3;
+    type: "PLATFORM" | "WALLET" | "PROVIDER";
+    email: string;
+    mfaType: "TOTP" | "SMS";
+    first: boolean;
+    roleId: string;
+    sendEmails: boolean;
+    updateDate: unknown;
+    picture: string;
+    serviceProviderId: string;
+    firstName: string;
+    id: string;
+    active: boolean;
+    lastName: string;
+    accessLevel: {
+      R949: number;
+      SP95: number;
+      U783: number;
+      W325: number;
+    };
   },
->(options: UseQueryOptions<TOutput> = {}) {
+>(_: TInput, options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
     ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
-    queryKey: ["authed-user-info"],
+    queryKey: ["get-authed-user-info"],
     queryFn: () => {
       return customFetch<TOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
@@ -68,8 +68,68 @@ export function useAuthedUserInfoQuery<
   });
 }
 
+const ACCESS_LEVELS_MAP = {
+  R949: "roles",
+  W325: "wallets",
+  U783: "users",
+  SP95: "serviceProviders",
+} as const;
+export type AccessLevelModule =
+  (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
+const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
+  "view",
+  "add",
+  "edit",
+  "inactive",
+] as const;
+type AccessLevels = {
+  [key in AccessLevelModule]: (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[number][];
+};
+// Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
+export function useGetAuthedUserAccessLevelsQuery<
+  TInput = undefined,
+  TOutput = AccessLevels,
+>(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
+    queryKey: ["get-authed-user-access-levels"],
+    queryFn: async () => {
+      const data = await customFetch<{
+        accessLevel: {
+          R949: number;
+          SP95: number;
+          U783: number;
+          W325: number;
+        };
+      }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
+
+      const accessLevels: AccessLevels = {
+        roles: [],
+        wallets: [],
+        users: [],
+        serviceProviders: [],
+      };
+
+      for (const [key, value] of Object.entries(data.accessLevel)) {
+        const bin = value.toString(2).padStart(4, "0");
+        for (let i = 0; i < ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length; i++) {
+          if (bin[i] === "1") {
+            accessLevels[
+              ACCESS_LEVELS_MAP[key as keyof typeof ACCESS_LEVELS_MAP]
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ].push(ACCESS_LEVELS_ACTIONS_BINARY_ORDERED[i]!);
+          }
+        }
+      }
+
+      return accessLevels as TOutput; // We know it's TOutput but TS does not
+    },
+  });
+}
+
 export function useLoginMutation(
-  options: UseMutationOptions<z.infer<typeof loginValidator>, undefined> = {},
+  options: UseMutationOptions<z.infer<typeof loginValidator>, unknown> = {},
 ) {
   const cq = useQueryClient();
   return useMutation({
@@ -81,16 +141,13 @@ export function useLoginMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
       });
     },
   });
@@ -100,26 +157,35 @@ export function useTwoFactorAuthenticationMutation(
   options: UseMutationOptions<
     z.infer<typeof twoFactorAuthenticationValidator>,
     {
-      token: string;
       user: {
-        PrivacyPolicy: boolean;
-        MfaEnabled: boolean;
-        CreateDate: string;
-        TermsConditions: boolean;
-        Otp: string;
-        SendSms: boolean;
-        State: 0 | 2 | 3;
-        Email: string;
-        MfaType: "TOTP" | "SMS";
-        First: boolean;
-        SendEmails: boolean;
-        UpdateDate: string;
-        Picture: string;
-        RoleId: string;
-        ServiceProviderId: string;
-        Active: boolean;
-        type: "PLATFORM" | "PROVIDER" | "WALLET";
+        privacyPolicy: boolean;
+        mfaEnabled: boolean;
+        createDate: unknown;
+        termsConditions: boolean;
+        otp: string;
+        sendSms: boolean;
+        state: 0 | 1 | 2 | 3;
+        type: "PLATFORM" | "WALLET" | "PROVIDER";
+        email: string;
+        mfaType: "TOTP" | "SMS";
+        first: boolean;
+        roleId: string;
+        sendEmails: boolean;
+        updateDate: unknown;
+        picture: "";
+        serviceProviderId: string;
+        firstName: string;
+        id: string;
+        active: boolean;
+        lastName: string;
+        accessLevel: {
+          R949: number;
+          SP95: number;
+          U783: number;
+          W325: number;
+        };
       };
+      token: string;
     }
   > = {},
 ) {
@@ -133,23 +199,44 @@ export function useTwoFactorAuthenticationMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
+      });
+    },
+  });
+}
+
+export function useLogoutMutation(
+  options: UseMutationOptions<null, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["logout"],
+    mutationFn: () => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/logout",
+        {
+          method: "POST",
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
       });
     },
   });
 }
 
 export function useResendCodeMutation(
-  options: UseMutationOptions<{ email: string }, undefined> = {},
+  options: UseMutationOptions<{ email: string }, unknown> = {},
 ) {
   return useMutation({
     ...options,
@@ -160,9 +247,6 @@ export function useResendCodeMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
@@ -172,7 +256,7 @@ export function useResendCodeMutation(
 export function useResetPasswordMutation(
   options: UseMutationOptions<
     z.infer<typeof resetPasswordValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   const cq = useQueryClient();
@@ -185,16 +269,13 @@ export function useResetPasswordMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
       });
     },
   });
@@ -203,7 +284,7 @@ export function useResetPasswordMutation(
 export function useForgotPasswordEmailStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordEmailStepValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   return useMutation({
@@ -215,9 +296,6 @@ export function useForgotPasswordEmailStepMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
@@ -227,7 +305,7 @@ export function useForgotPasswordEmailStepMutation(
 export function useForgotPasswordCodeStepMutation(
   options: UseMutationOptions<
     z.infer<typeof forgotPasswordCodeStepValidator>,
-    undefined
+    unknown
   > = {},
 ) {
   const cq = useQueryClient();
@@ -241,16 +319,102 @@ export function useForgotPasswordCodeStepMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
     },
     onSuccess: (...input) => {
       options.onSuccess?.(...input);
       void cq.invalidateQueries({
-        queryKey: ["authed-user-info"],
+        queryKey: ["get-authed-user-info"],
+      });
+    },
+  });
+}
+
+export interface Role {
+  createDate: string;
+  updateDate: string;
+  modules: unknown;
+  description: string;
+  id: string;
+  providerId: string;
+  active: boolean;
+  name: string;
+}
+export function useGetRolesQuery<
+  TInput = z.infer<typeof paginationAndSearchValidator>,
+  TOutput = {
+    roles: Role[];
+    total: number;
+  },
+>(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-roles", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export function useAddOrEditRoleMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditRoleValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-role"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles/" +
+          (input.roleId ?? ""),
+        {
+          method: input.roleId ? "PUT" : "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-roles"],
+      });
+    },
+  });
+}
+
+export function useToggleRoleStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleRoleStatusValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-role-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/roles/${input.roleId}/toggle`,
+        {
+          method: "PATCH",
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-roles"],
       });
     },
   });

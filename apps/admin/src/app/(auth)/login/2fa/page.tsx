@@ -42,7 +42,8 @@ export default function TwoFactorAuthenticationPage() {
     onSuccess: (data) => {
       localStorage.removeItem("email");
       localStorage.setItem("access-token", data.token);
-      router.replace("/dashboard");
+      if (data.user.first) return router.replace("/reset-password");
+      return router.replace("/dashboard");
     },
   });
   const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({
@@ -98,9 +99,15 @@ export default function TwoFactorAuthenticationPage() {
               />
               <p className="text-base text-[#3678B1]">
                 {values["auth.2fa.code.valid-for"]}{" "}
-                {minutesRemaining.toString().padStart(2, "0")}
-                {":"}
-                {secondsRemaining.toString().padStart(2, "0")}
+                {countDown <= 0 ? (
+                  "00:00"
+                ) : (
+                  <>
+                    {minutesRemaining.toString().padStart(2, "0")}
+                    {":"}
+                    {secondsRemaining.toString().padStart(2, "0")}
+                  </>
+                )}
               </p>
             </div>
           }
