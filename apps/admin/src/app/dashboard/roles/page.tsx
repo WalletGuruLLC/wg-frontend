@@ -122,6 +122,7 @@ const columns = [
 
 export default function RolesPage() {
   const loading = useAccessLevelGuard("roles");
+  const { value } = useI18n("dashboard.roles.add-button");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -204,7 +205,7 @@ export default function RolesPage() {
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max w-48 flex-row items-center">
-                <p className="flex-1 text-lg font-light">Add Role</p>
+                <p className="flex-1 text-lg font-light">{value}</p>
                 <PlusCircle strokeWidth={0.75} className="size-6" />
               </Button>
             }
