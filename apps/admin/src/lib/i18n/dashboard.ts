@@ -19,8 +19,8 @@ export const dashboardDict = {
     "dashboard.roles.add-dialog.name.placeholder": "Role Name",
     "dashboard.roles.add-dialog.name.error":
       "Role Name cannot contain numbers and must be less than 20 characters",
-    "dashboard.roles.add-dialog.description.label": "Role Description",
-    "dashboard.roles.add-dialog.description.placeholder": "Description",
+    "dashboard.roles.add-dialog.description.label": "Description",
+    "dashboard.roles.add-dialog.description.placeholder": "",
     "dashboard.roles.add-dialog.description.error":
       "Role Description cannot contain numbers and must be less than 50 characters",
     "dashboard.roles.add-dialog.primary-button": "Create",
@@ -30,8 +30,8 @@ export const dashboardDict = {
     "dashboard.roles.edit-dialog.name.placeholder": "Role Name",
     "dashboard.roles.edit-dialog.name.error":
       "Role Name cannot contain numbers and must be less than 20 characters",
-    "dashboard.roles.edit-dialog.description.label": "Role Description",
-    "dashboard.roles.edit-dialog.description.placeholder": "Description",
+    "dashboard.roles.edit-dialog.description.label": "Description",
+    "dashboard.roles.edit-dialog.description.placeholder": "",
     "dashboard.roles.edit-dialog.description.error":
       "Role Description cannot contain numbers and must be less than 50 characters",
     "dashboard.roles.edit-dialog.primary-button": "Save",
@@ -78,7 +78,7 @@ export const dashboardDict = {
     "dashboard.roles.add-dialog.name.error":
       "El nombre del Rol no puede contener números y debe tener menos de 20 caracteres",
     "dashboard.roles.add-dialog.description.label": "Descripción",
-    "dashboard.roles.add-dialog.description.placeholder": "Descripción del Rol",
+    "dashboard.roles.add-dialog.description.placeholder": "",
     "dashboard.roles.add-dialog.description.error":
       "El nombre del Rol no puede contener números y debe tener menos de 50 caracteres",
     "dashboard.roles.add-dialog.primary-button": "Crear",
@@ -90,7 +90,7 @@ export const dashboardDict = {
       "El nombre del Rol no puede contener números y debe tener menos de 20 caracteres",
     "dashboard.roles.edit-dialog.description.label": "Descripción",
     "dashboard.roles.edit-dialog.description.placeholder":
-      "Descripción del Rol",
+      "",
     "dashboard.roles.edit-dialog.description.error":
       "La descripción del Rol no puede contener números y debe tener menos de 50 caracteres",
     "dashboard.roles.edit-dialog.primary-button": "Guardar",
