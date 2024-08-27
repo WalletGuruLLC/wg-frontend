@@ -179,7 +179,7 @@ export default function RolesPage() {
   if (loading || isLoadingAccessLevels) return null;
 
   return (
-    <div className="w-full space-y-10 pb-4">
+    <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
         <span>Roles</span>
         {isLoading && <Loader2 className="animate-spin" />}
@@ -213,36 +213,40 @@ export default function RolesPage() {
           />
         )}
       </div>
-      <Table table={table} />
-      <PaginationFooter
-        count={{
-          total: data?.total ?? 0,
-          firstRowIdx,
-          lastRowIdx,
-        }}
-        items={paginationAndSearch.items ?? "10"}
-        onItemsChange={(items) =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            items,
-            page: "1",
-          })
-        }
-        canPreviousPage={paginationAndSearch.page !== "1"}
-        canNextPage={data?.roles.length === Number(paginationAndSearch.items)}
-        onPreviousPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) - 1),
-          })
-        }
-        onNextPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) + 1),
-          })
-        }
-      />
+      <div className="flex-1 overflow-auto">
+        <Table table={table} />
+      </div>
+      <div>
+        <PaginationFooter
+          count={{
+            total: data?.total ?? 0,
+            firstRowIdx,
+            lastRowIdx,
+          }}
+          items={paginationAndSearch.items ?? "10"}
+          onItemsChange={(items) =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              items,
+              page: "1",
+            })
+          }
+          canPreviousPage={paginationAndSearch.page !== "1"}
+          canNextPage={data?.roles.length === Number(paginationAndSearch.items)}
+          onPreviousPage={() =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              page: String(Number(paginationAndSearch.page) - 1),
+            })
+          }
+          onNextPage={() =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              page: String(Number(paginationAndSearch.page) + 1),
+            })
+          }
+        />
+      </div>
     </div>
   );
 }

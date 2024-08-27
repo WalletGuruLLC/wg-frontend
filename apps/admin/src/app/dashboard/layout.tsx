@@ -92,9 +92,9 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     <main>
       <Metatags />
 
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-        <div className="hidden bg-black text-white md:block">
-          <div className="flex h-full max-h-screen flex-col gap-2">
+      <div className="grid max-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+        <div className="hidden h-screen bg-black text-white md:block">
+          <div className="flex h-full flex-col gap-2">
             <div className="flex h-24 items-center px-4">
               <Link href="/" className="flex items-center gap-2 font-semibold">
                 <Image
@@ -140,8 +140,8 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <header className="flex h-24 items-center gap-4 bg-black px-4 lg:px-6">
+        <div className="flex max-h-screen flex-col">
+          <header className="flex min-h-24 items-center gap-4 bg-black px-4 lg:px-6">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -211,7 +211,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </header>
-          <div className="px-4 pt-8">{props.children}</div>
+          <div className="h-full px-4 pt-8">{props.children}</div>
         </div>
       </div>
     </main>
