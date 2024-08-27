@@ -130,7 +130,7 @@ export default function RolesPage() {
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",
-    search: searchParams.get("query") ?? "",
+    search: searchParams.get("search") ?? "",
   };
 
   const { data, isLoading } = useGetRolesQuery(paginationAndSearch);
@@ -193,6 +193,7 @@ export default function RolesPage() {
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,
                 search: e.target.value,
+                page: "1",
               })
             }
           />
