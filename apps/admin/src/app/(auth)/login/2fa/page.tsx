@@ -99,9 +99,15 @@ export default function TwoFactorAuthenticationPage() {
               />
               <p className="text-base text-[#3678B1]">
                 {values["auth.2fa.code.valid-for"]}{" "}
-                {minutesRemaining.toString().padStart(2, "0")}
-                {":"}
-                {secondsRemaining.toString().padStart(2, "0")}
+                {countDown <= 0 ? (
+                  "00:00"
+                ) : (
+                  <>
+                    {minutesRemaining.toString().padStart(2, "0")}
+                    {":"}
+                    {secondsRemaining.toString().padStart(2, "0")}
+                  </>
+                )}
               </p>
             </div>
           }
