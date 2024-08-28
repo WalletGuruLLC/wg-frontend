@@ -324,7 +324,7 @@ function AddOrEditDialog(props: {
       phone: props.user?.phone ?? "",
       roleId: props.user?.role.id ?? "",
       serviceProviderId: "EMPTY",
-      type: "WALLET",
+      type: "PLATFORM",
       userId: props.user?.id,
     },
   });
