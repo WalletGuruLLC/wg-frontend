@@ -155,11 +155,11 @@ export default function WalletManagementPage() {
     data: data?.wallet ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.roles.includes("edit"),
+        (c) => c.id !== "actions" || accessLevelsData?.wallets.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.roles.includes("inactive"),
+          c.id !== "active" || accessLevelsData?.wallets.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
