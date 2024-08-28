@@ -27,7 +27,7 @@ pipelines:
       - parallel:
           - step:
               name: Lint
-              size: 2x
+              size: 4x
               script:
                 - *setup
                 - pnpm lint && pnpm lint:ws
