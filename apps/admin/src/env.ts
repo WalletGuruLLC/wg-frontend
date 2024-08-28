@@ -7,6 +7,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ADMIN_BASE_URL: z.string().min(1),
     NEXT_PUBLIC_AUTH_MICROSERVICE_URL: z.string().min(1),
     NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL: z.string().min(1),
+    NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL: z.string().min(1),
   },
   shared: {
     NODE_ENV: z
@@ -19,6 +20,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL,
     NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL:
       process.env.NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL,
+    NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL:
+      process.env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL,
     NODE_ENV: process.env.NODE_ENV,
   },
   skipValidation:
