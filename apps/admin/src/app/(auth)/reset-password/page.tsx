@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -12,15 +12,17 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { useResetPasswordMutation } from "~/lib/data-access";
-import { useAuthGuard } from "~/lib/hooks";
+import {
+  useGetAuthedUserInfoQuery,
+  useResetPasswordMutation,
+} from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { resetPasswordValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
 import { PasswordInput } from "../_components/auth-password-input";
 
 export default function ResetPasswordPage() {
-  const loading = useAuthGuard();
+  const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
   const router = useRouter();
 
   const { values } = useI18n();
@@ -41,7 +43,9 @@ export default function ResetPasswordPage() {
     },
   });
 
-  if (loading) return null;
+  if (!isLoading && !data) return redirect("/login");
+
+  if (isLoading) return null;
 
   return (
     <Form {...form}>
