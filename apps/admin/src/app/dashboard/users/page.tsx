@@ -78,7 +78,7 @@ function Actions({
     <AddOrEditDialog
       user={{
         ...user,
-        phone: "+1-21323",
+        phone: "+1-21323", // TODO: borrar esto cuando back nos mande el phone
       }}
       trigger={
         <Button className="font-semibold no-underline" variant="link">
