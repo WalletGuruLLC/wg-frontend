@@ -105,3 +105,20 @@ export const toggleUserStatusValidator = z.object({
   email: z.string().min(1),
   active: z.boolean(),
 });
+
+export const addOrEditWalletValidator = z.object({
+  name: z.string().min(1, "dashboard.wallet-management.edit-dialog.name.error"),
+  walletType: z
+    .string()
+    .min(1, "dashboard.wallet-management.edit-dialog.type.error"),
+  walletAddress: z
+    .string()
+    .url("dashboard.wallet-management.edit-dialog.address.error")
+    .min(1, "dashboard.wallet-management.edit-dialog.address.error"),
+  serviceProviderId: z.string().min(1),
+  walletId: z.string().optional(),
+});
+
+export const toggleWalletStatusValidator = z.object({
+  walletId: z.string().min(1),
+});

@@ -15,6 +15,7 @@ import {
 import type {
   addOrEditRoleValidator,
   addOrEditUserValidator,
+  addOrEditWalletValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -22,6 +23,7 @@ import type {
   resetPasswordValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
+  toggleWalletStatusValidator,
   twoFactorAuthenticationValidator,
 } from "../validators";
 import { env } from "~/env";
@@ -543,6 +545,91 @@ export function useGetCountryCodesQuery<
         env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL +
           "/api/v0.1/countries/codes",
       );
+    },
+  });
+}
+
+export interface Wallet {
+  id: string;
+  name: string;
+  walletType: string;
+  walletAddress: string;
+  active: boolean;
+}
+export function useGetWalletsQuery<
+  TInput = z.infer<typeof paginationAndSearchValidator>,
+  TOutput = {
+    wallet: Wallet[];
+  },
+>(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-wallets", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export function useAddOrEditWalletMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditWalletValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-wallet"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets/" +
+          (input.walletId ?? ""),
+        {
+          method: input.walletId ? "PUT" : "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-wallets"],
+      });
+    },
+  });
+}
+
+export function useToggleWalletStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleWalletStatusValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-wallet-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/wallets/${input.walletId}/toggle`,
+        {
+          method: "PATCH",
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-wallets"],
+      });
     },
   });
 }

@@ -131,6 +131,65 @@ export const dashboardDict = {
     "dashboard.users.table.actions.edit": "Edit",
     "dashboard.users.table.items-label": "Items per page:",
     "dashboard.users.table.items-count-separator": " of ",
+    "dashboard.wallet-management.title": "Registered Wallets",
+    "dashboard.wallet-management.search.placeholder": "Search",
+    "dashboard.wallet-management.add-button": "Add new wallet",
+    "dashboard.wallet-management.add-dialog.title": "Create a new wallet",
+    "dashboard.wallet-management.add-dialog.name.label": "Name",
+    "dashboard.wallet-management.add-dialog.name.placeholder": "Wallet Name",
+    "dashboard.wallet-management.add-dialog.name.error":
+      "Wallet Name is required",
+    "dashboard.wallet-management.add-dialog.type.label": "Wallet Type",
+    "dashboard.wallet-management.add-dialog.type.placeholder": "Wallet Type",
+    "dashboard.wallet-management.add-dialog.type.error":
+      "Wallet Type is required",
+    "dashboard.wallet-management.add-dialog.address.label": "Wallet Address",
+    "dashboard.wallet-management.add-dialog.address.placeholder":
+      "Wallet Address",
+    "dashboard.wallet-management.add-dialog.address.error":
+      "Wallet Address is required",
+    "dashboard.wallet-management.add-dialog.primary-button": "Create",
+    "dashboard.wallet-management.add-dialog.toast.success":
+      "The wallet was Successfully created",
+    "dashboard.wallet-management.edit-dialog.title": "Edit Wallet",
+    "dashboard.wallet-management.edit-dialog.name.label": "Name",
+    "dashboard.wallet-management.edit-dialog.name.placeholder": "Wallet Name",
+    "dashboard.wallet-management.edit-dialog.name.error":
+      "Wallet Name is required",
+    "dashboard.wallet-management.edit-dialog.type.label": "Wallet Type",
+    "dashboard.wallet-management.edit-dialog.type.placeholder": "Wallet Type",
+    "dashboard.wallet-management.edit-dialog.type.error":
+      "Wallet Type is required",
+    "dashboard.wallet-management.edit-dialog.address.label": "Wallet Address",
+    "dashboard.wallet-management.edit-dialog.address.placeholder":
+      "Wallet Address",
+    "dashboard.wallet-management.edit-dialog.address.error":
+      "Wallet Address is required",
+    "dashboard.wallet-management.edit-dialog.primary-button": "Create",
+    "dashboard.wallet-management.edit-dialog.toast.success":
+      "The wallet was Successfully edited",
+    "dashboard.wallet-management.inactive-dialog.title": "Inactive Wallet",
+    "dashboard.wallet-management.inactive-dialog.description":
+      "Deactivating the wallet will block transactions and access. Do you want to proceed?",
+    "dashboard.wallet-management.inactive-dialog.primary-button": "Yes",
+    "dashboard.wallet-management.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-management.inactive-dialog.toast.success":
+      "The wallet has been deactivated successfully.",
+    "dashboard.wallet-management.activate-dialog.title": "Activate Wallet",
+    "dashboard.wallet-management.activate-dialog.description":
+      "Activating the wallet will restore transactions and access. Do you want to proceed?",
+    "dashboard.wallet-management.activate-dialog.primary-button": "Yes",
+    "dashboard.wallet-management.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-management.activate-dialog.toast.success":
+      "The wallet has been activated successfully.",
+    "dashboard.wallet-management.table.header.name": "Name",
+    "dashboard.wallet-management.table.header.address": "Wallet Address",
+    "dashboard.wallet-management.table.header.type": "Type",
+    "dashboard.wallet-management.table.header.is-active": "Active",
+    "dashboard.wallet-management.table.header.actions": "Actions",
+    "dashboard.wallet-management.table.actions.edit": "Edit",
+    "dashboard.wallet-management.table.items-label": "Items per page:",
+    "dashboard.wallet-management.table.items-count-separator": " of ",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -260,5 +319,71 @@ export const dashboardDict = {
     "dashboard.users.table.actions.edit": "Editar",
     "dashboard.users.table.items-label": "Elementos por página:",
     "dashboard.users.table.items-count-separator": " de ",
+    "dashboard.wallet-management.title": "Billeteras Registradas",
+    "dashboard.wallet-management.search.placeholder": "Buscar",
+    "dashboard.wallet-management.add-button": "Agregar nueva billetera",
+    "dashboard.wallet-management.add-dialog.title": "Crear una nueva billetera",
+    "dashboard.wallet-management.add-dialog.name.label": "Nombre",
+    "dashboard.wallet-management.add-dialog.name.placeholder":
+      "Nombre de la Billetera",
+    "dashboard.wallet-management.add-dialog.name.error":
+      "Nombre de la Billetera es requerido",
+    "dashboard.wallet-management.add-dialog.type.label": "Tipo de Billetera",
+    "dashboard.wallet-management.add-dialog.type.placeholder":
+      "Tipo de Billetera",
+    "dashboard.wallet-management.add-dialog.type.error":
+      "Tipo de Billetera es requerido",
+    "dashboard.wallet-management.add-dialog.address.label":
+      "Dirección de la Billetera",
+    "dashboard.wallet-management.add-dialog.address.placeholder":
+      "Dirección de la Billetera",
+    "dashboard.wallet-management.add-dialog.address.error":
+      "Dirección de la Billetera es requerida",
+    "dashboard.wallet-management.add-dialog.primary-button": "Crear",
+    "dashboard.wallet-management.add-dialog.toast.success":
+      "La billetera se ha creado exitosamente",
+    "dashboard.wallet-management.edit-dialog.title": "Editar Billetera",
+    "dashboard.wallet-management.edit-dialog.name.label": "Nombre",
+    "dashboard.wallet-management.edit-dialog.name.placeholder":
+      "Nombre de la Billetera",
+    "dashboard.wallet-management.edit-dialog.name.error":
+      "Nombre de la Billetera es requerido",
+    "dashboard.wallet-management.edit-dialog.type.label": "Tipo de Billetera",
+    "dashboard.wallet-management.edit-dialog.type.placeholder":
+      "Tipo de Billetera",
+    "dashboard.wallet-management.edit-dialog.type.error":
+      "Tipo de Billetera es requerido",
+    "dashboard.wallet-management.edit-dialog.address.label":
+      "Dirección de la Billetera",
+    "dashboard.wallet-management.edit-dialog.address.placeholder":
+      "Dirección de la Billetera",
+    "dashboard.wallet-management.edit-dialog.address.error":
+      "Dirección de la Billetera es requerida",
+    "dashboard.wallet-management.edit-dialog.primary-button": "Crear",
+    "dashboard.wallet-management.edit-dialog.toast.success":
+      "La billetera se ha editado exitosamente",
+    "dashboard.wallet-management.inactive-dialog.title": "Billetera Inactiva",
+    "dashboard.wallet-management.inactive-dialog.description":
+      "Al desactivar la billetera, se bloquearán las transacciones y el acceso. ¿Desea continuar?",
+    "dashboard.wallet-management.inactive-dialog.primary-button": "Sí",
+    "dashboard.wallet-management.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-management.inactive-dialog.toast.success":
+      "La billetera se ha desactivado exitosamente.",
+    "dashboard.wallet-management.activate-dialog.title": "Activar Billetera",
+    "dashboard.wallet-management.activate-dialog.description":
+      "Al activar la billetera, se restaurarán las transacciones y el acceso. ¿Desea continuar?",
+    "dashboard.wallet-management.activate-dialog.primary-button": "Sí",
+    "dashboard.wallet-management.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-management.activate-dialog.toast.success":
+      "La billetera se ha activado exitosamente.",
+    "dashboard.wallet-management.table.header.name": "Nombre",
+    "dashboard.wallet-management.table.header.address":
+      "Dirección de la Billetera",
+    "dashboard.wallet-management.table.header.type": "Tipo",
+    "dashboard.wallet-management.table.header.is-active": "Activo",
+    "dashboard.wallet-management.table.header.actions": "Acciones",
+    "dashboard.wallet-management.table.actions.edit": "Editar",
+    "dashboard.wallet-management.table.items-label": "Elementos por página:",
+    "dashboard.wallet-management.table.items-count-separator": " de ",
   },
 } satisfies I18nDictionary;
