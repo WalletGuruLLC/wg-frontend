@@ -1,12 +1,14 @@
 services:
   server:
     build:
-        context: .
-        dockerfile: apps/admin/Dockerfile
-        args:
-          NEXT_PUBLIC_ADMIN_BASE_URL: https://dev.admin.walletguru.co
-          NEXT_PUBLIC_AUTH_MICROSERVICE_URL: https://dev.auth.walletguru.co
-          NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL: https://dev.notification.walletguru.co
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        NEXT_PUBLIC_ADMIN_BASE_URL: https://dev.admin.walletguru.co
+        NEXT_PUBLIC_AUTH_MICROSERVICE_URL: https://dev.auth.walletguru.co
+        NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL: https://dev.notification.walletguru.co
+        NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL: https://countriesnow.space
+        NEXT_PUBLIC_WALLET_MICROSERVICE_URL: https://dev.wallet.walletguru.co
     environment:
       NODE_ENV: production
     ports:

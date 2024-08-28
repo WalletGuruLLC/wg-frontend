@@ -35,7 +35,7 @@ pipelines:
                 - pnpm
           - step:
               name: Format
-              size: 2x
+              size: 4x
               script:
                 - *setup
                 - pnpm format
@@ -43,7 +43,7 @@ pipelines:
                 - pnpm
           - step:
               name: Typecheck
-              size: 2x
+              size: 4x
               script:
                 - *setup
                 - pnpm typecheck
