@@ -147,7 +147,7 @@ export const dashboardDict = {
     "dashboard.wallet-management.add-dialog.address.placeholder":
       "Wallet Address",
     "dashboard.wallet-management.add-dialog.address.error":
-      "Wallet Address is required",
+      "Wallet Address must be a valid URL",
     "dashboard.wallet-management.add-dialog.primary-button": "Create",
     "dashboard.wallet-management.add-dialog.toast.success":
       "The wallet was Successfully created",
@@ -164,7 +164,7 @@ export const dashboardDict = {
     "dashboard.wallet-management.edit-dialog.address.placeholder":
       "Wallet Address",
     "dashboard.wallet-management.edit-dialog.address.error":
-      "Wallet Address is required",
+      "Wallet Address must be a valid URL",
     "dashboard.wallet-management.edit-dialog.primary-button": "Create",
     "dashboard.wallet-management.edit-dialog.toast.success":
       "The wallet was Successfully edited",
@@ -338,7 +338,7 @@ export const dashboardDict = {
     "dashboard.wallet-management.add-dialog.address.placeholder":
       "Dirección de la Billetera",
     "dashboard.wallet-management.add-dialog.address.error":
-      "Dirección de la Billetera es requerida",
+      "Dirección de la Billetera debe ser una URL válida",
     "dashboard.wallet-management.add-dialog.primary-button": "Crear",
     "dashboard.wallet-management.add-dialog.toast.success":
       "La billetera se ha creado exitosamente",
@@ -358,7 +358,7 @@ export const dashboardDict = {
     "dashboard.wallet-management.edit-dialog.address.placeholder":
       "Dirección de la Billetera",
     "dashboard.wallet-management.edit-dialog.address.error":
-      "Dirección de la Billetera es requerida",
+      "Dirección de la Billetera debe ser una URL válida",
     "dashboard.wallet-management.edit-dialog.primary-button": "Crear",
     "dashboard.wallet-management.edit-dialog.toast.success":
       "La billetera se ha editado exitosamente",
