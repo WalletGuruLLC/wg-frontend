@@ -75,6 +75,8 @@ const ACCESS_LEVELS_MAP = {
   W325: "wallets",
   U783: "users",
   SP95: "serviceProviders",
+  SE37: "settings",
+  TR91: "transactions",
 } as const;
 export type AccessLevelModule =
   (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
@@ -105,23 +107,18 @@ export function useGetAuthedUserAccessLevelsQuery<
         };
       }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
 
-      // const data = {
-      //   accessLevel: {
-      //     R949: 15,
-      //     SP95: 15,
-      //     U783: 15,
-      //     W325: 15,
-      //   },
-      // };
-
       const accessLevels: AccessLevels = {
         roles: [],
         wallets: [],
         users: [],
         serviceProviders: [],
+        settings: [],
+        transactions: [],
       };
 
       for (const [key, value] of Object.entries(data.accessLevel)) {
+        if (!Object.keys(ACCESS_LEVELS_MAP).includes(key)) continue;
+
         const bin = value.toString(2).padStart(4, "0").split("");
         for (let i = 0; i < ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length; i++) {
           if (bin[i] === "1") {
