@@ -477,7 +477,7 @@ export function useAddOrEditUserMutation(
           "/api/v1/users/" +
           (input.userId ?? "register"),
         {
-          method: input.roleId ? "PATCH" : "POST",
+          method: input.userId ? "PUT" : "POST",
           body: JSON.stringify(input),
         },
       );
