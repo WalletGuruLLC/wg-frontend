@@ -9,11 +9,11 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger,
   SelectValue,
 } from "@wg-frontend/ui/select";
 
 import type { I18nKey } from "~/lib/i18n";
+import { SelectTrigger } from "~/components/select";
 import { useI18n } from "~/lib/i18n";
 
 export default function Table<TData>({ table }: { table: Table<TData> }) {

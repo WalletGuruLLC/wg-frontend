@@ -1,6 +1,7 @@
 "use client";
 
 import type { Viewport } from "next";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
@@ -10,6 +11,7 @@ import "~/app/globals.css";
 
 import { Toaster } from "@wg-frontend/ui/toast";
 
+import { env } from "~/env";
 import QueryClientProvider from "~/lib/data-access/provider";
 import { I18nProvider } from "~/lib/i18n";
 
@@ -31,7 +33,12 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <I18nProvider>
-          <QueryClientProvider>{props.children}</QueryClientProvider>
+          <QueryClientProvider>
+            {props.children}
+            {env.NODE_ENV === "development" && (
+              <ReactQueryDevtools initialIsOpen={true} />
+            )}
+          </QueryClientProvider>
         </I18nProvider>
         <Toaster
           position="top-right"

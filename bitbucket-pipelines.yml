@@ -67,8 +67,8 @@ pipelines:
                   - aws configure set aws_secret_access_key "${AWS_SECRET}"
                   - eval $(aws ecr get-login --no-include-email --region us-east-2 | sed 's;https://;;g')
                   - export DOCKER_BUILDKIT=1
-                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL --build-arg NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL --build-arg NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL -t ${IMAGE}:$TAG
-                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL --build-arg NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL --build-arg NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL -t ${IMAGE}:$TAG_LATEST
+                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL --build-arg NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL --build-arg NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL --build-arg NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL=$NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL  -t ${IMAGE}:$TAG
+                  - docker build -f apps/admin/Dockerfile . --build-arg NODE_ENV=$NODE_ENV --build-arg NEXT_PUBLIC_ADMIN_BASE_URL=$NEXT_PUBLIC_ADMIN_BASE_URL --build-arg NEXT_PUBLIC_AUTH_MICROSERVICE_URL=$NEXT_PUBLIC_AUTH_MICROSERVICE_URL --build-arg NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL=$NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL --build-arg NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL=$NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL  -t ${IMAGE}:$TAG_LATEST
                   - docker push ${IMAGE}:$TAG
                   - docker push ${IMAGE}:$TAG_LATEST
                 caches:

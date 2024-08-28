@@ -61,11 +61,17 @@ export default function createI18nHandlers<
         return defaultLanguage;
       }
 
-      const browserLanguage = navigator.language;
+      const browserLanguages = navigator.languages.map(
+        (lang) => lang.split("-")[0],
+      );
 
-      return Object.keys(dictionary).includes(browserLanguage)
-        ? (browserLanguage as Language)
-        : defaultLanguage;
+      for (const browserLanguage of browserLanguages) {
+        if (Object.keys(dictionary).includes(browserLanguage ?? "")) {
+          return browserLanguage as Language;
+        }
+      }
+
+      return defaultLanguage;
     });
 
     return (

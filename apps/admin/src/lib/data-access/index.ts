@@ -14,12 +14,14 @@ import {
 
 import type {
   addOrEditRoleValidator,
+  addOrEditUserValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
   toggleRoleStatusValidator,
+  toggleUserStatusValidator,
   twoFactorAuthenticationValidator,
 } from "../validators";
 import { env } from "~/env";
@@ -73,6 +75,8 @@ const ACCESS_LEVELS_MAP = {
   W325: "wallets",
   U783: "users",
   SP95: "serviceProviders",
+  SE37: "settings",
+  TR91: "transactions",
 } as const;
 export type AccessLevelModule =
   (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
@@ -92,7 +96,6 @@ export function useGetAuthedUserAccessLevelsQuery<
 >(_: TInput, options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
     ...options,
-    retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
     queryKey: ["get-authed-user-access-levels"],
     queryFn: async () => {
       const data = await customFetch<{
@@ -109,10 +112,14 @@ export function useGetAuthedUserAccessLevelsQuery<
         wallets: [],
         users: [],
         serviceProviders: [],
+        settings: [],
+        transactions: [],
       };
 
       for (const [key, value] of Object.entries(data.accessLevel)) {
-        const bin = value.toString(2).padStart(4, "0");
+        if (!Object.keys(ACCESS_LEVELS_MAP).includes(key)) continue;
+
+        const bin = value.toString(2).padStart(4, "0").split("");
         for (let i = 0; i < ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length; i++) {
           if (bin[i] === "1") {
             accessLevels[
@@ -416,6 +423,126 @@ export function useToggleRoleStatusMutation(
       void cq.invalidateQueries({
         queryKey: ["get-roles"],
       });
+    },
+  });
+}
+
+export interface User {
+  mfaEnabled: boolean;
+  roleId: string;
+  serviceProviderId: string;
+  state: 0 | 1 | 2 | 3;
+  firstName: string;
+  id: string;
+  type: "PLATFORM" | "WALLET" | "PROVIDER";
+  active: boolean;
+  lastName: string;
+  email: string;
+  first: boolean;
+  mfaType: "TOTP" | "SMS";
+  roleName: string;
+  phone: string;
+}
+export function useGetUsersQuery<
+  TInput = z.infer<typeof paginationAndSearchValidator> & {
+    type: "PLATFORM" | "WALLET" | "PROVIDER";
+  },
+  TOutput = {
+    users: User[];
+    total: number;
+    totalPages: number;
+    currentPage: number;
+  },
+>(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-users", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export function useAddOrEditUserMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditUserValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-user"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/" +
+          (input.userId ?? "register"),
+        {
+          method: input.userId ? "PUT" : "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-users"],
+      });
+    },
+  });
+}
+
+export function useToggleUserStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleUserStatusValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-user-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/users/update-status/${input.userId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-users"],
+      });
+    },
+  });
+}
+
+export function useGetCountryCodesQuery<
+  TInput = undefined,
+  TOutput = {
+    name: string;
+    code: string;
+    dial_code: string;
+  }[],
+>(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-country-codes"],
+    queryFn: () => {
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL +
+          "/api/v0.1/countries/codes",
+      );
     },
   });
 }
