@@ -139,13 +139,14 @@ export default function RolesPage() {
 
   const table = useReactTable({
     data: data?.roles ?? [],
-    columns: columns.filter(
-      (c) =>
-        c.id === "name" ||
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        (c.id === "actions" && accessLevelsData?.roles.includes("edit")) ||
-        (c.id === "active" && accessLevelsData?.roles.includes("inactive")),
-    ),
+    columns: columns
+      .filter(
+        (c) => c.id !== "actions" || accessLevelsData?.roles.includes("edit"),
+      )
+      .filter(
+        (c) =>
+          c.id !== "active" || accessLevelsData?.roles.includes("inactive"),
+      ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
