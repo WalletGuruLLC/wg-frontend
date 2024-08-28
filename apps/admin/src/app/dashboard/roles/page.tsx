@@ -187,7 +187,7 @@ export default function RolesPage() {
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
-            placeholder="Search"
+            placeholder={values["dashboard.roles.search.placeholder"]}
             className="rounded-full border border-black"
             onChange={(e) =>
               handlePaginationAndSearchChange({
