@@ -81,7 +81,17 @@ export const addOrEditUserValidator = z.object({
   firstName: z.string().min(1, "dashboard.user.edit-dialog.first-name.error"),
   lastName: z.string().min(1, "dashboard.user.edit-dialog.last-name.error"),
   email: z.string().email("dashboard.user.edit-dialog.email.error"),
-  phone: z.string().min(1, "dashboard.user.edit-dialog.phone.error"),
+  phone: z
+    .string()
+    .min(1)
+    .refine(
+      (v) =>
+        (v.split("-")[0] !== "" && !isNaN(Number(v.split("-")[0]))) ||
+        (v.split("-")[1] !== "" && !isNaN(Number(v.split("-")[1]))),
+      {
+        message: "dashboard.user.edit-dialog.phone.error",
+      },
+    ),
   serviceProviderId: z.string().min(1),
   roleId: z.string().min(1, "dashboard.user.edit-dialog.role.error"),
   type: z.enum(["WALLET", "PROVIDER", "PLATFORM"]),

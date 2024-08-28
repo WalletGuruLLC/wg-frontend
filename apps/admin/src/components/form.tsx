@@ -5,7 +5,7 @@ import React from "react";
 import { cn } from "@wg-frontend/ui";
 import { useFormField } from "@wg-frontend/ui/form";
 
-import type { errorsDict } from "~/lib/i18n/errors";
+import type { I18nKey } from "~/lib/i18n";
 import { useI18n } from "~/lib/i18n";
 
 const FormMessage = React.forwardRef<
@@ -13,9 +13,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const { value } = useI18n(
-    error?.message as keyof (typeof errorsDict)["en" | "es"],
-  );
+  const { value } = useI18n(error?.message as I18nKey);
 
   if (!error) {
     return null;

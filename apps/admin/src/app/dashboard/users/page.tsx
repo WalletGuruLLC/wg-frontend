@@ -18,8 +18,15 @@ import {
 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { cn } from "@wg-frontend/ui";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { User } from "~/lib/data-access";
@@ -27,9 +34,12 @@ import type { I18nKey } from "~/lib/i18n";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
+import { SelectTrigger } from "~/components/select";
 import {
   useAddOrEditUserMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetCountryCodesQuery,
+  useGetRolesQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
@@ -80,14 +90,14 @@ const columnHelper = createColumnHelper<User>();
 const columns = [
   columnHelper.accessor("firstName", {
     id: "firstName",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue() || "-",
     header: () => (
       <ColumnHeader i18nKey="dashboard.users.table.header.first-name" />
     ),
   }),
   columnHelper.accessor("lastName", {
     id: "lastName",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue() || "-",
     header: () => (
       <ColumnHeader i18nKey="dashboard.users.table.header.last-name" />
     ),
@@ -97,9 +107,14 @@ const columns = [
     cell: (info) => info.getValue(),
     header: () => <ColumnHeader i18nKey="dashboard.users.table.header.email" />,
   }),
+  columnHelper.accessor("phone", {
+    id: "phone",
+    cell: (info) => info.getValue() || "-",
+    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.phone" />,
+  }),
   columnHelper.accessor("roleName", {
     id: "roleName",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue() || "-",
     header: () => <ColumnHeader i18nKey="dashboard.users.table.header.role" />,
   }),
   columnHelper.accessor("active", {
@@ -155,7 +170,7 @@ export default function UsersPage() {
 
   const { data, isLoading } = useGetUsersQuery({
     ...paginationAndSearch,
-    type: "WALLET",
+    type: "PLATFORM",
   });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -318,6 +333,11 @@ function AddOrEditDialog(props: {
       form.reset();
     },
   });
+  const { data: dataRoles } = useGetRolesQuery({
+    items: "1000",
+    page: "1",
+  });
+  const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
     `dashboard.users.${props.user ? "edit" : "add"}-dialog` as const;
@@ -416,7 +436,124 @@ function AddOrEditDialog(props: {
                 </FormItem>
               )}
             />
-            {/* FALTA PHONE Y ROLE */}
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{values[`${valuesPrefix}.phone.label`]}</FormLabel>
+                  <div className="flex flex-row items-center space-x-2">
+                    <div>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange({
+                            target: {
+                              value:
+                                value + "-" + (field.value.split("-")[1] ?? ""),
+                            },
+                          });
+                        }}
+                        defaultValue={field.value.split("-")[0]}
+                      >
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-none border-transparent border-b-black",
+                            !field.value.split("-")[0] && "text-[#A1A1A1]",
+                          )}
+                        >
+                          <SelectValue
+                            className="h-full"
+                            placeholder={
+                              values[`${valuesPrefix}.phone.code-placeholder`]
+                            }
+                          >
+                            {field.value.split("-")[0]}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {!dataCountryCodes && (
+                            <Loader2
+                              className="animate-spin"
+                              strokeWidth={0.75}
+                            />
+                          )}
+                          {dataCountryCodes?.map((country) => (
+                            <SelectItem
+                              key={country.code}
+                              value={country.dial_code}
+                            >
+                              {country.name} {country.dial_code}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex-1">
+                      <FormControl>
+                        <Input
+                          placeholder={
+                            values[`${valuesPrefix}.phone.phone-placeholder`]
+                          }
+                          required
+                          inputMode="numeric"
+                          onChange={(e) => {
+                            field.onChange({
+                              target: {
+                                value:
+                                  (field.value.split("-")[0] ?? "") +
+                                  "-" +
+                                  e.target.value,
+                              },
+                            });
+                          }}
+                          value={field.value.split("-")[1] ?? ""}
+                        />
+                      </FormControl>
+                    </div>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="roleId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{values[`${valuesPrefix}.role.label`]}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={cn(
+                          "rounded-none border-transparent border-b-black",
+                          !field.value && "text-[#A1A1A1]",
+                        )}
+                      >
+                        <SelectValue
+                          placeholder={
+                            values[`${valuesPrefix}.role.placeholder`]
+                          }
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {!dataRoles && (
+                        <Loader2 className="animate-spin" strokeWidth={0.75} />
+                      )}
+                      {dataRoles?.roles.map((role) => (
+                        <SelectItem key={role.id} value={role.id}>
+                          {role.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <DialogFooter className="pt-9">
               <Button className="w-full" type="submit" disabled={isPending}>
                 {

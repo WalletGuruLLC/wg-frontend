@@ -94,7 +94,6 @@ export function useGetAuthedUserAccessLevelsQuery<
 >(_: TInput, options: UseQueryOptions<TOutput> = {}) {
   return useQuery({
     ...options,
-    retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
     queryKey: ["get-authed-user-access-levels"],
     queryFn: async () => {
       const data = await customFetch<{
@@ -516,6 +515,26 @@ export function useToggleUserStatusMutation(
       void cq.invalidateQueries({
         queryKey: ["get-users"],
       });
+    },
+  });
+}
+
+export function useGetCountryCodesQuery<
+  TInput = undefined,
+  TOutput = {
+    name: string;
+    code: string;
+    dial_code: string;
+  }[],
+>(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-country-codes"],
+    queryFn: () => {
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL +
+          "/api/v0.1/countries/codes",
+      );
     },
   });
 }

@@ -78,7 +78,7 @@ export const dashboardDict = {
     "dashboard.users.add-dialog.phone.code-placeholder": "+00",
     "dashboard.users.add-dialog.phone.phone-placeholder":
       "Enter your phone number",
-    "dashboard.users.add-dialog.phone.error": "Phone Number is required",
+    "dashboard.users.add-dialog.phone.error": "Phone Number is invalid",
     "dashboard.users.add-dialog.role.label": "Role",
     "dashboard.users.add-dialog.role.placeholder": "Select Role",
     "dashboard.users.add-dialog.role.error": "Role is required",
@@ -100,7 +100,7 @@ export const dashboardDict = {
     "dashboard.users.edit-dialog.phone.code-placeholder": "+00",
     "dashboard.users.edit-dialog.phone.phone-placeholder":
       "Enter your phone number",
-    "dashboard.users.edit-dialog.phone.error": "Phone Number is required",
+    "dashboard.users.edit-dialog.phone.error": "Phone Number is invalid",
     "dashboard.users.edit-dialog.role.label": "Role",
     "dashboard.users.edit-dialog.role.placeholder": "Select Role",
     "dashboard.users.edit-dialog.role.error": "Role is required",
@@ -207,7 +207,7 @@ export const dashboardDict = {
     "dashboard.users.add-dialog.phone.code-placeholder": "+00",
     "dashboard.users.add-dialog.phone.phone-placeholder":
       "Ingrese su número de teléfono",
-    "dashboard.users.add-dialog.phone.error": "Número de Teléfono es requerido",
+    "dashboard.users.add-dialog.phone.error": "Número de Teléfono es invalido",
     "dashboard.users.add-dialog.role.label": "Rol",
     "dashboard.users.add-dialog.role.placeholder": "Seleccionar Rol",
     "dashboard.users.add-dialog.role.error": "Rol es requerido",
@@ -229,8 +229,7 @@ export const dashboardDict = {
     "dashboard.users.edit-dialog.phone.code-placeholder": "+00",
     "dashboard.users.edit-dialog.phone.phone-placeholder":
       "Ingrese su número de teléfono",
-    "dashboard.users.edit-dialog.phone.error":
-      "Número de Teléfono es requerido",
+    "dashboard.users.edit-dialog.phone.error": "Número de Teléfono es invalido",
     "dashboard.users.edit-dialog.role.label": "Rol",
     "dashboard.users.edit-dialog.role.placeholder": "Seleccionar Rol",
     "dashboard.users.edit-dialog.role.error": "Rol es requerido",
