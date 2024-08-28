@@ -76,3 +76,20 @@ export const addOrEditRoleValidator = z.object({
 export const toggleRoleStatusValidator = z.object({
   roleId: z.string().min(1),
 });
+
+export const addOrEditUserValidator = z.object({
+  firstName: z.string().min(1, "dashboard.user.edit-dialog.first-name.error"),
+  lastName: z.string().min(1, "dashboard.user.edit-dialog.last-name.error"),
+  email: z.string().email("dashboard.user.edit-dialog.email.error"),
+  phone: z.string().min(1, "dashboard.user.edit-dialog.phone.error"),
+  serviceProviderId: z.string().min(1),
+  roleId: z.string().min(1, "dashboard.user.edit-dialog.role.error"),
+  type: z.enum(["WALLET", "PROVIDER", "PLATFORM"]),
+  userId: z.string().optional(),
+});
+
+export const toggleUserStatusValidator = z.object({
+  userId: z.string().min(1),
+  email: z.string().min(1),
+  active: z.boolean(),
+});
