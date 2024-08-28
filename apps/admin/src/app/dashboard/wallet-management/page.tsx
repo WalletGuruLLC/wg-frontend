@@ -18,8 +18,15 @@ import {
 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { cn } from "@wg-frontend/ui";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { Wallet } from "~/lib/data-access";
@@ -27,6 +34,7 @@ import type { I18nKey } from "~/lib/i18n";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
+import { SelectTrigger } from "~/components/select";
 import {
   useAddOrEditWalletMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -355,13 +363,29 @@ function AddOrEditDialog(props: {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{values[`${valuesPrefix}.type.label`]}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={values[`${valuesPrefix}.type.placeholder`]}
-                      required
-                      {...field}
-                    />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={cn(
+                          "rounded-none border-transparent border-b-black",
+                          !field.value && "text-[#A1A1A1]",
+                        )}
+                      >
+                        <SelectValue
+                          placeholder={
+                            values[`${valuesPrefix}.type.placeholder`]
+                          }
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="White Label">White Label</SelectItem>
+                      <SelectItem value="Third Party">Third Party</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
