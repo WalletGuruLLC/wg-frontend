@@ -27,6 +27,7 @@ pipelines:
       - parallel:
           - step:
               name: Lint
+              size: 2x
               script:
                 - *setup
                 - pnpm lint && pnpm lint:ws
@@ -34,6 +35,7 @@ pipelines:
                 - pnpm
           - step:
               name: Format
+              size: 2x
               script:
                 - *setup
                 - pnpm format
@@ -41,6 +43,7 @@ pipelines:
                 - pnpm
           - step:
               name: Typecheck
+              size: 2x
               script:
                 - *setup
                 - pnpm typecheck
