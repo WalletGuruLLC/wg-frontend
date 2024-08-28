@@ -282,7 +282,6 @@ function AddOrEditDialog(props: {
       name: props.wallet?.name ?? "",
       walletType: props.wallet?.walletType ?? "",
       walletAddress: props.wallet?.walletAddress ?? "",
-      serviceProviderId: "EMPTY",
       walletId: props.wallet?.id,
     },
   });
@@ -309,7 +308,6 @@ function AddOrEditDialog(props: {
         walletType: props.wallet.walletType,
         walletAddress: props.wallet.walletAddress,
         walletId: props.wallet.id,
-        serviceProviderId: "EMPTY",
       });
     }
   }, [props.wallet, form]);

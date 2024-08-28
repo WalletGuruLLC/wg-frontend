@@ -115,7 +115,6 @@ export const addOrEditWalletValidator = z.object({
     .string()
     .url("dashboard.wallet-management.edit-dialog.address.error")
     .min(1, "dashboard.wallet-management.edit-dialog.address.error"),
-  serviceProviderId: z.string().min(1),
   walletId: z.string().optional(),
 });
 
