@@ -177,7 +177,6 @@ export default function UsersPage() {
     ...paginationAndSearch,
     type: "PLATFORM",
   });
-  console.log(data);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
