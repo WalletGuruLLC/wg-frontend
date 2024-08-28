@@ -69,13 +69,17 @@ function Actions({
     };
     email: string;
     phone: string;
+    first: boolean;
   };
 }) {
   const { value } = useI18n("dashboard.users.table.actions.edit");
 
   return (
     <AddOrEditDialog
-      user={user}
+      user={{
+        ...user,
+        phone: "+1-21323",
+      }}
       trigger={
         <Button className="font-semibold no-underline" variant="link">
           {value}
@@ -149,6 +153,7 @@ const columns = [
             id: info.row.original.roleId,
             name: info.row.original.roleName,
           },
+          first: info.row.original.first,
         }}
       />
     ),
@@ -172,6 +177,7 @@ export default function UsersPage() {
     ...paginationAndSearch,
     type: "PLATFORM",
   });
+  console.log(data);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -303,6 +309,7 @@ function AddOrEditDialog(props: {
       id: string;
       name: string;
     };
+    first: boolean;
   };
   trigger: ReactNode;
 }) {
@@ -352,6 +359,8 @@ function AddOrEditDialog(props: {
         phone: props.user.phone,
         roleId: props.user.role.id,
         userId: props.user.id,
+        serviceProviderId: "EMPTY",
+        type: "WALLET",
       });
     }
   }, [props.user, form]);
@@ -421,6 +430,7 @@ function AddOrEditDialog(props: {
             <FormField
               control={form.control}
               name="email"
+              disabled={props.user && !props.user.first}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{values[`${valuesPrefix}.email.label`]}</FormLabel>
@@ -428,7 +438,6 @@ function AddOrEditDialog(props: {
                     <Input
                       placeholder={values[`${valuesPrefix}.email.placeholder`]}
                       required
-                      type="email"
                       {...field}
                     />
                   </FormControl>

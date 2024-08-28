@@ -83,11 +83,13 @@ export const addOrEditUserValidator = z.object({
   email: z.string().email("dashboard.user.edit-dialog.email.error"),
   phone: z
     .string()
-    .min(1)
+    .min(1, "dashboard.user.edit-dialog.phone.error")
     .refine(
       (v) =>
-        (v.split("-")[0] !== "" && !isNaN(Number(v.split("-")[0]))) ||
-        (v.split("-")[1] !== "" && !isNaN(Number(v.split("-")[1]))),
+        v.split("-")[0] !== "" &&
+        !isNaN(Number(v.split("-")[0])) &&
+        v.split("-")[1] !== "" &&
+        !isNaN(Number(v.split("-")[1])),
       {
         message: "dashboard.user.edit-dialog.phone.error",
       },

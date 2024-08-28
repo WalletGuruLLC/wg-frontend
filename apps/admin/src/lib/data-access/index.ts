@@ -105,6 +105,15 @@ export function useGetAuthedUserAccessLevelsQuery<
         };
       }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
 
+      // const data = {
+      //   accessLevel: {
+      //     R949: 15,
+      //     SP95: 15,
+      //     U783: 15,
+      //     W325: 15,
+      //   },
+      // };
+
       const accessLevels: AccessLevels = {
         roles: [],
         wallets: [],
@@ -113,7 +122,7 @@ export function useGetAuthedUserAccessLevelsQuery<
       };
 
       for (const [key, value] of Object.entries(data.accessLevel)) {
-        const bin = value.toString(2).padStart(4, "0");
+        const bin = value.toString(2).padStart(4, "0").split("");
         for (let i = 0; i < ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length; i++) {
           if (bin[i] === "1") {
             accessLevels[
@@ -424,15 +433,17 @@ export function useToggleRoleStatusMutation(
 export interface User {
   mfaEnabled: boolean;
   roleId: string;
-  roleName: string; // MAYBE: Remove this field
   serviceProviderId: string;
-  id: string;
   state: 0 | 1 | 2 | 3;
-  active: boolean;
-  email: string;
-  mfaType: "TOTP" | "SMS";
   firstName: string;
+  id: string;
+  type: "PLATFORM" | "WALLET" | "PROVIDER";
+  active: boolean;
   lastName: string;
+  email: string;
+  first: boolean;
+  mfaType: "TOTP" | "SMS";
+  roleName: string;
   phone: string;
 }
 export function useGetUsersQuery<
