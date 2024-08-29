@@ -500,6 +500,23 @@ export function useAddOrEditUserMutation(
   });
 }
 
+export function useGetActiveRolesQuery<
+  TInput = {
+    providerId: string;
+  },
+  TOutput = Role[],
+>(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-active-roles", input],
+    queryFn: () => {
+      return customFetch<TOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/roles/active",
+      );
+    },
+  });
+}
+
 export function useToggleUserStatusMutation(
   options: UseMutationOptions<
     z.infer<typeof toggleUserStatusValidator>,
