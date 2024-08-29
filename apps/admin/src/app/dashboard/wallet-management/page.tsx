@@ -222,7 +222,7 @@ export default function WalletManagementPage() {
         {accessLevelsData?.wallets.includes("add") && (
           <AddOrEditDialog
             trigger={
-              <Button className="flex h-max w-48 flex-row items-center">
+              <Button className="flex h-max w-64 flex-row items-center">
                 <p className="flex-1 text-lg font-light">
                   {values["dashboard.wallet-management.add-button"]}
                 </p>
