@@ -618,7 +618,7 @@ export function useToggleWalletStatusMutation(
     mutationKey: ["toggle-wallet-status"],
     mutationFn: (input) => {
       return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
           `/api/v1/wallets/${input.walletId}/toggle`,
         {
           method: "PATCH",
