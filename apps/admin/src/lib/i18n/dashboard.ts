@@ -165,7 +165,7 @@ export const dashboardDict = {
       "Wallet Address",
     "dashboard.wallet-management.edit-dialog.address.error":
       "Wallet Address must be a valid URL",
-    "dashboard.wallet-management.edit-dialog.primary-button": "Create",
+    "dashboard.wallet-management.edit-dialog.primary-button": "Save",
     "dashboard.wallet-management.edit-dialog.toast.success":
       "The wallet was Successfully edited",
     "dashboard.wallet-management.inactive-dialog.title": "Inactive Wallet",
@@ -359,7 +359,7 @@ export const dashboardDict = {
       "Dirección de la Billetera",
     "dashboard.wallet-management.edit-dialog.address.error":
       "Dirección de la Billetera debe ser una URL válida",
-    "dashboard.wallet-management.edit-dialog.primary-button": "Crear",
+    "dashboard.wallet-management.edit-dialog.primary-button": "Guardar",
     "dashboard.wallet-management.edit-dialog.toast.success":
       "La billetera se ha editado exitosamente",
     "dashboard.wallet-management.inactive-dialog.title": "Billetera Inactiva",

@@ -37,9 +37,9 @@ import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
 import {
   useAddOrEditUserMutation,
+  useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
   useGetCountryCodesQuery,
-  useGetRolesQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
@@ -339,10 +339,10 @@ function AddOrEditDialog(props: {
       form.reset();
     },
   });
-  const { data: dataRoles } = useGetRolesQuery({
-    items: "1000",
-    page: "1",
+  const { data: dataRoles } = useGetActiveRolesQuery({
+    providerId: "EMPTY",
   });
+
   const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
@@ -551,7 +551,7 @@ function AddOrEditDialog(props: {
                       {!dataRoles && (
                         <Loader2 className="animate-spin" strokeWidth={0.75} />
                       )}
-                      {dataRoles?.roles.map((role) => (
+                      {dataRoles?.map((role) => (
                         <SelectItem key={role.id} value={role.id}>
                           {role.name}
                         </SelectItem>
