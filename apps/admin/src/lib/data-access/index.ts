@@ -21,6 +21,7 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  saveRoleModuleAccessLevelValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
   toggleWalletStatusValidator,
@@ -68,7 +69,7 @@ export function useGetAuthedUserInfoQuery(
   });
 }
 
-const ACCESS_LEVELS_MAP = {
+export const ACCESS_LEVELS_MAP = {
   R949: "roles",
   W325: "wallets",
   U783: "users",
@@ -76,7 +77,7 @@ const ACCESS_LEVELS_MAP = {
   SE37: "settings",
   TR91: "transactions",
 } as const;
-type APIAccessLevels = {
+export type APIAccessLevels = {
   [key in keyof typeof ACCESS_LEVELS_MAP]?: number;
 };
 export type AccessLevelModule =
@@ -87,12 +88,13 @@ const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
   "edit",
   "inactive",
 ] as const;
-type AccessLevels = {
-  [key in AccessLevelModule]: (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[
-    | 0
-    | 1
-    | 2
-    | 3][];
+export type AccessLevelAction = (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[
+  | 0
+  | 1
+  | 2
+  | 3];
+export type AccessLevels = {
+  [key in AccessLevelModule]: AccessLevelAction[];
 };
 // Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
 export function useGetAuthedUserAccessLevelsQuery(
@@ -140,6 +142,14 @@ function parseAccessLevels(accessLevels: APIAccessLevels) {
   }
 
   return accessLevelsMap;
+}
+export function convertAccessLevel(accessLevel: AccessLevelAction[]) {
+  return parseInt(
+    ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.map((v) =>
+      accessLevel.includes(v) ? "1" : "0",
+    ).join(""),
+    2,
+  );
 }
 
 export function useLoginMutation(
@@ -430,15 +440,19 @@ export function useToggleRoleStatusMutation(
   });
 }
 
+export type UseGetRoleQueryOutput = {
+  module: AccessLevelModule;
+  accessLevels: AccessLevels[AccessLevelModule];
+}[];
 export function useGetRoleQuery(
   input: {
     roleId: string;
   },
-  options: UseQueryOptions<AccessLevels> = {},
+  options: UseQueryOptions<UseGetRoleQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
-    queryKey: ["get-roles", input],
+    queryKey: ["get-role", input],
     queryFn: async () => {
       const apiAccessLevels = await customFetch<APIAccessLevels>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
@@ -446,7 +460,43 @@ export function useGetRoleQuery(
           input.roleId,
       );
 
-      return parseAccessLevels(apiAccessLevels);
+      return Object.entries(parseAccessLevels(apiAccessLevels)).map(
+        ([k, v]) => {
+          return {
+            module: k as AccessLevelModule,
+            accessLevels: v,
+          };
+        },
+      );
+    },
+  });
+}
+
+export function useSaveRoleModuleAccessLevelMutation(
+  options: UseMutationOptions<
+    z.infer<typeof saveRoleModuleAccessLevelValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["save-role-module-access-level"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/roles/access-level/${input.roleId}/${input.moduleId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-role"],
+      });
     },
   });
 }
