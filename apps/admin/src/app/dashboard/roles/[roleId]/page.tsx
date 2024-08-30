@@ -177,6 +177,7 @@ const columns = [
       />
     ),
   }),
+  // TODO: Add "all" column
   columnHelper.display({
     id: "actions",
     header: () => (
