@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 
+import { useIsMutating } from "@wg-frontend/data-access";
 import { Button } from "@wg-frontend/ui/button";
 import { Checkbox } from "@wg-frontend/ui/checkbox";
 import { toast } from "@wg-frontend/ui/toast";
@@ -38,7 +39,7 @@ function Actions({
   const { roleId } = useParams<{ roleId: string }>();
   const { value, values } = useI18n("dashboard.roles.role.table.actions.save");
 
-  const { mutate } = useSaveRoleModuleAccessLevelMutation({
+  const { mutate, isPending } = useSaveRoleModuleAccessLevelMutation({
     onSuccess: () => {
       toast.success(values["dashboard.roles.role.success-toast"]);
     },
@@ -46,27 +47,28 @@ function Actions({
       toast.error(values[`errors.${error.message}` as I18nKey]);
     },
   });
+  const isPendingOther = useIsMutating({
+    mutationKey: ["save-role-module-access-level"],
+  });
 
   return (
-    <div className="flex flex-row space-x-4">
-      <Button
-        className="font-semibold no-underline"
-        variant="link"
-        onClick={() => {
-          mutate({
-            roleId,
-            moduleId: Object.keys(ACCESS_LEVELS_MAP).find(
-              (k) =>
-                ACCESS_LEVELS_MAP[k as keyof typeof ACCESS_LEVELS_MAP] ===
-                module,
-            ) as keyof typeof ACCESS_LEVELS_MAP,
-            accessLevel: convertAccessLevel(accessLevels),
-          });
-        }}
-      >
-        {value}
-      </Button>
-    </div>
+    <Button
+      className="font-semibold no-underline"
+      variant="link"
+      disabled={isPending || !!isPendingOther}
+      onClick={() => {
+        mutate({
+          roleId,
+          moduleId: Object.keys(ACCESS_LEVELS_MAP).find(
+            (k) =>
+              ACCESS_LEVELS_MAP[k as keyof typeof ACCESS_LEVELS_MAP] === module,
+          ) as keyof typeof ACCESS_LEVELS_MAP,
+          accessLevel: convertAccessLevel(accessLevels),
+        });
+      }}
+    >
+      {value}
+    </Button>
   );
 }
 
