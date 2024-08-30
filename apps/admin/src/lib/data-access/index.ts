@@ -21,6 +21,7 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  saveRoleModuleAccessLevelValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
   toggleWalletStatusValidator,
@@ -29,50 +30,46 @@ import type {
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
-export function useGetAuthedUserInfoQuery<
-  TInput = undefined,
-  TOutput = {
-    privacyPolicy: boolean;
-    mfaEnabled: boolean;
-    createDate: unknown;
-    termsConditions: boolean;
-    otp: string;
-    sendSms: boolean;
-    state: 0 | 1 | 2 | 3;
-    type: "PLATFORM" | "WALLET" | "PROVIDER";
-    email: string;
-    mfaType: "TOTP" | "SMS";
-    first: boolean;
-    roleId: string;
-    sendEmails: boolean;
-    updateDate: unknown;
-    picture: string;
-    serviceProviderId: string;
-    firstName: string;
-    id: string;
-    active: boolean;
-    lastName: string;
-    accessLevel: {
-      R949: number;
-      SP95: number;
-      U783: number;
-      W325: number;
-    };
-  },
->(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+interface UseGetAuthedUserInfoQueryOutput {
+  privacyPolicy: boolean;
+  mfaEnabled: boolean;
+  createDate: unknown;
+  termsConditions: boolean;
+  otp: string;
+  sendSms: boolean;
+  state: 0 | 1 | 2 | 3;
+  type: "PLATFORM" | "WALLET" | "PROVIDER";
+  email: string;
+  mfaType: "TOTP" | "SMS";
+  first: boolean;
+  roleId: string;
+  sendEmails: boolean;
+  updateDate: unknown;
+  picture: string;
+  serviceProviderId: string;
+  firstName: string;
+  id: string;
+  active: boolean;
+  lastName: string;
+  accessLevel: APIAccessLevels;
+}
+export function useGetAuthedUserInfoQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetAuthedUserInfoQueryOutput> = {},
+) {
   return useQuery({
     ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
     queryKey: ["get-authed-user-info"],
     queryFn: () => {
-      return customFetch<TOutput>(
+      return customFetch<UseGetAuthedUserInfoQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
       );
     },
   });
 }
 
-const ACCESS_LEVELS_MAP = {
+export const ACCESS_LEVELS_MAP = {
   R949: "roles",
   W325: "wallets",
   U783: "users",
@@ -80,61 +77,79 @@ const ACCESS_LEVELS_MAP = {
   SE37: "settings",
   TR91: "transactions",
 } as const;
+export type APIAccessLevels = {
+  [key in keyof typeof ACCESS_LEVELS_MAP]?: number;
+};
 export type AccessLevelModule =
   (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
-const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
+export const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
   "view",
   "add",
   "edit",
   "inactive",
 ] as const;
-type AccessLevels = {
-  [key in AccessLevelModule]: (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[number][];
+export type AccessLevelAction = (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[
+  | 0
+  | 1
+  | 2
+  | 3];
+export type AccessLevels = {
+  [key in AccessLevelModule]: AccessLevelAction[];
 };
 // Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
-export function useGetAuthedUserAccessLevelsQuery<
-  TInput = undefined,
-  TOutput = AccessLevels,
->(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+export function useGetAuthedUserAccessLevelsQuery(
+  _: undefined,
+  options: UseQueryOptions<AccessLevels> = {},
+) {
   return useQuery({
     ...options,
     queryKey: ["get-authed-user-access-levels"],
     queryFn: async () => {
       const data = await customFetch<{
-        accessLevel: {
-          R949: number;
-          SP95: number;
-          U783: number;
-          W325: number;
-        };
+        accessLevel: APIAccessLevels;
       }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
 
-      const accessLevels: AccessLevels = {
-        roles: [],
-        wallets: [],
-        users: [],
-        serviceProviders: [],
-        settings: [],
-        transactions: [],
-      };
-
-      for (const [key, value] of Object.entries(data.accessLevel)) {
-        if (!Object.keys(ACCESS_LEVELS_MAP).includes(key)) continue;
-
-        const bin = value.toString(2).padStart(4, "0").split("");
-        for (let i = 0; i < ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length; i++) {
-          if (bin[i] === "1") {
-            accessLevels[
-              ACCESS_LEVELS_MAP[key as keyof typeof ACCESS_LEVELS_MAP]
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            ].push(ACCESS_LEVELS_ACTIONS_BINARY_ORDERED[i]!);
-          }
-        }
-      }
-
-      return accessLevels as TOutput; // We know it's TOutput but TS does not
+      return parseAccessLevels(data.accessLevel);
     },
   });
+}
+function parseAccessLevels(accessLevels: APIAccessLevels) {
+  const accessLevelsMap: AccessLevels = {
+    roles: [],
+    wallets: [],
+    users: [],
+    serviceProviders: [],
+    settings: [],
+    transactions: [],
+  };
+
+  for (const [key, value] of Object.entries(accessLevels)) {
+    if (!Object.keys(ACCESS_LEVELS_MAP).includes(key)) continue;
+
+    const bin = value.toString(2).padStart(4, "0").split("");
+    if (bin.length !== ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length) continue;
+
+    const accessLevelKey =
+      ACCESS_LEVELS_MAP[key as keyof typeof ACCESS_LEVELS_MAP];
+
+    for (let i = 0; i < bin.length; i++) {
+      if (bin[i] === "1") {
+        accessLevelsMap[accessLevelKey].push(
+          ACCESS_LEVELS_ACTIONS_BINARY_ORDERED[i as 0 | 1 | 2 | 3],
+        );
+      }
+    }
+  }
+
+  return accessLevelsMap;
+}
+export function convertAccessLevel(accessLevel: AccessLevelAction[]) {
+  return parseInt(
+    ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.map((v) =>
+      accessLevel.includes(v) ? "1" : "0",
+    ).join(""),
+    2,
+  );
 }
 
 export function useLoginMutation(
@@ -187,12 +202,7 @@ export function useTwoFactorAuthenticationMutation(
         id: string;
         active: boolean;
         lastName: string;
-        accessLevel: {
-          R949: number;
-          SP95: number;
-          U783: number;
-          W325: number;
-        };
+        accessLevel: APIAccessLevels;
       };
       token: string;
     }
@@ -350,19 +360,20 @@ export interface Role {
   active: boolean;
   name: string;
 }
-export function useGetRolesQuery<
-  TInput = z.infer<typeof paginationAndSearchValidator>,
-  TOutput = {
-    roles: Role[];
-    total: number;
-  },
->(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+interface UseGetRolesQueryOutput {
+  roles: Role[];
+  total: number;
+}
+export function useGetRolesQuery(
+  input: z.infer<typeof paginationAndSearchValidator>,
+  options: UseQueryOptions<UseGetRolesQueryOutput> = {},
+) {
   return useQuery({
     ...options,
     queryKey: ["get-roles", input],
     queryFn: () => {
       const params = new URLSearchParams(input as Record<string, string>);
-      return customFetch<TOutput>(
+      return customFetch<UseGetRolesQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           "/api/v1/roles?" +
           params.toString(),
@@ -429,6 +440,67 @@ export function useToggleRoleStatusMutation(
   });
 }
 
+export type UseGetRoleQueryOutput = {
+  module: AccessLevelModule;
+  accessLevels: AccessLevels[AccessLevelModule];
+}[];
+export function useGetRoleQuery(
+  input: {
+    roleId: string;
+  },
+  options: UseQueryOptions<UseGetRoleQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-role", input],
+    queryFn: async () => {
+      const apiAccessLevels = await customFetch<APIAccessLevels>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles/access-level/" +
+          input.roleId,
+      );
+
+      return Object.entries(parseAccessLevels(apiAccessLevels)).map(
+        ([k, v]) => {
+          return {
+            module: k as AccessLevelModule,
+            accessLevels: v,
+          };
+        },
+      );
+    },
+  });
+}
+
+export function useSaveRoleModuleAccessLevelMutation(
+  options: UseMutationOptions<
+    z.infer<typeof saveRoleModuleAccessLevelValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["save-role-module-access-level"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/roles/access-level/${input.roleId}/${input.moduleId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      options.onSuccess?.(...input);
+      void cq.invalidateQueries({
+        queryKey: ["get-role"],
+      });
+    },
+  });
+}
+
 export interface User {
   mfaEnabled: boolean;
   roleId: string;
@@ -445,23 +517,24 @@ export interface User {
   roleName: string;
   phone: string;
 }
-export function useGetUsersQuery<
-  TInput = z.infer<typeof paginationAndSearchValidator> & {
+interface UseGetUsersQueryOutput {
+  users: User[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+}
+export function useGetUsersQuery(
+  input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
   },
-  TOutput = {
-    users: User[];
-    total: number;
-    totalPages: number;
-    currentPage: number;
-  },
->(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  options: UseQueryOptions<UseGetUsersQueryOutput> = {},
+) {
   return useQuery({
     ...options,
     queryKey: ["get-users", input],
     queryFn: () => {
       const params = new URLSearchParams(input as Record<string, string>);
-      return customFetch<TOutput>(
+      return customFetch<UseGetUsersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           "/api/v1/users?" +
           params.toString(),
@@ -500,17 +573,17 @@ export function useAddOrEditUserMutation(
   });
 }
 
-export function useGetActiveRolesQuery<
-  TInput = {
+export function useGetActiveRolesQuery(
+  input: {
     providerId: string;
   },
-  TOutput = Role[],
->(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+  options: UseQueryOptions<Role[]> = {},
+) {
   return useQuery({
     ...options,
     queryKey: ["get-active-roles", input],
     queryFn: () => {
-      return customFetch<TOutput>(
+      return customFetch<Role[]>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/roles/active",
       );
     },
@@ -546,19 +619,20 @@ export function useToggleUserStatusMutation(
   });
 }
 
-export function useGetCountryCodesQuery<
-  TInput = undefined,
-  TOutput = {
-    name: string;
-    code: string;
-    dial_code: string;
-  }[],
->(_: TInput, options: UseQueryOptions<TOutput> = {}) {
+type UseGetCountryCodesQueryOutput = {
+  name: string;
+  code: string;
+  dial_code: string;
+}[];
+export function useGetCountryCodesQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetCountryCodesQueryOutput> = {},
+) {
   return useQuery({
     ...options,
     queryKey: ["get-country-codes"],
     queryFn: () => {
-      return customFetch<TOutput>(
+      return customFetch<UseGetCountryCodesQueryOutput>(
         env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL +
           "/api/v0.1/countries/codes",
       );
@@ -573,18 +647,19 @@ export interface Wallet {
   walletAddress: string;
   active: boolean;
 }
-export function useGetWalletsQuery<
-  TInput = z.infer<typeof paginationAndSearchValidator>,
-  TOutput = {
-    wallet: Wallet[];
-  },
->(input: TInput, options: UseQueryOptions<TOutput> = {}) {
+interface UseGetWalletsQueryOutput {
+  wallet: Wallet[];
+}
+export function useGetWalletsQuery(
+  input: z.infer<typeof paginationAndSearchValidator>,
+  options: UseQueryOptions<UseGetWalletsQueryOutput> = {},
+) {
   return useQuery({
     ...options,
     queryKey: ["get-wallets", input],
     queryFn: () => {
       const params = new URLSearchParams(input as Record<string, string>);
-      return customFetch<TOutput>(
+      return customFetch<UseGetWalletsQueryOutput>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
           "/api/v1/wallets?" +
           params.toString(),

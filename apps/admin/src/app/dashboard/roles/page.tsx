@@ -68,7 +68,7 @@ function Actions({
           </Button>
         }
       />
-      <Link href={`/dashboard/roles/${role.id}`}>
+      <Link href={`/dashboard/roles/${role.id}?name=${role.name}`}>
         <Button className="font-semibold no-underline" variant="link">
           {values["dashboard.roles.table.actions.access"]}
         </Button>
@@ -197,6 +197,7 @@ export default function RolesPage() {
                 page: "1",
               })
             }
+            value={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"

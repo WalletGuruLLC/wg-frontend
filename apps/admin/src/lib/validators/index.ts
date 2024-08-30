@@ -77,6 +77,12 @@ export const toggleRoleStatusValidator = z.object({
   roleId: z.string().min(1),
 });
 
+export const saveRoleModuleAccessLevelValidator = z.object({
+  accessLevel: z.number(),
+  roleId: z.string().min(1),
+  moduleId: z.string().min(1),
+});
+
 export const addOrEditUserValidator = z.object({
   firstName: z.string().min(1, "dashboard.user.edit-dialog.first-name.error"),
   lastName: z.string().min(1, "dashboard.user.edit-dialog.last-name.error"),

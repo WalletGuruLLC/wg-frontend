@@ -240,6 +240,7 @@ export default function UsersPage() {
                 page: "1",
               })
             }
+            value={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
