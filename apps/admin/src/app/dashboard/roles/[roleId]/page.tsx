@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 
-import { Button } from "@wg-frontend/ui/button";
 import { Checkbox } from "@wg-frontend/ui/checkbox";
 import { toast } from "@wg-frontend/ui/toast";
 
@@ -19,6 +18,7 @@ import type {
   UseGetRoleQueryOutput,
 } from "~/lib/data-access";
 import type { I18nKey } from "~/lib/i18n";
+import { Button } from "~/components/button";
 import {
   ACCESS_LEVELS_ACTIONS_BINARY_ORDERED,
   ACCESS_LEVELS_MAP,
