@@ -12,7 +12,7 @@ export function useAuthGuard() {
   const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
 
   if (!isLoading && !data) return redirect("/login");
-  // if (!isLoading && data?.first) return redirect("/reset-password");
+  if (!isLoading && data?.first) return redirect("/reset-password");
 
   return isLoading;
 }
