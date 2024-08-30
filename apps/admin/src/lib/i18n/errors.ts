@@ -95,6 +95,6 @@ export const errorsDict = {
       "Ocurrió un error. Por favor, intente nuevamente más tarde.",
     "errors.WGE0074":
       "No hay ninguna billetera asociada con la información ingresada.",
-    "errors.WGE0075": "Wallet update failed.",
+    "errors.WGE0075": "Error al actualizar la billetera.",
   },
 } satisfies I18nDictionary;
