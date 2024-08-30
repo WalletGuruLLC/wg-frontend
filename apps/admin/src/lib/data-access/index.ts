@@ -82,7 +82,7 @@ export type APIAccessLevels = {
 };
 export type AccessLevelModule =
   (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
-const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
+export const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
   "view",
   "add",
   "edit",
