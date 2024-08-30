@@ -26,6 +26,7 @@ import {
   useGetRoleQuery,
   useSaveRoleModuleAccessLevelMutation,
 } from "~/lib/data-access";
+import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import Table, { ColumnHeader } from "../../_components/dashboard-table";
 
@@ -212,6 +213,7 @@ const columns = [
 ];
 
 export default function RoleAccessLevels() {
+  const loading = useAccessLevelGuard("roles");
   const { values } = useI18n();
   const { roleId } = useParams<{ roleId: string }>();
   const searchParams = useSearchParams();
@@ -253,6 +255,8 @@ export default function RoleAccessLevels() {
       );
     }
   }, [data]);
+
+  if (loading) return null;
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
