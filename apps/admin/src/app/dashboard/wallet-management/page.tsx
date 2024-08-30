@@ -239,7 +239,7 @@ export default function WalletManagementPage() {
       <div>
         <PaginationFooter
           count={{
-            total: data?.wallet.length ?? 0,
+            total: data?.total ?? 0,
             firstRowIdx,
             lastRowIdx,
           }}

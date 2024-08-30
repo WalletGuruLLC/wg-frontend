@@ -649,6 +649,7 @@ export interface Wallet {
 }
 interface UseGetWalletsQueryOutput {
   wallet: Wallet[];
+  total: number;
 }
 export function useGetWalletsQuery(
   input: z.infer<typeof paginationAndSearchValidator>,
