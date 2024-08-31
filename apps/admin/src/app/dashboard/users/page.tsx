@@ -250,7 +250,7 @@ export default function UsersPage() {
         {accessLevelsData?.users.includes("add") && (
           <AddOrEditDialog
             trigger={
-              <Button className="flex h-max w-48 flex-row items-center">
+              <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
                   {values["dashboard.users.add-button"]}
                 </p>
