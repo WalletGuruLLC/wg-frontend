@@ -46,6 +46,7 @@ export const errorsDict = {
     "errors.WGE0073": "An error has occurred. Please try again later.",
     "errors.WGE0074": "There is no wallet associated with the entered info.",
     "errors.WGE0075": "Wallet update failed.",
+    "errors.WGE00108": "This email is currently inactive. Please contact the wallet guru support team to reactivate your account.",
   },
   es: {
     "errors.UE1":
@@ -53,7 +54,7 @@ export const errorsDict = {
     "errors.UE2":
       "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
     "errors.WGE0001":
-      "La contraseña ingresada no coincide con la registrada en el sistema.",
+      "Ha ocurrido un problema con sus credenciales, por favor intentelo de nuevo.",
     "errors.WGE0002":
       "No existe una cuenta asociada con el correo electrónico o nombre de usuario ingresado.",
     "errors.WGE0003":
@@ -96,5 +97,6 @@ export const errorsDict = {
     "errors.WGE0074":
       "No hay ninguna billetera asociada con la información ingresada.",
     "errors.WGE0075": "Error al actualizar la billetera.",
+    "errors.WGE00108": "Este correo electrónico está actualmente inactivo. Por favor, contacta al equipo de soporte de Wallet Guru para reactivar tu cuenta.",
   },
 } satisfies I18nDictionary;
