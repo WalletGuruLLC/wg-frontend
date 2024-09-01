@@ -440,19 +440,19 @@ export function useToggleRoleStatusMutation(
   });
 }
 
-export type UseGetRoleQueryOutput = {
+export type UseGetRoleAccessLevelsQueryOutput = {
   module: AccessLevelModule;
   accessLevels: AccessLevels[AccessLevelModule];
 }[];
-export function useGetRoleQuery(
+export function useGetRoleAccessLevelsQuery(
   input: {
     roleId: string;
   },
-  options: UseQueryOptions<UseGetRoleQueryOutput> = {},
+  options: UseQueryOptions<UseGetRoleAccessLevelsQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
-    queryKey: ["get-role", input],
+    queryKey: ["get-role-access-levels", input],
     queryFn: async () => {
       const apiAccessLevels = await customFetch<APIAccessLevels>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
@@ -467,6 +467,33 @@ export function useGetRoleQuery(
             accessLevels: v,
           };
         },
+      );
+    },
+  });
+}
+
+interface UseGetRoleQueryOutput {
+  CreateDate: number;
+  UpdateDate: number;
+  Modules: unknown;
+  Description: string;
+  Id: string;
+  Active: boolean;
+  ProviderId: string;
+  Name: string;
+}
+export function useGetRoleQuery(
+  input: {
+    roleId: string;
+  },
+  options: UseQueryOptions<UseGetRoleQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-role", input],
+    queryFn: () => {
+      return customFetch<UseGetRoleQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/roles/" + input.roleId,
       );
     },
   });

@@ -68,7 +68,7 @@ function Actions({
           </Button>
         }
       />
-      <Link href={`/dashboard/roles/${role.id}?name=${role.name}`}>
+      <Link href={`/dashboard/roles/${role.id}`}>
         <Button className="font-semibold no-underline" variant="link">
           {values["dashboard.roles.table.actions.access"]}
         </Button>
