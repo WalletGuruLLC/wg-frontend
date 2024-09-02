@@ -17,13 +17,13 @@
     "@tanstack/react-query": "5.51.23"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "5.51.15",
     "@types/react": "^18.3.3",
     "@wg-frontend/eslint-config": "workspace:*",
     "@wg-frontend/prettier-config": "workspace:*",
     "@wg-frontend/tsconfig": "workspace:*",
     "eslint": "^9.7.0",
     "prettier": "^3.3.3",
-    "@tanstack/eslint-plugin-query": "5.51.15",
     "typescript": "^5.5.4"
   },
   "peerDependencies": {
