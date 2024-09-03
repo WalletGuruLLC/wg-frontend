@@ -514,7 +514,7 @@ export function useSaveRoleModuleAccessLevelMutation(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           `/api/v1/roles/access-level/${input.roleId}/${input.moduleId}`,
         {
-          method: "PUT",
+          method: "POST", // POST because backend things but it means an update aswell
           body: JSON.stringify(input),
         },
       );
