@@ -33,7 +33,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        {/* The order of the providers matter, test before changing something */}
+        {/* The order of the providers matters, test before changing something */}
         <I18nProvider>
           <QueryClientProvider>
             <ErrorsProvider>
