@@ -2,6 +2,7 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
@@ -63,6 +64,13 @@ function EmailStep({ setEmail }: Props) {
         <AuthCard
           title={values["auth.forgot-password.email-step.title"]}
           subtitle={values["auth.forgot-password.email-step.subtitle"]}
+          secondaryButton={
+            <Link href="/login">
+              <Button variant="link">
+                {values["auth.forgot-password.email-step.secondary-button"]}
+              </Button>
+            </Link>
+          }
           content={
             <div className="space-y-6 text-white">
               {error !== null && (

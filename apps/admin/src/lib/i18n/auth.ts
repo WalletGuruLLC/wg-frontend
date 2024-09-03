@@ -38,6 +38,7 @@ export const authDict = {
       "Enter your email address below, and we'll send you a code to reset your password.",
     "auth.forgot-password.email-step.email.placeholder": "Email",
     "auth.forgot-password.email-step.primary-button": "Request",
+    "auth.forgot-password.email-step.secondary-button": "Go Back",
     "auth.forgot-password.code-step.title": "Reset Password",
     "auth.forgot-password.code-step.code.placeholder": "Enter the code sent",
     "auth.forgot-password.code-step.new-password.placeholder":
@@ -86,6 +87,7 @@ export const authDict = {
       "Ingresa tu dirección de correo electrónico a continuación, y te enviaremos un código para restablecer tu contraseña.",
     "auth.forgot-password.email-step.email.placeholder": "Email",
     "auth.forgot-password.email-step.primary-button": "Solicitar",
+    "auth.forgot-password.email-step.secondary-button": "Regresar",
     "auth.forgot-password.code-step.title": "Restablecer contraseña",
     "auth.forgot-password.code-step.code.placeholder":
       "Ingresa el código enviado",
