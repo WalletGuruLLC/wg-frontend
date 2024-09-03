@@ -1,5 +1,11 @@
 import type { Dispatch, ReactNode, SetStateAction } from "react";
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 /**
  * A dictionary of translations. The first level is the language, the second
@@ -56,7 +62,7 @@ export default function createI18nHandlers<
    * }
    */
   function I18nProvider({ children }: { children: ReactNode }) {
-    const [language, setLanguage] = useState(() => {
+    const getBrowserLanguage = useCallback(() => {
       if (typeof window === "undefined") {
         return defaultLanguage;
       }
@@ -72,7 +78,21 @@ export default function createI18nHandlers<
       }
 
       return defaultLanguage;
-    });
+    }, []);
+
+    const [language, setLanguage] = useState(getBrowserLanguage);
+
+    useEffect(() => {
+      window.addEventListener("languagechange", () => {
+        setLanguage(getBrowserLanguage);
+      });
+
+      return () => {
+        window.removeEventListener("languagechange", () => {
+          setLanguage(getBrowserLanguage);
+        });
+      };
+    }, [getBrowserLanguage]);
 
     return (
       <I18nContext.Provider
