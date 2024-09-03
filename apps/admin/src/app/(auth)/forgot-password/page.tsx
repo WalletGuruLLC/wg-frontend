@@ -18,6 +18,7 @@ import {
   useForgotPasswordCodeStepMutation,
   useForgotPasswordEmailStepMutation,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
 import {
   forgotPasswordCodeStepValidator,
@@ -43,6 +44,7 @@ interface Props {
 
 function EmailStep({ setEmail }: Props) {
   const { values } = useI18n();
+  const errors = useErrors();
 
   const form = useForm({
     schema: forgotPasswordEmailStepValidator,
@@ -67,7 +69,7 @@ function EmailStep({ setEmail }: Props) {
             <div className="space-y-6 text-white">
               {error !== null && (
                 <p className="text-lg text-[#E21D1D]">
-                  {values[("errors." + error.message) as keyof typeof values]}
+                  {errors[error.message]}
                 </p>
               )}
               <FormField

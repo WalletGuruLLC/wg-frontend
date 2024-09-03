@@ -17,6 +17,7 @@ import {
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { useLoginMutation } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
 import AuthCard from "../_components/auth-card";
@@ -26,6 +27,7 @@ import { PasswordInput } from "../_components/auth-password-input";
 export default function LoginPage() {
   const router = useRouter();
   const { values } = useI18n();
+  const errors = useErrors();
 
   const form = useForm({
     schema: loginValidator,
@@ -52,7 +54,7 @@ export default function LoginPage() {
             <div className="space-y-6 text-white">
               {error !== null && (
                 <p className="text-lg text-[#E21D1D]">
-                  {values[("errors." + error.message) as keyof typeof values]}
+                  {errors[error.message]}
                 </p>
               )}
               <FormField
