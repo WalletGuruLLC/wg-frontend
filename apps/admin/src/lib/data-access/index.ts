@@ -753,3 +753,35 @@ export function useToggleWalletStatusMutation(
     },
   });
 }
+
+export function useErrorsQuery(
+  input: {
+    language: "en" | "us";
+  },
+  options: UseQueryOptions<Record<string, string>> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-errors", input],
+    queryFn: async () => {
+      const data = await customFetch<
+        {
+          customCode: string;
+          customMessage: string;
+        }[]
+      >(
+        env.NEXT_PUBLIC_CUSTOM_CODES_MICROSERVICE_URL +
+          "/api/v1/codes/status-code/" +
+          input.language,
+      );
+
+      return data.reduce(
+        (acc, { customCode, customMessage }) => {
+          acc[customCode] = customMessage;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+    },
+  });
+}

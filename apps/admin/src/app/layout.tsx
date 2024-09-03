@@ -12,6 +12,7 @@ import "~/app/globals.css";
 import { Toaster } from "@wg-frontend/ui/toast";
 
 import { env } from "~/env";
+import { ErrorsProvider } from "~/lib/data-access/errors";
 import QueryClientProvider from "~/lib/data-access/provider";
 import { I18nProvider } from "~/lib/i18n";
 
@@ -32,22 +33,25 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
+        {/* The order of the providers matter, test before changing something */}
         <I18nProvider>
           <QueryClientProvider>
-            {props.children}
-            {env.NODE_ENV === "development" && (
-              <ReactQueryDevtools initialIsOpen={true} />
-            )}
+            <ErrorsProvider>
+              {props.children}
+              {env.NODE_ENV === "development" && (
+                <ReactQueryDevtools initialIsOpen={true} />
+              )}
+              <Toaster
+                position="top-right"
+                theme="light"
+                className="mt-20"
+                toastOptions={{
+                  className: "bg-black text-white border-none",
+                }}
+              />
+            </ErrorsProvider>
           </QueryClientProvider>
         </I18nProvider>
-        <Toaster
-          position="top-right"
-          theme="light"
-          className="mt-20"
-          toastOptions={{
-            className: "bg-black text-white border-none",
-          }}
-        />
       </body>
     </html>
   );
