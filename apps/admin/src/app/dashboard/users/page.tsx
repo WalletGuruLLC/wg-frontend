@@ -78,6 +78,7 @@ function Actions({
     <AddOrEditDialog
       user={{
         ...user,
+        phone: (user.phone as string | undefined) ?? "+1-",
       }}
       trigger={
         <Button className="font-semibold no-underline" variant="link">
@@ -249,7 +250,7 @@ export default function UsersPage() {
         {accessLevelsData?.users.includes("add") && (
           <AddOrEditDialog
             trigger={
-              <Button className="flex h-max w-48 flex-row items-center">
+              <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
                   {values["dashboard.users.add-button"]}
                 </p>
@@ -429,7 +430,6 @@ function AddOrEditDialog(props: {
             <FormField
               control={form.control}
               name="email"
-              disabled={props.user && !props.user.first}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{values[`${valuesPrefix}.email.label`]}</FormLabel>
@@ -437,6 +437,7 @@ function AddOrEditDialog(props: {
                     <Input
                       placeholder={values[`${valuesPrefix}.email.placeholder`]}
                       required
+                      disabled={props.user && !props.user.first}
                       {...field}
                     />
                   </FormControl>

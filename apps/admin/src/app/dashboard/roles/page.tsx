@@ -68,7 +68,7 @@ function Actions({
           </Button>
         }
       />
-      <Link href={`/dashboard/roles/${role.id}?name=${role.name}`}>
+      <Link href={`/dashboard/roles/${role.id}`}>
         <Button className="font-semibold no-underline" variant="link">
           {values["dashboard.roles.table.actions.access"]}
         </Button>
@@ -207,7 +207,7 @@ export default function RolesPage() {
         {accessLevelsData?.roles.includes("add") && (
           <AddOrEditDialog
             trigger={
-              <Button className="flex h-max w-48 flex-row items-center">
+              <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
                   {values["dashboard.roles.add-button"]}
                 </p>

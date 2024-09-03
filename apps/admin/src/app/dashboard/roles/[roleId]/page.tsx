@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,20 +9,21 @@ import {
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 
-import { Button } from "@wg-frontend/ui/button";
 import { Checkbox } from "@wg-frontend/ui/checkbox";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type {
   AccessLevelAction,
   AccessLevelModule,
-  UseGetRoleQueryOutput,
+  UseGetRoleAccessLevelsQueryOutput,
 } from "~/lib/data-access";
 import type { I18nKey } from "~/lib/i18n";
+import { Button } from "~/components/button";
 import {
   ACCESS_LEVELS_ACTIONS_BINARY_ORDERED,
   ACCESS_LEVELS_MAP,
   convertAccessLevel,
+  useGetRoleAccessLevelsQuery,
   useGetRoleQuery,
   useSaveRoleModuleAccessLevelMutation,
 } from "~/lib/data-access";
@@ -120,7 +121,7 @@ function AllCheckboxCell({
 }
 
 const columnHelper = createColumnHelper<{
-  data: UseGetRoleQueryOutput[number];
+  data: UseGetRoleAccessLevelsQueryOutput[number];
   setData: (data: AccessLevelAction[]) => void;
 }>();
 
@@ -216,14 +217,16 @@ export default function RoleAccessLevels() {
   const loading = useAccessLevelGuard("roles");
   const { values } = useI18n();
   const { roleId } = useParams<{ roleId: string }>();
-  const searchParams = useSearchParams();
   const [state, setState] = useState<
     {
-      data: UseGetRoleQueryOutput[number];
+      data: UseGetRoleAccessLevelsQueryOutput[number];
       setData: (data: AccessLevelAction[]) => void;
     }[]
   >([]);
-  const { data, isLoading } = useGetRoleQuery({ roleId });
+  const { data: roleAccessLevelsData, isLoading } = useGetRoleAccessLevelsQuery(
+    { roleId },
+  );
+  const { data, isLoading: isLoadingRoleData } = useGetRoleQuery({ roleId });
 
   const table = useReactTable({
     data: state,
@@ -232,9 +235,9 @@ export default function RoleAccessLevels() {
   });
 
   useEffect(() => {
-    if (data) {
+    if (roleAccessLevelsData) {
       setState(
-        data.map((d) => ({
+        roleAccessLevelsData.map((d) => ({
           data: d,
           setData: (newData) => {
             setState((prev) =>
@@ -254,7 +257,7 @@ export default function RoleAccessLevels() {
         })),
       );
     }
-  }, [data]);
+  }, [roleAccessLevelsData]);
 
   if (loading) return null;
 
@@ -263,9 +266,11 @@ export default function RoleAccessLevels() {
       <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
         <span>
           {values["dashboard.roles.role.title"]}
-          {searchParams.get("name") ?? ""}
+          {data?.Name}
         </span>
-        {isLoading && <Loader2 className="animate-spin" />}
+        {(isLoading || isLoadingRoleData) && (
+          <Loader2 className="animate-spin" />
+        )}
       </h1>
       <div className="flex-1 overflow-auto">
         <Table table={table} />
