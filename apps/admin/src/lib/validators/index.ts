@@ -84,12 +84,12 @@ export const saveRoleModuleAccessLevelValidator = z.object({
 });
 
 export const addOrEditUserValidator = z.object({
-  firstName: z.string().min(1, "dashboard.user.edit-dialog.first-name.error"),
-  lastName: z.string().min(1, "dashboard.user.edit-dialog.last-name.error"),
-  email: z.string().email("dashboard.user.edit-dialog.email.error"),
+  firstName: z.string().min(1, "dashboard.users.edit-dialog.first-name.error"),
+  lastName: z.string().min(1, "dashboard.users.edit-dialog.last-name.error"),
+  email: z.string().email("dashboard.users.edit-dialog.email.error"),
   phone: z
     .string()
-    .min(1, "dashboard.user.edit-dialog.phone.error")
+    .min(1, "dashboard.users.edit-dialog.phone.error")
     .refine(
       (v) =>
         v.split("-")[0] !== "" &&
@@ -97,11 +97,11 @@ export const addOrEditUserValidator = z.object({
         v.split("-")[1] !== "" &&
         !isNaN(Number(v.split("-")[1])),
       {
-        message: "dashboard.user.edit-dialog.phone.error",
+        message: "dashboard.users.edit-dialog.phone.error",
       },
     ),
   serviceProviderId: z.string().min(1),
-  roleId: z.string().min(1, "dashboard.user.edit-dialog.role.error"),
+  roleId: z.string().min(1, "dashboard.users.edit-dialog.role.error"),
   type: z.enum(["WALLET", "PROVIDER", "PLATFORM"]),
   userId: z.string().optional(),
 });

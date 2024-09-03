@@ -78,6 +78,7 @@ function Actions({
     <AddOrEditDialog
       user={{
         ...user,
+        phone: (user.phone as string | undefined) ?? "+1-",
       }}
       trigger={
         <Button className="font-semibold no-underline" variant="link">
@@ -429,7 +430,6 @@ function AddOrEditDialog(props: {
             <FormField
               control={form.control}
               name="email"
-              disabled={props.user && !props.user.first}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{values[`${valuesPrefix}.email.label`]}</FormLabel>
@@ -437,6 +437,7 @@ function AddOrEditDialog(props: {
                     <Input
                       placeholder={values[`${valuesPrefix}.email.placeholder`]}
                       required
+                      disabled={props.user && !props.user.first}
                       {...field}
                     />
                   </FormControl>
