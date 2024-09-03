@@ -1,6 +1,6 @@
 # Internationalization (i18n) package
 
-This package provides a set of fully typed utilities to help you internationalize your application.
+This package provides a set of fully typed utilities to help you internationalize your application. It automatically generates the necessary hooks and components to handle translations and language changes. It also detects if the user changes the language in the browser and updates the values accordingly.
 
 ## Installation
 
