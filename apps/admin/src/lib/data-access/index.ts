@@ -168,11 +168,11 @@ export function useLoginMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -221,11 +221,11 @@ export function useTwoFactorAuthenticationMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -245,11 +245,11 @@ export function useLogoutMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -291,11 +291,11 @@ export function useResetPasswordMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -341,11 +341,11 @@ export function useForgotPasswordCodeStepMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -403,11 +403,11 @@ export function useAddOrEditRoleMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-roles"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -431,11 +431,11 @@ export function useToggleRoleStatusMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-roles"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -519,11 +519,11 @@ export function useSaveRoleModuleAccessLevelMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-role"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -591,11 +591,11 @@ export function useAddOrEditUserMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-users"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -637,11 +637,11 @@ export function useToggleUserStatusMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-users"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -717,11 +717,11 @@ export function useAddOrEditWalletMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-wallets"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
@@ -745,11 +745,11 @@ export function useToggleWalletStatusMutation(
         },
       );
     },
-    onSuccess: (...input) => {
-      options.onSuccess?.(...input);
-      void cq.invalidateQueries({
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
         queryKey: ["get-wallets"],
       });
+      options.onSuccess?.(...input);
     },
   });
 }
