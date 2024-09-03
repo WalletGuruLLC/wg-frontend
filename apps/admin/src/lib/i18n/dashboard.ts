@@ -122,7 +122,7 @@ export const dashboardDict = {
     "dashboard.users.edit-dialog.role.error": "Role is required",
     "dashboard.users.edit-dialog.primary-button": "Save",
     "dashboard.users.edit-dialog.toast.success":
-      "A confirmation email has been sent to the user with the assigned password.",
+      "The User has been edited successfully.",
     "dashboard.users.inactive-dialog.title": "Inactive user",
     "dashboard.users.inactive-dialog.description":
       "By inactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
@@ -327,7 +327,7 @@ export const dashboardDict = {
     "dashboard.users.edit-dialog.role.error": "Rol es requerido",
     "dashboard.users.edit-dialog.primary-button": "Guardar",
     "dashboard.users.edit-dialog.toast.success":
-      "Se ha enviado un correo de confirmación al usuario con la contraseña asignada.",
+      "El Usuario se ha editado exitosamente.",
     "dashboard.users.inactive-dialog.title": "Inactivar usuario",
     "dashboard.users.inactive-dialog.description":
       "Al inactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
