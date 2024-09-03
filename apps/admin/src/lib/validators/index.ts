@@ -113,7 +113,7 @@ export const toggleUserStatusValidator = z.object({
 });
 
 export const addOrEditWalletValidator = z.object({
-  name: z.string().min(1, "dashboard.wallet-management.edit-dialog.name.error"),
+  name: z.string().min(4, "dashboard.wallet-management.edit-dialog.name.error"),
   walletType: z
     .string()
     .min(1, "dashboard.wallet-management.edit-dialog.type.error"),
