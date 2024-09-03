@@ -20,12 +20,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { AccessLevelModule } from "~/lib/data-access";
-import type { I18nKey } from "~/lib/i18n";
 import Metatags from "~/components/metatags";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useLogoutMutation,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 
@@ -75,10 +75,11 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { values } = useI18n();
+  const errors = useErrors();
 
   const { mutate } = useLogoutMutation({
     onError: (error) => {
-      toast.error(values[`errors.${error.message}` as I18nKey]);
+      toast.error(errors[error.message]);
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
