@@ -78,3 +78,19 @@ docker run -p 3000:3000 --env-file ./.env <app>
    - The project uses a shared prettier configuration located in the `tooling/prettier` directory.
    - The configuration is basically the default prettier config with some additional rules specific to tailwind.
    - The configuration is shared across all packages and apps.
+
+## Envs for pipeline
+
+- `BITBUCKET_CLONE_DIR`: Directory where the repository is cloned for pnpm install
+- `NODE_ENV`: Environment of the application (development, qa, staging, production)
+- `NEXT_PUBLIC_ADMIN_BASE_URL`: Base URL of the admin webapp
+- `NEXT_PUBLIC_AUTH_MICROSERVICE_URL`: URL of the auth microservice
+- `NEXT_PUBLIC_NOTIFICATION_MICROSERVICE_URL`: URL of the notification microservice
+- `NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL`: URL of the countries microservice
+- `NEXT_PUBLIC_WALLET_MICROSERVICE_URL`: URL of the wallet microservice
+- `AWS_KEY`: Key of the AWS account for deploy image of docker in ECR
+- `AWS_SECRET`: Secret of the AWS account for deploy image of docker in ECR
+- `IMAGE`: Name of the image for deploy in ECR
+- `CLUSTER_NAME`: Name of the cluster in ECS
+- `AWS_ACCESS_KEY_ID_TERRAFORM`: Key ID of the AWS account for Terraform
+- `AWS_SECRET_ACCESS_KEY_TERRAFORM`: Secret key of the AWS account for Terraform
