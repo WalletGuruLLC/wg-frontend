@@ -764,20 +764,22 @@ export function useErrorsQuery(
     ...options,
     queryKey: ["get-errors", input],
     queryFn: async () => {
-      const data = await customFetch<
-        {
-          customCode: string;
-          customMessage: string;
-        }[]
-      >(
+      const data = await customFetch<{
+        translations: {
+          id: string;
+          description: string;
+          language: string;
+          text: string;
+        }[];
+      }>(
         env.NEXT_PUBLIC_CUSTOM_CODES_MICROSERVICE_URL +
-          "/api/v1/codes/status-code/" +
+          "/api/v1/codes/" +
           input.language,
       );
 
-      return data.reduce(
-        (acc, { customCode, customMessage }) => {
-          acc[customCode] = customMessage;
+      return data.translations.reduce(
+        (acc, { id, text }) => {
+          acc[id] = text;
           return acc;
         },
         {} as Record<string, string>,
