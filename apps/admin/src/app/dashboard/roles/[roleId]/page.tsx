@@ -17,7 +17,6 @@ import type {
   AccessLevelModule,
   UseGetRoleAccessLevelsQueryOutput,
 } from "~/lib/data-access";
-import type { I18nKey } from "~/lib/i18n";
 import { Button } from "~/components/button";
 import {
   ACCESS_LEVELS_ACTIONS_BINARY_ORDERED,
@@ -27,6 +26,7 @@ import {
   useGetRoleQuery,
   useSaveRoleModuleAccessLevelMutation,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import Table, { ColumnHeader } from "../../_components/dashboard-table";
@@ -40,13 +40,16 @@ function Actions({
 }) {
   const { roleId } = useParams<{ roleId: string }>();
   const { value, values } = useI18n("dashboard.roles.role.table.actions.save");
+  const errors = useErrors();
 
   const { mutate, isPending } = useSaveRoleModuleAccessLevelMutation({
     onSuccess: () => {
       toast.success(values["dashboard.roles.role.success-toast"]);
     },
     onError: (error) => {
-      toast.error(values[`errors.${error.message}` as I18nKey]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
   });
 

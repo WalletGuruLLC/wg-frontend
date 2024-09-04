@@ -30,7 +30,6 @@ import {
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { User } from "~/lib/data-access";
-import type { I18nKey } from "~/lib/i18n";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
@@ -43,6 +42,7 @@ import {
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { addOrEditUserValidator } from "~/lib/validators";
@@ -314,6 +314,7 @@ function AddOrEditDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
+  const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
   const form = useForm({
@@ -332,7 +333,9 @@ function AddOrEditDialog(props: {
 
   const { mutate, isPending } = useAddOrEditUserMutation({
     onError: (error) => {
-      toast.error(values[`errors.${error.message}` as I18nKey]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
     onSuccess: () => {
       toast.success(values[`${valuesPrefix}.toast.success` as const]);
@@ -589,6 +592,7 @@ function SwitchActiveStatusDialog(props: {
   };
 }) {
   const { values } = useI18n();
+  const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
   const { mutate, isPending } = useToggleUserStatusMutation({
@@ -597,7 +601,9 @@ function SwitchActiveStatusDialog(props: {
       close();
     },
     onError: (error) => {
-      toast.error(values[`errors.${error.message}` as I18nKey]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
   });
 
