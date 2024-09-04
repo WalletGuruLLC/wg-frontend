@@ -79,7 +79,9 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
 
   const { mutate } = useLogoutMutation({
     onError: (error) => {
-      toast.error(errors[error.message]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");

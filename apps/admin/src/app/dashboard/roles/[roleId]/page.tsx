@@ -47,7 +47,9 @@ function Actions({
       toast.success(values["dashboard.roles.role.success-toast"]);
     },
     onError: (error) => {
-      toast.error(errors[error.message]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
   });
 
