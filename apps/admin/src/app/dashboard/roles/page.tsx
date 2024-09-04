@@ -279,7 +279,9 @@ function AddOrEditDialog(props: {
 
   const { mutate, isPending } = useAddOrEditRoleMutation({
     onError: (error) => {
-      toast.error(errors[error.message]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
     onSuccess: () => {
       toast.success(values[`${valuesPrefix}.toast.success` as const]);
@@ -398,7 +400,9 @@ function SwitchActiveStatusDialog(props: {
       close();
     },
     onError: (error) => {
-      toast.error(errors[error.message]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
   });
 
