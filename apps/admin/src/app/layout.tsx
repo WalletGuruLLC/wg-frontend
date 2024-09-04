@@ -48,8 +48,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 className="mt-20"
                 toastOptions={{
                   className:
-                    "bg-black text-white border-none p-10 flex flex-col items-center text-center space-y-3 text-lg font-light rounded-2xl",
-                  descriptionClassName: "text-xs pt-3",
+                    "bg-black text-white border-none p-10 flex flex-col items-center text-center text-lg font-light rounded-2xl",
+                  descriptionClassName: "text-xs",
                 }}
                 icons={{
                   error: <TriangleAlert size={24} strokeWidth={1.2} />,
