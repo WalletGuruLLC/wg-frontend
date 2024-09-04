@@ -3,6 +3,7 @@
 import type { Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { CircleCheck, TriangleAlert } from "lucide-react";
 
 import { cn } from "@wg-frontend/ui";
 
@@ -46,7 +47,14 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 theme="light"
                 className="mt-20"
                 toastOptions={{
-                  className: "bg-black text-white border-none",
+                  className:
+                    "bg-black text-white border-none p-10 flex flex-col items-center text-center space-y-3 text-lg font-light rounded-2xl",
+                  descriptionClassName: "text-xs pt-3",
+                }}
+                icons={{
+                  error: <TriangleAlert size={24} strokeWidth={1.2} />,
+                  success: <CircleCheck size={24} strokeWidth={1.2} />,
+                  warning: <TriangleAlert size={24} strokeWidth={1.2} />,
                 }}
               />
             </ErrorsProvider>
