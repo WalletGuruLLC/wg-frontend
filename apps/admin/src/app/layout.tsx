@@ -1,9 +1,8 @@
 "use client";
 
 import type { Viewport } from "next";
+import { Montserrat } from "next/font/google";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@wg-frontend/ui";
 
@@ -23,14 +22,15 @@ export const viewport: Viewport = {
   ],
 };
 
+const monsterrat = Montserrat({ subsets: ["latin"] });
+
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans text-foreground antialiased",
-          GeistSans.variable,
-          GeistMono.variable,
+          monsterrat.className,
         )}
       >
         {/* The order of the providers matters, test before changing something */}
