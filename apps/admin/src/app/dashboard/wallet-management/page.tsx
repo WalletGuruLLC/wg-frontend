@@ -9,13 +9,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  CircleCheck,
-  Loader2,
-  PlusCircle,
-  Search,
-  TriangleAlert,
-} from "lucide-react";
+import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
@@ -34,6 +28,7 @@ import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
+import Title from "~/components/title";
 import {
   useAddOrEditWalletMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -195,10 +190,10 @@ export default function WalletManagementPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
-        <span>{values["dashboard.wallet-management.title"]}</span>
-        {isLoading && <Loader2 className="animate-spin" />}
-      </h1>
+      <Title
+        title={values["dashboard.wallet-management.title"]}
+        isLoading={isLoading}
+      />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input

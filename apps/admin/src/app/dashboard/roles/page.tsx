@@ -10,13 +10,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  CircleCheck,
-  Loader2,
-  PlusCircle,
-  Search,
-  TriangleAlert,
-} from "lucide-react";
+import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
@@ -27,6 +21,7 @@ import type { Role } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
+import Title from "~/components/title";
 import {
   useAddOrEditRoleMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -181,10 +176,7 @@ export default function RolesPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
-        <span>{values["dashboard.roles.title"]}</span>
-        {isLoading && <Loader2 className="animate-spin" />}
-      </h1>
+      <Title title={values["dashboard.roles.title"]} isLoading={isLoading} />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
