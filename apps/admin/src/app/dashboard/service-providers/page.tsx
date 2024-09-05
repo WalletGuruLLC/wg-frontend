@@ -83,14 +83,11 @@ export default function ServiceProvidersPage() {
   if (loading || isLoadingAccessLevels) return null;
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <Title
-        title={values["dashboard.service-provider.title"]}
-        isLoading={isLoading}
-      />
+      <Title title={values["providers.title"]} isLoading={isLoading} />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
-            placeholder={values["dashboard.users.search.placeholder"]}
+            placeholder={values["providers.search.placeholder"]}
             className="rounded-full border border-black"
             onChange={(e) =>
               handlePaginationAndSearchChange({
@@ -111,7 +108,7 @@ export default function ServiceProvidersPage() {
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
-                  {values["dashboard.users.add-button"]}
+                  {values["providers.add-button"]}
                 </p>
                 <PlusCircle strokeWidth={0.75} className="size-6" />
               </Button>
@@ -219,7 +216,7 @@ function AddOrEditDialog(props: {
   // const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
-    `dashboard.users.${props.provider ? "edit" : "add"}-dialog` as const;
+    `providers.${props.provider ? "edit" : "add"}-dialog` as const;
 
   useEffect(() => {
     if (props.provider) {
