@@ -6,15 +6,16 @@ import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 //import { useAddOrEditProviderMutation, useGetAuthedUserAccessLevelsQuery, useGetCountryCodesQuery, useGetProvidersQuery } from "~/lib/data-access";
 //import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Loader2, PlusCircle, Search } from "lucide-react";
+import { PlusCircle, Search } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
-import { Button } from "@wg-frontend/ui/button";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, useForm } from "@wg-frontend/ui/form";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import { Button } from "~/components/button";
+import Title from "~/components/title";
 //import { addOrEditProviderValidator, type paginationAndSearchValidator } from "~/lib/validators";
 import {
   useAddOrEditProviderMutation,
@@ -80,78 +81,80 @@ export default function ServiceProvidersPage() {
   const lastRowIdx = firstRowIdx + 1 - 1;
 
   if (loading || isLoadingAccessLevels) return null;
-  <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-    <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
-      <span>{values["dashboard.users.title"]}</span>
-      {isLoading && <Loader2 className="animate-spin" />}
-    </h1>
-    <div className="flex flex-row items-center space-x-6">
-      <div className="relative flex-1">
-        <Input
-          placeholder={values["dashboard.users.search.placeholder"]}
-          className="rounded-full border border-black"
-          onChange={(e) =>
+  return (
+    <div className="flex h-[83vh] flex-col space-y-10 pb-4">
+      <Title
+        title={values["dashboard.service-provider.title"]}
+        isLoading={isLoading}
+      />
+      <div className="flex flex-row items-center space-x-6">
+        <div className="relative flex-1">
+          <Input
+            placeholder={values["dashboard.users.search.placeholder"]}
+            className="rounded-full border border-black"
+            onChange={(e) =>
+              handlePaginationAndSearchChange({
+                ...paginationAndSearch,
+                search: e.target.value,
+                page: "1",
+              })
+            }
+            value={paginationAndSearch.search}
+          />
+          <Search
+            className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
+            strokeWidth={0.75}
+          />
+        </div>
+        {accessLevelsData?.users.includes("add") && (
+          <AddOrEditDialog
+            trigger={
+              <Button className="flex h-max flex-row items-center space-x-2">
+                <p className="flex-1 text-lg font-light">
+                  {values["dashboard.users.add-button"]}
+                </p>
+                <PlusCircle strokeWidth={0.75} className="size-6" />
+              </Button>
+            }
+          />
+        )}
+      </div>
+      <div className="flex-1 overflow-auto"></div>
+      <div>
+        <PaginationFooter
+          count={{
+            total: data?.total ?? 0,
+            firstRowIdx,
+            lastRowIdx,
+          }}
+          items={paginationAndSearch.items ?? "10"}
+          onItemsChange={(items) =>
             handlePaginationAndSearchChange({
               ...paginationAndSearch,
-              search: e.target.value,
+              items,
               page: "1",
             })
           }
-          value={paginationAndSearch.search}
-        />
-        <Search
-          className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
-          strokeWidth={0.75}
-        />
-      </div>
-      {accessLevelsData?.users.includes("add") && (
-        <AddOrEditDialog
-          trigger={
-            <Button className="flex h-max flex-row items-center space-x-2">
-              <p className="flex-1 text-lg font-light">
-                {values["dashboard.users.add-button"]}
-              </p>
-              <PlusCircle strokeWidth={0.75} className="size-6" />
-            </Button>
+          canPreviousPage={paginationAndSearch.page !== "1"}
+          canNextPage={
+            data?.providers.length === Number(paginationAndSearch.items)
+          }
+          onPreviousPage={() =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              page: String(Number(paginationAndSearch.page) - 1),
+            })
+          }
+          onNextPage={() =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              page: String(Number(paginationAndSearch.page) + 1),
+            })
           }
         />
-      )}
+      </div>
     </div>
-    <div className="flex-1 overflow-auto"></div>
-    <div>
-      <PaginationFooter
-        count={{
-          total: data?.total ?? 0,
-          firstRowIdx,
-          lastRowIdx,
-        }}
-        items={paginationAndSearch.items ?? "10"}
-        onItemsChange={(items) =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            items,
-            page: "1",
-          })
-        }
-        canPreviousPage={paginationAndSearch.page !== "1"}
-        canNextPage={
-          data?.providers.length === Number(paginationAndSearch.items)
-        }
-        onPreviousPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) - 1),
-          })
-        }
-        onNextPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) + 1),
-          })
-        }
-      />
-    </div>
-  </div>;
+  );
 }
 
 function AddOrEditDialog(props: {
