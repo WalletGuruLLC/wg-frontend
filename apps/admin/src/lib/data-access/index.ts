@@ -13,6 +13,7 @@ import {
 } from "@wg-frontend/data-access";
 
 import type {
+  addOrEditProviderValidator,
   addOrEditRoleValidator,
   addOrEditUserValidator,
   addOrEditWalletValidator,
@@ -22,6 +23,7 @@ import type {
   paginationAndSearchValidator,
   resetPasswordValidator,
   saveRoleModuleAccessLevelValidator,
+  toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
   toggleWalletStatusValidator,
@@ -748,6 +750,109 @@ export function useToggleWalletStatusMutation(
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
         queryKey: ["get-wallets"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+//Service Providers
+
+export interface Provider {
+  id: string;
+  name: string;
+  description: string;
+  email: string;
+  phone: string;
+  einNumber: string;
+  country: string;
+  city: string;
+  zipCode: string;
+  companyAddress: string;
+  walletAddress: string;
+  logo: string;
+  contactinformation: string;
+  active: boolean;
+}
+interface UseGetProvidersQueryOutput {
+  providers: Provider[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+}
+export function useGetProvidersQuery(
+  input: z.infer<typeof paginationAndSearchValidator> & {
+    type: "PLATFORM" | "WALLET" | "PROVIDER";
+  },
+  options: UseQueryOptions<UseGetProvidersQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-providers", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseGetProvidersQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export function useAddOrEditProviderMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-provider"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/" +
+          input.providerId,
+        {
+          method: input.providerId ? "PUT" : "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-providers"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useToggleProviderStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleProviderStatusValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-provider-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/${input.providerId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-users"],
       });
       options.onSuccess?.(...input);
     },

@@ -34,6 +34,7 @@ import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
+import Title from "~/components/title";
 import {
   useAddOrEditUserMutation,
   useGetActiveRolesQuery,
@@ -224,10 +225,7 @@ export default function UsersPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <h1 className="flex flex-row items-center space-x-2 text-2xl font-semibold text-[#3A3A3A]">
-        <span>{values["dashboard.users.title"]}</span>
-        {isLoading && <Loader2 className="animate-spin" />}
-      </h1>
+      <Title title={values["dashboard.users.title"]} isLoading={isLoading} />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input

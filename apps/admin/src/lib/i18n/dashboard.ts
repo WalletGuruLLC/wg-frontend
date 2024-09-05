@@ -206,6 +206,7 @@ export const dashboardDict = {
     "dashboard.wallet-management.table.actions.edit": "Edit",
     "dashboard.wallet-management.table.items-label": "Items per page:",
     "dashboard.wallet-management.table.items-count-separator": " of ",
+    "dashboard.service-provider.title": "Services Providers",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -418,5 +419,6 @@ export const dashboardDict = {
     "dashboard.wallet-management.table.actions.edit": "Editar",
     "dashboard.wallet-management.table.items-label": "Elementos por página:",
     "dashboard.wallet-management.table.items-count-separator": " de ",
+    "dashboard.service-provider.title": "Proveedores de servicios",
   },
 } satisfies I18nDictionary;
