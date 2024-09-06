@@ -26,7 +26,7 @@ export default function Table<TData>({ table }: { table: Table<TData> }) {
               <th
                 key={header.id}
                 className={cn(
-                  "px-4 py-2 text-left text-lg font-bold",
+                  "px-4 py-2 text-left text-lg font-normal",
                   idx === 0 && "rounded-l-full",
                   idx + 1 === headerGroup.headers.length && "rounded-r-full",
                   (
@@ -51,7 +51,7 @@ export default function Table<TData>({ table }: { table: Table<TData> }) {
         {table.getRowModel().rows.map((row) => (
           <tr key={row.id} className="h-12 border-b">
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="px-4 font-semibold">
+              <td key={cell.id} className="px-4 font-normal">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
