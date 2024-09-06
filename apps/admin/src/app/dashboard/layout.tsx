@@ -99,7 +99,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
         <div className="hidden h-screen bg-black text-white md:block">
           <div className="flex h-full flex-col gap-2">
             <div className="flex h-24 items-center px-4">
-              <Link href="/" className="flex items-center gap-2 font-semibold">
+              <Link href="/" className="flex items-center gap-2 font-normal">
                 <Image
                   src="/logos/imagotype.png"
                   alt="Logo"
@@ -163,7 +163,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                 <nav className="grid gap-3 text-lg font-medium">
                   <Link
                     href="/"
-                    className="flex items-center gap-2 py-4 font-semibold"
+                    className="flex items-center gap-2 py-4 font-normal"
                   >
                     <Image
                       src="/logos/imagotype.png"

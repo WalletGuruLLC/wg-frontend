@@ -58,13 +58,13 @@ function Actions({
       <AddOrEditDialog
         role={role}
         trigger={
-          <Button className="font-semibold no-underline" variant="link">
+          <Button className="font-normal no-underline" variant="link">
             {values["dashboard.roles.table.actions.edit"]}
           </Button>
         }
       />
       <Link href={`/dashboard/roles/${role.id}`}>
-        <Button className="font-semibold no-underline" variant="link">
+        <Button className="font-normal no-underline" variant="link">
           {values["dashboard.roles.table.actions.access"]}
         </Button>
       </Link>

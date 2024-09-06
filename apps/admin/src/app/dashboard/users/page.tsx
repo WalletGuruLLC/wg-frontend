@@ -82,7 +82,7 @@ function Actions({
         phone: (user.phone as string | undefined) ?? "+1-",
       }}
       trigger={
-        <Button className="font-semibold no-underline" variant="link">
+        <Button className="font-normal no-underline" variant="link">
           {value}
         </Button>
       }
