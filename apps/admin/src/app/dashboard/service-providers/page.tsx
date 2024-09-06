@@ -134,7 +134,8 @@ export default function ServiceProvidersPage() {
           {data?.providers.map((provider) => (
             <Card className="overflow-hidden pb-3 pl-2 pr-2 pt-3">
               <Image
-                src="/logos/imagotype.png"
+                //src="/logos/imagotype.png"
+                src={provider.imageUrl}
                 className="w-auto object-cover"
                 alt={`${provider.name} logo`}
                 width={213}
