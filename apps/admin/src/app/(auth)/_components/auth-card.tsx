@@ -16,7 +16,7 @@ export default function AuthCard(props: {
     <Card className="flex flex-col space-y-12 rounded-[32px] border-[0.5px] bg-[#101010] px-12 py-9">
       <div className="flex w-full flex-col text-white">
         <Separator className="h-1 w-[66px] bg-[#00B0FB]" />
-        <h1 className="pt-3 text-3xl">{props.title}</h1>
+        <h1 className="pt-3 text-3xl font-normal">{props.title}</h1>
         {props.subtitle && <p className="pt-1 text-lg">{props.subtitle}</p>}
       </div>
       <div>{props.content}</div>
