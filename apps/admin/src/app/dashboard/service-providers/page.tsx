@@ -91,7 +91,9 @@ export default function ServiceProvidersPage() {
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
     1;
-  const lastRowIdx = firstRowIdx + 1 - 1;
+  const lastRowId = firstRowIdx + Number(paginationAndSearch.items) - 1;
+  const lastRowIdx =
+    lastRowId > Number(data?.total) ? Number(data?.total) : lastRowId;
 
   if (loading || isLoadingAccessLevels) return null;
   return (
@@ -132,29 +134,30 @@ export default function ServiceProvidersPage() {
       <div className="flex-1 overflow-auto">
         <div className="m-2 mb-10 grid grid-cols-2 gap-10 sm:grid-cols-3">
           {data?.providers.map((provider) => (
-            <Card className="overflow-hidden pb-3 pl-2 pr-2 pt-3">
+            <Card className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3">
               <Image
-                //src="/logos/imagotype.png"
                 src={provider.imageUrl}
-                className="w-auto object-cover"
+                className="w-full object-cover"
                 alt={`${provider.name} logo`}
                 width={213}
                 height={48}
                 priority
               />
-              <h6 className="text-xs">Name</h6>
-              <span className="text-lg">{provider.name}</span>
-              <div className="flex justify-start gap-3">
-                <PencilLine strokeWidth={0.75} className="size-6" />
-                <Eye strokeWidth={0.75} className="size-6" />
-                <SwitchActiveStatusDialog
-                  wallet={{
-                    id: provider.id,
-                    isActive: true,
-                    //id: info.row.original.id,
-                    //isActive: info.getValue(),
-                  }}
-                />
+              <div>
+                <h6 className="text-xs">Name</h6>
+                <span className="text-lg">{provider.name}</span>
+                <div className="flex justify-start gap-3">
+                  <PencilLine strokeWidth={0.75} className="size-6" />
+                  <Eye strokeWidth={0.75} className="size-6" />
+                  <SwitchActiveStatusDialog
+                    wallet={{
+                      id: provider.id,
+                      isActive: true,
+                      //id: info.row.original.id,
+                      //isActive: info.getValue(),
+                    }}
+                  />
+                </div>
               </div>
             </Card>
           ))}
