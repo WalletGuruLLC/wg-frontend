@@ -18,9 +18,9 @@ const config = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-hostname: '**.amazonaws.com',
-        port: '',
+        protocol: "https",
+        hostname: "**.amazonaws.com",
+        port: "",
       },
     ],
   },
