@@ -770,7 +770,7 @@ export interface Provider {
   zipCode: string;
   companyAddress: string;
   walletAddress: string;
-  logo: string;
+  imageUrl: string;
   contactinformation: string;
   active: boolean;
 }
