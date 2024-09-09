@@ -15,7 +15,15 @@ const config = {
     "@wg-frontend/data-access",
     "@wg-frontend/i18n",
   ],
-
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.amazonaws.com",
+        port: "",
+      },
+    ],
+  },
   redirects: async () => {
     return [
       {
