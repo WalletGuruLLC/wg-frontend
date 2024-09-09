@@ -3,12 +3,21 @@
 import type { ReactNode } from "react";
 import type { z } from "zod";
 import { useEffect } from "react";
+import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 //import { useAddOrEditProviderMutation, useGetAuthedUserAccessLevelsQuery, useGetCountryCodesQuery, useGetProvidersQuery } from "~/lib/data-access";
 //import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { PlusCircle, Search } from "lucide-react";
+import {
+  CircleCheck,
+  Eye,
+  PencilLine,
+  PlusCircle,
+  Search,
+  TriangleAlert,
+} from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { Card } from "@wg-frontend/ui/card";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, useForm } from "@wg-frontend/ui/form";
 import { toast } from "@wg-frontend/ui/toast";
@@ -21,12 +30,16 @@ import {
   useAddOrEditProviderMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetProvidersQuery,
+  useToggleWalletStatusMutation,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { addOrEditProviderValidator } from "~/lib/validators";
+import ConfirmDialog from "../_components/dashboard-confirm-dialog";
 import Dialog from "../_components/dashboard-dialog";
 import { Input } from "../_components/dashboard-input";
+import { Switch } from "../_components/dashboard-switch";
 //import Table from "../_components/dashboard-table";
 import {
   //ColumnHeader,
@@ -78,19 +91,18 @@ export default function ServiceProvidersPage() {
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
     1;
-  const lastRowIdx = firstRowIdx + 1 - 1;
+  const lastRowId = firstRowIdx + Number(paginationAndSearch.items) - 1;
+  const lastRowIdx =
+    lastRowId > Number(data?.total) ? Number(data?.total) : lastRowId;
 
   if (loading || isLoadingAccessLevels) return null;
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <Title
-        title={values["dashboard.service-provider.title"]}
-        isLoading={isLoading}
-      />
+      <Title title={values["providers.title"]} isLoading={isLoading} />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
-            placeholder={values["dashboard.users.search.placeholder"]}
+            placeholder={values["providers.search.placeholder"]}
             className="rounded-full border border-black"
             onChange={(e) =>
               handlePaginationAndSearchChange({
@@ -111,7 +123,7 @@ export default function ServiceProvidersPage() {
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
-                  {values["dashboard.users.add-button"]}
+                  {values["providers.add-button"]}
                 </p>
                 <PlusCircle strokeWidth={0.75} className="size-6" />
               </Button>
@@ -119,7 +131,38 @@ export default function ServiceProvidersPage() {
           />
         )}
       </div>
-      <div className="flex-1 overflow-auto"></div>
+      <div className="flex-1 overflow-auto">
+        <div className="m-2 mb-10 grid grid-cols-2 gap-10 sm:grid-cols-3">
+          {data?.providers.map((provider) => (
+            <Card className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3">
+              <Image
+                src={provider.imageUrl}
+                className="w-full object-cover"
+                alt={`${provider.name} logo`}
+                width={213}
+                height={48}
+                priority
+              />
+              <div>
+                <h6 className="text-xs">Name</h6>
+                <span className="text-lg">{provider.name}</span>
+                <div className="flex justify-start gap-3">
+                  <PencilLine strokeWidth={0.75} className="size-6" />
+                  <Eye strokeWidth={0.75} className="size-6" />
+                  <SwitchActiveStatusDialog
+                    wallet={{
+                      id: provider.id,
+                      isActive: true,
+                      //id: info.row.original.id,
+                      //isActive: info.getValue(),
+                    }}
+                  />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
       <div>
         <PaginationFooter
           count={{
@@ -219,7 +262,7 @@ function AddOrEditDialog(props: {
   // const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
-    `dashboard.users.${props.provider ? "edit" : "add"}-dialog` as const;
+    `providers.${props.provider ? "edit" : "add"}-dialog` as const;
 
   useEffect(() => {
     if (props.provider) {
@@ -275,5 +318,83 @@ function AddOrEditDialog(props: {
         </Form>
       </div>
     </Dialog>
+  );
+}
+
+function SwitchActiveStatusDialog(props: {
+  wallet: {
+    id: string;
+    isActive: boolean;
+  };
+}) {
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+
+  const { mutate, isPending } = useToggleWalletStatusMutation({
+    onSuccess: () => {
+      toast.success(values[`${valuesPrexif}.toast.success` as const]);
+      close();
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+  });
+
+  const valuesPrexif =
+    `dashboard.wallet-management.${props.wallet.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+
+  return (
+    <ConfirmDialog
+      key={props.wallet.id}
+      isOpen={isOpen}
+      toggleOpen={toggle}
+      trigger={<Switch checked={props.wallet.isActive} />}
+      actions={[
+        <Button
+          className="w-full"
+          key="yes"
+          onClick={() => mutate({ walletId: props.wallet.id })}
+          disabled={isPending}
+        >
+          {
+            values[
+              isPending
+                ? "loading"
+                : (`${valuesPrexif}.primary-button` as const)
+            ]
+          }
+        </Button>,
+        <Button
+          className="w-full"
+          variant="secondary"
+          key="no"
+          onClick={close}
+          disabled={isPending}
+        >
+          {values[`${valuesPrexif}.secondary-button`]}
+        </Button>,
+      ]}
+      ariaDescribedBy="switch-active-status-dialog"
+      Icon={
+        props.wallet.isActive ? (
+          <TriangleAlert
+            strokeWidth={0.75}
+            className="h-12 w-12"
+            color="#3678B1"
+          />
+        ) : (
+          <CircleCheck
+            strokeWidth={0.75}
+            className="h-12 w-12"
+            color="#3678B1"
+          />
+        )
+      }
+      title={values[`${valuesPrexif}.title`]}
+      description={<span>{values[`${valuesPrexif}.description`]}</span>}
+    />
   );
 }
