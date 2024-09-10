@@ -852,7 +852,7 @@ export function useToggleProviderStatusMutation(
     },
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
-        queryKey: ["get-users"],
+        queryKey: ["get-providers"],
       });
       options.onSuccess?.(...input);
     },

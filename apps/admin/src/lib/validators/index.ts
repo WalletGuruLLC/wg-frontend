@@ -159,4 +159,5 @@ export const addOrEditProviderValidator = z.object({
 
 export const toggleProviderStatusValidator = z.object({
   providerId: z.string().min(1),
+  active: z.boolean(),
 });
