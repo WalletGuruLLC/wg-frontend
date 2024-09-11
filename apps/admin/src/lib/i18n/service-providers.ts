@@ -26,6 +26,7 @@ export const providersDict = {
     "dashboard.provider.activate-dialog.secondary-button": "No",
     "dashboard.provider.activate-dialog.toast.success":
       "The Service Provider has been activated successfully.",
+    "dashboard.provider.users.title": "Users",
   },
   es: {
     "providers.title": "Proveedores de servicios",
@@ -53,5 +54,6 @@ export const providersDict = {
     "dashboard.provider.activate-dialog.secondary-button": "No",
     "dashboard.provider.activate-dialog.toast.success":
       "El Proveedor de servicio ha sido activado satisfactoriamente.",
+    "dashboard.provider.users.title": "Usuarios",
   },
 } satisfies I18nDictionary;

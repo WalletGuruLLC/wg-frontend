@@ -15,7 +15,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  ArrowLeft,
   CircleCheck,
   Loader2,
   PlusCircle,
@@ -46,6 +45,7 @@ import {
   useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
   useGetCountryCodesQuery,
+  useGetProviderByIdQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
@@ -187,6 +187,9 @@ export default function UsersPage() {
     type: "PROVIDER",
     serviceProviderId: providerId,
   });
+  const { data: dataProvider } = useGetProviderByIdQuery({
+    providerId,
+  });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -224,7 +227,7 @@ export default function UsersPage() {
     });
   }
   const handleGoBack = () => {
-    router.back(); // Ir atrás en el historial de navegación
+    router.back();
   };
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
@@ -237,10 +240,13 @@ export default function UsersPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <div className="flex flex-row justify-start">
-        <button onClick={handleGoBack}>
-          <ArrowLeft />
+        <button className="text-xl" onClick={handleGoBack}>
+          {dataProvider?.name ?? ""}
         </button>
-        <Title title={values["dashboard.users.title"]} isLoading={isLoading} />
+        <Title
+          title={`/${values["dashboard.provider.users.title"] || ""}`}
+          isLoading={isLoading}
+        />
       </div>
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
