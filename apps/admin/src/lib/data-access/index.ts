@@ -552,6 +552,7 @@ interface UseGetUsersQueryOutput {
   totalPages: number;
   currentPage: number;
 }
+//Todo
 export function useGetUsersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
@@ -612,8 +613,11 @@ export function useGetActiveRolesQuery(
     ...options,
     queryKey: ["get-active-roles", input],
     queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<Role[]>(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/roles/active",
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles/active?" +
+          params.toString(),
       );
     },
   });
@@ -855,6 +859,32 @@ export function useToggleProviderStatusMutation(
         queryKey: ["get-providers"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+interface UseGetProviderByIdQueryOutput {
+  CreateDate: number;
+  UpdateDate: number;
+  phone: string;
+  active: boolean;
+  name: string;
+}
+
+export function useGetProviderByIdQuery(
+  input: {
+    providerId: string;
+  },
+  options: UseQueryOptions<UseGetProviderByIdQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider", input],
+    queryFn: () => {
+      return customFetch<UseGetProviderByIdQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/" +
+          input.providerId,
+      );
     },
   });
 }
