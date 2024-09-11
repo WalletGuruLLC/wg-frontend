@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { z } from "zod";
 import { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 //import { useAddOrEditProviderMutation, useGetAuthedUserAccessLevelsQuery, useGetCountryCodesQuery, useGetProvidersQuery } from "~/lib/data-access";
 //import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -148,7 +149,10 @@ export default function ServiceProvidersPage() {
                 <span className="text-lg">{provider.name}</span>
                 <div className="flex justify-start gap-3">
                   <PencilLine strokeWidth={0.75} className="size-6" />
-                  <Eye strokeWidth={0.75} className="size-6" />
+                  <Link href={`/dashboard/service-providers/${provider.id}`}>
+                    <Eye strokeWidth={0.75} className="size-6" />
+                  </Link>
+
                   <SwitchActiveStatusDialog
                     provider={{
                       id: provider.id,
