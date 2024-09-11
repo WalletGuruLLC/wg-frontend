@@ -211,7 +211,7 @@ export const dashboardDict = {
     "dashboard.home.title": "Bienvenido",
     "dashboard.layout.nav.home": "Inicio",
     "dashboard.layout.nav.wallet-management": "Billeteras",
-    "dashboard.layout.nav.service-providers": "Service Providers",
+    "dashboard.layout.nav.service-providers": "Proveedores de Servicio",
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.logout": "Cerrar sesión",
