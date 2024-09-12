@@ -6,8 +6,6 @@ import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-//import { useAddOrEditProviderMutation, useGetAuthedUserAccessLevelsQuery, useGetCountryCodesQuery, useGetProvidersQuery } from "~/lib/data-access";
-//import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import {
   CircleCheck,
   Eye,
@@ -26,7 +24,6 @@ import { toast } from "@wg-frontend/ui/toast";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import Title from "~/components/title";
-//import { addOrEditProviderValidator, type paginationAndSearchValidator } from "~/lib/validators";
 import {
   useAddOrEditProviderMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -41,11 +38,7 @@ import ConfirmDialog from "../_components/dashboard-confirm-dialog";
 import Dialog from "../_components/dashboard-dialog";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
-//import Table from "../_components/dashboard-table";
-import {
-  //ColumnHeader,
-  PaginationFooter,
-} from "../_components/dashboard-table";
+import { PaginationFooter } from "../_components/dashboard-table";
 
 export default function ServiceProvidersPage() {
   const loading = useAccessLevelGuard("serviceProviders");
@@ -65,8 +58,6 @@ export default function ServiceProvidersPage() {
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
-
-  //const  dataTable: data.providers ?? [];
 
   function handlePaginationAndSearchChange(
     newPaginationAndSearch: Partial<
@@ -138,10 +129,10 @@ export default function ServiceProvidersPage() {
             <Card className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3">
               <Image
                 src={provider.imageUrl}
-                className="w-full object-cover"
+                className="h-[200px] w-full object-cover"
                 alt={`${provider.name} logo`}
-                width={213}
-                height={48}
+                width={100}
+                height={100}
                 priority
               />
               <div>
@@ -254,13 +245,6 @@ function AddOrEditDialog(props: {
       form.reset();
     },
   });
-  /* 
-   TODO selects 
-   const { data: dataRoles } = useGetActiveRolesQuery({
-    providerId: "EMPTY",
-  });
-   */
-  // const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
     `providers.${props.provider ? "edit" : "add"}-dialog` as const;
