@@ -129,7 +129,7 @@ export default function ServiceProvidersPage() {
             <Card className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3">
               <Image
                 src={provider.imageUrl}
-                className="h-[200px] w-full object-cover"
+                className="h-[200px] w-full object-contain"
                 alt={`${provider.name} logo`}
                 width={100}
                 height={100}
