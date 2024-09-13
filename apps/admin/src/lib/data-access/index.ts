@@ -756,32 +756,30 @@ export function useToggleWalletStatusMutation(
   });
 }
 
-//Service Providers
-
-export interface Provider {
-  id: string;
-  name: string;
-  description: string;
-  email: string;
-  phone: string;
-  einNumber: string;
-  country: string;
-  city: string;
-  zipCode: string;
-  companyAddress: string;
-  walletAddress: string;
-  imageUrl: string;
-  contactinformation: string;
-  active: boolean;
-}
 interface UseGetProvidersQueryOutput {
-  providers: Provider[];
+  providers: {
+    id: string;
+    name: string;
+    description: string;
+    email: string;
+    phone: string;
+    einNumber: string;
+    country: string;
+    city: string;
+    zipCode: string;
+    companyAddress: string;
+    walletAddress: string;
+    imageUrl: string;
+    contactinformation: string;
+    active: boolean;
+  }[];
   total: number;
   totalPages: number;
   currentPage: number;
 }
 export function useGetProvidersQuery(
-  input: z.infer<typeof paginationAndSearchValidator> & {
+  input: {
+    search: string;
     type: "PLATFORM" | "WALLET" | "PROVIDER";
   },
   options: UseQueryOptions<UseGetProvidersQueryOutput> = {},

@@ -1,12 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { z } from "zod";
 import { useEffect } from "react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-//import { useAddOrEditProviderMutation, useGetAuthedUserAccessLevelsQuery, useGetCountryCodesQuery, useGetProvidersQuery } from "~/lib/data-access";
-//import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import {
   CircleCheck,
   Eye,
@@ -22,10 +19,8 @@ import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, useForm } from "@wg-frontend/ui/form";
 import { toast } from "@wg-frontend/ui/toast";
 
-import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import Title from "~/components/title";
-//import { addOrEditProviderValidator, type paginationAndSearchValidator } from "~/lib/validators";
 import {
   useAddOrEditProviderMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -40,11 +35,6 @@ import ConfirmDialog from "../_components/dashboard-confirm-dialog";
 import Dialog from "../_components/dashboard-dialog";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
-//import Table from "../_components/dashboard-table";
-import {
-  //ColumnHeader,
-  PaginationFooter,
-} from "../_components/dashboard-table";
 
 export default function ServiceProvidersPage() {
   const loading = useAccessLevelGuard("serviceProviders");
@@ -52,50 +42,28 @@ export default function ServiceProvidersPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
-    page: searchParams.get("page") ?? "1",
-    items: searchParams.get("items") ?? "10",
-    search: searchParams.get("search") ?? "",
-  };
+
+  const search = searchParams.get("search") ?? "";
+
   const { data, isLoading } = useGetProvidersQuery({
-    ...paginationAndSearch,
+    search,
     type: "PLATFORM",
   });
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
-  //const  dataTable: data.providers ?? [];
-
-  function handlePaginationAndSearchChange(
-    newPaginationAndSearch: Partial<
-      z.infer<typeof paginationAndSearchValidator>
-    >,
-  ) {
+  function handleSearchChange(newSearch: string) {
     const params = new URLSearchParams(searchParams);
-    for (const key in newPaginationAndSearch) {
-      const val =
-        newPaginationAndSearch[key as keyof typeof newPaginationAndSearch];
-      if (val) {
-        params.set(key, val);
-      } else {
-        params.delete(key);
-      }
-    }
+    if (newSearch) params.set("search", newSearch);
+    else params.delete("search");
     router.replace(`${pathname}?${params.toString()}`, {
       scroll: false,
     });
   }
 
-  const firstRowIdx =
-    Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
-    Number(paginationAndSearch.items) +
-    1;
-  const lastRowId = firstRowIdx + Number(paginationAndSearch.items) - 1;
-  const lastRowIdx =
-    lastRowId > Number(data?.total) ? Number(data?.total) : lastRowId;
-
   if (loading || isLoadingAccessLevels) return null;
+
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <Title title={values["providers.title"]} isLoading={isLoading} />
@@ -104,14 +72,8 @@ export default function ServiceProvidersPage() {
           <Input
             placeholder={values["providers.search.placeholder"]}
             className="rounded-full border border-black"
-            onChange={(e) =>
-              handlePaginationAndSearchChange({
-                ...paginationAndSearch,
-                search: e.target.value,
-                page: "1",
-              })
-            }
-            value={paginationAndSearch.search}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            value={search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
@@ -153,8 +115,6 @@ export default function ServiceProvidersPage() {
                     wallet={{
                       id: provider.id,
                       isActive: true,
-                      //id: info.row.original.id,
-                      //isActive: info.getValue(),
                     }}
                   />
                 </div>
@@ -162,39 +122,6 @@ export default function ServiceProvidersPage() {
             </Card>
           ))}
         </div>
-      </div>
-      <div>
-        <PaginationFooter
-          count={{
-            total: data?.total ?? 0,
-            firstRowIdx,
-            lastRowIdx,
-          }}
-          items={paginationAndSearch.items ?? "10"}
-          onItemsChange={(items) =>
-            handlePaginationAndSearchChange({
-              ...paginationAndSearch,
-              items,
-              page: "1",
-            })
-          }
-          canPreviousPage={paginationAndSearch.page !== "1"}
-          canNextPage={
-            data?.providers.length === Number(paginationAndSearch.items)
-          }
-          onPreviousPage={() =>
-            handlePaginationAndSearchChange({
-              ...paginationAndSearch,
-              page: String(Number(paginationAndSearch.page) - 1),
-            })
-          }
-          onNextPage={() =>
-            handlePaginationAndSearchChange({
-              ...paginationAndSearch,
-              page: String(Number(paginationAndSearch.page) + 1),
-            })
-          }
-        />
       </div>
     </div>
   );
@@ -220,6 +147,7 @@ function AddOrEditDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
+  const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
   const form = useForm({
@@ -241,10 +169,8 @@ function AddOrEditDialog(props: {
     },
   });
   const { mutate, isPending } = useAddOrEditProviderMutation({
-    onError: () => {
-      //onError: (error) => {
-      toast.error("Error");
-      //toast.error(values[`errors.${error.message}` as I18nKey]);
+    onError: (error) => {
+      toast.error(errors[error.message]);
     },
     onSuccess: () => {
       toast.success("Success");
@@ -283,6 +209,7 @@ function AddOrEditDialog(props: {
       });
     }
   }, [props.provider, form]);
+
   return (
     <Dialog
       key={props.provider?.id ?? "add"}
