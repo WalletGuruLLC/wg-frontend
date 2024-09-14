@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   CircleCheck,
@@ -25,7 +26,7 @@ import {
   useAddOrEditProviderMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetProvidersQuery,
-  useToggleWalletStatusMutation,
+  useToggleProviderStatusMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -99,22 +100,25 @@ export default function ServiceProvidersPage() {
             <Card className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3">
               <Image
                 src={provider.imageUrl}
-                className="w-full object-cover"
+                className="h-[200px] w-full object-contain"
                 alt={`${provider.name} logo`}
-                width={213}
-                height={48}
+                width={100}
+                height={100}
                 priority
               />
               <div>
-                <h6 className="text-xs">Name</h6>
+                <h6 className="text-xs">{values["providers.card.view"]}</h6>
                 <span className="text-lg">{provider.name}</span>
                 <div className="flex justify-start gap-3">
                   <PencilLine strokeWidth={0.75} className="size-6" />
-                  <Eye strokeWidth={0.75} className="size-6" />
+                  <Link href={`/dashboard/service-providers/${provider.id}`}>
+                    <Eye strokeWidth={0.75} className="size-6" />
+                  </Link>
+
                   <SwitchActiveStatusDialog
-                    wallet={{
+                    provider={{
                       id: provider.id,
-                      isActive: true,
+                      isActive: provider.active,
                     }}
                   />
                 </div>
@@ -149,7 +153,7 @@ function AddOrEditDialog(props: {
   const { values } = useI18n();
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
-
+  const codes = useErrors();
   const form = useForm({
     schema: addOrEditProviderValidator,
     defaultValues: {
@@ -174,18 +178,10 @@ function AddOrEditDialog(props: {
     },
     onSuccess: () => {
       toast.success("Success");
-      //toast.success(values[`${valuesPrefix}.toast.success` as const]);
       close();
       form.reset();
     },
   });
-  /* 
-   TODO selects 
-   const { data: dataRoles } = useGetActiveRolesQuery({
-    providerId: "EMPTY",
-  });
-   */
-  // const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
     `providers.${props.provider ? "edit" : "add"}-dialog` as const;
@@ -249,7 +245,7 @@ function AddOrEditDialog(props: {
 }
 
 function SwitchActiveStatusDialog(props: {
-  wallet: {
+  provider: {
     id: string;
     isActive: boolean;
   };
@@ -258,7 +254,7 @@ function SwitchActiveStatusDialog(props: {
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
-  const { mutate, isPending } = useToggleWalletStatusMutation({
+  const { mutate, isPending } = useToggleProviderStatusMutation({
     onSuccess: () => {
       toast.success(values[`${valuesPrexif}.toast.success` as const]);
       close();
@@ -271,19 +267,24 @@ function SwitchActiveStatusDialog(props: {
   });
 
   const valuesPrexif =
-    `dashboard.wallet-management.${props.wallet.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `dashboard.provider.${props.provider.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog
-      key={props.wallet.id}
+      key={props.provider.id}
       isOpen={isOpen}
       toggleOpen={toggle}
-      trigger={<Switch checked={props.wallet.isActive} />}
+      trigger={<Switch checked={props.provider.isActive} />}
       actions={[
         <Button
           className="w-full"
           key="yes"
-          onClick={() => mutate({ walletId: props.wallet.id })}
+          onClick={() =>
+            mutate({
+              providerId: props.provider.id,
+              active: !props.provider.isActive,
+            })
+          }
           disabled={isPending}
         >
           {
@@ -306,7 +307,7 @@ function SwitchActiveStatusDialog(props: {
       ]}
       ariaDescribedBy="switch-active-status-dialog"
       Icon={
-        props.wallet.isActive ? (
+        props.provider.isActive ? (
           <TriangleAlert
             strokeWidth={0.75}
             className="h-12 w-12"

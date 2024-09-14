@@ -52,6 +52,7 @@ export const paginationAndSearchValidator = z.object({
   page: z.string().optional(),
   items: z.string().optional(),
   search: z.string().optional(),
+  serviceProviderId: z.string().optional(),
 });
 
 export const addOrEditRoleValidator = z.object({
@@ -159,4 +160,5 @@ export const addOrEditProviderValidator = z.object({
 
 export const toggleProviderStatusValidator = z.object({
   providerId: z.string().min(1),
+  active: z.boolean(),
 });
