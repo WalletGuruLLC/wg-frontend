@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -12,6 +12,7 @@ import {
   PlusCircle,
   Search,
   TriangleAlert,
+  Upload,
 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
@@ -19,6 +20,7 @@ import { cn } from "@wg-frontend/ui";
 import { Card } from "@wg-frontend/ui/card";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import { Label } from "@wg-frontend/ui/label";
 import {
   Select,
   SelectContent,
@@ -38,6 +40,7 @@ import {
   useGetProvidersQuery,
   useGetStatesQuery,
   useToggleProviderStatusMutation,
+  useUploadProviderImageMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -109,7 +112,10 @@ export default function ServiceProvidersPage() {
       <div className="flex-1 overflow-auto">
         <div className="m-2 grid grid-cols-2 gap-10 sm:grid-cols-3">
           {data?.providers.map((provider) => (
-            <Card className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3">
+            <Card
+              key={provider.id}
+              className="flex flex-col justify-between overflow-hidden pb-3 pl-2 pr-2 pt-3"
+            >
               <Image
                 src={provider.imageUrl}
                 className="h-[200px] w-full object-contain"
@@ -142,7 +148,6 @@ export default function ServiceProvidersPage() {
                       zipCode: provider.zipCode ?? "",
                       companyAddress: provider.companyAddress ?? "",
                       walletAddress: provider.walletAddress ?? "",
-                      logo: provider.imageUrl,
                     }}
                   />
                   <Link href={`/dashboard/service-providers/${provider.id}`}>
@@ -175,13 +180,13 @@ function AddOrEditDialog(props: {
     zipCode: string;
     companyAddress: string;
     walletAddress: string;
-    logo: string;
   };
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const [file, setFile] = useState<File | undefined>(undefined);
   const form = useForm({
     schema: addOrEditServiceProviderValidator,
     defaultValues: {
@@ -193,7 +198,6 @@ function AddOrEditDialog(props: {
       zipCode: props.provider?.zipCode ?? "",
       companyAddress: props.provider?.companyAddress ?? "",
       walletAddress: props.provider?.walletAddress ?? "",
-      logo: props.provider?.logo ?? "asdasd",
     },
   });
 
@@ -209,13 +213,30 @@ function AddOrEditDialog(props: {
 
   const { mutate, isPending } = useAddOrEditProviderMutation({
     onError: (error) => {
-      toast.error(errors[error.message]);
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
-    onSuccess: () => {
-      // TODO: Upload image
+    onSuccess: (data) => {
+      if (file)
+        void uploadImage({
+          file,
+          id: data.id,
+        });
       toast.success(values[`${valuesPrefix}.toast.success`]);
       close();
       form.reset();
+    },
+  });
+
+  const { mutate: uploadImage } = useUploadProviderImageMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(values[`${valuesPrefix}.toast.success`]);
     },
   });
 
@@ -233,7 +254,6 @@ function AddOrEditDialog(props: {
         zipCode: props.provider.zipCode,
         companyAddress: props.provider.companyAddress,
         walletAddress: props.provider.walletAddress,
-        logo: props.provider.logo,
       });
     }
   }, [props.provider, form]);
@@ -454,6 +474,47 @@ function AddOrEditDialog(props: {
                   {WALLET_ADDRESS_BASE_URL}
                   {form.watch("walletAddress")}
                 </p>
+              </div>
+            </div>
+            <div className="w-full">
+              <Label className="text-xs font-light">
+                {values[`${valuesPrefix}.company-logo.label`]}
+              </Label>
+              <div>
+                <Label
+                  htmlFor="company-logo"
+                  className="flex h-24 w-full items-center justify-center rounded-xl border border-black"
+                >
+                  <div className="flex flex-row justify-center space-x-4">
+                    <p
+                      className={cn(
+                        "self-center text-sm font-light text-[#A1A1A1]",
+                        file && "text-black",
+                      )}
+                    >
+                      {file?.name ??
+                        values[`${valuesPrefix}.company-logo.placeholder`]}
+                    </p>
+                    <Upload strokeWidth={0.75} className="size-6 self-center" />
+                    <Button
+                      variant="secondary"
+                      type="button"
+                      className="pointer-events-none font-light text-[#A1A1A1]"
+                    >
+                      {values[`${valuesPrefix}.company-logo.button`]}
+                    </Button>
+                  </div>
+                </Label>
+                <Input
+                  type="file"
+                  id="company-logo"
+                  name="company-logo"
+                  accept="image/png, image/jpeg"
+                  onChange={(e) => {
+                    setFile(e.target.files?.[0]);
+                  }}
+                  className="hidden"
+                />
               </div>
             </div>
             <DialogFooter className="pt-9">

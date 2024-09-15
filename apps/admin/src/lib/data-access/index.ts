@@ -832,6 +832,36 @@ export function useAddOrEditProviderMutation(
   });
 }
 
+export function useUploadProviderImageMutation(
+  options: UseMutationOptions<{ id: string; file: File }, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["upload-provider-image"],
+    mutationFn: (input) => {
+      const formData = new FormData();
+      formData.append("file", input.file);
+
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/upload-image" +
+          input.id,
+        {
+          method: "PUT",
+          body: formData,
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-providers"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
 type UseGetCountriesQueryOutput = {
   name: string;
   iso2: string;

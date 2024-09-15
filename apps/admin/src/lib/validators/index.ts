@@ -144,7 +144,6 @@ export const addOrEditServiceProviderValidator = z.object({
   walletAddress: z
     .string()
     .min(1, "service-providers.add-dialog.wallet-address.error"),
-  logo: z.string().min(1, "service-providers.add-dialog.company-logo.error"),
 });
 
 export const toggleProviderStatusValidator = z.object({
