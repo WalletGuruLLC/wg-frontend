@@ -45,7 +45,7 @@ import {
   useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
   useGetCountryCodesQuery,
-  useGetProviderByIdQuery,
+  useGetProviderQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
@@ -187,7 +187,7 @@ export default function UsersPage() {
     type: "PROVIDER",
     serviceProviderId: providerId,
   });
-  const { data: dataProvider } = useGetProviderByIdQuery({
+  const { data: dataProvider } = useGetProviderQuery({
     providerId,
   });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =

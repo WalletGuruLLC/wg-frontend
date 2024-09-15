@@ -957,7 +957,8 @@ export function useToggleProviderStatusMutation(
     },
   });
 }
-interface UseGetProviderByIdQueryOutput {
+
+interface UseGetProviderQueryOutput {
   CreateDate: number;
   UpdateDate: number;
   phone: string;
@@ -965,17 +966,17 @@ interface UseGetProviderByIdQueryOutput {
   name: string;
 }
 
-export function useGetProviderByIdQuery(
+export function useGetProviderQuery(
   input: {
     providerId: string;
   },
-  options: UseQueryOptions<UseGetProviderByIdQueryOutput> = {},
+  options: UseQueryOptions<UseGetProviderQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
     queryKey: ["get-provider", input],
     queryFn: () => {
-      return customFetch<UseGetProviderByIdQueryOutput>(
+      return customFetch<UseGetProviderQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           "/api/v1/providers/" +
           input.providerId,
