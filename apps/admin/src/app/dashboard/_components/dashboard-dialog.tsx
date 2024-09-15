@@ -19,6 +19,7 @@ export interface Props {
   trigger: ReactNode;
   children: ReactNode;
   ariaDescribedBy: string;
+  contentClassName?: string;
 }
 
 export default function Dialog(props: Props) {
@@ -31,7 +32,9 @@ export default function Dialog(props: Props) {
           <DialogDescription>{props.ariaDescribedBy}</DialogDescription>
         </DialogHeader>
       </VisuallyHidden.Root>
-      <DialogContent>{props.children}</DialogContent>
+      <DialogContent className={props.contentClassName}>
+        {props.children}
+      </DialogContent>
     </_Dialog>
   );
 }
