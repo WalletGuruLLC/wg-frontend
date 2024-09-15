@@ -98,11 +98,13 @@ export const serviceProvidersDict = {
     "service-providers.activate-dialog.secondary-button": "No",
     "service-providers.activate-dialog.toast.success":
       "The Service Provider has been activated successfully.",
-    "service-providers.home.title.section-1": "Service Providers",
+    "service-providers.home.title": "Service Providers",
     "service-providers.home.sections.users.label": "Users",
     "service-providers.home.sections.roles.label": "Roles",
     "service-providers.home.sections.settings.label": "Settings",
     "service-providers.home.sections.transactions.label": "Transactions",
+    "service-providers.settings.title": "Settings",
+    "service-providers.transactions.title": "Transactions",
   },
   es: {
     "service-providers.title": "Proveedores de servicios",
@@ -208,10 +210,12 @@ export const serviceProvidersDict = {
     "service-providers.activate-dialog.secondary-button": "No",
     "service-providers.activate-dialog.toast.success":
       "El Proveedor de servicio ha sido activado satisfactoriamente.",
-    "service-providers.home.title.section-1": "Proveedores de servicios",
+    "service-providers.home.title": "Proveedores de servicios",
     "service-providers.home.sections.users.label": "Usuarios",
     "service-providers.home.sections.roles.label": "Roles",
     "service-providers.home.sections.settings.label": "Configuraciones",
     "service-providers.home.sections.transactions.label": "Transacciones",
+    "service-providers.settings.title": "Configuraciones",
+    "service-providers.transactions.title": "Transacciones",
   },
 } satisfies I18nDictionary;

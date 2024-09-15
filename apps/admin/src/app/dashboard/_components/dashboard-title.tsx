@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
 import {
@@ -40,7 +41,9 @@ export function BreadcrumbTitle({ sections }: BreadcrumbTitleProps) {
               {isLoading ? (
                 <Loader2 className="animate-spin" />
               ) : (
-                <BreadcrumbLink href={href}>{title}</BreadcrumbLink>
+                <BreadcrumbLink asChild>
+                  <Link href={href ?? ""}>{title}</Link>
+                </BreadcrumbLink>
               )}
             </BreadcrumbItem>
             {index !== sections.length - 1 && (

@@ -61,7 +61,7 @@ export default function ServiceProviderPage() {
       <BreadcrumbTitle
         sections={[
           {
-            title: values["service-providers.home.title.section-1"],
+            title: values["service-providers.home.title"],
             href: "/dashboard/service-providers",
             isLoading: false,
           },
