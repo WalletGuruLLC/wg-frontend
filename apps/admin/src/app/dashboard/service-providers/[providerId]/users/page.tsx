@@ -36,10 +36,10 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import type { User } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import { BreadcrumbTitle } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
-import Title from "~/components/title";
 import {
   useAddOrEditUserMutation,
   useGetActiveRolesQuery,
@@ -80,7 +80,7 @@ function Actions({
     first: boolean;
   };
 }) {
-  const { value } = useI18n("dashboard.users.table.actions.edit");
+  const { value } = useI18n("service-providers.users.table.actions.edit");
 
   return (
     <AddOrEditDialog
@@ -104,35 +104,48 @@ const columns = [
     id: "firstName",
     cell: (info) => info.getValue() || "-",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.first-name" />
+      <ColumnHeader i18nKey="service-providers.users.table.header.first-name" />
     ),
   }),
   columnHelper.accessor("lastName", {
     id: "lastName",
     cell: (info) => info.getValue() || "-",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.last-name" />
+      <ColumnHeader i18nKey="service-providers.users.table.header.last-name" />
     ),
   }),
   columnHelper.accessor("email", {
     id: "email",
     cell: (info) => info.getValue(),
-    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.email" />,
+    header: () => (
+      <ColumnHeader i18nKey="service-providers.users.table.header.email" />
+    ),
   }),
   columnHelper.accessor("phone", {
     id: "phone",
     cell: (info) => info.getValue() || "-",
-    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.phone" />,
+    header: () => (
+      <ColumnHeader i18nKey="service-providers.users.table.header.phone" />
+    ),
   }),
   columnHelper.accessor("roleName", {
     id: "roleName",
     cell: (info) => info.getValue() || "-",
-    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.role" />,
+    header: () => (
+      <ColumnHeader i18nKey="service-providers.users.table.header.role" />
+    ),
+  }),
+  columnHelper.display({
+    id: "contact",
+    cell: () => "-",
+    header: () => (
+      <ColumnHeader i18nKey="service-providers.users.table.header.contact" />
+    ),
   }),
   columnHelper.accessor("active", {
     id: "active",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.is-active" />
+      <ColumnHeader i18nKey="service-providers.users.table.header.is-active" />
     ),
     cell: (info) => (
       <SwitchActiveStatusDialog
@@ -147,7 +160,7 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.actions" />
+      <ColumnHeader i18nKey="service-providers.users.table.header.actions" />
     ),
     cell: (info) => (
       <Actions
@@ -169,7 +182,7 @@ const columns = [
   }),
 ];
 
-export default function UsersPage() {
+export default function ServiceProviderUsersPage() {
   const loading = useAccessLevelGuard("users");
   const { values } = useI18n();
   const searchParams = useSearchParams();
@@ -187,9 +200,10 @@ export default function UsersPage() {
     type: "PROVIDER",
     serviceProviderId: providerId,
   });
-  const { data: dataProvider } = useGetProviderQuery({
-    providerId,
-  });
+  const { data: dataProvider, isLoading: isLoadingProviderData } =
+    useGetProviderQuery({
+      providerId,
+    });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -226,9 +240,7 @@ export default function UsersPage() {
       scroll: false,
     });
   }
-  const handleGoBack = () => {
-    router.back();
-  };
+
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
@@ -239,19 +251,29 @@ export default function UsersPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <div className="flex flex-row justify-start">
-        <button className="text-xl" onClick={handleGoBack}>
-          {dataProvider?.name ?? ""}
-        </button>
-        <Title
-          title={`/${values["dashboard.provider.users.title"] || ""}`}
-          isLoading={isLoading}
-        />
-      </div>
+      <BreadcrumbTitle
+        sections={[
+          {
+            title: values["service-providers.home.title"],
+            href: "/dashboard/service-providers",
+            isLoading: false,
+          },
+          {
+            title: dataProvider?.name,
+            href: `/dashboard/service-providers/${providerId}`,
+            isLoading: isLoadingProviderData,
+          },
+          {
+            title: values["service-providers.users.title"],
+            href: `/dashboard/service-providers/${providerId}/users`,
+            isLoading: false,
+          },
+        ]}
+      />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
-            placeholder={values["dashboard.users.search.placeholder"]}
+            placeholder={values["service-providers.users.search.placeholder"]}
             className="rounded-full border border-black"
             onChange={(e) =>
               handlePaginationAndSearchChange({
@@ -272,7 +294,7 @@ export default function UsersPage() {
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
-                  {values["dashboard.users.add-button"]}
+                  {values["service-providers.users.add-button"]}
                 </p>
                 <PlusCircle strokeWidth={0.75} className="size-6" />
               </Button>
@@ -371,7 +393,7 @@ function AddOrEditDialog(props: {
   const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   const valuesPrefix =
-    `dashboard.users.${props.user ? "edit" : "add"}-dialog` as const;
+    `service-providers.users.${props.user ? "edit" : "add"}-dialog` as const;
 
   // This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
   useEffect(() => {
@@ -629,7 +651,7 @@ function SwitchActiveStatusDialog(props: {
   });
 
   const valuesPrexif =
-    `dashboard.users.${props.user.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `service-providers.users.${props.user.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog

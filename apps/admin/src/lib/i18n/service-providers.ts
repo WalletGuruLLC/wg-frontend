@@ -103,6 +103,87 @@ export const serviceProvidersDict = {
     "service-providers.home.sections.roles.label": "Roles",
     "service-providers.home.sections.settings.label": "Settings",
     "service-providers.home.sections.transactions.label": "Transactions",
+    "service-providers.users.title": "Users",
+    "service-providers.users.search.placeholder": "Search",
+    "service-providers.users.add-button": "Add User",
+    "service-providers.users.add-dialog.title": "Add User",
+    "service-providers.users.add-dialog.first-name.label": "First Name",
+    "service-providers.users.add-dialog.first-name.placeholder":
+      "Enter the name",
+    "service-providers.users.add-dialog.first-name.error":
+      "First Name is required",
+    "service-providers.users.add-dialog.last-name.label": "Last Name",
+    "service-providers.users.add-dialog.last-name.placeholder":
+      "Enter the last name",
+    "service-providers.users.add-dialog.last-name.error":
+      "Last Name is required",
+    "service-providers.users.add-dialog.email.label": "Email",
+    "service-providers.users.add-dialog.email.placeholder": "Enter the email",
+    "service-providers.users.add-dialog.email.error":
+      "Email is required and must be a valid email",
+    "service-providers.users.add-dialog.phone.label": "Phone Number",
+    "service-providers.users.add-dialog.phone.code-placeholder": "+00",
+    "service-providers.users.add-dialog.phone.phone-placeholder":
+      "Enter your phone number",
+    "service-providers.users.add-dialog.phone.error": "Phone Number is invalid",
+    "service-providers.users.add-dialog.role.label": "Role",
+    "service-providers.users.add-dialog.role.placeholder": "Select Role",
+    "service-providers.users.add-dialog.role.error": "Role is required",
+    "service-providers.users.add-dialog.primary-button": "Save",
+    "service-providers.users.add-dialog.toast.success":
+      "A confirmation email has been sent to the user with the assigned password.",
+    "service-providers.users.edit-dialog.title": "Edit User",
+    "service-providers.users.edit-dialog.first-name.label": "First Name",
+    "service-providers.users.edit-dialog.first-name.placeholder":
+      "Enter the name",
+    "service-providers.users.edit-dialog.first-name.error":
+      "First Name is required",
+    "service-providers.users.edit-dialog.last-name.label": "Last Name",
+    "service-providers.users.edit-dialog.last-name.placeholder":
+      "Enter the last name",
+    "service-providers.users.edit-dialog.last-name.error":
+      "Last Name is required",
+    "service-providers.users.edit-dialog.email.label": "Email",
+    "service-providers.users.edit-dialog.email.placeholder": "Enter the email",
+    "service-providers.users.edit-dialog.email.error":
+      "Email is required and must be a valid email",
+    "service-providers.users.edit-dialog.phone.label": "Phone Number",
+    "service-providers.users.edit-dialog.phone.code-placeholder": "+00",
+    "service-providers.users.edit-dialog.phone.phone-placeholder":
+      "Enter your phone number",
+    "service-providers.users.edit-dialog.phone.error":
+      "Phone Number is invalid",
+    "service-providers.users.edit-dialog.role.label": "Role",
+    "service-providers.users.edit-dialog.role.placeholder": "Select Role",
+    "service-providers.users.edit-dialog.role.error": "Role is required",
+    "service-providers.users.edit-dialog.primary-button": "Save",
+    "service-providers.users.edit-dialog.toast.success":
+      "The User has been edited successfully.",
+    "service-providers.users.inactive-dialog.title": "Inactive user",
+    "service-providers.users.inactive-dialog.description":
+      "By inactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
+    "service-providers.users.inactive-dialog.primary-button": "Yes",
+    "service-providers.users.inactive-dialog.secondary-button": "No",
+    "service-providers.users.inactive-dialog.toast.success":
+      "The user has been deactivated successfully.",
+    "service-providers.users.activate-dialog.title": "Activate User",
+    "service-providers.users.activate-dialog.description":
+      "By activating this user, you are granting the user access to specific system privileges. Do you want to proceed?",
+    "service-providers.users.activate-dialog.primary-button": "Yes",
+    "service-providers.users.activate-dialog.secondary-button": "No",
+    "service-providers.users.activate-dialog.toast.success":
+      "The user has been activated successfully.",
+    "service-providers.users.table.header.first-name": "First Name",
+    "service-providers.users.table.header.last-name": "Last Name",
+    "service-providers.users.table.header.email": "Mail",
+    "service-providers.users.table.header.phone": "Phone",
+    "service-providers.users.table.header.role": "Role",
+    "service-providers.users.table.header.contact": "Contact",
+    "service-providers.users.table.header.is-active": "Active",
+    "service-providers.users.table.header.actions": "Actions",
+    "service-providers.users.table.actions.edit": "Edit",
+    "service-providers.users.table.items-label": "Items per page:",
+    "service-providers.users.table.items-count-separator": " of ",
     "service-providers.settings.title": "Settings",
     "service-providers.transactions.title": "Transactions",
   },
@@ -215,6 +296,89 @@ export const serviceProvidersDict = {
     "service-providers.home.sections.roles.label": "Roles",
     "service-providers.home.sections.settings.label": "Configuraciones",
     "service-providers.home.sections.transactions.label": "Transacciones",
+    "service-providers.users.title": "Usuarios",
+    "service-providers.users.search.placeholder": "Buscar",
+    "service-providers.users.add-button": "Agregar Usuario",
+    "service-providers.users.add-dialog.title": "Agregar Usuario",
+    "service-providers.users.add-dialog.first-name.label": "Nombre",
+    "service-providers.users.add-dialog.first-name.placeholder":
+      "Ingrese el nombre",
+    "service-providers.users.add-dialog.first-name.error":
+      "Nombre es requerido",
+    "service-providers.users.add-dialog.last-name.label": "Apellido",
+    "service-providers.users.add-dialog.last-name.placeholder":
+      "Ingrese el apellido",
+    "service-providers.users.add-dialog.last-name.error":
+      "Apellido es requerido",
+    "service-providers.users.add-dialog.email.label": "Correo",
+    "service-providers.users.add-dialog.email.placeholder": "Ingrese el correo",
+    "service-providers.users.add-dialog.email.error":
+      "Correo es requerido y debe ser un correo válido",
+    "service-providers.users.add-dialog.phone.label": "Número de Teléfono",
+    "service-providers.users.add-dialog.phone.code-placeholder": "+00",
+    "service-providers.users.add-dialog.phone.phone-placeholder":
+      "Ingrese su número de teléfono",
+    "service-providers.users.add-dialog.phone.error":
+      "Número de Teléfono es invalido",
+    "service-providers.users.add-dialog.role.label": "Rol",
+    "service-providers.users.add-dialog.role.placeholder": "Seleccionar Rol",
+    "service-providers.users.add-dialog.role.error": "Rol es requerido",
+    "service-providers.users.add-dialog.primary-button": "Guardar",
+    "service-providers.users.add-dialog.toast.success":
+      "Se ha enviado un correo de confirmación al usuario con la contraseña asignada.",
+    "service-providers.users.edit-dialog.title": "Editar Usuario",
+    "service-providers.users.edit-dialog.first-name.label": "Nombre",
+    "service-providers.users.edit-dialog.first-name.placeholder":
+      "Ingrese el nombre",
+    "service-providers.users.edit-dialog.first-name.error":
+      "Nombre es requerido",
+    "service-providers.users.edit-dialog.last-name.label": "Apellido",
+    "service-providers.users.edit-dialog.last-name.placeholder":
+      "Ingrese el apellido",
+    "service-providers.users.edit-dialog.last-name.error":
+      "Apellido es requerido",
+    "service-providers.users.edit-dialog.email.label": "Correo",
+    "service-providers.users.edit-dialog.email.placeholder":
+      "Ingrese el correo",
+    "service-providers.users.edit-dialog.email.error":
+      "Correo es requerido y debe ser un correo válido",
+    "service-providers.users.edit-dialog.phone.label": "Número de Teléfono",
+    "service-providers.users.edit-dialog.phone.code-placeholder": "+00",
+    "service-providers.users.edit-dialog.phone.phone-placeholder":
+      "Ingrese su número de teléfono",
+    "service-providers.users.edit-dialog.phone.error":
+      "Número de Teléfono es invalido",
+    "service-providers.users.edit-dialog.role.label": "Rol",
+    "service-providers.users.edit-dialog.role.placeholder": "Seleccionar Rol",
+    "service-providers.users.edit-dialog.role.error": "Rol es requerido",
+    "service-providers.users.edit-dialog.primary-button": "Guardar",
+    "service-providers.users.edit-dialog.toast.success":
+      "El Usuario se ha editado exitosamente.",
+    "service-providers.users.inactive-dialog.title": "Inactivar usuario",
+    "service-providers.users.inactive-dialog.description":
+      "Al inactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
+    "service-providers.users.inactive-dialog.primary-button": "Sí",
+    "service-providers.users.inactive-dialog.secondary-button": "No",
+    "service-providers.users.inactive-dialog.toast.success":
+      "El usuario se ha desactivado exitosamente.",
+    "service-providers.users.activate-dialog.title": "Activar Usuario",
+    "service-providers.users.activate-dialog.description":
+      "Al activar este usuario, le está otorgando al usuario acceso a privilegios específicos del sistema. ¿Desea continuar?",
+    "service-providers.users.activate-dialog.primary-button": "Sí",
+    "service-providers.users.activate-dialog.secondary-button": "No",
+    "service-providers.users.activate-dialog.toast.success":
+      "El usuario se ha activado exitosamente.",
+    "service-providers.users.table.header.first-name": "Nombre",
+    "service-providers.users.table.header.last-name": "Apellido",
+    "service-providers.users.table.header.email": "Correo",
+    "service-providers.users.table.header.phone": "Teléfono",
+    "service-providers.users.table.header.role": "Rol",
+    "service-providers.users.table.header.contact": "Contacto",
+    "service-providers.users.table.header.is-active": "Activo",
+    "service-providers.users.table.header.actions": "Acciones",
+    "service-providers.users.table.actions.edit": "Editar",
+    "service-providers.users.table.items-label": "Elementos por página:",
+    "service-providers.users.table.items-count-separator": " de ",
     "service-providers.settings.title": "Configuraciones",
     "service-providers.transactions.title": "Transacciones",
   },
