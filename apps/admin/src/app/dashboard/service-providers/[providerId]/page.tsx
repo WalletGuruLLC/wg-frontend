@@ -5,13 +5,13 @@ import { useParams } from "next/navigation";
 
 import { Card } from "@wg-frontend/ui/card";
 
-import Title from "~/components/title";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetProviderByIdQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
 export default function DashboardProviders() {
   const loading = useAccessLevelGuard("serviceProviders");
@@ -27,10 +27,23 @@ export default function DashboardProviders() {
   if (loading || isLoadingAccessLevels) return null;
   return (
     <div className="flex-1 overflow-auto">
-      <Title title={data?.name ?? ""} isLoading={isLoadingProviderData} />
+      <BreadcrumbTitle
+        sections={[
+          {
+            title: "Service Providers",
+            href: "/dashboard/service-providers",
+            isLoading: false,
+          },
+          {
+            title: data?.name,
+            href: `/dashboard/service-providers/${providerId}`,
+            isLoading: isLoadingProviderData,
+          },
+        ]}
+      />
       <div className="m-2 mb-10 grid grid-cols-2 gap-10 sm:grid-cols-3">
         <Link href={`/dashboard/service-providers/${providerId}/users`}>
-          <Card>{values["dashboard.provider.users.title"]}</Card>
+          <Card>{values["dashboard.provider.users.title"]}asds</Card>
         </Link>
       </div>
     </div>

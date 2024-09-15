@@ -7,7 +7,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
 
 import { Checkbox } from "@wg-frontend/ui/checkbox";
 import { toast } from "@wg-frontend/ui/toast";
@@ -30,6 +29,7 @@ import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import Table, { ColumnHeader } from "../../_components/dashboard-table";
+import { SimpleTitle } from "../../_components/dashboard-title";
 
 function Actions({
   module,
@@ -266,15 +266,10 @@ export default function RoleAccessLevels() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <h1 className="flex flex-row items-center space-x-2 text-2xl font-normal text-[#3A3A3A]">
-        <span>
-          {values["dashboard.roles.role.title"]}
-          {data?.Name}
-        </span>
-        {(isLoading || isLoadingRoleData) && (
-          <Loader2 className="animate-spin" />
-        )}
-      </h1>
+      <SimpleTitle
+        title={values["dashboard.roles.role.title"] + data?.Name}
+        isLoading={isLoading || isLoadingRoleData}
+      />
       <div className="flex-1 overflow-auto">
         <Table table={table} />
       </div>

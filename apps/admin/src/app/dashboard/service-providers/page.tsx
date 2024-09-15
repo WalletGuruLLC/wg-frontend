@@ -32,7 +32,6 @@ import { toast } from "@wg-frontend/ui/toast";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
-import Title from "~/components/title";
 import {
   useAddOrEditProviderMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -51,6 +50,7 @@ import Dialog from "../_components/dashboard-dialog";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
+import { SimpleTitle } from "../_components/dashboard-title";
 
 export default function ServiceProvidersPage() {
   const loading = useAccessLevelGuard("serviceProviders");
@@ -82,7 +82,10 @@ export default function ServiceProvidersPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <Title title={values["service-providers.title"]} isLoading={isLoading} />
+      <SimpleTitle
+        title={values["service-providers.title"]}
+        isLoading={isLoading}
+      />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
