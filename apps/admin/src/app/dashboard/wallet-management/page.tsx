@@ -28,7 +28,6 @@ import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
-import Title from "~/components/title";
 import {
   useAddOrEditWalletMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -48,6 +47,7 @@ import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "../_components/dashboard-table";
+import { SimpleTitle } from "../_components/dashboard-title";
 
 function Actions({
   wallet,
@@ -190,9 +190,9 @@ export default function WalletManagementPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <Title
+      <SimpleTitle
         title={values["dashboard.wallet-management.title"]}
-        isLoading={isLoading}
+        showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">

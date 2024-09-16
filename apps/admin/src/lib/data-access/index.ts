@@ -13,8 +13,8 @@ import {
 } from "@wg-frontend/data-access";
 
 import type {
-  addOrEditProviderValidator,
   addOrEditRoleValidator,
+  addOrEditServiceProviderValidator,
   addOrEditUserValidator,
   addOrEditWalletValidator,
   forgotPasswordCodeStepValidator,
@@ -760,32 +760,30 @@ export function useToggleWalletStatusMutation(
   });
 }
 
-//Service Providers
-
-export interface Provider {
-  id: string;
-  name: string;
-  description: string;
-  email: string;
-  phone: string;
-  einNumber: string;
-  country: string;
-  city: string;
-  zipCode: string;
-  companyAddress: string;
-  walletAddress: string;
-  imageUrl: string;
-  contactinformation: string;
-  active: boolean;
-}
 interface UseGetProvidersQueryOutput {
-  providers: Provider[];
+  providers: {
+    id: string;
+    name?: string;
+    description?: string;
+    email?: string;
+    phone?: string;
+    einNumber?: string;
+    country?: string;
+    city?: string;
+    zipCode?: string;
+    companyAddress?: string;
+    walletAddress?: string;
+    imageUrl: string;
+    contactInformation?: string;
+    active: boolean;
+  }[];
   total: number;
   totalPages: number;
   currentPage: number;
 }
 export function useGetProvidersQuery(
-  input: z.infer<typeof paginationAndSearchValidator> & {
+  input: {
+    search: string;
     type: "PLATFORM" | "WALLET" | "PROVIDER";
   },
   options: UseQueryOptions<UseGetProvidersQueryOutput> = {},
@@ -806,8 +804,8 @@ export function useGetProvidersQuery(
 
 export function useAddOrEditProviderMutation(
   options: UseMutationOptions<
-    z.infer<typeof addOrEditProviderValidator>,
-    unknown
+    z.infer<typeof addOrEditServiceProviderValidator>,
+    { id: string }
   > = {},
 ) {
   const cq = useQueryClient();
@@ -830,6 +828,103 @@ export function useAddOrEditProviderMutation(
         queryKey: ["get-providers"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useUploadProviderImageMutation(
+  options: UseMutationOptions<{ id: string; file: File }, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["upload-provider-image"],
+    mutationFn: (input) => {
+      const formData = new FormData();
+      formData.append("file", input.file);
+
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/upload-image" +
+          input.id,
+        {
+          method: "PUT",
+          body: formData,
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-providers"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+type UseGetCountriesQueryOutput = {
+  name: string;
+  iso2: string;
+  log: number;
+  lat: number;
+}[];
+export function useGetCountriesQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetCountriesQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-countries"],
+    queryFn: () => {
+      return customFetch<UseGetCountriesQueryOutput>(
+        env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL +
+          "/api/v0.1/countries/positions",
+      );
+    },
+  });
+}
+
+type UseGetStatesQueryOutput = {
+  name: string;
+  code: string;
+  country: {
+    iso3: string;
+    name: string;
+  };
+}[];
+export function useGetStatesQuery(
+  input: { country: string },
+  options: UseQueryOptions<UseGetStatesQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-states", input],
+    queryFn: async () => {
+      const res = await customFetch<{
+        name: string;
+        iso3: string;
+        iso2: string;
+        states: {
+          name: string;
+          state_code: string;
+        }[];
+      }>(
+        env.NEXT_PUBLIC_COUNTRIES_MICROSERVICE_URL +
+          "/api/v0.1/countries/states",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+
+      return res.states.map((stateData) => ({
+        name: stateData.name,
+        code: stateData.state_code,
+        country: {
+          iso3: res.iso3,
+          name: res.name,
+        },
+      }));
     },
   });
 }
@@ -862,7 +957,8 @@ export function useToggleProviderStatusMutation(
     },
   });
 }
-interface UseGetProviderByIdQueryOutput {
+
+interface UseGetProviderQueryOutput {
   CreateDate: number;
   UpdateDate: number;
   phone: string;
@@ -870,17 +966,17 @@ interface UseGetProviderByIdQueryOutput {
   name: string;
 }
 
-export function useGetProviderByIdQuery(
+export function useGetProviderQuery(
   input: {
     providerId: string;
   },
-  options: UseQueryOptions<UseGetProviderByIdQueryOutput> = {},
+  options: UseQueryOptions<UseGetProviderQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
     queryKey: ["get-provider", input],
     queryFn: () => {
-      return customFetch<UseGetProviderByIdQueryOutput>(
+      return customFetch<UseGetProviderQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           "/api/v1/providers/" +
           input.providerId,

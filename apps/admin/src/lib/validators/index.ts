@@ -129,33 +129,21 @@ export const toggleWalletStatusValidator = z.object({
   walletId: z.string().min(1),
 });
 
-export const addOrEditProviderValidator = z.object({
+export const addOrEditServiceProviderValidator = z.object({
   providerId: z.string(),
-  name: z.string().min(3),
-  description: z.string().min(3),
-  email: z.string().email(),
-  phone: z
+  name: z.string().min(1, "service-providers.add-dialog.company-name.error"),
+  einNumber: z
     .string()
-    .min(1, "phone error 1")
-    .refine(
-      (v) =>
-        v.split("-")[0] !== "" &&
-        !isNaN(Number(v.split("-")[0])) &&
-        v.split("-")[1] !== "" &&
-        !isNaN(Number(v.split("-")[1])),
-      {
-        message: "phone error",
-      },
-    ),
-  einNumber: z.string().regex(/^\d{2}-\d{7}$/, "ein format error"),
-  country: z.string().min(2),
-  city: z.string().min(2),
-  zipCode: z.string().min(2),
-  companyAddress: z.string().min(2),
-  walletAddress: z.string().min(2),
-  logo: z.string().min(2),
-  contactinformation: z.string().min(2),
-  active: z.string().min(2),
+    .regex(/^\d{2}-\d{7}$/, "service-providers.add-dialog.ein.error"),
+  country: z.string().min(1, "service-providers.add-dialog.country.error"),
+  city: z.string().min(1, "service-providers.add-dialog.city.error"),
+  zipCode: z.string().min(1, "service-providers.add-dialog.zip-code.error"),
+  companyAddress: z
+    .string()
+    .min(1, "service-providers.add-dialog.company-address.error"),
+  walletAddress: z
+    .string()
+    .min(1, "service-providers.add-dialog.wallet-address.error"),
 });
 
 export const toggleProviderStatusValidator = z.object({

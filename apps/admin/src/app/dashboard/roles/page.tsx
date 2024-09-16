@@ -21,7 +21,6 @@ import type { Role } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import Title from "~/components/title";
 import {
   useAddOrEditRoleMutation,
   useGetAuthedUserAccessLevelsQuery,
@@ -41,6 +40,7 @@ import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "../_components/dashboard-table";
+import { SimpleTitle } from "../_components/dashboard-title";
 
 function Actions({
   role,
@@ -176,7 +176,10 @@ export default function RolesPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <Title title={values["dashboard.roles.title"]} isLoading={isLoading} />
+      <SimpleTitle
+        title={values["dashboard.roles.title"]}
+        showLoadingIndicator={isLoading}
+      />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input

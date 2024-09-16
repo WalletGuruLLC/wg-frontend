@@ -7,9 +7,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
 
-import { Checkbox } from "@wg-frontend/ui/checkbox";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type {
@@ -29,7 +27,9 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { Checkbox } from "../../_components/dashboard-checkbox";
 import Table, { ColumnHeader } from "../../_components/dashboard-table";
+import { SimpleTitle } from "../../_components/dashboard-title";
 
 function Actions({
   module,
@@ -98,7 +98,6 @@ function CheckboxCell({
             : accessLevels.filter((al) => al !== action),
         );
       }}
-      className="rounded-sm border-black data-[state=checked]:bg-white data-[state=checked]:text-black"
     />
   );
 }
@@ -118,7 +117,6 @@ function AllCheckboxCell({
       onCheckedChange={(newChecked: boolean) => {
         setData(newChecked ? [...ACCESS_LEVELS_ACTIONS_BINARY_ORDERED] : []);
       }}
-      className="rounded-sm border-black data-[state=checked]:bg-white data-[state=checked]:text-black"
     />
   );
 }
@@ -266,15 +264,10 @@ export default function RoleAccessLevels() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <h1 className="flex flex-row items-center space-x-2 text-2xl font-normal text-[#3A3A3A]">
-        <span>
-          {values["dashboard.roles.role.title"]}
-          {data?.Name}
-        </span>
-        {(isLoading || isLoadingRoleData) && (
-          <Loader2 className="animate-spin" />
-        )}
-      </h1>
+      <SimpleTitle
+        title={values["dashboard.roles.role.title"] + data?.Name}
+        showLoadingIndicator={isLoading || isLoadingRoleData}
+      />
       <div className="flex-1 overflow-auto">
         <Table table={table} />
       </div>
