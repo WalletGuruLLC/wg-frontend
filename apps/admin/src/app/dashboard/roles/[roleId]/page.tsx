@@ -266,7 +266,7 @@ export default function RoleAccessLevels() {
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
         title={values["dashboard.roles.role.title"] + data?.Name}
-        isLoading={isLoading || isLoadingRoleData}
+        showLoadingIndicator={isLoading || isLoadingRoleData}
       />
       <div className="flex-1 overflow-auto">
         <Table table={table} />

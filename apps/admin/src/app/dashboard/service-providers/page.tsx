@@ -84,7 +84,7 @@ export default function ServiceProvidersPage() {
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
         title={values["service-providers.title"]}
-        isLoading={isLoading}
+        showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">

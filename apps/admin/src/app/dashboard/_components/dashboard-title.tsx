@@ -11,10 +11,13 @@ import {
 
 interface SimpleTitleProps {
   title: string;
-  isLoading: boolean;
+  showLoadingIndicator: boolean;
 }
 
-export function SimpleTitle({ title, isLoading }: SimpleTitleProps) {
+export function SimpleTitle({
+  title,
+  showLoadingIndicator: isLoading,
+}: SimpleTitleProps) {
   return (
     <h1 className="flex flex-row items-center space-x-2 text-2xl font-normal text-[#3A3A3A]">
       <span>{title}</span>
@@ -29,12 +32,12 @@ interface BreadcrumbTitleProps {
     href?: string;
     isLoading: boolean;
   }[];
-  isLoading?: boolean;
+  showLoadingIndicator?: boolean;
 }
 
 export function BreadcrumbTitle({
   sections,
-  isLoading = false,
+  showLoadingIndicator: isLoading = false,
 }: BreadcrumbTitleProps) {
   return (
     <Breadcrumb>

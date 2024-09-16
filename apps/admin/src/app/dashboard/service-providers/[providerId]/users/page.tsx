@@ -270,7 +270,7 @@ export default function ServiceProviderUsersPage() {
             isLoading: false,
           },
         ]}
-        isLoading={isLoading}
+        showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
