@@ -8,7 +8,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Checkbox } from "@wg-frontend/ui/checkbox";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type {
@@ -28,6 +27,7 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { Checkbox } from "../../_components/dashboard-checkbox";
 import Table, { ColumnHeader } from "../../_components/dashboard-table";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
@@ -98,7 +98,6 @@ function CheckboxCell({
             : accessLevels.filter((al) => al !== action),
         );
       }}
-      className="rounded-sm border-black data-[state=checked]:bg-white data-[state=checked]:text-black"
     />
   );
 }
@@ -118,7 +117,6 @@ function AllCheckboxCell({
       onCheckedChange={(newChecked: boolean) => {
         setData(newChecked ? [...ACCESS_LEVELS_ACTIONS_BINARY_ORDERED] : []);
       }}
-      className="rounded-sm border-black data-[state=checked]:bg-white data-[state=checked]:text-black"
     />
   );
 }

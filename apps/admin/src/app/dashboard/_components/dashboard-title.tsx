@@ -29,9 +29,13 @@ interface BreadcrumbTitleProps {
     href?: string;
     isLoading: boolean;
   }[];
+  isLoading?: boolean;
 }
 
-export function BreadcrumbTitle({ sections }: BreadcrumbTitleProps) {
+export function BreadcrumbTitle({
+  sections,
+  isLoading = false,
+}: BreadcrumbTitleProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList className="text-2xl font-normal text-[#3A3A3A]">
@@ -51,6 +55,7 @@ export function BreadcrumbTitle({ sections }: BreadcrumbTitleProps) {
             )}
           </>
         ))}
+        {isLoading && <Loader2 className="animate-spin" />}
       </BreadcrumbList>
     </Breadcrumb>
   );

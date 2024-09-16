@@ -36,6 +36,7 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import type { User } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import { Checkbox } from "~/app/dashboard/_components/dashboard-checkbox";
 import { BreadcrumbTitle } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
@@ -137,7 +138,7 @@ const columns = [
   }),
   columnHelper.display({
     id: "contact",
-    cell: () => "-",
+    cell: () => <Checkbox />,
     header: () => (
       <ColumnHeader i18nKey="service-providers.users.table.header.contact" />
     ),
@@ -269,6 +270,7 @@ export default function ServiceProviderUsersPage() {
             isLoading: false,
           },
         ]}
+        isLoading={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
