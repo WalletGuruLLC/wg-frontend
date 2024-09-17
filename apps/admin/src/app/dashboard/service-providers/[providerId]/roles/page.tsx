@@ -137,7 +137,10 @@ export default function RolesPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data, isLoading } = useGetRolesQuery(paginationAndSearch);
+  const { data, isLoading } = useGetRolesQuery({
+    ...paginationAndSearch,
+    providerId,
+  });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data: providerData, isLoading: isLoadingProviderData } =
