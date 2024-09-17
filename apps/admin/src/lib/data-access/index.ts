@@ -367,7 +367,9 @@ interface UseGetRolesQueryOutput {
   total: number;
 }
 export function useGetRolesQuery(
-  input: z.infer<typeof paginationAndSearchValidator>,
+  input: z.infer<typeof paginationAndSearchValidator> & {
+    providerId?: string;
+  },
   options: UseQueryOptions<UseGetRolesQueryOutput> = {},
 ) {
   return useQuery({
