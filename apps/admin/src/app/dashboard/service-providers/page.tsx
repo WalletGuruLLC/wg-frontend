@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { z } from "zod";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,6 +30,7 @@ import {
 } from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
+import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
@@ -50,6 +52,7 @@ import Dialog from "../_components/dashboard-dialog";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
+import { PaginationFooter } from "../_components/dashboard-table";
 import { SimpleTitle } from "../_components/dashboard-title";
 
 export default function ServiceProvidersPage() {
@@ -59,24 +62,45 @@ export default function ServiceProvidersPage() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const search = searchParams.get("search") ?? "";
+  const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
+    page: searchParams.get("page") ?? "1",
+    items: searchParams.get("items") ?? "10",
+    search: searchParams.get("search") ?? "",
+  };
 
   const { data, isLoading } = useGetProvidersQuery({
-    search,
+    ...paginationAndSearch,
     type: "PLATFORM",
   });
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
-  function handleSearchChange(newSearch: string) {
+  function handlePaginationAndSearchChange(
+    newPaginationAndSearch: Partial<
+      z.infer<typeof paginationAndSearchValidator>
+    >,
+  ) {
     const params = new URLSearchParams(searchParams);
-    if (newSearch) params.set("search", newSearch);
-    else params.delete("search");
+    for (const key in newPaginationAndSearch) {
+      const val =
+        newPaginationAndSearch[key as keyof typeof newPaginationAndSearch];
+      if (val) {
+        params.set(key, val);
+      } else {
+        params.delete(key);
+      }
+    }
     router.replace(`${pathname}?${params.toString()}`, {
       scroll: false,
     });
   }
+
+  const firstRowIdx =
+    Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
+    Number(paginationAndSearch.items) +
+    1;
+  const lastRowIdx = firstRowIdx + (data?.providers.length ?? -1) - 1;
 
   if (loading || isLoadingAccessLevels) return null;
 
@@ -91,8 +115,14 @@ export default function ServiceProvidersPage() {
           <Input
             placeholder={values["service-providers.search.placeholder"]}
             className="rounded-full border border-black"
-            onChange={(e) => handleSearchChange(e.target.value)}
-            value={search}
+            onChange={(e) =>
+              handlePaginationAndSearchChange({
+                ...paginationAndSearch,
+                search: e.target.value,
+                page: "1",
+              })
+            }
+            value={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
@@ -167,6 +197,39 @@ export default function ServiceProvidersPage() {
             </Card>
           ))}
         </div>
+      </div>
+      <div>
+        <PaginationFooter
+          count={{
+            total: data?.total ?? 0,
+            firstRowIdx,
+            lastRowIdx,
+          }}
+          items={paginationAndSearch.items ?? "10"}
+          onItemsChange={(items) =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              items,
+              page: "1",
+            })
+          }
+          canPreviousPage={paginationAndSearch.page !== "1"}
+          canNextPage={
+            data?.providers.length === Number(paginationAndSearch.items)
+          }
+          onPreviousPage={() =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              page: String(Number(paginationAndSearch.page) - 1),
+            })
+          }
+          onNextPage={() =>
+            handlePaginationAndSearchChange({
+              ...paginationAndSearch,
+              page: String(Number(paginationAndSearch.page) + 1),
+            })
+          }
+        />
       </div>
     </div>
   );
