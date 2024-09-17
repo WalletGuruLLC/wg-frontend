@@ -782,8 +782,7 @@ interface UseGetProvidersQueryOutput {
   currentPage: number;
 }
 export function useGetProvidersQuery(
-  input: {
-    search: string;
+  input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
   },
   options: UseQueryOptions<UseGetProvidersQueryOutput> = {},
