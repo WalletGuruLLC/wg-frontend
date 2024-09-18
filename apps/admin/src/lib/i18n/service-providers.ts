@@ -46,6 +46,8 @@ export const serviceProvidersDict = {
     "service-providers.add-dialog.primary-button": "Create",
     "service-providers.add-dialog.toast.success":
       "Service Provider Created Successfully",
+    "service-providers.add-dialog.image.toast.success":
+      "Service Provider Image Uploaded Successfully",
     "service-providers.edit-dialog.title": "Edit Service Provider",
     "service-providers.edit-dialog.company-name.label": "Company Name",
     "service-providers.edit-dialog.company-name.placeholder":
@@ -84,6 +86,8 @@ export const serviceProvidersDict = {
     "service-providers.edit-dialog.primary-button": "Save",
     "service-providers.edit-dialog.toast.success":
       "The Service Provider has been edited successfully.",
+    "service-providers.edit-dialog.image.toast.success":
+      "Service Provider Image Uploaded Successfully",
     "service-providers.inactive-dialog.title": "Inactivate Service Provider",
     "service-providers.inactive-dialog.description":
       "By inactivating this Service Provider, you will revoke the Service Provider's access to certain system privileges. Do you want to proceed?",
@@ -302,6 +306,8 @@ export const serviceProvidersDict = {
     "service-providers.add-dialog.primary-button": "Crear",
     "service-providers.add-dialog.toast.success":
       "Proveedor de servicios creado satisfactoriamente",
+    "service-providers.add-dialog.image.toast.success":
+      "Imagen de Proveedor de servicios subida satisfactoriamente",
     "service-providers.edit-dialog.title": "Editar Proveedor de Servicios",
     "service-providers.edit-dialog.company-name.label": "Nombre de la empresa",
     "service-providers.edit-dialog.company-name.placeholder":
@@ -344,6 +350,8 @@ export const serviceProvidersDict = {
     "service-providers.edit-dialog.primary-button": "Guardar",
     "service-providers.edit-dialog.toast.success":
       "El Proveedor de Servicios ha sido editado satisfactoriamente.",
+    "service-providers.edit-dialog.image.toast.success":
+      "Imagen de Proveedor de servicios subida satisfactoriamente",
     "service-providers.inactive-dialog.title":
       "Inactivar Proveedor de Servicios",
     "service-providers.inactive-dialog.description":

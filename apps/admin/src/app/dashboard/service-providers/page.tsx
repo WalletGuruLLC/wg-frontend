@@ -300,7 +300,7 @@ function AddOrEditDialog(props: {
       });
     },
     onSuccess: () => {
-      toast.success(values[`${valuesPrefix}.toast.success`]);
+      toast.success(values[`${valuesPrefix}.image.toast.success`]);
       setFile(undefined);
     },
   });
