@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { navigate } from "../actions";
 
 const TIMEOUT_MILLISECONDS = 10000;
 
@@ -42,7 +42,7 @@ export default async function customFetch<ResponseType>(
   };
 
   if (!res.ok) {
-    if (json.customCode === "WGE0021") redirect("/login");
+    if (json.customCode === "WGE0021") await navigate("/login");
     throw new Error(json.customCode, { cause: json });
   }
 
