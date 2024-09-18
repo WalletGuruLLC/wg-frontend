@@ -220,6 +220,7 @@ export default function RolesPage() {
           <Input
             placeholder={values["service-providers.roles.search.placeholder"]}
             className="rounded-full border border-black"
+            name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,

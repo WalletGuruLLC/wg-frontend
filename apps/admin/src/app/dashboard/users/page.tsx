@@ -234,6 +234,7 @@ export default function UsersPage() {
           <Input
             placeholder={values["dashboard.users.search.placeholder"]}
             className="rounded-full border border-black"
+            name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,

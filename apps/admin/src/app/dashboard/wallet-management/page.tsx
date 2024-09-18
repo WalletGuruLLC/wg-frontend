@@ -201,6 +201,7 @@ export default function WalletManagementPage() {
               values["dashboard.wallet-management.search.placeholder"]
             }
             className="rounded-full border border-black"
+            name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,
