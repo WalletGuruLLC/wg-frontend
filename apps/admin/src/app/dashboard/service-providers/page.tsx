@@ -302,9 +302,6 @@ function AddOrEditDialog(props: {
     onSuccess: () => {
       toast.success(values[`${valuesPrefix}.toast.success`]);
     },
-    onMutate: (data) => {
-      console.log("uploiading", data.file);
-    },
   });
 
   const valuesPrefix =

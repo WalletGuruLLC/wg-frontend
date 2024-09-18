@@ -848,7 +848,7 @@ export function useUploadProviderImageMutation(
 
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/upload-image" +
+          "/api/v1/providers/upload-image/" +
           input.id,
         {
           method: "PUT",
