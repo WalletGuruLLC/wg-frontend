@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   useParams,
   usePathname,
@@ -48,6 +48,7 @@ import {
   useGetCountryCodesQuery,
   useGetProviderQuery,
   useGetUsersQuery,
+  useToggleContactInformationMutation,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
@@ -63,6 +64,47 @@ import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "../../../_components/dashboard-table";
+
+function ContactInformationCheckbox(props: {
+  isContactInformation: boolean;
+  userId: string;
+}) {
+  const { value } = useI18n(
+    "service-providers.users.edit-dialog.toast.success",
+  );
+  const errors = useErrors();
+  const [checked, setChecked] = useState(props.isContactInformation);
+
+  const { mutate, isPending } = useToggleContactInformationMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(value);
+    },
+    onMutate: () => {
+      setChecked(!checked);
+    },
+  });
+
+  useEffect(() => {
+    setChecked(props.isContactInformation);
+  }, [props.isContactInformation]);
+
+  return (
+    <Checkbox
+      checked={checked}
+      disabled={isPending}
+      onCheckedChange={() => {
+        void mutate({
+          userId: props.userId,
+        });
+      }}
+    />
+  );
+}
 
 function Actions({
   user,
@@ -138,7 +180,12 @@ const columns = [
   }),
   columnHelper.display({
     id: "contact",
-    cell: () => <Checkbox />,
+    cell: (info) => (
+      <ContactInformationCheckbox
+        isContactInformation={!!info.row.original.contactUser}
+        userId={info.row.original.id}
+      />
+    ),
     header: () => (
       <ColumnHeader i18nKey="service-providers.users.table.header.contact" />
     ),
@@ -277,6 +324,7 @@ export default function ServiceProviderUsersPage() {
           <Input
             placeholder={values["service-providers.users.search.placeholder"]}
             className="rounded-full border border-black"
+            name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,
