@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
@@ -43,8 +44,8 @@ export function BreadcrumbTitle({
     <Breadcrumb>
       <BreadcrumbList className="text-2xl font-normal text-[#3A3A3A]">
         {sections.map(({ title, href, isLoading }, index) => (
-          <>
-            <BreadcrumbItem key={index}>
+          <Fragment key={index}>
+            <BreadcrumbItem>
               {isLoading ? (
                 <Loader2 className="animate-spin" />
               ) : (
@@ -56,7 +57,7 @@ export function BreadcrumbTitle({
             {index !== sections.length - 1 && (
               <BreadcrumbSeparator>/</BreadcrumbSeparator>
             )}
-          </>
+          </Fragment>
         ))}
         {isLoading && <Loader2 className="animate-spin" />}
       </BreadcrumbList>
