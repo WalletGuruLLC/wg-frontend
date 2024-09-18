@@ -764,20 +764,22 @@ export function useToggleWalletStatusMutation(
 
 interface UseGetProvidersQueryOutput {
   providers: {
-    id: string;
-    name?: string;
-    description?: string;
-    email?: string;
-    phone?: string;
-    einNumber?: string;
-    country?: string;
-    city?: string;
-    zipCode?: string;
-    companyAddress?: string;
-    walletAddress?: string;
+    contactInformation: string;
+    createDate: number;
+    phone: string;
+    city: string;
+    country: string;
+    zipCode: string;
+    eINNumber: string;
+    description: string;
+    email: string;
+    updateDate: number;
     imageUrl: string;
-    contactInformation?: string;
+    companyAddress: string;
+    id: string;
     active: boolean;
+    walletAddress: string;
+    name: string;
   }[];
   total: number;
   totalPages: number;
@@ -846,11 +848,14 @@ export function useUploadProviderImageMutation(
 
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/upload-image" +
+          "/api/v1/providers/upload-image/" +
           input.id,
         {
           method: "PUT",
           body: formData,
+          headers: {
+            "x-no-content-type": "true",
+          },
         },
       );
     },

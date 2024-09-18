@@ -58,6 +58,7 @@ function Actions({
   };
 }) {
   const { values } = useI18n();
+  const { providerId } = useParams<{ providerId: string }>();
 
   return (
     <div className="flex flex-row space-x-4">
@@ -69,7 +70,9 @@ function Actions({
           </Button>
         }
       />
-      <Link href={`/service-providers/roles/${role.id}`}>
+      <Link
+        href={`/dashboard/service-providers/${providerId}/roles/${role.id}`}
+      >
         <Button className="font-normal no-underline" variant="link">
           {values["service-providers.roles.table.actions.access"]}
         </Button>

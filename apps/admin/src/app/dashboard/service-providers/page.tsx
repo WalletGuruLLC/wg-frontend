@@ -152,7 +152,7 @@ export default function ServiceProvidersPage() {
               <Image
                 src={provider.imageUrl}
                 className="h-[200px] w-full object-contain"
-                alt={`${provider.name ?? "Unnamed provider"} logo`}
+                alt={`${provider.name} logo`}
                 width={100}
                 height={100}
                 priority
@@ -161,9 +161,7 @@ export default function ServiceProvidersPage() {
                 <h6 className="text-xs">
                   {values["service-providers.card.label"]}
                 </h6>
-                <span className="text-lg">
-                  {provider.name ?? "Unnamed provider"}
-                </span>
+                <span className="text-lg">{provider.name}</span>
                 <div className="flex justify-start gap-3">
                   <AddOrEditDialog
                     trigger={
@@ -174,13 +172,13 @@ export default function ServiceProvidersPage() {
                     }
                     provider={{
                       id: provider.id,
-                      companyName: provider.name ?? "",
-                      ein: provider.einNumber ?? "",
-                      country: provider.country ?? "",
-                      city: provider.city ?? "",
-                      zipCode: provider.zipCode ?? "",
-                      companyAddress: provider.companyAddress ?? "",
-                      walletAddress: provider.walletAddress ?? "",
+                      companyName: provider.name,
+                      ein: provider.eINNumber,
+                      country: provider.country,
+                      city: provider.city,
+                      zipCode: provider.zipCode,
+                      companyAddress: provider.companyAddress,
+                      walletAddress: provider.walletAddress,
                     }}
                   />
                   <Link href={`/dashboard/service-providers/${provider.id}`}>
@@ -302,7 +300,8 @@ function AddOrEditDialog(props: {
       });
     },
     onSuccess: () => {
-      toast.success(values[`${valuesPrefix}.toast.success`]);
+      toast.success(values[`${valuesPrefix}.image.toast.success`]);
+      setFile(undefined);
     },
   });
 
@@ -330,6 +329,7 @@ function AddOrEditDialog(props: {
       isOpen={isOpen}
       toggleOpen={() => {
         form.reset();
+        setFile(undefined);
         toggle();
       }}
       trigger={props.trigger}
