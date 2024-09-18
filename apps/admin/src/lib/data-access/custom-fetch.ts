@@ -5,6 +5,7 @@ const TIMEOUT_MILLISECONDS = 10000;
 /**
  * customFetch is a wrapper around the native fetch function that adds the Authorization header to the request.
  * It also allows you to specify the response type as a generic parameter and automatically parses the response as JSON.
+ * Special case: if you want to send a request without the Content-Type header, you can set the x-no-content-type header.
  *
  * @param params The same parameters as the native fetch function.
  * @returns A promise that resolves to the parsed JSON response.
@@ -16,14 +17,18 @@ const TIMEOUT_MILLISECONDS = 10000;
 export default async function customFetch<ResponseType>(
   ...params: Parameters<typeof fetch>
 ) {
+  const headers = new Headers(params[1]?.headers);
+  headers.append(
+    "Authorization",
+    `Bearer ${localStorage.getItem("access-token")}`,
+  );
+  headers.append("Content-Type", "application/json");
+  if (headers.has("x-no-content-type")) headers.delete("Content-Type");
+
   const res = await fetch(params[0], {
     ...params[1],
     signal: AbortSignal.timeout(TIMEOUT_MILLISECONDS),
-    headers: {
-      ...params[1]?.headers,
-      Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-      "Content-Type": "application/json",
-    },
+    headers,
   }).catch((err) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (err.name === "TimeoutError") throw new Error("WGE0016", { cause: err });

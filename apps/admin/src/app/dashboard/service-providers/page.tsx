@@ -301,6 +301,7 @@ function AddOrEditDialog(props: {
     },
     onSuccess: () => {
       toast.success(values[`${valuesPrefix}.toast.success`]);
+      setFile(undefined);
     },
   });
 
@@ -328,6 +329,7 @@ function AddOrEditDialog(props: {
       isOpen={isOpen}
       toggleOpen={() => {
         form.reset();
+        setFile(undefined);
         toggle();
       }}
       trigger={props.trigger}

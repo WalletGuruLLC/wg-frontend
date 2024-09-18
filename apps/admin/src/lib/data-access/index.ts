@@ -853,6 +853,9 @@ export function useUploadProviderImageMutation(
         {
           method: "PUT",
           body: formData,
+          headers: {
+            "x-no-content-type": "true",
+          },
         },
       );
     },
