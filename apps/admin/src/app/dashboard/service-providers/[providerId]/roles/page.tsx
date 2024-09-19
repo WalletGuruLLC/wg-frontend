@@ -295,6 +295,7 @@ function AddOrEditDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
+  const { providerId } = useParams<{ providerId: string }>();
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
@@ -303,7 +304,7 @@ function AddOrEditDialog(props: {
     defaultValues: {
       name: props.role?.name ?? "",
       description: props.role?.description ?? "",
-      providerId: "EMPTY",
+      providerId,
       roleId: props.role?.id,
     },
   });
@@ -330,11 +331,11 @@ function AddOrEditDialog(props: {
       form.reset({
         name: props.role.name,
         description: props.role.description,
-        providerId: "EMPTY",
+        providerId,
         roleId: props.role.id,
       });
     }
-  }, [props.role, form]);
+  }, [props.role, form, providerId]);
 
   return (
     <Dialog
