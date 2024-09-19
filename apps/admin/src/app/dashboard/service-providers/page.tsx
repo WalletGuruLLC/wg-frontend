@@ -543,7 +543,7 @@ function AddOrEditDialog(props: {
                 </p>
               </div>
             </div>
-            <div className="w-full">
+            <div className={cn("w-full", !props.provider && "hidden")}>
               <Label className="text-xs font-light">
                 {values[`${valuesPrefix}.company-logo.label`]}
               </Label>
