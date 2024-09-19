@@ -4,7 +4,12 @@ import type { ReactNode } from "react";
 import type { z } from "zod";
 import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -19,11 +24,13 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import type { Role } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import { BreadcrumbTitle } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import {
   useAddOrEditRoleMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetProviderQuery,
   useGetRolesQuery,
   useToggleRoleStatusMutation,
 } from "~/lib/data-access";
@@ -31,16 +38,15 @@ import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { addOrEditRoleValidator } from "~/lib/validators";
-import ConfirmDialog from "../_components/dashboard-confirm-dialog";
-import Dialog from "../_components/dashboard-dialog";
-import { FormItem, FormLabel } from "../_components/dashboard-form";
-import { Input } from "../_components/dashboard-input";
-import { Switch } from "../_components/dashboard-switch";
+import ConfirmDialog from "../../../_components/dashboard-confirm-dialog";
+import Dialog from "../../../_components/dashboard-dialog";
+import { FormItem, FormLabel } from "../../../_components/dashboard-form";
+import { Input } from "../../../_components/dashboard-input";
+import { Switch } from "../../../_components/dashboard-switch";
 import Table, {
   ColumnHeader,
   PaginationFooter,
-} from "../_components/dashboard-table";
-import { SimpleTitle } from "../_components/dashboard-title";
+} from "../../../_components/dashboard-table";
 
 function Actions({
   role,
@@ -52,6 +58,7 @@ function Actions({
   };
 }) {
   const { values } = useI18n();
+  const { providerId } = useParams<{ providerId: string }>();
 
   return (
     <div className="flex flex-row space-x-4">
@@ -59,13 +66,15 @@ function Actions({
         role={role}
         trigger={
           <Button className="font-normal no-underline" variant="link">
-            {values["dashboard.roles.table.actions.edit"]}
+            {values["service-providers.roles.table.actions.edit"]}
           </Button>
         }
       />
-      <Link href={`/dashboard/roles/${role.id}`}>
+      <Link
+        href={`/dashboard/service-providers/${providerId}/roles/${role.id}`}
+      >
         <Button className="font-normal no-underline" variant="link">
-          {values["dashboard.roles.table.actions.access"]}
+          {values["service-providers.roles.table.actions.access"]}
         </Button>
       </Link>
     </div>
@@ -78,7 +87,9 @@ const columns = [
   columnHelper.accessor("name", {
     id: "name",
     cell: (info) => info.getValue(),
-    header: () => <ColumnHeader i18nKey="dashboard.roles.table.header.role" />,
+    header: () => (
+      <ColumnHeader i18nKey="service-providers.roles.table.header.role" />
+    ),
     meta: {
       main: true,
     },
@@ -86,7 +97,7 @@ const columns = [
   columnHelper.accessor("active", {
     id: "active",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.table.header.is-active" />
+      <ColumnHeader i18nKey="service-providers.roles.table.header.is-active" />
     ),
     cell: (info) => (
       <SwitchActiveStatusDialog
@@ -101,7 +112,7 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.table.header.actions" />
+      <ColumnHeader i18nKey="service-providers.roles.table.header.actions" />
     ),
     cell: (info) => (
       <Actions
@@ -121,6 +132,7 @@ export default function RolesPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const { providerId } = useParams<{ providerId: string }>();
 
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
     page: searchParams.get("page") ?? "1",
@@ -128,9 +140,16 @@ export default function RolesPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data, isLoading } = useGetRolesQuery(paginationAndSearch);
+  const { data, isLoading } = useGetRolesQuery({
+    ...paginationAndSearch,
+    providerId,
+  });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
+  const { data: providerData, isLoading: isLoadingProviderData } =
+    useGetProviderQuery({
+      providerId,
+    });
 
   const table = useReactTable({
     data: data?.roles ?? [],
@@ -176,14 +195,30 @@ export default function RolesPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <SimpleTitle
-        title={values["dashboard.roles.title"]}
+      <BreadcrumbTitle
+        sections={[
+          {
+            title: values["service-providers.home.title"],
+            href: "/dashboard/service-providers",
+            isLoading: false,
+          },
+          {
+            title: providerData?.name,
+            href: `/dashboard/service-providers/${providerId}`,
+            isLoading: isLoadingProviderData,
+          },
+          {
+            title: values["service-providers.roles.title"],
+            href: `/dashboard/service-providers/${providerId}/roles`,
+            isLoading: false,
+          },
+        ]}
         showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
-            placeholder={values["dashboard.roles.search.placeholder"]}
+            placeholder={values["service-providers.roles.search.placeholder"]}
             className="rounded-full border border-black"
             name="search"
             onChange={(e) =>
@@ -205,7 +240,7 @@ export default function RolesPage() {
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
-                  {values["dashboard.roles.add-button"]}
+                  {values["service-providers.roles.add-button"]}
                 </p>
                 <PlusCircle strokeWidth={0.75} className="size-6" />
               </Button>
@@ -287,7 +322,7 @@ function AddOrEditDialog(props: {
   });
 
   const valuesPrefix =
-    `dashboard.roles.${props.role ? "edit" : "add"}-dialog` as const;
+    `service-providers.roles.${props.role ? "edit" : "add"}-dialog` as const;
 
   // This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
   useEffect(() => {
@@ -403,7 +438,7 @@ function SwitchActiveStatusDialog(props: {
   });
 
   const valuesPrexif =
-    `dashboard.roles.${props.role.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `service-providers.roles.${props.role.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog

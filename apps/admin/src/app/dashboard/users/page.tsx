@@ -34,7 +34,6 @@ import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
-import Title from "~/components/title";
 import {
   useAddOrEditUserMutation,
   useGetActiveRolesQuery,
@@ -56,6 +55,7 @@ import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "../_components/dashboard-table";
+import { SimpleTitle } from "../_components/dashboard-title";
 
 function Actions({
   user,
@@ -225,12 +225,16 @@ export default function UsersPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <Title title={values["dashboard.users.title"]} isLoading={isLoading} />
+      <SimpleTitle
+        title={values["dashboard.users.title"]}
+        showLoadingIndicator={isLoading}
+      />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
           <Input
             placeholder={values["dashboard.users.search.placeholder"]}
             className="rounded-full border border-black"
+            name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,

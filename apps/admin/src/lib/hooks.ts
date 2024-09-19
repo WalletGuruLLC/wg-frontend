@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import type { AccessLevelModule } from "./data-access";
 import {
@@ -9,19 +9,21 @@ import {
 } from "./data-access";
 
 export function useAuthGuard() {
+  const router = useRouter();
   const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
 
-  if (!isLoading && !data) return redirect("/login");
-  if (!isLoading && data?.first) return redirect("/reset-password");
+  if (!isLoading && !data) return router.replace("/login");
+  if (!isLoading && data?.first) return router.replace("/reset-password");
 
   return isLoading;
 }
 
 export function useAccessLevelGuard(module: AccessLevelModule) {
+  const router = useRouter();
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
 
   if (!isLoading && !data?.[module].includes("view"))
-    return redirect("/dashboard");
+    return router.replace("/dashboard");
 
   return isLoading;
 }

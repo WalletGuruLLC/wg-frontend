@@ -20,6 +20,7 @@ import {
   ACCESS_LEVELS_ACTIONS_BINARY_ORDERED,
   ACCESS_LEVELS_MAP,
   convertAccessLevel,
+  useGetProviderQuery,
   useGetRoleAccessLevelsQuery,
   useGetRoleQuery,
   useSaveRoleModuleAccessLevelMutation,
@@ -27,9 +28,9 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { Checkbox } from "../../_components/dashboard-checkbox";
-import Table, { ColumnHeader } from "../../_components/dashboard-table";
-import { SimpleTitle } from "../../_components/dashboard-title";
+import { Checkbox } from "../../../../_components/dashboard-checkbox";
+import Table, { ColumnHeader } from "../../../../_components/dashboard-table";
+import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
 
 function Actions({
   module,
@@ -39,12 +40,14 @@ function Actions({
   accessLevels: AccessLevelAction[];
 }) {
   const { roleId } = useParams<{ roleId: string }>();
-  const { value, values } = useI18n("dashboard.roles.role.table.actions.save");
+  const { value, values } = useI18n(
+    "service-providers.roles.role.table.actions.save",
+  );
   const errors = useErrors();
 
   const { mutate, isPending } = useSaveRoleModuleAccessLevelMutation({
     onSuccess: () => {
-      toast.success(values["dashboard.roles.role.success-toast"]);
+      toast.success(values["service-providers.roles.role.success-toast"]);
     },
     onError: (error) => {
       toast.error(errors[error.message], {
@@ -75,7 +78,7 @@ function Actions({
 }
 
 function ModuleColumnValue({ module }: { module: AccessLevelModule }) {
-  const { value } = useI18n(`dashboard.roles.role.modules.${module}`);
+  const { value } = useI18n(`service-providers.roles.role.modules.${module}`);
   return <span className="font-normal text-black">{value}</span>;
 }
 
@@ -130,7 +133,7 @@ const columns = [
   columnHelper.display({
     id: "module",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.role.table.modules.header" />
+      <ColumnHeader i18nKey="service-providers.roles.role.table.modules.header" />
     ),
     cell: (info) => (
       <ModuleColumnValue module={info.row.original.data.module} />
@@ -139,7 +142,7 @@ const columns = [
   columnHelper.display({
     id: "view",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.role.table.view.header" />
+      <ColumnHeader i18nKey="service-providers.roles.role.table.view.header" />
     ),
     cell: (info) => (
       <CheckboxCell
@@ -152,7 +155,7 @@ const columns = [
   columnHelper.display({
     id: "add",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.role.table.add.header" />
+      <ColumnHeader i18nKey="service-providers.roles.role.table.add.header" />
     ),
     cell: (info) => (
       <CheckboxCell
@@ -165,7 +168,7 @@ const columns = [
   columnHelper.display({
     id: "edit",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.role.table.edit.header" />
+      <ColumnHeader i18nKey="service-providers.roles.role.table.edit.header" />
     ),
     cell: (info) => (
       <CheckboxCell
@@ -178,7 +181,7 @@ const columns = [
   columnHelper.display({
     id: "inactive",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.role.table.inactive.header" />
+      <ColumnHeader i18nKey="service-providers.roles.role.table.inactive.header" />
     ),
     cell: (info) => (
       <CheckboxCell
@@ -191,7 +194,7 @@ const columns = [
   columnHelper.display({
     id: "all",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.role.table.all.header" />
+      <ColumnHeader i18nKey="service-providers.roles.role.table.all.header" />
     ),
     cell: (info) => (
       <AllCheckboxCell
@@ -203,7 +206,7 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.roles.table.header.actions" />
+      <ColumnHeader i18nKey="service-providers.roles.table.header.actions" />
     ),
     cell: (info) => (
       <Actions
@@ -217,6 +220,7 @@ const columns = [
 export default function RoleAccessLevels() {
   const loading = useAccessLevelGuard("roles");
   const { values } = useI18n();
+  const { providerId } = useParams<{ providerId: string }>();
   const { roleId } = useParams<{ roleId: string }>();
   const [state, setState] = useState<
     {
@@ -228,6 +232,10 @@ export default function RoleAccessLevels() {
     { roleId },
   );
   const { data, isLoading: isLoadingRoleData } = useGetRoleQuery({ roleId });
+  const { data: providerData, isLoading: isLoadingProviderData } =
+    useGetProviderQuery({
+      providerId,
+    });
 
   const table = useReactTable({
     data: state,
@@ -264,9 +272,30 @@ export default function RoleAccessLevels() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <SimpleTitle
-        title={values["dashboard.roles.role.title"] + data?.Name}
-        showLoadingIndicator={isLoading || isLoadingRoleData}
+      <BreadcrumbTitle
+        sections={[
+          {
+            title: values["service-providers.home.title"],
+            href: "/dashboard/service-providers",
+            isLoading: false,
+          },
+          {
+            title: providerData?.name,
+            href: `/dashboard/service-providers/${providerId}`,
+            isLoading: isLoadingProviderData,
+          },
+          {
+            title: values["service-providers.roles.title"],
+            href: `/dashboard/service-providers/${providerId}/roles`,
+            isLoading: false,
+          },
+          {
+            title: data?.Name,
+            href: `/dashboard/service-providers/${providerId}/roles/${data?.Id}`,
+            isLoading: isLoadingRoleData,
+          },
+        ]}
+        showLoadingIndicator={isLoading}
       />
       <div className="flex-1 overflow-auto">
         <Table table={table} />
