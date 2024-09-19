@@ -36,7 +36,7 @@ export const serviceProvidersDict = {
     "service-providers.add-dialog.wallet-address.placeholder":
       "Enter the Address",
     "service-providers.add-dialog.wallet-address.error":
-      "The wallet address is required",
+      "The wallet address is invalid",
     "service-providers.add-dialog.company-logo.label": "Company logo",
     "service-providers.add-dialog.company-logo.placeholder":
       "Drop or Upload the Company Logo here",
@@ -296,7 +296,7 @@ export const serviceProvidersDict = {
     "service-providers.add-dialog.wallet-address.placeholder":
       "Ingrese la dirección",
     "service-providers.add-dialog.wallet-address.error":
-      "La dirección de la billetera es requerida",
+      "La dirección de la billetera es invalida",
     "service-providers.add-dialog.company-logo.label": "Logo de la empresa",
     "service-providers.add-dialog.company-logo.placeholder":
       "Arrastre o suba el logo de la empresa aquí",

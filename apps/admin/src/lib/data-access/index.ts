@@ -547,6 +547,7 @@ export interface User {
   mfaType: "TOTP" | "SMS";
   roleName: string;
   phone: string;
+  contactUser?: boolean;
 }
 interface UseGetUsersQueryOutput {
   users: User[];
@@ -571,6 +572,39 @@ export function useGetUsersQuery(
           "/api/v1/users?" +
           params.toString(),
       );
+    },
+  });
+}
+
+export function useToggleContactInformationMutation(
+  options: UseMutationOptions<
+    {
+      userId: string;
+    },
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-contact-information"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/" +
+          input.userId +
+          "/toggle-contact",
+        {
+          method: "PATCH",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-users"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }

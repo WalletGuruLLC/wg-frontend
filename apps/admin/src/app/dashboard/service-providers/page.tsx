@@ -115,6 +115,7 @@ export default function ServiceProvidersPage() {
           <Input
             placeholder={values["service-providers.search.placeholder"]}
             className="rounded-full border border-black"
+            name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
                 ...paginationAndSearch,
