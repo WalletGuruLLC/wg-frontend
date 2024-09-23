@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -54,23 +55,33 @@ function Actions({
   });
 
   return (
-    <Button
-      className="font-medium no-underline"
-      variant="link"
-      disabled={isPending}
-      onClick={() => {
-        mutate({
-          roleId,
-          moduleId: Object.keys(ACCESS_LEVELS_MAP).find(
-            (k) =>
-              ACCESS_LEVELS_MAP[k as keyof typeof ACCESS_LEVELS_MAP] === module,
-          ) as keyof typeof ACCESS_LEVELS_MAP,
-          accessLevel: convertAccessLevel(accessLevels),
-        });
-      }}
-    >
-      {value}
-    </Button>
+    <div className="flex flex-row space-x-4">
+      <Button
+        className="font-normal no-underline"
+        variant="link"
+        disabled={isPending}
+        onClick={() => {
+          mutate({
+            roleId,
+            moduleId: Object.keys(ACCESS_LEVELS_MAP).find(
+              (k) =>
+                ACCESS_LEVELS_MAP[k as keyof typeof ACCESS_LEVELS_MAP] ===
+                module,
+            ) as keyof typeof ACCESS_LEVELS_MAP,
+            accessLevel: convertAccessLevel(accessLevels),
+          });
+        }}
+      >
+        {value}
+      </Button>
+      {!["serviceProviders", "wallets"].includes(module) && (
+        <Link href={`/dashboard/roles/${roleId}/${module}`}>
+          <Button className="font-normal no-underline" variant="link">
+            {values["dashboard.roles.role.table.actions.details"]}
+          </Button>
+        </Link>
+      )}
+    </div>
   );
 }
 
