@@ -2,13 +2,13 @@
 
 import { useParams } from "next/navigation";
 
-import type { AccessLevelModule } from "~/lib/data-access";
+import type { ModuleId } from "~/lib/data-access";
 import { useGetRoleQuery } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { BreadcrumbTitle } from "../../../_components/dashboard-title";
 
-type Module = Exclude<AccessLevelModule, "serviceProviders" | "wallets">;
+type Module = Exclude<ModuleId, "serviceProviders" | "wallets">;
 
 export default function RoleAccessLevels() {
   const loading = useAccessLevelGuard("roles");

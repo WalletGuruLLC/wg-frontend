@@ -19,7 +19,7 @@ import { Separator } from "@wg-frontend/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
 import { toast } from "@wg-frontend/ui/toast";
 
-import type { AccessLevelModule } from "~/lib/data-access";
+import type { ModuleId } from "~/lib/data-access";
 import Metatags from "~/components/metatags";
 import {
   useGetAuthedUserAccessLevelsQuery,
@@ -42,28 +42,28 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.wallet-management",
     path: "/dashboard/wallet-management",
     id: "wallet-management",
-    moduleId: "wallets" satisfies AccessLevelModule,
+    moduleId: "wallets" satisfies ModuleId,
   },
   {
     Icon: User,
     i18nTitleKey: "dashboard.layout.nav.service-providers",
     path: "/dashboard/service-providers",
     id: "service-providers",
-    moduleId: "serviceProviders" satisfies AccessLevelModule,
+    moduleId: "serviceProviders" satisfies ModuleId,
   },
   {
     Icon: Users,
     i18nTitleKey: "dashboard.layout.nav.users",
     path: "/dashboard/users",
     id: "users",
-    moduleId: "users" satisfies AccessLevelModule,
+    moduleId: "users" satisfies ModuleId,
   },
   {
     Icon: SquareUserRound,
     i18nTitleKey: "dashboard.layout.nav.roles",
     path: "/dashboard/roles",
     id: "roles",
-    moduleId: "roles" satisfies AccessLevelModule,
+    moduleId: "roles" satisfies ModuleId,
   },
 ] as const;
 

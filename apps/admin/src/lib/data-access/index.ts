@@ -22,7 +22,6 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
-  saveRoleModuleAccessLevelValidator,
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
@@ -53,7 +52,7 @@ interface UseGetAuthedUserInfoQueryOutput {
   id: string;
   active: boolean;
   lastName: string;
-  accessLevel: APIAccessLevels;
+  accessLevel: ApiSimpleAccessLevels;
 }
 export function useGetAuthedUserInfoQuery(
   _: undefined,
@@ -71,7 +70,7 @@ export function useGetAuthedUserInfoQuery(
   });
 }
 
-export const ACCESS_LEVELS_MAP = {
+const MODULES_MAP = {
   R949: "roles",
   W325: "wallets",
   U783: "users",
@@ -79,44 +78,40 @@ export const ACCESS_LEVELS_MAP = {
   SE37: "settings",
   TR91: "transactions",
 } as const;
-export type APIAccessLevels = {
-  [key in keyof typeof ACCESS_LEVELS_MAP]?: number;
+type ModuleDatabaseId = keyof typeof MODULES_MAP;
+export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
+type ApiSimpleAccessLevels = {
+  [key in ModuleDatabaseId]?: number;
 };
-export type AccessLevelModule =
-  (typeof ACCESS_LEVELS_MAP)[keyof typeof ACCESS_LEVELS_MAP];
-export const ACCESS_LEVELS_ACTIONS_BINARY_ORDERED = [
+export const ACCESS_LEVELS_BINARY_ORDERED = [
   "view",
   "add",
   "edit",
   "inactive",
 ] as const;
-export type AccessLevelAction = (typeof ACCESS_LEVELS_ACTIONS_BINARY_ORDERED)[
-  | 0
-  | 1
-  | 2
-  | 3];
-export type AccessLevels = {
-  [key in AccessLevelModule]: AccessLevelAction[];
+export type AccessLevel = (typeof ACCESS_LEVELS_BINARY_ORDERED)[0 | 1 | 2 | 3];
+type ModuleAccessLevels = {
+  [key in ModuleId]: AccessLevel[];
 };
 // Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
 export function useGetAuthedUserAccessLevelsQuery(
   _: undefined,
-  options: UseQueryOptions<AccessLevels> = {},
+  options: UseQueryOptions<ModuleAccessLevels> = {},
 ) {
   return useQuery({
     ...options,
     queryKey: ["get-authed-user-access-levels"],
     queryFn: async () => {
       const data = await customFetch<{
-        accessLevel: APIAccessLevels;
+        accessLevel: ApiSimpleAccessLevels;
       }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
 
       return parseAccessLevels(data.accessLevel);
     },
   });
 }
-function parseAccessLevels(accessLevels: APIAccessLevels) {
-  const accessLevelsMap: AccessLevels = {
+function parseAccessLevels(accessLevels: ApiSimpleAccessLevels) {
+  const accessLevelsMap: ModuleAccessLevels = {
     roles: [],
     wallets: [],
     users: [],
@@ -126,18 +121,17 @@ function parseAccessLevels(accessLevels: APIAccessLevels) {
   };
 
   for (const [key, value] of Object.entries(accessLevels)) {
-    if (!Object.keys(ACCESS_LEVELS_MAP).includes(key)) continue;
+    if (!Object.keys(MODULES_MAP).includes(key)) continue;
 
     const bin = value.toString(2).padStart(4, "0").split("");
-    if (bin.length !== ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length) continue;
+    if (bin.length !== ACCESS_LEVELS_BINARY_ORDERED.length) continue;
 
-    const accessLevelKey =
-      ACCESS_LEVELS_MAP[key as keyof typeof ACCESS_LEVELS_MAP];
+    const accessLevelKey = MODULES_MAP[key as keyof typeof MODULES_MAP];
 
     for (let i = 0; i < bin.length; i++) {
       if (bin[i] === "1") {
         accessLevelsMap[accessLevelKey].push(
-          ACCESS_LEVELS_ACTIONS_BINARY_ORDERED[i as 0 | 1 | 2 | 3],
+          ACCESS_LEVELS_BINARY_ORDERED[i as 0 | 1 | 2 | 3],
         );
       }
     }
@@ -145,12 +139,15 @@ function parseAccessLevels(accessLevels: APIAccessLevels) {
 
   return accessLevelsMap;
 }
-export function convertAccessLevel(accessLevel: AccessLevelAction[]) {
-  return parseInt(
-    ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.map((v) =>
-      accessLevel.includes(v) ? "1" : "0",
-    ).join(""),
-    2,
+function numberToAccessLevels(numericAccessLevel: number) {
+  return ACCESS_LEVELS_BINARY_ORDERED.filter(
+    (_, i) => (numericAccessLevel & (1 << i)) !== 0,
+  );
+}
+export function accessLevelsToNumber(accessLevels: AccessLevel[]) {
+  return accessLevels.reduce(
+    (acc, v) => acc | (1 << ACCESS_LEVELS_BINARY_ORDERED.indexOf(v)),
+    0,
   );
 }
 
@@ -204,7 +201,7 @@ export function useTwoFactorAuthenticationMutation(
         id: string;
         active: boolean;
         lastName: string;
-        accessLevel: APIAccessLevels;
+        accessLevel: ApiSimpleAccessLevels;
       };
       token: string;
     }
@@ -445,33 +442,50 @@ export function useToggleRoleStatusMutation(
 }
 
 export type UseGetRoleAccessLevelsQueryOutput = {
-  module: AccessLevelModule;
-  accessLevels: AccessLevels[AccessLevelModule];
+  module: ModuleId;
+  accessLevels: ModuleAccessLevels[ModuleId];
 }[];
 export function useGetRoleAccessLevelsQuery(
   input: {
     roleId: string;
+    isProvider: boolean;
   },
   options: UseQueryOptions<UseGetRoleAccessLevelsQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
-    queryKey: ["get-role-access-levels", input],
+    queryKey: [
+      "get-role-access-levels",
+      {
+        roleId: input.roleId,
+      },
+    ],
     queryFn: async () => {
-      const apiAccessLevels = await customFetch<APIAccessLevels>(
+      const params = new URLSearchParams({
+        isProvider: input.isProvider.toString(),
+      });
+      const modules = await customFetch<
+        {
+          id: ModuleDatabaseId;
+          belongs: string;
+          description: string;
+        }[]
+      >(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/roles/access-level/" +
+          "/api/v1/modules?" +
+          params.toString(),
+      );
+
+      const accessLevels = await customFetch<ApiSimpleAccessLevels>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/roles/simple-access-level/" +
           input.roleId,
       );
 
-      return Object.entries(parseAccessLevels(apiAccessLevels)).map(
-        ([k, v]) => {
-          return {
-            module: k as AccessLevelModule,
-            accessLevels: v,
-          };
-        },
-      );
+      return modules.map((m) => ({
+        module: MODULES_MAP[m.id],
+        accessLevels: numberToAccessLevels(accessLevels[m.id] ?? 0),
+      }));
     },
   });
 }
@@ -505,7 +519,12 @@ export function useGetRoleQuery(
 
 export function useSaveRoleModuleAccessLevelMutation(
   options: UseMutationOptions<
-    z.infer<typeof saveRoleModuleAccessLevelValidator>,
+    {
+      accessLevel: number;
+      roleId: string;
+      module: ModuleId;
+      serviceProvider?: string;
+    },
     unknown
   > = {},
 ) {
@@ -514,9 +533,13 @@ export function useSaveRoleModuleAccessLevelMutation(
     ...options,
     mutationKey: ["save-role-module-access-level"],
     mutationFn: (input) => {
+      const moduleDatabaseId = Object.keys(MODULES_MAP).find(
+        (k) => MODULES_MAP[k as ModuleDatabaseId] === input.module,
+      ) as ModuleDatabaseId;
+
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/roles/access-level/${input.roleId}/${input.moduleId}`,
+          `/api/v1/roles/general-access-level/${input.roleId}/${moduleDatabaseId}`,
         {
           method: "POST", // POST because backend things but it means an update aswell
           body: JSON.stringify(input),
@@ -525,7 +548,7 @@ export function useSaveRoleModuleAccessLevelMutation(
     },
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
-        queryKey: ["get-role"],
+        queryKey: ["get-role-access-levels", { roleId: input[1].roleId }],
       });
       options.onSuccess?.(...input);
     },
