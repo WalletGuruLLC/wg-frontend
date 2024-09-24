@@ -40,6 +40,7 @@ import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "../_components/dashboard-table";
+import { Textarea } from "../_components/dashboard-textarea";
 import { SimpleTitle } from "../_components/dashboard-title";
 
 function Actions({
@@ -347,13 +348,12 @@ function AddOrEditDialog(props: {
                     {values[`${valuesPrefix}.description.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
                       placeholder={
                         values[`${valuesPrefix}.description.placeholder`]
                       }
                       required
-                      type="textarea"
-                      className="h-32"
+                      className="resize-none"
                       {...field}
                     />
                   </FormControl>
