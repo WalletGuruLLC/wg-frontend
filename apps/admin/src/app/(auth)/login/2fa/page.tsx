@@ -43,6 +43,8 @@ export default function TwoFactorAuthenticationPage() {
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
     onSuccess: (data) => {
       localStorage.removeItem("email");
+      if (data.user.type === "WALLET")
+        return router.replace("https://walletguru.com/");
       localStorage.setItem("access-token", data.token);
       if (data.user.first) return router.replace("/reset-password");
       return router.replace("/dashboard");
