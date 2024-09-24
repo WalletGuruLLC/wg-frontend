@@ -523,7 +523,6 @@ export function useSaveRoleModuleAccessLevelMutation(
       accessLevel: number;
       roleId: string;
       module: ModuleId;
-      serviceProvider?: string;
     },
     unknown
   > = {},
@@ -539,7 +538,7 @@ export function useSaveRoleModuleAccessLevelMutation(
 
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/roles/general-access-level/${input.roleId}/${moduleDatabaseId}`,
+          `/api/v1/roles/access-level/${input.roleId}/${moduleDatabaseId}`,
         {
           method: "POST", // POST because backend things but it means an update aswell
           body: JSON.stringify(input),
