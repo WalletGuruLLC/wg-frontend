@@ -14,6 +14,8 @@ export function useAuthGuard() {
 
   if (!isLoading && !data) return router.replace("/login");
   if (!isLoading && data?.first) return router.replace("/reset-password");
+  if (!isLoading && data?.type === "WALLET")
+    return router.replace("https://walletguru.com/");
 
   return isLoading;
 }

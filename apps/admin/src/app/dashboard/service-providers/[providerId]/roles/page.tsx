@@ -24,6 +24,7 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import type { Role } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import { Textarea } from "~/app/dashboard/_components/dashboard-textarea";
 import { BreadcrumbTitle } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
@@ -383,13 +384,12 @@ function AddOrEditDialog(props: {
                     {values[`${valuesPrefix}.description.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
                       placeholder={
                         values[`${valuesPrefix}.description.placeholder`]
                       }
                       required
-                      type="textarea"
-                      className="h-32"
+                      className="resize-none"
                       {...field}
                     />
                   </FormControl>
