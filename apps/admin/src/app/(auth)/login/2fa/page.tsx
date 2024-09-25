@@ -10,6 +10,7 @@ import {
   FormItem,
   useForm,
 } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
@@ -43,6 +44,14 @@ export default function TwoFactorAuthenticationPage() {
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
     onSuccess: (data) => {
       localStorage.removeItem("email");
+      if (data.user.type === "WALLET") {
+        router.replace("/login");
+        return toast.error(values["auth.2fa.errors.unauthorized"], {
+          style: {
+            border: "1px solid #E21D1D",
+          },
+        });
+      }
       localStorage.setItem("access-token", data.token);
       if (data.user.first) return router.replace("/reset-password");
       return router.replace("/dashboard");
