@@ -357,7 +357,7 @@ export default function RoleAccessLevels() {
       <div>
         <PaginationFooter
           count={{
-            total: state.length,
+            total: state[0]?.data.total ?? 0,
             firstRowIdx,
             lastRowIdx,
           }}
