@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { toast } from "@wg-frontend/ui/toast";
 
-import type { AccessLevelModule } from "./data-access";
+import type { ModuleId } from "./data-access";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
@@ -30,7 +30,7 @@ export function useAuthGuard() {
   return isLoading;
 }
 
-export function useAccessLevelGuard(module: AccessLevelModule) {
+export function useAccessLevelGuard(module: ModuleId) {
   const router = useRouter();
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
 

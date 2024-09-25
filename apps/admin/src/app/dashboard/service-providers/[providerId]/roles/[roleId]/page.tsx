@@ -11,15 +11,14 @@ import {
 import { toast } from "@wg-frontend/ui/toast";
 
 import type {
-  AccessLevelAction,
-  AccessLevelModule,
+  AccessLevel,
+  ModuleId,
   UseGetRoleAccessLevelsQueryOutput,
 } from "~/lib/data-access";
 import { Button } from "~/components/button";
 import {
-  ACCESS_LEVELS_ACTIONS_BINARY_ORDERED,
-  ACCESS_LEVELS_MAP,
-  convertAccessLevel,
+  ACCESS_LEVELS_BINARY_ORDERED,
+  accessLevelsToNumber,
   useGetProviderQuery,
   useGetRoleAccessLevelsQuery,
   useGetRoleQuery,
@@ -36,8 +35,8 @@ function Actions({
   module,
   accessLevels,
 }: {
-  module: AccessLevelModule;
-  accessLevels: AccessLevelAction[];
+  module: ModuleId;
+  accessLevels: AccessLevel[];
 }) {
   const { roleId } = useParams<{ roleId: string }>();
   const { value, values } = useI18n(
@@ -64,11 +63,8 @@ function Actions({
       onClick={() => {
         mutate({
           roleId,
-          moduleId: Object.keys(ACCESS_LEVELS_MAP).find(
-            (k) =>
-              ACCESS_LEVELS_MAP[k as keyof typeof ACCESS_LEVELS_MAP] === module,
-          ) as keyof typeof ACCESS_LEVELS_MAP,
-          accessLevel: convertAccessLevel(accessLevels),
+          module,
+          accessLevel: accessLevelsToNumber(accessLevels),
         });
       }}
     >
@@ -77,7 +73,7 @@ function Actions({
   );
 }
 
-function ModuleColumnValue({ module }: { module: AccessLevelModule }) {
+function ModuleColumnValue({ module }: { module: ModuleId }) {
   const { value } = useI18n(`service-providers.roles.role.modules.${module}`);
   return <span className="font-normal text-black">{value}</span>;
 }
@@ -87,9 +83,9 @@ function CheckboxCell({
   action,
   setData,
 }: {
-  accessLevels: AccessLevelAction[];
-  action: AccessLevelAction;
-  setData: (data: AccessLevelAction[]) => void;
+  accessLevels: AccessLevel[];
+  action: AccessLevel;
+  setData: (data: AccessLevel[]) => void;
 }) {
   return (
     <Checkbox
@@ -109,16 +105,14 @@ function AllCheckboxCell({
   accessLevels,
   setData,
 }: {
-  accessLevels: AccessLevelAction[];
-  setData: (data: AccessLevelAction[]) => void;
+  accessLevels: AccessLevel[];
+  setData: (data: AccessLevel[]) => void;
 }) {
   return (
     <Checkbox
-      checked={
-        accessLevels.length === ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length
-      }
+      checked={accessLevels.length === ACCESS_LEVELS_BINARY_ORDERED.length}
       onCheckedChange={(newChecked: boolean) => {
-        setData(newChecked ? [...ACCESS_LEVELS_ACTIONS_BINARY_ORDERED] : []);
+        setData(newChecked ? [...ACCESS_LEVELS_BINARY_ORDERED] : []);
       }}
     />
   );
@@ -126,7 +120,7 @@ function AllCheckboxCell({
 
 const columnHelper = createColumnHelper<{
   data: UseGetRoleAccessLevelsQueryOutput[number];
-  setData: (data: AccessLevelAction[]) => void;
+  setData: (data: AccessLevel[]) => void;
 }>();
 
 const columns = [
@@ -225,11 +219,11 @@ export default function RoleAccessLevels() {
   const [state, setState] = useState<
     {
       data: UseGetRoleAccessLevelsQueryOutput[number];
-      setData: (data: AccessLevelAction[]) => void;
+      setData: (data: AccessLevel[]) => void;
     }[]
   >([]);
   const { data: roleAccessLevelsData, isLoading } = useGetRoleAccessLevelsQuery(
-    { roleId },
+    { roleId, isProvider: true },
   );
   const { data, isLoading: isLoadingRoleData } = useGetRoleQuery({ roleId });
   const { data: providerData, isLoading: isLoadingProviderData } =
