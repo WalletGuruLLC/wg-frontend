@@ -37,6 +37,9 @@ export const serviceProvidersDict = {
       "Enter the Address",
     "service-providers.add-dialog.wallet-address.error":
       "The wallet address is invalid",
+    "service-providers.add-dialog.asset.label": "Asset",
+    "service-providers.add-dialog.asset.placeholder": "Choose the asset",
+    "service-providers.add-dialog.asset.error": "The asset is required",
     "service-providers.add-dialog.company-logo.label": "Company logo",
     "service-providers.add-dialog.company-logo.placeholder":
       "Drop or Upload the Company Logo here",
@@ -77,6 +80,9 @@ export const serviceProvidersDict = {
       "Enter the Address",
     "service-providers.edit-dialog.wallet-address.error":
       "The wallet address is required",
+    "service-providers.edit-dialog.asset.label": "Asset",
+    "service-providers.edit-dialog.asset.placeholder": "Choose the asset",
+    "service-providers.edit-dialog.asset.error": "The asset is required",
     "service-providers.edit-dialog.company-logo.label": "Company logo",
     "service-providers.edit-dialog.company-logo.placeholder":
       "Drop or Upload the Company Logo here",
@@ -297,6 +303,9 @@ export const serviceProvidersDict = {
       "Ingrese la dirección",
     "service-providers.add-dialog.wallet-address.error":
       "La dirección de la billetera es invalida",
+    "service-providers.add-dialog.asset.label": "Activo",
+    "service-providers.add-dialog.asset.placeholder": "Elija el activo",
+    "service-providers.add-dialog.asset.error": "El activo es requerido",
     "service-providers.add-dialog.company-logo.label": "Logo de la empresa",
     "service-providers.add-dialog.company-logo.placeholder":
       "Arrastre o suba el logo de la empresa aquí",
@@ -341,6 +350,9 @@ export const serviceProvidersDict = {
       "Ingrese la dirección",
     "service-providers.edit-dialog.wallet-address.error":
       "La dirección de la billetera es requerida",
+    "service-providers.edit-dialog.asset.label": "Activo",
+    "service-providers.edit-dialog.asset.placeholder": "Elija el activo",
+    "service-providers.edit-dialog.asset.error": "El activo es requerido",
     "service-providers.edit-dialog.company-logo.label": "Logo de la empresa",
     "service-providers.edit-dialog.company-logo.placeholder":
       "Arrastre o suba el logo de la empresa aquí",

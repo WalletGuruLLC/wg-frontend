@@ -814,6 +814,7 @@ interface UseGetProvidersQueryOutput {
     active: boolean;
     walletAddress: string;
     name: string;
+    asset: string;
   }[];
   total: number;
   totalPages: number;
@@ -965,6 +966,55 @@ export function useGetStatesQuery(
           name: res.name,
         },
       }));
+    },
+  });
+}
+
+interface UseGetRafikiAssetsQueryOutput {
+  rafikiAssets: {
+    code: string;
+    id: string;
+  }[];
+}
+export function useGetRafikiAssetsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetRafikiAssetsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-rafiki-assets"],
+    queryFn: () => {
+      return customFetch<UseGetRafikiAssetsQueryOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets-rafiki/assets",
+      );
+    },
+  });
+}
+
+interface UseGetSettingQueryOutput {
+  id: string;
+  belongs: string;
+  key: string;
+  value: string;
+  createDate: string;
+  updateDate: string;
+}
+export function useGetSettingQuery(
+  input: {
+    key: string;
+  },
+  options: UseQueryOptions<UseGetSettingQueryOutput | undefined> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-setting", input],
+    queryFn: async () => {
+      const settings = await customFetch<UseGetSettingQueryOutput[]>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/settings",
+      );
+
+      return settings.find((s) => s.key === input.key);
     },
   });
 }

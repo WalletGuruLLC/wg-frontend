@@ -39,6 +39,8 @@ import {
   useGetAuthedUserAccessLevelsQuery,
   useGetCountriesQuery,
   useGetProvidersQuery,
+  useGetRafikiAssetsQuery,
+  useGetSettingQuery,
   useGetStatesQuery,
   useToggleProviderStatusMutation,
   useUploadProviderImageMutation,
@@ -180,6 +182,7 @@ export default function ServiceProvidersPage() {
                       zipCode: provider.zipCode,
                       companyAddress: provider.companyAddress,
                       walletAddress: provider.walletAddress,
+                      asset: provider.asset,
                     }}
                   />
                   <Link href={`/dashboard/service-providers/${provider.id}`}>
@@ -234,7 +237,6 @@ export default function ServiceProvidersPage() {
   );
 }
 
-const WALLET_ADDRESS_BASE_URL = "www.walletguru.me/";
 function AddOrEditDialog(props: {
   provider?: {
     id: string;
@@ -245,6 +247,7 @@ function AddOrEditDialog(props: {
     zipCode: string;
     companyAddress: string;
     walletAddress: string;
+    asset: string;
   };
   trigger: ReactNode;
 }) {
@@ -263,6 +266,7 @@ function AddOrEditDialog(props: {
       zipCode: props.provider?.zipCode ?? "",
       companyAddress: props.provider?.companyAddress ?? "",
       walletAddress: props.provider?.walletAddress ?? "",
+      asset: props.provider?.asset ?? "",
     },
   });
 
@@ -275,6 +279,10 @@ function AddOrEditDialog(props: {
       enabled: !!form.watch("country"),
     },
   );
+  const { data: rafikiAssets } = useGetRafikiAssetsQuery(undefined);
+  const { data: urlWalletSetting } = useGetSettingQuery({
+    key: "url-wallet",
+  });
 
   const { mutate, isPending } = useAddOrEditProviderMutation({
     onError: (error) => {
@@ -320,6 +328,7 @@ function AddOrEditDialog(props: {
         zipCode: props.provider.zipCode,
         companyAddress: props.provider.companyAddress,
         walletAddress: props.provider.walletAddress,
+        asset: props.provider.asset,
       });
     }
   }, [props.provider, form]);
@@ -532,16 +541,52 @@ function AddOrEditDialog(props: {
                         {...field}
                       />
                     </FormControl>
+                    <p className="overflow-auto text-nowrap text-xs">
+                      {urlWalletSetting?.value ?? ""}/
+                      {form.watch("walletAddress")}
+                    </p>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="w-1/2 self-center">
-                <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-                  {WALLET_ADDRESS_BASE_URL}
-                  {form.watch("walletAddress")}
-                </p>
-              </div>
+              <FormField
+                control={form.control}
+                name="asset"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel>
+                      {values[`${valuesPrefix}.asset.label`]}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-none border-transparent border-b-black",
+                            !field.value && "text-[#A1A1A1]",
+                          )}
+                        >
+                          <SelectValue
+                            placeholder={
+                              values[`${valuesPrefix}.asset.placeholder`]
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {rafikiAssets?.rafikiAssets.map((asset) => (
+                          <SelectItem key={asset.id} value={asset.code}>
+                            {asset.code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
             <div className={cn("w-full", !props.provider && "hidden")}>
               <Label className="text-xs font-light">
