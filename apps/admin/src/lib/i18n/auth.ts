@@ -20,6 +20,7 @@ export const authDict = {
     "auth.2fa.primary-button": "Verify",
     "auth.2fa.secondary-button": "Resend Code",
     "auth.2fa.code.errors.invalid": "Invalid code, please try again",
+    "auth.2fa.errors.unauthorized": "Unauthorized",
     "auth.reset-password.title": "Reset Password",
     "auth.reset-password.primary-button": "Save",
     "auth.reset-password.current-password.placeholder":
@@ -68,6 +69,7 @@ export const authDict = {
     "auth.2fa.secondary-button": "Reenviar código",
     "auth.2fa.code.errors.invalid":
       "Código inválido, por favor inténtalo de nuevo",
+    "auth.2fa.errors.unauthorized": "No autorizado",
     "auth.reset-password.title": "Restablecer contraseña",
     "auth.reset-password.primary-button": "Guardar",
     "auth.reset-password.current-password.placeholder":

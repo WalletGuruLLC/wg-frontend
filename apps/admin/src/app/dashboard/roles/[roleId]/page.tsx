@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -11,15 +12,14 @@ import {
 import { toast } from "@wg-frontend/ui/toast";
 
 import type {
-  AccessLevelAction,
-  AccessLevelModule,
+  AccessLevel,
+  ModuleId,
   UseGetRoleAccessLevelsQueryOutput,
 } from "~/lib/data-access";
 import { Button } from "~/components/button";
 import {
-  ACCESS_LEVELS_ACTIONS_BINARY_ORDERED,
-  ACCESS_LEVELS_MAP,
-  convertAccessLevel,
+  ACCESS_LEVELS_BINARY_ORDERED,
+  accessLevelsToNumber,
   useGetRoleAccessLevelsQuery,
   useGetRoleQuery,
   useSaveRoleModuleAccessLevelMutation,
@@ -35,8 +35,8 @@ function Actions({
   module,
   accessLevels,
 }: {
-  module: AccessLevelModule;
-  accessLevels: AccessLevelAction[];
+  module: ModuleId;
+  accessLevels: AccessLevel[];
 }) {
   const { roleId } = useParams<{ roleId: string }>();
   const { value, values } = useI18n("dashboard.roles.role.table.actions.save");
@@ -54,27 +54,33 @@ function Actions({
   });
 
   return (
-    <Button
-      className="font-medium no-underline"
-      variant="link"
-      disabled={isPending}
-      onClick={() => {
-        mutate({
-          roleId,
-          moduleId: Object.keys(ACCESS_LEVELS_MAP).find(
-            (k) =>
-              ACCESS_LEVELS_MAP[k as keyof typeof ACCESS_LEVELS_MAP] === module,
-          ) as keyof typeof ACCESS_LEVELS_MAP,
-          accessLevel: convertAccessLevel(accessLevels),
-        });
-      }}
-    >
-      {value}
-    </Button>
+    <div className="flex flex-row space-x-4">
+      <Button
+        className="font-normal no-underline"
+        variant="link"
+        disabled={isPending}
+        onClick={() => {
+          mutate({
+            roleId,
+            module,
+            accessLevel: accessLevelsToNumber(accessLevels),
+          });
+        }}
+      >
+        {value}
+      </Button>
+      {!["serviceProviders", "wallets"].includes(module) && (
+        <Link href={`/dashboard/roles/${roleId}/${module}`}>
+          <Button className="font-normal no-underline" variant="link">
+            {values["dashboard.roles.role.table.actions.details"]}
+          </Button>
+        </Link>
+      )}
+    </div>
   );
 }
 
-function ModuleColumnValue({ module }: { module: AccessLevelModule }) {
+function ModuleColumnValue({ module }: { module: ModuleId }) {
   const { value } = useI18n(`dashboard.roles.role.modules.${module}`);
   return <span className="font-normal text-black">{value}</span>;
 }
@@ -84,9 +90,9 @@ function CheckboxCell({
   action,
   setData,
 }: {
-  accessLevels: AccessLevelAction[];
-  action: AccessLevelAction;
-  setData: (data: AccessLevelAction[]) => void;
+  accessLevels: AccessLevel[];
+  action: AccessLevel;
+  setData: (data: AccessLevel[]) => void;
 }) {
   return (
     <Checkbox
@@ -106,16 +112,14 @@ function AllCheckboxCell({
   accessLevels,
   setData,
 }: {
-  accessLevels: AccessLevelAction[];
-  setData: (data: AccessLevelAction[]) => void;
+  accessLevels: AccessLevel[];
+  setData: (data: AccessLevel[]) => void;
 }) {
   return (
     <Checkbox
-      checked={
-        accessLevels.length === ACCESS_LEVELS_ACTIONS_BINARY_ORDERED.length
-      }
+      checked={accessLevels.length === ACCESS_LEVELS_BINARY_ORDERED.length}
       onCheckedChange={(newChecked: boolean) => {
-        setData(newChecked ? [...ACCESS_LEVELS_ACTIONS_BINARY_ORDERED] : []);
+        setData(newChecked ? [...ACCESS_LEVELS_BINARY_ORDERED] : []);
       }}
     />
   );
@@ -123,7 +127,7 @@ function AllCheckboxCell({
 
 const columnHelper = createColumnHelper<{
   data: UseGetRoleAccessLevelsQueryOutput[number];
-  setData: (data: AccessLevelAction[]) => void;
+  setData: (data: AccessLevel[]) => void;
 }>();
 
 const columns = [
@@ -221,11 +225,11 @@ export default function RoleAccessLevels() {
   const [state, setState] = useState<
     {
       data: UseGetRoleAccessLevelsQueryOutput[number];
-      setData: (data: AccessLevelAction[]) => void;
+      setData: (data: AccessLevel[]) => void;
     }[]
   >([]);
   const { data: roleAccessLevelsData, isLoading } = useGetRoleAccessLevelsQuery(
-    { roleId },
+    { roleId, isProvider: false },
   );
   const { data, isLoading: isLoadingRoleData } = useGetRoleQuery({ roleId });
 
@@ -265,7 +269,7 @@ export default function RoleAccessLevels() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={values["dashboard.roles.role.title"] + data?.Name}
+        title={values["dashboard.roles.role.title"] + (data?.Name ?? "")}
         showLoadingIndicator={isLoading || isLoadingRoleData}
       />
       <div className="flex-1 overflow-auto">

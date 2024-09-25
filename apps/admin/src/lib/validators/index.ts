@@ -52,7 +52,6 @@ export const paginationAndSearchValidator = z.object({
   page: z.string().optional(),
   items: z.string().optional(),
   search: z.string().optional(),
-  serviceProviderId: z.string().optional(),
 });
 
 export const addOrEditRoleValidator = z.object({
@@ -76,12 +75,6 @@ export const addOrEditRoleValidator = z.object({
 
 export const toggleRoleStatusValidator = z.object({
   roleId: z.string().min(1),
-});
-
-export const saveRoleModuleAccessLevelValidator = z.object({
-  accessLevel: z.number(),
-  roleId: z.string().min(1),
-  moduleId: z.string().min(1),
 });
 
 export const addOrEditUserValidator = z.object({
