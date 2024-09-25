@@ -83,6 +83,9 @@ export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
 type ApiSimpleAccessLevels = {
   [key in ModuleDatabaseId]?: number;
 };
+type ApiComplexAccessLevels = {
+  [K in ModuleDatabaseId]: { [P in K]: Record<string, number> };
+}[ModuleDatabaseId][];
 export const ACCESS_LEVELS_BINARY_ORDERED = [
   "view",
   "add",
@@ -443,7 +446,7 @@ export function useToggleRoleStatusMutation(
 
 export type UseGetRoleAccessLevelsQueryOutput = {
   module: ModuleId;
-  accessLevels: ModuleAccessLevels[ModuleId];
+  accessLevels: AccessLevel[];
 }[];
 export function useGetRoleAccessLevelsQuery(
   input: {
@@ -454,12 +457,7 @@ export function useGetRoleAccessLevelsQuery(
 ) {
   return useQuery({
     ...options,
-    queryKey: [
-      "get-role-access-levels",
-      {
-        roleId: input.roleId,
-      },
-    ],
+    queryKey: ["get-role-access-levels", input],
     queryFn: async () => {
       const params = new URLSearchParams({
         isProvider: input.isProvider.toString(),
@@ -547,13 +545,117 @@ export function useSaveRoleModuleAccessLevelMutation(
     },
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
-        queryKey: ["get-role-access-levels", { roleId: input[1].roleId }],
+        queryKey: ["get-role-access-levels"],
       });
       options.onSuccess?.(...input);
     },
   });
 }
 
+export type UseGetRoleProvidersAccessLevelsQueryOutput = {
+  serviceProvider: {
+    id: string;
+    name: string;
+  };
+  accessLevels: AccessLevel[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+}[];
+export function useGetRoleProvidersAccessLevelsQuery(
+  input: z.infer<typeof paginationAndSearchValidator> & {
+    roleId: string;
+    module: ModuleId;
+  },
+  options: UseQueryOptions<UseGetRoleProvidersAccessLevelsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-role-providers-access-levels", input],
+    queryFn: async () => {
+      const serviceProvidersData = await fetchProviders({
+        ...input,
+        type: "PLATFORM",
+      });
+
+      let apiComplexAccessLevels = await customFetch<
+        Record<string, never> | ApiComplexAccessLevels
+      >(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/roles/access-level/${input.roleId}`,
+      );
+      apiComplexAccessLevels =
+        typeof apiComplexAccessLevels === "object" &&
+        !Array.isArray(apiComplexAccessLevels)
+          ? []
+          : apiComplexAccessLevels; // back responds with empty object if no access levels ??????? why
+
+      const moduleDatabaseId = Object.keys(MODULES_MAP).find(
+        (k) => MODULES_MAP[k as ModuleDatabaseId] === input.module,
+      ) as ModuleDatabaseId;
+
+      // @ts-expect-error because we know it's not an empty object and can be indexed by moduleDatabaseId
+      const serviceProvidersNumericAccessLevel = apiComplexAccessLevels.find(
+        (al) => Object.keys(al)[0] === moduleDatabaseId,
+      )?.[moduleDatabaseId] as Record<string, number> | undefined;
+
+      return serviceProvidersData.providers.map((sp) => {
+        const accessLevels = numberToAccessLevels(
+          serviceProvidersNumericAccessLevel?.[sp.id] ?? 0,
+        );
+
+        return {
+          serviceProvider: {
+            id: sp.id,
+            name: sp.name,
+          },
+          accessLevels,
+          total: serviceProvidersData.total,
+          totalPages: serviceProvidersData.totalPages,
+          currentPage: serviceProvidersData.currentPage,
+        };
+      });
+    },
+  });
+}
+
+export function useSaveRoleProviderModuleAccessLevelMutation(
+  options: UseMutationOptions<
+    {
+      accessLevel: number;
+      roleId: string;
+      module: ModuleId;
+      serviceProvider: string;
+    },
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["save-role-provider-module-access-level"],
+    mutationFn: (input) => {
+      const moduleDatabaseId = Object.keys(MODULES_MAP).find(
+        (k) => MODULES_MAP[k as ModuleDatabaseId] === input.module,
+      ) as ModuleDatabaseId;
+
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/roles/module-access-level/${input.roleId}/${moduleDatabaseId}`,
+        {
+          method: "POST", // POST because backend things but it means an update aswell
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-role-providers-access-levels"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
 export interface User {
   mfaEnabled: boolean;
   roleId: string;
@@ -577,10 +679,10 @@ interface UseGetUsersQueryOutput {
   totalPages: number;
   currentPage: number;
 }
-//Todo
 export function useGetUsersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
+    serviceProviderId?: string;
   },
   options: UseQueryOptions<UseGetUsersQueryOutput> = {},
 ) {
@@ -851,14 +953,19 @@ export function useGetProvidersQuery(
     ...options,
     queryKey: ["get-providers", input],
     queryFn: () => {
-      const params = new URLSearchParams(input as Record<string, string>);
-      return customFetch<UseGetProvidersQueryOutput>(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers?" +
-          params.toString(),
-      );
+      return fetchProviders(input);
     },
   });
+}
+async function fetchProviders(
+  input: Parameters<typeof useGetProvidersQuery>["0"],
+) {
+  const params = new URLSearchParams(input as Record<string, string>);
+  return customFetch<UseGetProvidersQueryOutput>(
+    env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+      "/api/v1/providers?" +
+      params.toString(),
+  );
 }
 
 export function useAddOrEditProviderMutation(
