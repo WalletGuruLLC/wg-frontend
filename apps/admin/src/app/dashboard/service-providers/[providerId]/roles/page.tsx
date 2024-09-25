@@ -127,13 +127,21 @@ const columns = [
   }),
 ];
 
-export default function RolesPage() {
-  const loading = useAccessLevelGuard("roles");
+export default function ServiceProviderRolesPage() {
+  const { providerId } = useParams<{ providerId: string }>();
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+    providers: {
+      id: providerId,
+      module: "roles",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { providerId } = useParams<{ providerId: string }>();
 
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
     page: searchParams.get("page") ?? "1",
@@ -156,11 +164,14 @@ export default function RolesPage() {
     data: data?.roles ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.roles.includes("edit"),
+        (c) =>
+          c.id !== "actions" ||
+          accessLevelsData?.providers[providerId]?.roles.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.roles.includes("inactive"),
+          c.id !== "active" ||
+          accessLevelsData?.providers[providerId]?.roles.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -236,7 +247,7 @@ export default function RolesPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.roles.includes("add") && (
+        {accessLevelsData?.providers[providerId]?.roles.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">

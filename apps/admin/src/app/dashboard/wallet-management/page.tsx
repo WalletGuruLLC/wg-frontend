@@ -130,7 +130,11 @@ const columns = [
 ];
 
 export default function WalletManagementPage() {
-  const loading = useAccessLevelGuard("wallets");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "wallets",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -150,11 +154,14 @@ export default function WalletManagementPage() {
     data: data?.wallet ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.wallets.includes("edit"),
+        (c) =>
+          c.id !== "actions" ||
+          accessLevelsData?.general.wallets.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.wallets.includes("inactive"),
+          c.id !== "active" ||
+          accessLevelsData?.general.wallets.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -216,7 +223,7 @@ export default function WalletManagementPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.wallets.includes("add") && (
+        {accessLevelsData?.general.wallets.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">

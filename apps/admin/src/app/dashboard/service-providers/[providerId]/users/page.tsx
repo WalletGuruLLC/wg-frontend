@@ -231,12 +231,20 @@ const columns = [
 ];
 
 export default function ServiceProviderUsersPage() {
-  const loading = useAccessLevelGuard("users");
+  const { providerId } = useParams<{ providerId: string }>();
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+    providers: {
+      id: providerId,
+      module: "users",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { providerId } = useParams<{ providerId: string }>();
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",
@@ -259,11 +267,14 @@ export default function ServiceProviderUsersPage() {
     data: data?.users ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.users.includes("edit"),
+        (c) =>
+          c.id !== "actions" ||
+          accessLevelsData?.providers[providerId]?.users.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.users.includes("inactive"),
+          c.id !== "active" ||
+          accessLevelsData?.providers[providerId]?.users.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -339,7 +350,7 @@ export default function ServiceProviderUsersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.users.includes("add") && (
+        {accessLevelsData?.providers[providerId]?.users.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">

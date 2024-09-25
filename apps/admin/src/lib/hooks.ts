@@ -18,12 +18,29 @@ export function useAuthGuard() {
   return isLoading;
 }
 
-export function useAccessLevelGuard(module: ModuleId) {
+export function useAccessLevelGuard({
+  general,
+  providers,
+}: {
+  general: {
+    module: ModuleId;
+  };
+  providers?: {
+    module: ModuleId;
+    id: string;
+  };
+}) {
   const router = useRouter();
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
 
-  if (!isLoading && !data?.[module].includes("view"))
+  if (!isLoading && !data?.general[general.module].includes("view"))
     return router.replace("/dashboard");
+  if (
+    !isLoading &&
+    providers &&
+    !data?.providers[providers.id]?.[providers.module].includes("view")
+  )
+    return router.replace(`/dashboard/service-providers/${providers.id}`);
 
   return isLoading;
 }
