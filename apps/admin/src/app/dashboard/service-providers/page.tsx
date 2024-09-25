@@ -58,7 +58,11 @@ import { PaginationFooter } from "../_components/dashboard-table";
 import { SimpleTitle } from "../_components/dashboard-title";
 
 export default function ServiceProvidersPage() {
-  const loading = useAccessLevelGuard("serviceProviders");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -132,7 +136,7 @@ export default function ServiceProvidersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.users.includes("add") && (
+        {accessLevelsData?.general.serviceProviders.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
@@ -166,34 +170,42 @@ export default function ServiceProvidersPage() {
                 </h6>
                 <span className="text-lg">{provider.name}</span>
                 <div className="flex justify-start gap-3">
-                  <AddOrEditDialog
-                    trigger={
-                      <PencilLine
-                        strokeWidth={0.75}
-                        className="size-6 cursor-pointer"
-                      />
-                    }
-                    provider={{
-                      id: provider.id,
-                      companyName: provider.name,
-                      ein: provider.eINNumber,
-                      country: provider.country,
-                      city: provider.city,
-                      zipCode: provider.zipCode,
-                      companyAddress: provider.companyAddress,
-                      walletAddress: provider.walletAddress,
-                      asset: provider.asset,
-                    }}
-                  />
+                  {accessLevelsData?.general.serviceProviders.includes(
+                    "edit",
+                  ) && (
+                    <AddOrEditDialog
+                      trigger={
+                        <PencilLine
+                          strokeWidth={0.75}
+                          className="size-6 cursor-pointer"
+                        />
+                      }
+                      provider={{
+                        id: provider.id,
+                        companyName: provider.name,
+                        ein: provider.eINNumber,
+                        country: provider.country,
+                        city: provider.city,
+                        zipCode: provider.zipCode,
+                        companyAddress: provider.companyAddress,
+                        walletAddress: provider.walletAddress,
+                        asset: provider.asset,
+                      }}
+                    />
+                  )}
                   <Link href={`/dashboard/service-providers/${provider.id}`}>
                     <Eye strokeWidth={0.75} className="size-6" />
                   </Link>
-                  <SwitchActiveStatusDialog
-                    provider={{
-                      id: provider.id,
-                      isActive: provider.active,
-                    }}
-                  />
+                  {accessLevelsData?.general.serviceProviders.includes(
+                    "inactive",
+                  ) && (
+                    <SwitchActiveStatusDialog
+                      provider={{
+                        id: provider.id,
+                        isActive: provider.active,
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </Card>

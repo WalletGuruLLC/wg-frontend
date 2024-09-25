@@ -211,11 +211,21 @@ const columns = [
   }),
 ];
 
-export default function RoleAccessLevels() {
-  const loading = useAccessLevelGuard("roles");
+export default function ServiceProviderRoleAccessLevels() {
+  const { providerId, roleId } = useParams<{
+    providerId: string;
+    roleId: string;
+  }>();
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+    providers: {
+      id: providerId,
+      module: "roles",
+    },
+  });
   const { values } = useI18n();
-  const { providerId } = useParams<{ providerId: string }>();
-  const { roleId } = useParams<{ roleId: string }>();
   const [state, setState] = useState<
     {
       data: UseGetRoleAccessLevelsQueryOutput[number];

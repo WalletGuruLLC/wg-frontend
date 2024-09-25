@@ -117,7 +117,11 @@ const columns = [
 ];
 
 export default function RolesPage() {
-  const loading = useAccessLevelGuard("roles");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "roles",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -137,11 +141,14 @@ export default function RolesPage() {
     data: data?.roles ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.roles.includes("edit"),
+        (c) =>
+          c.id !== "actions" ||
+          accessLevelsData?.general.roles.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.roles.includes("inactive"),
+          c.id !== "active" ||
+          accessLevelsData?.general.roles.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -201,7 +208,7 @@ export default function RolesPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.roles.includes("add") && (
+        {accessLevelsData?.general.roles.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">

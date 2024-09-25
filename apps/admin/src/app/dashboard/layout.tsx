@@ -112,7 +112,10 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             <div className="flex-1 pt-8">
               <nav className="grid items-start gap-4 px-4">
                 {NAV.map((page) => {
-                  if (page.moduleId && !data?.[page.moduleId].includes("view"))
+                  if (
+                    page.moduleId &&
+                    !data?.general[page.moduleId].includes("view")
+                  )
                     return null;
                   return (
                     <Link
@@ -175,7 +178,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                   {NAV.map((page) => {
                     if (
                       page.moduleId &&
-                      !data?.[page.moduleId].includes("view")
+                      !data?.general[page.moduleId].includes("view")
                     )
                       return null;
                     return (

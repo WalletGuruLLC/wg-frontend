@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowRightLeft, Settings, SquareUserRound, Users } from "lucide-react";
 
+import type { ModuleId } from "~/lib/data-access";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetProviderQuery,
@@ -17,38 +18,42 @@ const SECTIONS = [
     id: "users",
     i18nTitleKey: "service-providers.home.sections.users.label",
     path: "/users",
-    moduleId: null,
+    moduleId: "users" satisfies ModuleId,
     Icon: Users,
   },
   {
     id: "roles",
     i18nTitleKey: "service-providers.home.sections.roles.label",
     path: "/roles",
-    moduleId: null,
+    moduleId: "roles" satisfies ModuleId,
     Icon: SquareUserRound,
   },
   {
     id: "settings",
     i18nTitleKey: "service-providers.home.sections.settings.label",
     path: "/settings",
-    moduleId: null,
+    moduleId: "settings" satisfies ModuleId,
     Icon: Settings,
   },
   {
     id: "transactions",
     i18nTitleKey: "service-providers.home.sections.transactions.label",
     path: "/transactions",
-    moduleId: null,
+    moduleId: "transactions" satisfies ModuleId,
     Icon: ArrowRightLeft,
   },
 ] as const;
 
 export default function ServiceProviderPage() {
-  const loading = useAccessLevelGuard("serviceProviders");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+  });
   const { values } = useI18n();
   const { providerId } = useParams<{ providerId: string }>();
 
-  const { isLoading: isLoadingAccessLevels } =
+  const { data: accessLevelData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data, isLoading: isLoadingProviderData } = useGetProviderQuery({
     providerId,
@@ -73,16 +78,24 @@ export default function ServiceProviderPage() {
         ]}
       />
       <div className="flex w-full">
-        {SECTIONS.map((section) => (
-          <Link
-            key={section.id}
-            href={`/dashboard/service-providers/${providerId}${section.path}`}
-            className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
-          >
-            <section.Icon size={32} strokeWidth={0.75} color="#3678B1" />
-            <span className="text-2xl">{values[section.i18nTitleKey]}</span>
-          </Link>
-        ))}
+        {SECTIONS.map((section) => {
+          if (
+            !accessLevelData?.providers[providerId]?.[
+              section.moduleId
+            ].includes("view")
+          )
+            return null;
+          return (
+            <Link
+              key={section.id}
+              href={`/dashboard/service-providers/${providerId}${section.path}`}
+              className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <section.Icon size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">{values[section.i18nTitleKey]}</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

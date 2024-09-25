@@ -11,9 +11,17 @@ import { useI18n } from "~/lib/i18n";
 import { BreadcrumbTitle } from "../../../_components/dashboard-title";
 
 export default function ServiceProviderSettingsPage() {
-  const loading = useAccessLevelGuard("serviceProviders");
-  const { values } = useI18n();
   const { providerId } = useParams<{ providerId: string }>();
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+    providers: {
+      id: providerId,
+      module: "settings",
+    },
+  });
+  const { values } = useI18n();
 
   const { isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
