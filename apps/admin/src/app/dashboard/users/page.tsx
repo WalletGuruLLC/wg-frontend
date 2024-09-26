@@ -17,6 +17,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
+import { keepPreviousData } from "@wg-frontend/data-access";
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
@@ -178,10 +179,15 @@ export default function UsersPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data, isLoading } = useGetUsersQuery({
-    ...paginationAndSearch,
-    type: "PLATFORM",
-  });
+  const { data, isLoading } = useGetUsersQuery(
+    {
+      ...paginationAndSearch,
+      type: "PLATFORM",
+    },
+    {
+      placeholderData: keepPreviousData,
+    },
+  );
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
