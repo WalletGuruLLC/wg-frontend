@@ -19,6 +19,7 @@ import {
 
 import { keepPreviousData } from "@wg-frontend/data-access";
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { useDebouncedValue } from "@wg-frontend/hooks/use-debounced-value";
 import { cn } from "@wg-frontend/ui";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
@@ -179,9 +180,14 @@ export default function UsersPage() {
     search: searchParams.get("search") ?? "",
   };
 
+  const [paginationAndSearchDebounced] = useDebouncedValue(
+    paginationAndSearch,
+    500,
+  );
+
   const { data, isLoading } = useGetUsersQuery(
     {
-      ...paginationAndSearch,
+      ...paginationAndSearchDebounced,
       type: "PLATFORM",
     },
     {
