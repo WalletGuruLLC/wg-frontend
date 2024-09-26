@@ -99,7 +99,10 @@ type ModuleAccessLevels = {
 // Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
 export function useGetAuthedUserAccessLevelsQuery(
   _: undefined,
-  options: UseQueryOptions<ModuleAccessLevels> = {},
+  options: UseQueryOptions<{
+    general: ModuleAccessLevels;
+    providers: Record<string, ModuleAccessLevels>;
+  }> = {},
 ) {
   return useQuery({
     ...options,
@@ -107,40 +110,65 @@ export function useGetAuthedUserAccessLevelsQuery(
     queryFn: async () => {
       const data = await customFetch<{
         accessLevel: ApiSimpleAccessLevels;
+        platformAccessLevel: Record<string, never> | ApiComplexAccessLevels;
       }>(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user");
 
-      return parseAccessLevels(data.accessLevel);
+      const apiGeneralAccessLevels = data.accessLevel;
+      const apiProvidersAccessLevels =
+        typeof data.platformAccessLevel === "object" &&
+        !Array.isArray(data.platformAccessLevel)
+          ? []
+          : data.platformAccessLevel;
+
+      const generalAccessLevels = Object.keys(MODULES_MAP).reduce(
+        (acc, moduleDatabaseId) => {
+          const accessLevels = numberToAccessLevels(
+            apiGeneralAccessLevels[moduleDatabaseId as ModuleDatabaseId] ?? 0,
+          );
+          acc[MODULES_MAP[moduleDatabaseId as ModuleDatabaseId]] = accessLevels;
+          return acc;
+        },
+        {} as ModuleAccessLevels,
+      );
+
+      const providersAccessLevels = apiProvidersAccessLevels.reduce(
+        (acc, moduleAccessLevels) => {
+          const moduleDatabaseId = Object.keys(
+            moduleAccessLevels,
+          )[0] as ModuleDatabaseId;
+
+          // @ts-expect-error because we know it's not an empty object and can be indexed by moduleDatabaseId
+          const serviceProvidersNumericAccessLevel = moduleAccessLevels[
+            moduleDatabaseId
+          ] as Record<string, number>;
+
+          Object.entries(serviceProvidersNumericAccessLevel).forEach(
+            ([serviceProviderId, numericAccessLevel]) => {
+              acc[serviceProviderId] = {
+                roles: [],
+                wallets: [],
+                users: [],
+                serviceProviders: [],
+                settings: [],
+                transactions: [],
+                ...acc[serviceProviderId],
+                [MODULES_MAP[moduleDatabaseId]]:
+                  numberToAccessLevels(numericAccessLevel),
+              };
+            },
+          );
+
+          return acc;
+        },
+        {} as Record<string, ModuleAccessLevels>,
+      );
+
+      return {
+        general: generalAccessLevels,
+        providers: providersAccessLevels,
+      };
     },
   });
-}
-function parseAccessLevels(accessLevels: ApiSimpleAccessLevels) {
-  const accessLevelsMap: ModuleAccessLevels = {
-    roles: [],
-    wallets: [],
-    users: [],
-    serviceProviders: [],
-    settings: [],
-    transactions: [],
-  };
-
-  for (const [key, value] of Object.entries(accessLevels)) {
-    if (!Object.keys(MODULES_MAP).includes(key)) continue;
-
-    const bin = value.toString(2).padStart(4, "0").split("");
-    if (bin.length !== ACCESS_LEVELS_BINARY_ORDERED.length) continue;
-
-    const accessLevelKey = MODULES_MAP[key as keyof typeof MODULES_MAP];
-
-    for (let i = 0; i < bin.length; i++) {
-      if (bin[i] === "1") {
-        accessLevelsMap[accessLevelKey].push(
-          ACCESS_LEVELS_BINARY_ORDERED[i as 0 | 1 | 2 | 3],
-        );
-      }
-    }
-  }
-
-  return accessLevelsMap;
 }
 function numberToAccessLevels(numericAccessLevel: number) {
   return ACCESS_LEVELS_BINARY_ORDERED.filter(
@@ -938,6 +966,7 @@ interface UseGetProvidersQueryOutput {
     active: boolean;
     walletAddress: string;
     name: string;
+    asset: string;
   }[];
   total: number;
   totalPages: number;
@@ -1094,6 +1123,55 @@ export function useGetStatesQuery(
           name: res.name,
         },
       }));
+    },
+  });
+}
+
+interface UseGetRafikiAssetsQueryOutput {
+  rafikiAssets: {
+    code: string;
+    id: string;
+  }[];
+}
+export function useGetRafikiAssetsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetRafikiAssetsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-rafiki-assets"],
+    queryFn: () => {
+      return customFetch<UseGetRafikiAssetsQueryOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets-rafiki/assets",
+      );
+    },
+  });
+}
+
+interface UseGetSettingQueryOutput {
+  id: string;
+  belongs: string;
+  key: string;
+  value: string;
+  createDate: string;
+  updateDate: string;
+}
+export function useGetSettingQuery(
+  input: {
+    key: string;
+  },
+  options: UseQueryOptions<UseGetSettingQueryOutput | undefined> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-setting", input],
+    queryFn: async () => {
+      const settings = await customFetch<UseGetSettingQueryOutput[]>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/settings",
+      );
+
+      return settings.find((s) => s.key === input.key);
     },
   });
 }

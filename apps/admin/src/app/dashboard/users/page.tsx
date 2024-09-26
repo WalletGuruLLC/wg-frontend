@@ -162,7 +162,11 @@ const columns = [
 ];
 
 export default function UsersPage() {
-  const loading = useAccessLevelGuard("users");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "users",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -185,11 +189,14 @@ export default function UsersPage() {
     data: data?.users ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.users.includes("edit"),
+        (c) =>
+          c.id !== "actions" ||
+          accessLevelsData?.general.users.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.users.includes("inactive"),
+          c.id !== "active" ||
+          accessLevelsData?.general.users.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -249,7 +256,7 @@ export default function UsersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.users.includes("add") && (
+        {accessLevelsData?.general.users.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">

@@ -39,6 +39,8 @@ import {
   useGetAuthedUserAccessLevelsQuery,
   useGetCountriesQuery,
   useGetProvidersQuery,
+  useGetRafikiAssetsQuery,
+  useGetSettingQuery,
   useGetStatesQuery,
   useToggleProviderStatusMutation,
   useUploadProviderImageMutation,
@@ -56,7 +58,11 @@ import { PaginationFooter } from "../_components/dashboard-table";
 import { SimpleTitle } from "../_components/dashboard-title";
 
 export default function ServiceProvidersPage() {
-  const loading = useAccessLevelGuard("serviceProviders");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "serviceProviders",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -130,7 +136,7 @@ export default function ServiceProvidersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.users.includes("add") && (
+        {accessLevelsData?.general.serviceProviders.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
@@ -164,33 +170,42 @@ export default function ServiceProvidersPage() {
                 </h6>
                 <span className="text-lg">{provider.name}</span>
                 <div className="flex justify-start gap-3">
-                  <AddOrEditDialog
-                    trigger={
-                      <PencilLine
-                        strokeWidth={0.75}
-                        className="size-6 cursor-pointer"
-                      />
-                    }
-                    provider={{
-                      id: provider.id,
-                      companyName: provider.name,
-                      ein: provider.eINNumber,
-                      country: provider.country,
-                      city: provider.city,
-                      zipCode: provider.zipCode,
-                      companyAddress: provider.companyAddress,
-                      walletAddress: provider.walletAddress,
-                    }}
-                  />
+                  {accessLevelsData?.general.serviceProviders.includes(
+                    "edit",
+                  ) && (
+                    <AddOrEditDialog
+                      trigger={
+                        <PencilLine
+                          strokeWidth={0.75}
+                          className="size-6 cursor-pointer"
+                        />
+                      }
+                      provider={{
+                        id: provider.id,
+                        companyName: provider.name,
+                        ein: provider.eINNumber,
+                        country: provider.country,
+                        city: provider.city,
+                        zipCode: provider.zipCode,
+                        companyAddress: provider.companyAddress,
+                        walletAddress: provider.walletAddress,
+                        asset: provider.asset,
+                      }}
+                    />
+                  )}
                   <Link href={`/dashboard/service-providers/${provider.id}`}>
                     <Eye strokeWidth={0.75} className="size-6" />
                   </Link>
-                  <SwitchActiveStatusDialog
-                    provider={{
-                      id: provider.id,
-                      isActive: provider.active,
-                    }}
-                  />
+                  {accessLevelsData?.general.serviceProviders.includes(
+                    "inactive",
+                  ) && (
+                    <SwitchActiveStatusDialog
+                      provider={{
+                        id: provider.id,
+                        isActive: provider.active,
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </Card>
@@ -234,7 +249,6 @@ export default function ServiceProvidersPage() {
   );
 }
 
-const WALLET_ADDRESS_BASE_URL = "www.walletguru.me/";
 function AddOrEditDialog(props: {
   provider?: {
     id: string;
@@ -245,6 +259,7 @@ function AddOrEditDialog(props: {
     zipCode: string;
     companyAddress: string;
     walletAddress: string;
+    asset: string;
   };
   trigger: ReactNode;
 }) {
@@ -263,6 +278,7 @@ function AddOrEditDialog(props: {
       zipCode: props.provider?.zipCode ?? "",
       companyAddress: props.provider?.companyAddress ?? "",
       walletAddress: props.provider?.walletAddress ?? "",
+      asset: props.provider?.asset ?? "",
     },
   });
 
@@ -275,6 +291,10 @@ function AddOrEditDialog(props: {
       enabled: !!form.watch("country"),
     },
   );
+  const { data: rafikiAssets } = useGetRafikiAssetsQuery(undefined);
+  const { data: urlWalletSetting } = useGetSettingQuery({
+    key: "url-wallet",
+  });
 
   const { mutate, isPending } = useAddOrEditProviderMutation({
     onError: (error) => {
@@ -320,6 +340,7 @@ function AddOrEditDialog(props: {
         zipCode: props.provider.zipCode,
         companyAddress: props.provider.companyAddress,
         walletAddress: props.provider.walletAddress,
+        asset: props.provider.asset,
       });
     }
   }, [props.provider, form]);
@@ -532,16 +553,52 @@ function AddOrEditDialog(props: {
                         {...field}
                       />
                     </FormControl>
+                    <p className="overflow-auto text-nowrap text-xs">
+                      {urlWalletSetting?.value ?? ""}/
+                      {form.watch("walletAddress")}
+                    </p>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="w-1/2 self-center">
-                <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-                  {WALLET_ADDRESS_BASE_URL}
-                  {form.watch("walletAddress")}
-                </p>
-              </div>
+              <FormField
+                control={form.control}
+                name="asset"
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormLabel>
+                      {values[`${valuesPrefix}.asset.label`]}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-none border-transparent border-b-black",
+                            !field.value && "text-[#A1A1A1]",
+                          )}
+                        >
+                          <SelectValue
+                            placeholder={
+                              values[`${valuesPrefix}.asset.placeholder`]
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {rafikiAssets?.rafikiAssets.map((asset) => (
+                          <SelectItem key={asset.id} value={asset.code}>
+                            {asset.code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
             <div className={cn("w-full", !props.provider && "hidden")}>
               <Label className="text-xs font-light">

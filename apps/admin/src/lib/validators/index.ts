@@ -140,6 +140,7 @@ export const addOrEditServiceProviderValidator = z.object({
     .refine((v) => !/\s/.test(v), {
       message: "service-providers.add-dialog.wallet-address.error",
     }),
+  asset: z.string().min(1, "service-providers.add-dialog.asset.error"),
 });
 
 export const toggleProviderStatusValidator = z.object({

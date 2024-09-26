@@ -228,7 +228,11 @@ const columns = [
 ];
 
 export default function RoleAccessLevels() {
-  const loading = useAccessLevelGuard("roles");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "roles",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
