@@ -1232,6 +1232,40 @@ export function useGetProviderQuery(
   });
 }
 
+export interface ProviderSetting {
+  name: string;
+  description: string;
+  cost: number;
+  frequency: string;
+  interval: number;
+  seconds: number;
+  asset: string;
+  key: string;
+  id: string;
+  active: boolean;
+}
+interface UseGetProviderSettingsQueryOutput {
+  data: ProviderSetting[];
+  total: number;
+}
+export function useGetProviderSettingsQuery(
+  input: z.infer<typeof paginationAndSearchValidator> & {
+    providerId: string;
+  },
+  options: UseQueryOptions<UseGetProviderSettingsQueryOutput | undefined> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-settings", input],
+    queryFn: () => {
+      return customFetch<UseGetProviderSettingsQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/${input.providerId}/payment-parameters`,
+      );
+    },
+  });
+}
+
 export function useErrorsQuery(
   input: {
     language: "en" | "us";
