@@ -262,21 +262,36 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.settings": "Settings",
     "service-providers.roles.role.modules.transactions": "Transactions",
     "service-providers.roles.role.success-toast": "Role Access Levels Updated",
-    "service-providers.settings.title": "Payment Parameters",
-    "service-providers.settings.search.placeholder": "Search",
-    "service-providers.settings.add-button": "Add Parameter",
-    "service-providers.settings.table.header.name": "Parameter Name",
-    "service-providers.settings.table.header.key": "Key",
-    "service-providers.settings.table.header.amount": "Amount",
-    "service-providers.settings.table.header.assets": "Assets",
-    "service-providers.settings.table.header.frequency": "Frequency",
-    "service-providers.settings.table.header.interval": "Interval",
-    "service-providers.settings.table.header.seconds": "Seconds",
-    "service-providers.settings.table.header.is-active": "Active",
-    "service-providers.settings.table.header.actions": "Actions",
-    "service-providers.settings.table.actions.edit": "Edit",
-    "service-providers.settings.table.items-label": "Items per page:",
-    "service-providers.settings.table.items-count-separator": " of ",
+    "service-providers.settings.title": "Settings",
+    "service-providers.settings.sections.payment-parameters":
+      "Payment Parameters",
+    "service-providers.settings.sections.fee": "Set Fee",
+    "service-providers.settings.sections.exchange-rates": "Exchange Rates",
+    "service-providers.settings.payment-parameters.search.placeholder":
+      "Search",
+    "service-providers.settings.payment-parameters.add-button": "Add Parameter",
+    "service-providers.settings.payment-parameters.table.header.name":
+      "Parameter Name",
+    "service-providers.settings.payment-parameters.table.header.key": "Key",
+    "service-providers.settings.payment-parameters.table.header.amount":
+      "Amount",
+    "service-providers.settings.payment-parameters.table.header.assets":
+      "Assets",
+    "service-providers.settings.payment-parameters.table.header.frequency":
+      "Frequency",
+    "service-providers.settings.payment-parameters.table.header.interval":
+      "Interval",
+    "service-providers.settings.payment-parameters.table.header.seconds":
+      "Seconds",
+    "service-providers.settings.payment-parameters.table.header.is-active":
+      "Active",
+    "service-providers.settings.payment-parameters.table.header.actions":
+      "Actions",
+    "service-providers.settings.payment-parameters.table.actions.edit": "Edit",
+    "service-providers.settings.payment-parameters.table.items-label":
+      "Items per page:",
+    "service-providers.settings.payment-parameters.table.items-count-separator":
+      " of ",
     "service-providers.transactions.title": "Transactions",
   },
   es: {
@@ -551,21 +566,37 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.transactions": "Transacciones",
     "service-providers.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
-    "service-providers.settings.title": "Parámetros de Pago",
-    "service-providers.settings.search.placeholder": "Buscar",
-    "service-providers.settings.add-button": "Agregar Parámetro",
-    "service-providers.settings.table.header.name": "Nombre",
-    "service-providers.settings.table.header.key": "Llave",
-    "service-providers.settings.table.header.amount": "Cantidad",
-    "service-providers.settings.table.header.assets": "Activos",
-    "service-providers.settings.table.header.frequency": "Frecuencia",
-    "service-providers.settings.table.header.interval": "Intervalo",
-    "service-providers.settings.table.header.seconds": "Segundos",
-    "service-providers.settings.table.header.is-active": "Activo",
-    "service-providers.settings.table.header.actions": "Acciones",
-    "service-providers.settings.table.actions.edit": "Editar",
-    "service-providers.settings.table.items-label": "Elementos por página:",
-    "service-providers.settings.table.items-count-separator": " de ",
+    "service-providers.settings.title": "Configuraciones",
+    "service-providers.settings.sections.payment-parameters":
+      "Parámetros de Pago",
+    "service-providers.settings.sections.fee": "Establecer Tarifa",
+    "service-providers.settings.sections.exchange-rates": "Tasas de Cambio",
+    "service-providers.settings.payment-parameters.search.placeholder":
+      "Buscar",
+    "service-providers.settings.payment-parameters.add-button":
+      "Agregar Parámetro",
+    "service-providers.settings.payment-parameters.table.header.name": "Nombre",
+    "service-providers.settings.payment-parameters.table.header.key": "Llave",
+    "service-providers.settings.payment-parameters.table.header.amount":
+      "Cantidad",
+    "service-providers.settings.payment-parameters.table.header.assets":
+      "Activos",
+    "service-providers.settings.payment-parameters.table.header.frequency":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.table.header.interval":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.table.header.seconds":
+      "Segundos",
+    "service-providers.settings.payment-parameters.table.header.is-active":
+      "Activo",
+    "service-providers.settings.payment-parameters.table.header.actions":
+      "Acciones",
+    "service-providers.settings.payment-parameters.table.actions.edit":
+      "Editar",
+    "service-providers.settings.payment-parameters.table.items-label":
+      "Elementos por página:",
+    "service-providers.settings.payment-parameters.table.items-count-separator":
+      " de ",
     "service-providers.transactions.title": "Transacciones",
   },
 } satisfies I18nDictionary;
