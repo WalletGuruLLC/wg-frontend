@@ -54,13 +54,6 @@ const columns = [
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.amount" />
     ),
   }),
-  columnHelper.accessor("cost", {
-    id: "amount",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.amount" />
-    ),
-  }),
   columnHelper.accessor("frequency", {
     id: "frequency",
     cell: (info) => info.getValue(),
