@@ -267,6 +267,7 @@ export const serviceProvidersDict = {
       "Payment Parameters",
     "service-providers.settings.sections.fee": "Set Fee",
     "service-providers.settings.sections.exchange-rates": "Exchange Rates",
+    "service-providers.settings.payment-parameters.title": "Payment Parameters",
     "service-providers.settings.payment-parameters.search.placeholder":
       "Search",
     "service-providers.settings.payment-parameters.add-button": "Add Parameter",
@@ -573,6 +574,7 @@ export const serviceProvidersDict = {
     "service-providers.settings.sections.exchange-rates": "Tasas de Cambio",
     "service-providers.settings.payment-parameters.search.placeholder":
       "Buscar",
+    "service-providers.settings.payment-parameters.title": "Parámetros de Pago",
     "service-providers.settings.payment-parameters.add-button":
       "Agregar Parámetro",
     "service-providers.settings.payment-parameters.table.header.name": "Nombre",

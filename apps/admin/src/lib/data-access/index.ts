@@ -1232,7 +1232,7 @@ export function useGetProviderQuery(
   });
 }
 
-export interface ProviderSetting {
+export interface ProviderPaymentParameters {
   name: string;
   description: string;
   cost: number;
@@ -1244,21 +1244,25 @@ export interface ProviderSetting {
   id: string;
   active: boolean;
 }
-interface UseGetProviderSettingsQueryOutput {
-  data: ProviderSetting[];
+interface UseGetProviderPaymentParametersQueryOutput {
+  paymentParameters: ProviderPaymentParameters[];
   total: number;
+  currentPage: number;
+  totalPages: number;
 }
-export function useGetProviderSettingsQuery(
+export function useGetProviderPaymentParametersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     providerId: string;
   },
-  options: UseQueryOptions<UseGetProviderSettingsQueryOutput | undefined> = {},
+  options: UseQueryOptions<
+    UseGetProviderPaymentParametersQueryOutput | undefined
+  > = {},
 ) {
   return useQuery({
     ...options,
     queryKey: ["get-provider-settings", input],
     queryFn: () => {
-      return customFetch<UseGetProviderSettingsQueryOutput>(
+      return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           `/api/v1/providers/${input.providerId}/payment-parameters`,
       );

@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 
-import type { ProviderSetting } from "~/lib/data-access";
+import type { ProviderPaymentParameters } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
 import Table, {
@@ -23,69 +23,69 @@ import Table, {
 } from "~/app/dashboard/_components/dashboard-table";
 import {
   useGetAuthedUserAccessLevelsQuery,
+  useGetProviderPaymentParametersQuery,
   useGetProviderQuery,
-  useGetProviderSettingsQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
 
-const columnHelper = createColumnHelper<ProviderSetting>();
+const columnHelper = createColumnHelper<ProviderPaymentParameters>();
 
 const columns = [
   columnHelper.accessor("name", {
     id: "name",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.name" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.name" />
     ),
   }),
   columnHelper.accessor("key", {
     id: "key",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.key" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.key" />
     ),
   }),
   columnHelper.accessor("cost", {
     id: "amount",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.amount" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.amount" />
     ),
   }),
   columnHelper.accessor("cost", {
     id: "amount",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.amount" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.amount" />
     ),
   }),
   columnHelper.accessor("frequency", {
     id: "frequency",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.frequency" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.frequency" />
     ),
   }),
   columnHelper.accessor("interval", {
     id: "interval",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.interval" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.interval" />
     ),
   }),
   columnHelper.accessor("seconds", {
     id: "seconds",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.seconds" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.seconds" />
     ),
   }),
   columnHelper.accessor("active", {
     id: "active",
     header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.table.header.is-active" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.is-active" />
     ),
     cell: (_) => "-",
     // <SwitchActiveStatusDialog
@@ -98,7 +98,7 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.wallet-management.table.header.actions" />
+      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.actions" />
     ),
     cell: (_) => "-",
     // <Actions
@@ -135,7 +135,7 @@ export default function ServiceProviderPaymentParametersPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data, isLoading } = useGetProviderSettingsQuery({
+  const { data, isLoading } = useGetProviderPaymentParametersQuery({
     ...paginationAndSearch,
     providerId,
   });
@@ -145,7 +145,7 @@ export default function ServiceProviderPaymentParametersPage() {
     useGetAuthedUserAccessLevelsQuery(undefined);
 
   const table = useReactTable({
-    data: data?.data ?? [],
+    data: data?.paymentParameters ?? [],
     columns: columns
       .filter(
         (c) =>
@@ -210,6 +210,12 @@ export default function ServiceProviderPaymentParametersPage() {
             href: `/dashboard/service-providers/${providerId}/settings`,
             isLoading: false,
           },
+          {
+            title:
+              values["service-providers.settings.payment-parameters.title"],
+            href: `/dashboard/service-providers/${providerId}/settings/payment-parameters`,
+            isLoading: false,
+          },
         ]}
         showLoadingIndicator={isLoading}
       />
@@ -217,7 +223,9 @@ export default function ServiceProviderPaymentParametersPage() {
         <div className="relative flex-1">
           <Input
             placeholder={
-              values["service-providers.settings.search.placeholder"]
+              values[
+                "service-providers.settings.payment-parameters.search.placeholder"
+              ]
             }
             className="rounded-full border border-black"
             name="search"
@@ -267,7 +275,9 @@ export default function ServiceProviderPaymentParametersPage() {
             })
           }
           canPreviousPage={paginationAndSearch.page !== "1"}
-          canNextPage={data?.data.length === Number(paginationAndSearch.items)}
+          canNextPage={
+            data?.paymentParameters.length === Number(paginationAndSearch.items)
+          }
           onPreviousPage={() =>
             handlePaginationAndSearchChange({
               ...paginationAndSearch,
