@@ -12,20 +12,28 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { CircleCheck, Search, TriangleAlert } from "lucide-react";
+
+import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { toast } from "@wg-frontend/ui/toast";
 
 import type { ProviderPaymentParameter } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import ConfirmDialog from "~/app/dashboard/_components/dashboard-confirm-dialog";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
+import { Switch } from "~/app/dashboard/_components/dashboard-switch";
 import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "~/app/dashboard/_components/dashboard-table";
+import { Button } from "~/components/button";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetProviderPaymentParametersQuery,
   useGetProviderQuery,
+  useToggleProviderPaymentParameterStatusMutation,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
@@ -73,13 +81,14 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.is-active" />
     ),
-    cell: (_) => "-",
-    // <SwitchActiveStatusDialog
-    //   wallet={{
-    //     id: info.row.original.id,
-    //     isActive: info.getValue(),
-    //   }}
-    // />
+    cell: (info) => (
+      <SwitchActiveStatusDialog
+        paymentParameter={{
+          id: info.row.original.id,
+          isActive: info.getValue(),
+        }}
+      />
+    ),
   }),
   columnHelper.display({
     id: "actions",
@@ -279,5 +288,91 @@ export default function ServiceProviderPaymentParametersPage() {
         />
       </div>
     </div>
+  );
+}
+
+function SwitchActiveStatusDialog(props: {
+  paymentParameter: {
+    id: string;
+    isActive: boolean;
+  };
+}) {
+  const { providerId } = useParams<{ providerId: string }>();
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+
+  const { mutate, isPending } = useToggleProviderPaymentParameterStatusMutation(
+    {
+      onSuccess: () => {
+        toast.success(values[`${valuesPrexif}.toast.success` as const]);
+        close();
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    },
+  );
+
+  const valuesPrexif =
+    `dashboard.users.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+
+  return (
+    <ConfirmDialog
+      key={props.paymentParameter.id}
+      isOpen={isOpen}
+      toggleOpen={toggle}
+      trigger={<Switch checked={props.paymentParameter.isActive} />}
+      actions={[
+        <Button
+          className="w-full"
+          key="yes"
+          onClick={() =>
+            mutate({
+              providerId,
+              paymentParameterId: props.paymentParameter.id,
+            })
+          }
+          disabled={isPending}
+        >
+          {
+            values[
+              isPending
+                ? "loading"
+                : (`${valuesPrexif}.primary-button` as const)
+            ]
+          }
+        </Button>,
+        <Button
+          className="w-full"
+          variant="secondary"
+          key="no"
+          onClick={close}
+          disabled={isPending}
+        >
+          {values[`${valuesPrexif}.secondary-button`]}
+        </Button>,
+      ]}
+      ariaDescribedBy="switch-active-status-dialog"
+      Icon={
+        props.paymentParameter.isActive ? (
+          <TriangleAlert
+            strokeWidth={0.75}
+            className="h-12 w-12"
+            color="#3678B1"
+          />
+        ) : (
+          <CircleCheck
+            strokeWidth={0.75}
+            className="h-12 w-12"
+            color="#3678B1"
+          />
+        )
+      }
+      title={values[`${valuesPrexif}.title`]}
+      description={<span>{values[`${valuesPrexif}.description`]}</span>}
+    />
   );
 }
