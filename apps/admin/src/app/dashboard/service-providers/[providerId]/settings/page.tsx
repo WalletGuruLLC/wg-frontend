@@ -73,7 +73,7 @@ export default function ServiceProviderPage() {
         {SECTIONS.map((section) => (
           <Link
             key={section.id}
-            href={`/dashboard/service-providers/${providerId}${section.path}`}
+            href={`/dashboard/service-providers/${providerId}/settings${section.path}`}
             className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
           >
             <section.Icon size={32} strokeWidth={0.75} color="#3678B1" />
