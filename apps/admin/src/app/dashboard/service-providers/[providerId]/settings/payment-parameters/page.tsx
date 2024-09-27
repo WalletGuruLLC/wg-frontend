@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 
-import type { ProviderPaymentParameters } from "~/lib/data-access";
+import type { ProviderPaymentParameter } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
 import Table, {
@@ -30,7 +30,7 @@ import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
 
-const columnHelper = createColumnHelper<ProviderPaymentParameters>();
+const columnHelper = createColumnHelper<ProviderPaymentParameter>();
 
 const columns = [
   columnHelper.accessor("name", {
@@ -40,8 +40,8 @@ const columns = [
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.name" />
     ),
   }),
-  columnHelper.accessor("key", {
-    id: "key",
+  columnHelper.accessor("id", {
+    id: "id",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.key" />
@@ -73,13 +73,6 @@ const columns = [
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.interval" />
-    ),
-  }),
-  columnHelper.accessor("seconds", {
-    id: "seconds",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.seconds" />
     ),
   }),
   columnHelper.accessor("active", {

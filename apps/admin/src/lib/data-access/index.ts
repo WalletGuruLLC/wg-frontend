@@ -1232,20 +1232,17 @@ export function useGetProviderQuery(
   });
 }
 
-export interface ProviderPaymentParameters {
-  name: string;
-  description: string;
-  cost: number;
-  frequency: string;
-  interval: number;
-  seconds: number;
-  asset: string;
-  key: string;
+export interface ProviderPaymentParameter {
   id: string;
+  name: string;
   active: boolean;
+  frequency: number;
+  interval: string;
+  cost: number;
+  asset: string;
 }
 interface UseGetProviderPaymentParametersQueryOutput {
-  paymentParameters: ProviderPaymentParameters[];
+  paymentParameters: ProviderPaymentParameter[];
   total: number;
   currentPage: number;
   totalPages: number;
@@ -1262,9 +1259,12 @@ export function useGetProviderPaymentParametersQuery(
     ...options,
     queryKey: ["get-provider-settings", input],
     queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters`,
+          `/api/v1/providers/${input.providerId}/payment-parameters` +
+          "?" +
+          params.toString(),
       );
     },
   });
