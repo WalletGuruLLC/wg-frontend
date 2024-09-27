@@ -41,6 +41,7 @@ import {
   useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
   useGetCountryCodesQuery,
+  useGetDashboardUsersTitleQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
@@ -194,6 +195,8 @@ export default function UsersPage() {
       placeholderData: keepPreviousData,
     },
   );
+  const { data: title, isLoading: isLoadingTitle } =
+    useGetDashboardUsersTitleQuery(undefined);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -245,8 +248,8 @@ export default function UsersPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={values["dashboard.users.title"]}
-        showLoadingIndicator={isLoading}
+        title={`${title ?? ""} ${values["dashboard.users.title"]}`}
+        showLoadingIndicator={isLoading || isLoadingTitle}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">

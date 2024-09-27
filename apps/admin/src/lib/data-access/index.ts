@@ -728,6 +728,35 @@ export function useGetUsersQuery(
   });
 }
 
+export function useGetDashboardUsersTitleQuery(
+  _: undefined,
+  options: UseQueryOptions<string> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-dashboard-users-title"],
+    queryFn: async () => {
+      const userInfo = await customFetch<UseGetAuthedUserInfoQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
+      );
+
+      if (userInfo.type === "PLATFORM") return "Wallet Guru";
+      if (userInfo.type === "PROVIDER") {
+        const providerInfo = await customFetch<{
+          name: string;
+        }>(
+          env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+            "/api/v1/providers/" +
+            userInfo.serviceProviderId,
+        );
+        return providerInfo.name;
+      }
+
+      return "";
+    },
+  });
+}
+
 export function useToggleContactInformationMutation(
   options: UseMutationOptions<
     {
