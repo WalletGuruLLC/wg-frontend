@@ -143,6 +143,29 @@ export const addOrEditServiceProviderValidator = z.object({
   asset: z.string().min(1, "service-providers.add-dialog.asset.error"),
 });
 
+export const addOrEditProviderFeeValidator = z.object({
+  percent: z
+    .string()
+    .min(1, "service-providers.settings.fee.dialog.percent.error")
+    .refine((v) => !isNaN(Number(v)), {
+      message: "service-providers.settings.fee.dialog.percent.error",
+    }),
+  comission: z
+    .string()
+    .min(1, "service-providers.settings.fee.dialog.commission.error")
+    .refine((v) => !isNaN(Number(v)), {
+      message: "service-providers.settings.fee.dialog.commission.error",
+    }),
+  base: z
+    .string()
+    .min(1, "service-providers.settings.fee.dialog.base.error")
+    .refine((v) => !isNaN(Number(v)), {
+      message: "service-providers.settings.fee.dialog.base.error",
+    }),
+  feeId: z.string().optional(),
+  serviceProviderId: z.string().min(1),
+});
+
 export const toggleProviderStatusValidator = z.object({
   providerId: z.string().min(1),
   active: z.boolean(),
