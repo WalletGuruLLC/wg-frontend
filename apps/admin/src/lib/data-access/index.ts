@@ -22,6 +22,7 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  toggleProviderPaymentParameterStatusValidator,
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
@@ -728,6 +729,35 @@ export function useGetUsersQuery(
   });
 }
 
+export function useGetDashboardUsersTitleQuery(
+  _: undefined,
+  options: UseQueryOptions<string> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-dashboard-users-title"],
+    queryFn: async () => {
+      const userInfo = await customFetch<UseGetAuthedUserInfoQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
+      );
+
+      if (userInfo.type === "PLATFORM") return "Wallet Guru";
+      if (userInfo.type === "PROVIDER") {
+        const providerInfo = await customFetch<{
+          name: string;
+        }>(
+          env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+            "/api/v1/providers/" +
+            userInfo.serviceProviderId,
+        );
+        return providerInfo.name;
+      }
+
+      return "";
+    },
+  });
+}
+
 export function useToggleContactInformationMutation(
   options: UseMutationOptions<
     {
@@ -1228,6 +1258,72 @@ export function useGetProviderQuery(
           "/api/v1/providers/" +
           input.providerId,
       );
+    },
+  });
+}
+
+export interface ProviderPaymentParameter {
+  id: string;
+  name: string;
+  active: boolean;
+  frequency: number;
+  interval: string;
+  cost: number;
+  asset: string;
+}
+interface UseGetProviderPaymentParametersQueryOutput {
+  paymentParameters: ProviderPaymentParameter[];
+  total: number;
+  currentPage: number;
+  totalPages: number;
+}
+export function useGetProviderPaymentParametersQuery(
+  input: z.infer<typeof paginationAndSearchValidator> & {
+    providerId: string;
+  },
+  options: UseQueryOptions<
+    UseGetProviderPaymentParametersQueryOutput | undefined
+  > = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-payment-parameters", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseGetProviderPaymentParametersQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/${input.providerId}/payment-parameters` +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export function useToggleProviderPaymentParameterStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleProviderPaymentParameterStatusValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-provider-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/${input.providerId}/payment-parameters/${input.paymentParameterId}/toggle`,
+        {
+          method: "PATCH",
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
