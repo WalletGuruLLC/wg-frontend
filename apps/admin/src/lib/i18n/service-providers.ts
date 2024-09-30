@@ -311,6 +311,26 @@ export const serviceProvidersDict = {
       "Items per page:",
     "service-providers.settings.payment-parameters.table.items-count-separator":
       " of ",
+    "service-providers.settings.payment-parameters.inactive-dialog.title":
+      "Inactive Payment Parameter",
+    "service-providers.settings.payment-parameters.inactive-dialog.description":
+      "By inactivating this Payment Parameter, you will disable specific payment features and functionalities. Do you want to proceed?",
+    "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
+      "Yes",
+    "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
+      "The Payment Parameter has been inactive successfully.",
+    "service-providers.settings.payment-parameters.activate-dialog.title":
+      "Activate Payment Parameter",
+    "service-providers.settings.payment-parameters.activate-dialog.description":
+      "By activating this Payment Parameter, you are enabling specific payment features and functionalities. Do you want to proceed?",
+    "service-providers.settings.payment-parameters.activate-dialog.primary-button":
+      "Yes",
+    "service-providers.settings.payment-parameters.activate-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.activate-dialog.toast.success":
+      "The Payment Parameter has been activated successfully.",
     "service-providers.transactions.title": "Transactions",
   },
   es: {
@@ -635,6 +655,26 @@ export const serviceProvidersDict = {
       "Elementos por página:",
     "service-providers.settings.payment-parameters.table.items-count-separator":
       " de ",
+    "service-providers.settings.payment-parameters.inactive-dialog.title":
+      "Inactivar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.inactive-dialog.description":
+      "Al inactivar este Parámetro de Pago, deshabilitará funciones y características de pago específicas. ¿Desea continuar?",
+    "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
+      "Sí",
+    "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
+      "El Parámetro de Pago ha sido inactivado satisfactoriamente.",
+    "service-providers.settings.payment-parameters.activate-dialog.title":
+      "Activar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.activate-dialog.description":
+      "Al activar este Parámetro de Pago, habilitará funciones y características de pago específicas. ¿Desea continuar?",
+    "service-providers.settings.payment-parameters.activate-dialog.primary-button":
+      "Sí",
+    "service-providers.settings.payment-parameters.activate-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.activate-dialog.toast.success":
+      "El Parámetro de Pago ha sido activado satisfactoriamente.",
     "service-providers.transactions.title": "Transacciones",
   },
 } satisfies I18nDictionary;
