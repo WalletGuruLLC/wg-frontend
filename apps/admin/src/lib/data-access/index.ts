@@ -1261,6 +1261,44 @@ export function useGetProviderQuery(
   });
 }
 
+export interface ProviderPaymentParameter {
+  id: string;
+  name: string;
+  active: boolean;
+  frequency: number;
+  interval: string;
+  cost: number;
+  asset: string;
+}
+interface UseGetProviderPaymentParametersQueryOutput {
+  paymentParameters: ProviderPaymentParameter[];
+  total: number;
+  currentPage: number;
+  totalPages: number;
+}
+export function useGetProviderPaymentParametersQuery(
+  input: z.infer<typeof paginationAndSearchValidator> & {
+    providerId: string;
+  },
+  options: UseQueryOptions<
+    UseGetProviderPaymentParametersQueryOutput | undefined
+  > = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-settings", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseGetProviderPaymentParametersQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/${input.providerId}/payment-parameters` +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
 export function useErrorsQuery(
   input: {
     language: "en" | "us";
