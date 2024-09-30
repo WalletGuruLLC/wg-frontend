@@ -37,6 +37,9 @@ export const serviceProvidersDict = {
       "Enter the Address",
     "service-providers.add-dialog.wallet-address.error":
       "The wallet address is invalid",
+    "service-providers.add-dialog.asset.label": "Asset",
+    "service-providers.add-dialog.asset.placeholder": "Choose the asset",
+    "service-providers.add-dialog.asset.error": "The asset is required",
     "service-providers.add-dialog.company-logo.label": "Company logo",
     "service-providers.add-dialog.company-logo.placeholder":
       "Drop or Upload the Company Logo here",
@@ -77,6 +80,9 @@ export const serviceProvidersDict = {
       "Enter the Address",
     "service-providers.edit-dialog.wallet-address.error":
       "The wallet address is required",
+    "service-providers.edit-dialog.asset.label": "Asset",
+    "service-providers.edit-dialog.asset.placeholder": "Choose the asset",
+    "service-providers.edit-dialog.asset.error": "The asset is required",
     "service-providers.edit-dialog.company-logo.label": "Company logo",
     "service-providers.edit-dialog.company-logo.placeholder":
       "Drop or Upload the Company Logo here",
@@ -257,6 +263,56 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.transactions": "Transactions",
     "service-providers.roles.role.success-toast": "Role Access Levels Updated",
     "service-providers.settings.title": "Settings",
+    "service-providers.settings.sections.payment-parameters":
+      "Payment Parameters",
+    "service-providers.settings.sections.fee": "Set Fee",
+    "service-providers.settings.sections.exchange-rates": "Exchange Rates",
+    "service-providers.settings.payment-parameters.title": "Payment Parameters",
+    "service-providers.settings.payment-parameters.search.placeholder":
+      "Search",
+    "service-providers.settings.payment-parameters.add-button": "Add Parameter",
+    "service-providers.settings.payment-parameters.table.header.name":
+      "Parameter Name",
+    "service-providers.settings.payment-parameters.table.header.key": "Key",
+    "service-providers.settings.payment-parameters.table.header.amount":
+      "Amount",
+    "service-providers.settings.payment-parameters.table.header.assets":
+      "Assets",
+    "service-providers.settings.payment-parameters.table.header.frequency":
+      "Frequency",
+    "service-providers.settings.payment-parameters.table.header.interval":
+      "Interval",
+    "service-providers.settings.payment-parameters.table.header.seconds":
+      "Seconds",
+    "service-providers.settings.payment-parameters.table.header.is-active":
+      "Active",
+    "service-providers.settings.payment-parameters.table.header.actions":
+      "Actions",
+    "service-providers.settings.payment-parameters.table.actions.edit": "Edit",
+    "service-providers.settings.payment-parameters.table.items-label":
+      "Items per page:",
+    "service-providers.settings.payment-parameters.table.items-count-separator":
+      " of ",
+    "service-providers.settings.payment-parameters.inactive-dialog.title":
+      "Inactive Payment Parameter",
+    "service-providers.settings.payment-parameters.inactive-dialog.description":
+      "By inactivating this Payment Parameter, you will disable specific payment features and functionalities. Do you want to proceed?",
+    "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
+      "Yes",
+    "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
+      "The Payment Parameter has been inactive successfully.",
+    "service-providers.settings.payment-parameters.activate-dialog.title":
+      "Activate Payment Parameter",
+    "service-providers.settings.payment-parameters.activate-dialog.description":
+      "By activating this Payment Parameter, you are enabling specific payment features and functionalities. Do you want to proceed?",
+    "service-providers.settings.payment-parameters.activate-dialog.primary-button":
+      "Yes",
+    "service-providers.settings.payment-parameters.activate-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.activate-dialog.toast.success":
+      "The Payment Parameter has been activated successfully.",
     "service-providers.transactions.title": "Transactions",
   },
   es: {
@@ -297,6 +353,9 @@ export const serviceProvidersDict = {
       "Ingrese la dirección",
     "service-providers.add-dialog.wallet-address.error":
       "La dirección de la billetera es invalida",
+    "service-providers.add-dialog.asset.label": "Activo",
+    "service-providers.add-dialog.asset.placeholder": "Elija el activo",
+    "service-providers.add-dialog.asset.error": "El activo es requerido",
     "service-providers.add-dialog.company-logo.label": "Logo de la empresa",
     "service-providers.add-dialog.company-logo.placeholder":
       "Arrastre o suba el logo de la empresa aquí",
@@ -341,6 +400,9 @@ export const serviceProvidersDict = {
       "Ingrese la dirección",
     "service-providers.edit-dialog.wallet-address.error":
       "La dirección de la billetera es requerida",
+    "service-providers.edit-dialog.asset.label": "Activo",
+    "service-providers.edit-dialog.asset.placeholder": "Elija el activo",
+    "service-providers.edit-dialog.asset.error": "El activo es requerido",
     "service-providers.edit-dialog.company-logo.label": "Logo de la empresa",
     "service-providers.edit-dialog.company-logo.placeholder":
       "Arrastre o suba el logo de la empresa aquí",
@@ -526,6 +588,57 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "service-providers.settings.title": "Configuraciones",
+    "service-providers.settings.sections.payment-parameters":
+      "Parámetros de Pago",
+    "service-providers.settings.sections.fee": "Establecer Tarifa",
+    "service-providers.settings.sections.exchange-rates": "Tasas de Cambio",
+    "service-providers.settings.payment-parameters.search.placeholder":
+      "Buscar",
+    "service-providers.settings.payment-parameters.title": "Parámetros de Pago",
+    "service-providers.settings.payment-parameters.add-button":
+      "Agregar Parámetro",
+    "service-providers.settings.payment-parameters.table.header.name": "Nombre",
+    "service-providers.settings.payment-parameters.table.header.key": "Llave",
+    "service-providers.settings.payment-parameters.table.header.amount":
+      "Cantidad",
+    "service-providers.settings.payment-parameters.table.header.assets":
+      "Activos",
+    "service-providers.settings.payment-parameters.table.header.frequency":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.table.header.interval":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.table.header.seconds":
+      "Segundos",
+    "service-providers.settings.payment-parameters.table.header.is-active":
+      "Activo",
+    "service-providers.settings.payment-parameters.table.header.actions":
+      "Acciones",
+    "service-providers.settings.payment-parameters.table.actions.edit":
+      "Editar",
+    "service-providers.settings.payment-parameters.table.items-label":
+      "Elementos por página:",
+    "service-providers.settings.payment-parameters.table.items-count-separator":
+      " de ",
+    "service-providers.settings.payment-parameters.inactive-dialog.title":
+      "Inactivar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.inactive-dialog.description":
+      "Al inactivar este Parámetro de Pago, deshabilitará funciones y características de pago específicas. ¿Desea continuar?",
+    "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
+      "Sí",
+    "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
+      "El Parámetro de Pago ha sido inactivado satisfactoriamente.",
+    "service-providers.settings.payment-parameters.activate-dialog.title":
+      "Activar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.activate-dialog.description":
+      "Al activar este Parámetro de Pago, habilitará funciones y características de pago específicas. ¿Desea continuar?",
+    "service-providers.settings.payment-parameters.activate-dialog.primary-button":
+      "Sí",
+    "service-providers.settings.payment-parameters.activate-dialog.secondary-button":
+      "No",
+    "service-providers.settings.payment-parameters.activate-dialog.toast.success":
+      "El Parámetro de Pago ha sido activado satisfactoriamente.",
     "service-providers.transactions.title": "Transacciones",
   },
 } satisfies I18nDictionary;

@@ -17,7 +17,9 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
+import { keepPreviousData } from "@wg-frontend/data-access";
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { useDebouncedValue } from "@wg-frontend/hooks/use-debounced-value";
 import { cn } from "@wg-frontend/ui";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
@@ -39,6 +41,7 @@ import {
   useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
   useGetCountryCodesQuery,
+  useGetDashboardUsersTitleQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
@@ -162,7 +165,11 @@ const columns = [
 ];
 
 export default function UsersPage() {
-  const loading = useAccessLevelGuard("users");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "users",
+    },
+  });
   const { values } = useI18n();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -174,10 +181,22 @@ export default function UsersPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data, isLoading } = useGetUsersQuery({
-    ...paginationAndSearch,
-    type: "PLATFORM",
-  });
+  const [paginationAndSearchDebounced] = useDebouncedValue(
+    paginationAndSearch,
+    500,
+  );
+
+  const { data, isLoading } = useGetUsersQuery(
+    {
+      ...paginationAndSearchDebounced,
+      type: "PLATFORM",
+    },
+    {
+      placeholderData: keepPreviousData,
+    },
+  );
+  const { data: title, isLoading: isLoadingTitle } =
+    useGetDashboardUsersTitleQuery(undefined);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -185,11 +204,14 @@ export default function UsersPage() {
     data: data?.users ?? [],
     columns: columns
       .filter(
-        (c) => c.id !== "actions" || accessLevelsData?.users.includes("edit"),
+        (c) =>
+          c.id !== "actions" ||
+          accessLevelsData?.general.users.includes("edit"),
       )
       .filter(
         (c) =>
-          c.id !== "active" || accessLevelsData?.users.includes("inactive"),
+          c.id !== "active" ||
+          accessLevelsData?.general.users.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -226,8 +248,8 @@ export default function UsersPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={values["dashboard.users.title"]}
-        showLoadingIndicator={isLoading}
+        title={`${title ?? ""} ${values["dashboard.users.title"]}`}
+        showLoadingIndicator={isLoading || isLoadingTitle}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
@@ -249,7 +271,7 @@ export default function UsersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.users.includes("add") && (
+        {accessLevelsData?.general.users.includes("add") && (
           <AddOrEditDialog
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">

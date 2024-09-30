@@ -20,6 +20,7 @@ import { Button } from "~/components/button";
 import {
   ACCESS_LEVELS_BINARY_ORDERED,
   accessLevelsToNumber,
+  useGetAuthedUserAccessLevelsQuery,
   useGetRoleAccessLevelsQuery,
   useGetRoleQuery,
   useSaveRoleModuleAccessLevelMutation,
@@ -41,6 +42,9 @@ function Actions({
   const { roleId } = useParams<{ roleId: string }>();
   const { value, values } = useI18n("dashboard.roles.role.table.actions.save");
   const errors = useErrors();
+
+  const { data: accessLevelsData } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
 
   const { mutate, isPending } = useSaveRoleModuleAccessLevelMutation({
     onSuccess: () => {
@@ -69,13 +73,14 @@ function Actions({
       >
         {value}
       </Button>
-      {!["serviceProviders", "wallets"].includes(module) && (
-        <Link href={`/dashboard/roles/${roleId}/${module}`}>
-          <Button className="font-normal no-underline" variant="link">
-            {values["dashboard.roles.role.table.actions.details"]}
-          </Button>
-        </Link>
-      )}
+      {accessLevelsData?.general.serviceProviders.includes("view") &&
+        !["serviceProviders", "wallets"].includes(module) && (
+          <Link href={`/dashboard/roles/${roleId}/${module}`}>
+            <Button className="font-normal no-underline" variant="link">
+              {values["dashboard.roles.role.table.actions.details"]}
+            </Button>
+          </Link>
+        )}
     </div>
   );
 }
@@ -219,7 +224,11 @@ const columns = [
 ];
 
 export default function RoleAccessLevels() {
-  const loading = useAccessLevelGuard("roles");
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "roles",
+    },
+  });
   const { values } = useI18n();
   const { roleId } = useParams<{ roleId: string }>();
   const [state, setState] = useState<
