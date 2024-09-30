@@ -22,6 +22,7 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  toggleProviderPaymentParameterStatusValidator,
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
@@ -1286,7 +1287,7 @@ export function useGetProviderPaymentParametersQuery(
 ) {
   return useQuery({
     ...options,
-    queryKey: ["get-provider-settings", input],
+    queryKey: ["get-provider-payment-parameters", input],
     queryFn: () => {
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
@@ -1295,6 +1296,34 @@ export function useGetProviderPaymentParametersQuery(
           "?" +
           params.toString(),
       );
+    },
+  });
+}
+
+export function useToggleProviderPaymentParameterStatusMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleProviderPaymentParameterStatusValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-provider-status"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/${input.providerId}/payment-parameters/${input.paymentParameterId}/toggle`,
+        {
+          method: "PATCH",
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
