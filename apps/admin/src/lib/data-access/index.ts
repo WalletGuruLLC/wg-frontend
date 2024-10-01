@@ -13,6 +13,7 @@ import {
 } from "@wg-frontend/data-access";
 
 import type {
+  addOrEditProviderFeeValidator,
   addOrEditRoleValidator,
   addOrEditServiceProviderValidator,
   addOrEditUserValidator,
@@ -1322,6 +1323,72 @@ export function useToggleProviderPaymentParameterStatusMutation(
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
         queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+interface UseGetProviderFeeQueryOutput {
+  updatedDate: number;
+  createdDate: number;
+  percent: number;
+  serviceProviderId: string;
+  createdBy: string;
+  id: string;
+  updatedBy: string;
+  comission: number;
+  base: number;
+}
+
+export function useGetProviderFeeQuery(
+  input: {
+    providerId: string;
+  },
+  options: UseQueryOptions<UseGetProviderFeeQueryOutput | null> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-fee", input],
+    queryFn: async () => {
+      const fee = await customFetch<UseGetProviderFeeQueryOutput | undefined>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/fee-configurations/${input.providerId}`,
+      );
+      return fee ?? null; // bacause backend does not even include the "data" attribute if no fee is set
+    },
+  });
+}
+
+export function useAddOrEditProviderFeeMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderFeeValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-provider-fee"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/create/fee-configurations/" +
+          input.feeId,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            comission: Number(input.comission),
+            base: Number(input.base),
+            percent: Number(input.percent),
+            serviceProviderId: input.serviceProviderId,
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-fee"],
       });
       options.onSuccess?.(...input);
     },
