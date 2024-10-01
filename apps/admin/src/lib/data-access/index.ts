@@ -1328,6 +1328,42 @@ export function useToggleProviderPaymentParameterStatusMutation(
   });
 }
 
+export interface ExchangeRate {
+  rate: number;
+  currency: string;
+  validUntil: string;
+}
+
+interface UseGetProviderExchangeRatesQueryOutput {
+  exchangeRates: {
+    createDate: unknown;
+    updateDate: unknown;
+    rates: ExchangeRate[];
+    id: string;
+    base: string;
+  };
+}
+export function useGetProviderExchangeRatesQuery(
+  input: {
+    base: string;
+  },
+  options: UseQueryOptions<UseGetProviderExchangeRatesQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-exchange-rates", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseGetProviderExchangeRatesQueryOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets-rafiki/exchange-rates" +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
 export function useErrorsQuery(
   input: {
     language: "en" | "us";
