@@ -313,6 +313,12 @@ export const serviceProvidersDict = {
       "No",
     "service-providers.settings.payment-parameters.activate-dialog.toast.success":
       "The Payment Parameter has been activated successfully.",
+    "service-providers.settings.exchange-rates.title": "Exchange Rates",
+    "service-providers.settings.exchange-rates.table.header.currency":
+      "Currency",
+    "service-providers.settings.exchange-rates.table.header.rate": "Rate",
+    "service-providers.settings.exchange-rates.table.header.valid-until":
+      "Valid Until",
     "service-providers.transactions.title": "Transactions",
   },
   es: {
@@ -639,6 +645,11 @@ export const serviceProvidersDict = {
       "No",
     "service-providers.settings.payment-parameters.activate-dialog.toast.success":
       "El Parámetro de Pago ha sido activado satisfactoriamente.",
+    "service-providers.settings.exchange-rates.title": "Tasas de Cambio",
+    "service-providers.settings.exchange-rates.table.header.currency": "Moneda",
+    "service-providers.settings.exchange-rates.table.header.rate": "Tasa",
+    "service-providers.settings.exchange-rates.table.header.valid-until":
+      "Válido Hasta",
     "service-providers.transactions.title": "Transacciones",
   },
 } satisfies I18nDictionary;
