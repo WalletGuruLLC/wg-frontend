@@ -12,7 +12,7 @@ import Table, {
   ColumnHeader,
 } from "~/app/dashboard/_components/dashboard-table";
 import {
-  useGetProviderExchangeRatesQuery,
+  useGetExchangeRatesQuery,
   useGetProviderQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -62,11 +62,11 @@ export default function ServiceProviderExchangeRatesPage() {
 
   const { data: providerData, isLoading: isLoadingProviderData } =
     useGetProviderQuery({ providerId });
-  const { data: exchangeRatesData, isLoading: isLoadingExchangeRatesData } =
-    useGetProviderExchangeRatesQuery({ base: BASE });
+  const { data: exchangeRates, isLoading: isLoadingExchangeRates } =
+    useGetExchangeRatesQuery({ base: BASE });
 
   const table = useReactTable({
-    data: exchangeRatesData?.exchangeRates.rates ?? [],
+    data: exchangeRates ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -98,7 +98,7 @@ export default function ServiceProviderExchangeRatesPage() {
             isLoading: false,
           },
         ]}
-        showLoadingIndicator={isLoadingExchangeRatesData}
+        showLoadingIndicator={isLoadingExchangeRates}
       />
       <div className="flex-1 overflow-auto">
         <Table table={table} />
