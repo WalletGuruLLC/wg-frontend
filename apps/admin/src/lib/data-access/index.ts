@@ -1395,6 +1395,61 @@ export function useAddOrEditProviderFeeMutation(
   });
 }
 
+export interface ExchangeRate {
+  rate: number;
+  currency: string;
+  validUntil: string;
+}
+
+export function useGetExchangeRatesQuery(
+  input: {
+    base: string;
+  },
+  options: UseQueryOptions<ExchangeRate[]> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-exchange-rates", input],
+    queryFn: async () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+
+      const res = await fetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets-rafiki/exchange-rates" +
+          "?" +
+          params.toString(),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const json = (await res.json()) as {
+        statusCode: number;
+        customCode: string;
+        createDate: number;
+        expirationTime: number;
+        updateDate: number;
+        rates: Record<string, number>;
+        id: string;
+        base: string;
+      };
+
+      if (!res.ok) throw new Error(json.customCode, { cause: json });
+
+      const date = new Date(json.expirationTime);
+
+      return Object.entries(json.rates).map(([currency, rate]) => ({
+        rate,
+        currency,
+        validUntil:
+          date.toLocaleDateString() + " - " + date.toLocaleTimeString(),
+      }));
+    },
+  });
+}
+
 export function useErrorsQuery(
   input: {
     language: "en" | "us";
