@@ -239,6 +239,8 @@ export const dashboardDict = {
     "dashboard.change-password.information-label":
       "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
     "dashboard.change-password.primary-button": "Save",
+    "dashboard.change-password.toast.success":
+      "Your password has been successfully Updated!",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -487,5 +489,7 @@ export const dashboardDict = {
     "dashboard.change-password.information-label":
       "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
     "dashboard.change-password.primary-button": "Guardar",
+    "dashboard.change-password.toast.success":
+      "¡Tu contraseña ha sido actualizada Exitosamente!",
   },
 } satisfies I18nDictionary;

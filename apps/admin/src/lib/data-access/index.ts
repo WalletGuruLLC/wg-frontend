@@ -17,6 +17,7 @@ import type {
   addOrEditServiceProviderValidator,
   addOrEditUserValidator,
   addOrEditWalletValidator,
+  changePasswordValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -366,6 +367,34 @@ export function useForgotPasswordCodeStepMutation(
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           "/api/v1/users/confirm-password",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useChangePasswordMutation(
+  options: UseMutationOptions<
+    z.infer<typeof changePasswordValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["change-password"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/change-password",
         {
           method: "POST",
           body: JSON.stringify(input),
