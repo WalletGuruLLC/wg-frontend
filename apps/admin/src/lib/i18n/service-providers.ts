@@ -267,6 +267,24 @@ export const serviceProvidersDict = {
       "Payment Parameters",
     "service-providers.settings.sections.fee": "Set Fee",
     "service-providers.settings.sections.exchange-rates": "Exchange Rates",
+    "service-providers.settings.fee.dialog.title": "Set Fee",
+    "service-providers.settings.fee.dialog.percent.label": "Percent",
+    "service-providers.settings.fee.dialog.percent.placeholder":
+      "Enter percent",
+    "service-providers.settings.fee.dialog.percent.error":
+      "Percent is required and must be a number",
+    "service-providers.settings.fee.dialog.commission.label": "Commission",
+    "service-providers.settings.fee.dialog.commission.placeholder":
+      "Enter commission",
+    "service-providers.settings.fee.dialog.commission.error":
+      "Commission is required and must be a number",
+    "service-providers.settings.fee.dialog.base.label": "Base",
+    "service-providers.settings.fee.dialog.base.placeholder": "Enter base",
+    "service-providers.settings.fee.dialog.base.error":
+      "Base is required and must be a number",
+    "service-providers.settings.fee.dialog.primary-button": "Save",
+    "service-providers.settings.fee.dialog.toast.success":
+      "Fee has been set successfully",
     "service-providers.settings.payment-parameters.title": "Payment Parameters",
     "service-providers.settings.payment-parameters.search.placeholder":
       "Search",
@@ -592,6 +610,24 @@ export const serviceProvidersDict = {
       "Parámetros de Pago",
     "service-providers.settings.sections.fee": "Establecer Tarifa",
     "service-providers.settings.sections.exchange-rates": "Tasas de Cambio",
+    "service-providers.settings.fee.dialog.title": "Establecer Tarifa",
+    "service-providers.settings.fee.dialog.percent.label": "Porcentaje",
+    "service-providers.settings.fee.dialog.percent.placeholder":
+      "Ingrese el porcentaje",
+    "service-providers.settings.fee.dialog.percent.error":
+      "El porcentaje es requerido y debe ser un número",
+    "service-providers.settings.fee.dialog.commission.label": "Comisión",
+    "service-providers.settings.fee.dialog.commission.placeholder":
+      "Ingrese la comisión",
+    "service-providers.settings.fee.dialog.commission.error":
+      "La comisión es requerida y debe ser un número",
+    "service-providers.settings.fee.dialog.base.label": "Base",
+    "service-providers.settings.fee.dialog.base.placeholder": "Ingrese la base",
+    "service-providers.settings.fee.dialog.base.error":
+      "La base es requerida y debe ser un número",
+    "service-providers.settings.fee.dialog.primary-button": "Guardar",
+    "service-providers.settings.fee.dialog.toast.success":
+      "La tarifa ha sido establecida satisfactoriamente",
     "service-providers.settings.payment-parameters.search.placeholder":
       "Buscar",
     "service-providers.settings.payment-parameters.title": "Parámetros de Pago",
