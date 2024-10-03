@@ -40,6 +40,7 @@ import {
   useAddOrEditUserMutation,
   useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
   useGetCountryCodesQuery,
   useGetDashboardUsersTitleQuery,
   useGetUsersQuery,
@@ -186,10 +187,13 @@ export default function UsersPage() {
     500,
   );
 
+  const { data: dataUser, isLoading: userIsLoading } =
+    useGetAuthedUserInfoQuery(undefined);
+
   const { data, isLoading } = useGetUsersQuery(
     {
       ...paginationAndSearchDebounced,
-      type: "PLATFORM",
+      type: !userIsLoading && dataUser ? dataUser.type : "PLATFORM",
     },
     {
       placeholderData: keepPreviousData,
