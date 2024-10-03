@@ -282,6 +282,7 @@ function ProfileInfoDialog(props: {
           <Link
             href="/dashboard/change-password"
             className="flex items-center justify-between"
+            onClick={toggle}
           >
             <span className="text-lg">
               {values["dashboard.layout.profile-dialog.change-password-button"]}
