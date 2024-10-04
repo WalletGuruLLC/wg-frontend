@@ -5,10 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
+  Loader2,
   LogOut,
   Menu,
   RectangleEllipsis,
   SquareUserRound,
+  Upload,
   User,
   Users,
   Wallet,
@@ -17,15 +19,29 @@ import {
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@wg-frontend/ui/avatar";
-import { Button } from "@wg-frontend/ui/button";
+import { Label } from "@wg-frontend/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@wg-frontend/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 import { Separator } from "@wg-frontend/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { ModuleId } from "~/lib/data-access";
+import { Button } from "~/components/button";
 import Metatags from "~/components/metatags";
+import { SelectTrigger } from "~/components/select";
 import {
   useGetAuthedUserAccessLevelsQuery,
+  useGetCountryCodesQuery,
   useLogoutMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
@@ -157,7 +173,6 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               <SheetTrigger asChild>
                 <Button
                   variant="outline"
-                  size="icon"
                   className="shrink-0 border-none bg-transparent text-white md:hidden"
                 >
                   <Menu className="h-8 w-8" strokeWidth={0.75} />
@@ -214,12 +229,9 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
             <div className="w-full flex-1"></div>
-            <ProfileInfoDialog
+            <ProfilePopover
               trigger={
-                <Button
-                  size="icon"
-                  className="rounded-full border-none bg-transparent"
-                >
+                <Button className="rounded-full border-none bg-transparent">
                   <User strokeWidth={0.75} />
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
@@ -239,7 +251,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
   );
 }
 
-function ProfileInfoDialog(props: {
+interface DialogProps {
   trigger: React.ReactNode;
   user: {
     name: string;
@@ -247,9 +259,13 @@ function ProfileInfoDialog(props: {
     phone: string;
     picture?: string;
   };
-}) {
+}
+
+function ProfileInfoDialog(props: DialogProps) {
   const { values } = useI18n();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
+
+  const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
 
   return (
     <Dialog
@@ -258,39 +274,197 @@ function ProfileInfoDialog(props: {
       trigger={props.trigger}
       ariaDescribedBy="profile-info-dialog"
     >
-      <div className="space-y-10 p-4 text-center">
+      <div className="space-y-4 p-4 text-center">
         <h1 className="text-2xl">
-          {values["dashboard.layout.profile-dialog.title"]}
+          {values["dashboard.layout.profile-dialog.my-info.title"]}
         </h1>
         <div className="flex flex-col items-center">
-          <Avatar className="size-16 rounded-xl">
-            <AvatarImage src={props.user.picture} alt={props.user.name} />
-            <AvatarFallback className="rounded-xl">
-              {props.user.name[0]}
-            </AvatarFallback>
-          </Avatar>
+          <Popover>
+            <PopoverTrigger>
+              <Avatar className="size-16 rounded-xl">
+                <AvatarImage src={props.user.picture} alt={props.user.name} />
+                <AvatarFallback className="rounded-xl">
+                  {props.user.name[0]}
+                </AvatarFallback>
+              </Avatar>
+            </PopoverTrigger>
+            <PopoverContent className="rounded-xl border border-black">
+              <Label
+                htmlFor="picture"
+                className="cursor-pointer items-center justify-center space-y-4"
+              >
+                <p className="text-center text-[#A1A1A1]">
+                  {
+                    values[
+                      "dashboard.layout.profile-dialog.my-info.picture.label"
+                    ]
+                  }
+                </p>
+                <div className="flex flex-row justify-center space-x-4">
+                  <Upload strokeWidth={0.75} className="size-6 self-center" />
+                  <Button
+                    type="button"
+                    className="pointer-events-none font-normal"
+                  >
+                    {
+                      values[
+                        "dashboard.layout.profile-dialog.my-info.picture.button"
+                      ]
+                    }
+                  </Button>
+                </div>
+              </Label>
+              <Input
+                type="file"
+                id="picture"
+                name="picture"
+                accept="image/png, image/jpeg"
+                // onChange={(e) => {
+                //   setFile(e.target.files?.[0]);
+                // }}
+                className="hidden"
+              />
+            </PopoverContent>
+          </Popover>
           <p className="text-sm">{props.user.name}</p>
         </div>
-        <h2 className="text-lg">
-          {values["dashboard.layout.profile-dialog.subtitle"]}
-        </h2>
-        <div>
-          <Input disabled value={props.user.email} />
-          <Input value={props.user.phone} />
+        <div className="space-y-6 text-left">
+          <div>
+            <Label className="text-sm font-normal text-[#A1A1A1]">
+              {values["dashboard.layout.profile-dialog.my-info.email.label"]}
+            </Label>
+            <Input disabled value={props.user.email} />
+          </div>
+          <div>
+            <Label className="text-sm font-normal">
+              {values["dashboard.layout.profile-dialog.my-info.phone.label"]}
+            </Label>
+            <div className="flex flex-row items-center space-x-2">
+              <div>
+                <Select
+                  // onValueChange={(value) => {
+                  //   field.onChange({
+                  //     target: {
+                  //       value:
+                  //         value + "-" + (field.value.split("-")[1] ?? ""),
+                  //     },
+                  //   });
+                  // }}
+                  // defaultValue={field.value.split("-")[0]}
+                  defaultValue="+12"
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "rounded-none border-transparent border-b-black",
+                      // !field.value.split("-")[0] && "text-[#A1A1A1]",
+                    )}
+                  >
+                    <SelectValue className="h-full">
+                      {/* {field.value.split("-")[0]} */}
+                      +12
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {!dataCountryCodes && (
+                      <Loader2 className="animate-spin" strokeWidth={0.75} />
+                    )}
+                    {dataCountryCodes?.map((country) => (
+                      <SelectItem key={country.code} value={country.dial_code}>
+                        {country.name} {country.dial_code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex-1">
+                <Input
+                  required
+                  inputMode="numeric"
+                  // onChange={(e) => {
+                  //   field.onChange({
+                  //     target: {
+                  //       value:
+                  //         (field.value.split("-")[0] ?? "") +
+                  //         "-" +
+                  //         e.target.value,
+                  //     },
+                  //   });
+                  // }}
+                  // value={field.value.split("-")[1] ?? ""}
+                  value="34567890"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <div>
-          <Link
-            href="/dashboard/change-password"
-            className="flex items-center justify-between"
-            onClick={toggle}
+          <Button
+            className="h-12 w-full"
+            // onClick={toggle}
           >
-            <span className="text-lg">
-              {values["dashboard.layout.profile-dialog.change-password-button"]}
-            </span>
-            <RectangleEllipsis className="size-6" strokeWidth={1.35} />
-          </Link>
+            {values["dashboard.layout.profile-dialog.my-info.save"]}
+          </Button>
         </div>
       </div>
     </Dialog>
+  );
+}
+
+function ProfilePopover(props: DialogProps) {
+  const router = useRouter();
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, __, toggle] = useBooleanHandlers();
+
+  const { mutate } = useLogoutMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      localStorage.removeItem("access-token");
+      router.replace("/login");
+    },
+  });
+
+  return (
+    <Popover open={isOpen} onOpenChange={toggle}>
+      <PopoverTrigger asChild>{props.trigger}</PopoverTrigger>
+      <PopoverContent>
+        <div className="space-y-4">
+          <ProfileInfoDialog
+            trigger={
+              <div className="flex cursor-pointer flex-row items-center space-x-2 border-b border-[#736E6E40] p-2">
+                <User className="size-6" strokeWidth={0.75} />
+                <p className="text-lg">
+                  {values["dashboard.layout.profile-dialog.option.my-info"]}
+                </p>
+              </div>
+            }
+            user={props.user}
+          />
+          <Link
+            href="/dashboard/change-password"
+            onClick={toggle}
+            className="flex cursor-pointer flex-row items-center space-x-2 border-b border-[#736E6E40] p-2"
+          >
+            <RectangleEllipsis className="size-6" strokeWidth={0.75} />
+            <p className="text-lg">
+              {values["dashboard.layout.profile-dialog.option.change-password"]}
+            </p>
+          </Link>
+          <div
+            className="flex cursor-pointer flex-row items-center space-x-2 border-b border-[#736E6E40] p-2"
+            onClick={() => void mutate(null)}
+          >
+            <LogOut className="size-6" strokeWidth={0.75} />
+            <p className="text-lg">
+              {values["dashboard.layout.profile-dialog.option.logout"]}
+            </p>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
