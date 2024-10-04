@@ -7,13 +7,16 @@ import {
   Home,
   LogOut,
   Menu,
+  RectangleEllipsis,
   SquareUserRound,
   User,
   Users,
   Wallet,
 } from "lucide-react";
 
+import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
+import { Avatar, AvatarFallback, AvatarImage } from "@wg-frontend/ui/avatar";
 import { Button } from "@wg-frontend/ui/button";
 import { Separator } from "@wg-frontend/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@wg-frontend/ui/sheet";
@@ -28,6 +31,8 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import Dialog from "./_components/dashboard-dialog";
+import { Input } from "./_components/dashboard-input";
 
 const NAV = [
   {
@@ -209,17 +214,83 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
             <div className="w-full flex-1"></div>
-            <Button
-              size="icon"
-              className="rounded-full border-none bg-transparent"
-            >
-              <User strokeWidth={0.75} />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
+            <ProfileInfoDialog
+              trigger={
+                <Button
+                  size="icon"
+                  className="rounded-full border-none bg-transparent"
+                >
+                  <User strokeWidth={0.75} />
+                  <span className="sr-only">Toggle user menu</span>
+                </Button>
+              }
+              user={{
+                name: "John Doe",
+                email: "pack2@asd.com",
+                phone: "+12-34567890",
+                picture: "/images/avatar.png",
+              }}
+            />
           </header>
           <div className="h-full px-4 pt-8">{props.children}</div>
         </div>
       </div>
     </main>
+  );
+}
+
+function ProfileInfoDialog(props: {
+  trigger: React.ReactNode;
+  user: {
+    name: string;
+    email: string;
+    phone: string;
+    picture?: string;
+  };
+}) {
+  const { values } = useI18n();
+  const [isOpen, _, __, toggle] = useBooleanHandlers();
+
+  return (
+    <Dialog
+      isOpen={isOpen}
+      toggleOpen={toggle}
+      trigger={props.trigger}
+      ariaDescribedBy="profile-info-dialog"
+    >
+      <div className="space-y-10 p-4 text-center">
+        <h1 className="text-2xl">
+          {values["dashboard.layout.profile-dialog.title"]}
+        </h1>
+        <div className="flex flex-col items-center">
+          <Avatar className="size-16 rounded-xl">
+            <AvatarImage src={props.user.picture} alt={props.user.name} />
+            <AvatarFallback className="rounded-xl">
+              {props.user.name[0]}
+            </AvatarFallback>
+          </Avatar>
+          <p className="text-sm">{props.user.name}</p>
+        </div>
+        <h2 className="text-lg">
+          {values["dashboard.layout.profile-dialog.subtitle"]}
+        </h2>
+        <div>
+          <Input disabled value={props.user.email} />
+          <Input value={props.user.phone} />
+        </div>
+        <div>
+          <Link
+            href="/dashboard/change-password"
+            className="flex items-center justify-between"
+            onClick={toggle}
+          >
+            <span className="text-lg">
+              {values["dashboard.layout.profile-dialog.change-password-button"]}
+            </span>
+            <RectangleEllipsis className="size-6" strokeWidth={1.35} />
+          </Link>
+        </div>
+      </div>
+    </Dialog>
   );
 }

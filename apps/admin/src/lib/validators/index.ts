@@ -48,6 +48,21 @@ export const forgotPasswordCodeStepValidator = z
     path: ["confirmPassword"],
   });
 
+export const changePasswordValidator = z
+  .object({
+    currentPassword: z.string().min(1),
+    newPassword: validPassword(
+      "dashboard.change-password.form.new-password.error",
+    ),
+    confirmPassword: validPassword(
+      "dashboard.change-password.form.new-password.error",
+    ),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "dashboard.change-password.form.confirm-password.error",
+    path: ["confirmPassword"],
+  });
+
 export const paginationAndSearchValidator = z.object({
   page: z.string().optional(),
   items: z.string().optional(),
