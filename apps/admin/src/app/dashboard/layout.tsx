@@ -41,8 +41,10 @@ import Metatags from "~/components/metatags";
 import { SelectTrigger } from "~/components/select";
 import {
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
   useGetCountryCodesQuery,
   useLogoutMutation,
+  useUploadUserImageMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAuthGuard } from "~/lib/hooks";
@@ -92,6 +94,8 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
   const loading = useAuthGuard();
 
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
+
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -237,10 +241,13 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                 </Button>
               }
               user={{
-                name: "John Doe",
-                email: "pack2@asd.com",
-                phone: "+12-34567890",
-                picture: "/images/avatar.png",
+                name: userData
+                  ? userData.firstName + " " + userData.lastName
+                  : "",
+                email: userData?.email ?? "",
+                phone: userData?.phone ?? "",
+                picture: userData?.picture,
+                id: userData?.id ?? "",
               }}
             />
           </header>
@@ -254,6 +261,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
 interface DialogProps {
   trigger: React.ReactNode;
   user: {
+    id: string;
     name: string;
     email: string;
     phone: string;
@@ -264,8 +272,16 @@ interface DialogProps {
 function ProfileInfoDialog(props: DialogProps) {
   const { values } = useI18n();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
+  const [isOpenPopover, ___, ____, togglePopover] = useBooleanHandlers();
 
   const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
+
+  const { mutate: uploadImage, isPending: isUploadingImage } =
+    useUploadUserImageMutation({
+      onSuccess: () => {
+        togglePopover();
+      },
+    });
 
   return (
     <Dialog
@@ -279,7 +295,7 @@ function ProfileInfoDialog(props: DialogProps) {
           {values["dashboard.layout.profile-dialog.my-info.title"]}
         </h1>
         <div className="flex flex-col items-center">
-          <Popover>
+          <Popover open={isOpenPopover} onOpenChange={togglePopover}>
             <PopoverTrigger>
               <Avatar className="size-16 rounded-xl">
                 <AvatarImage src={props.user.picture} alt={props.user.name} />
@@ -291,12 +307,17 @@ function ProfileInfoDialog(props: DialogProps) {
             <PopoverContent className="rounded-xl border border-black">
               <Label
                 htmlFor="picture"
-                className="cursor-pointer items-center justify-center space-y-4"
+                className={cn(
+                  "cursor-pointer items-center justify-center space-y-4",
+                  isUploadingImage && "pointer-events-none",
+                )}
               >
                 <p className="text-center text-[#A1A1A1]">
                   {
                     values[
-                      "dashboard.layout.profile-dialog.my-info.picture.label"
+                      isUploadingImage
+                        ? "loading"
+                        : "dashboard.layout.profile-dialog.my-info.picture.label"
                     ]
                   }
                 </p>
@@ -317,11 +338,17 @@ function ProfileInfoDialog(props: DialogProps) {
               <Input
                 type="file"
                 id="picture"
+                disabled={isUploadingImage}
                 name="picture"
-                accept="image/png, image/jpeg"
-                // onChange={(e) => {
-                //   setFile(e.target.files?.[0]);
-                // }}
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={(e) => {
+                  const picture = e.target.files?.[0];
+                  if (picture)
+                    uploadImage({
+                      picture,
+                      userId: props.user.id,
+                    });
+                }}
                 className="hidden"
               />
             </PopoverContent>
