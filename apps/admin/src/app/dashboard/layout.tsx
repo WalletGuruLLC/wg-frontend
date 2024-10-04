@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   RectangleEllipsis,
+  Settings,
   SquareUserRound,
   User,
   Users,
@@ -69,6 +70,13 @@ const NAV = [
     path: "/dashboard/roles",
     id: "roles",
     moduleId: "roles" satisfies ModuleId,
+  },
+  {
+    Icon: Settings,
+    i18nTitleKey: "dashboard.layout.nav.settings",
+    path: "/dashboard/settings",
+    id: "settings",
+    moduleId: "settings" satisfies ModuleId,
   },
 ] as const;
 
