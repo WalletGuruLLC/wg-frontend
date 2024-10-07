@@ -94,13 +94,13 @@ export const serviceProvidersDict = {
       "The Service Provider has been edited successfully.",
     "service-providers.edit-dialog.image.toast.success":
       "Service Provider Image Uploaded Successfully",
-    "service-providers.inactive-dialog.title": "Inactivate Service Provider",
+    "service-providers.inactive-dialog.title": "Deactivate Service Provider",
     "service-providers.inactive-dialog.description":
-      "By inactivating this Service Provider, you will revoke the Service Provider's access to certain system privileges. Do you want to proceed?",
+      "By deactivating this service provider, you will revoke the service provider's access to certain system privileges. Do you want to proceed?",
     "service-providers.inactive-dialog.primary-button": "Yes",
     "service-providers.inactive-dialog.secondary-button": "No",
     "service-providers.inactive-dialog.toast.success":
-      "The Service Provider has been inactive successfully.",
+      "The Service Provider has been deactivate successfully.",
     "service-providers.activate-dialog.title": "Activate Service Provider",
     "service-providers.activate-dialog.description":
       "By activating this Service Provider, you are granting the access to specific system privileges. Do you want to proceed?",
@@ -169,9 +169,9 @@ export const serviceProvidersDict = {
     "service-providers.users.edit-dialog.primary-button": "Save",
     "service-providers.users.edit-dialog.toast.success":
       "The User has been edited successfully.",
-    "service-providers.users.inactive-dialog.title": "Inactive user",
+    "service-providers.users.inactive-dialog.title": "Deactivate User",
     "service-providers.users.inactive-dialog.description":
-      "By inactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
+      "By deactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
     "service-providers.users.inactive-dialog.primary-button": "Yes",
     "service-providers.users.inactive-dialog.secondary-button": "No",
     "service-providers.users.inactive-dialog.toast.success":
@@ -221,8 +221,9 @@ export const serviceProvidersDict = {
     "service-providers.roles.edit-dialog.primary-button": "Save",
     "service-providers.roles.edit-dialog.toast.success":
       "The role has been edited successfully.",
-    "service-providers.roles.inactive-dialog.title": "Inactive Role",
-    "service-providers.roles.inactive-dialog.description.first": "Inactiving ",
+    "service-providers.roles.inactive-dialog.title": "Deactivate Role",
+    "service-providers.roles.inactive-dialog.description.first":
+      "Deactivating ",
     "service-providers.roles.inactive-dialog.description.second":
       " Role, will remove their access to all system resources. Proceed?",
     "service-providers.roles.inactive-dialog.primary-button": "Yes",
@@ -250,7 +251,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.table.view.header": "View",
     "service-providers.roles.role.table.add.header": "Add",
     "service-providers.roles.role.table.edit.header": "Edit",
-    "service-providers.roles.role.table.inactive.header": "Inactive",
+    "service-providers.roles.role.table.inactive.header": "Deactivate",
     "service-providers.roles.role.table.all.header": "All",
     "service-providers.roles.role.table.action.header": "Action",
     "service-providers.roles.role.table.actions.save": "Save",
@@ -312,15 +313,15 @@ export const serviceProvidersDict = {
     "service-providers.settings.payment-parameters.table.items-count-separator":
       " of ",
     "service-providers.settings.payment-parameters.inactive-dialog.title":
-      "Inactive Payment Parameter",
+      "Deactivate Payment Parameter",
     "service-providers.settings.payment-parameters.inactive-dialog.description":
-      "By inactivating this Payment Parameter, you will disable specific payment features and functionalities. Do you want to proceed?",
+      "By deactivating this Payment Parameter, you will disable specific payment features and functionalities. Do you want to proceed?",
     "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
       "Yes",
     "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
       "No",
     "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
-      "The Payment Parameter has been inactive successfully.",
+      "The Payment Parameter has been deactivate successfully.",
     "service-providers.settings.payment-parameters.activate-dialog.title":
       "Activate Payment Parameter",
     "service-providers.settings.payment-parameters.activate-dialog.description":
@@ -439,13 +440,13 @@ export const serviceProvidersDict = {
     "service-providers.edit-dialog.image.toast.success":
       "Imagen de Proveedor de servicios subida satisfactoriamente",
     "service-providers.inactive-dialog.title":
-      "Inactivar Proveedor de Servicios",
+      "Desactivar Proveedor de Servicios",
     "service-providers.inactive-dialog.description":
-      "Inactivando este Proveedor de Servicios, quitaras los provilegios de acceso al sistema. ¿Desea proceder?",
+      "Desactivando este Proveedor de Servicios, quitaras los provilegios de acceso al sistema. ¿Desea proceder?",
     "service-providers.inactive-dialog.primary-button": "Si",
     "service-providers.inactive-dialog.secondary-button": "No",
     "service-providers.inactive-dialog.toast.success":
-      "El Proveedor de servicio ha sido inactivado satisfactoriamente.",
+      "El Proveedor de servicio ha sido desactivado satisfactoriamente.",
     "service-providers.activate-dialog.title": "Activar Proveedor de Servicios",
     "service-providers.activate-dialog.description":
       "Activando este Proveedor de Servicios, quitaras los provilegios de acceso al sistema. ¿Desea proceder?",
@@ -518,7 +519,7 @@ export const serviceProvidersDict = {
       "El Usuario se ha editado exitosamente.",
     "service-providers.users.inactive-dialog.title": "Inactivar usuario",
     "service-providers.users.inactive-dialog.description":
-      "Al inactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
+      "Al desactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
     "service-providers.users.inactive-dialog.primary-button": "Sí",
     "service-providers.users.inactive-dialog.secondary-button": "No",
     "service-providers.users.inactive-dialog.toast.success":
@@ -572,7 +573,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.inactive-dialog.description.first":
       "Al desactivar Rol ",
     "service-providers.roles.inactive-dialog.description.second":
-      " se le quitará el acceso a todos los recursos del sistema. ¿Desea continuar?",
+      "Se le quitará el acceso a todos los recursos del sistema. ¿Desea continuar?",
     "service-providers.roles.inactive-dialog.primary-button": "Sí",
     "service-providers.roles.inactive-dialog.secondary-button": "No",
     "service-providers.roles.inactive-dialog.toast.success":
@@ -598,7 +599,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.table.view.header": "Ver",
     "service-providers.roles.role.table.add.header": "Agregar",
     "service-providers.roles.role.table.edit.header": "Editar",
-    "service-providers.roles.role.table.inactive.header": "Inactivar",
+    "service-providers.roles.role.table.inactive.header": "Desactivar",
     "service-providers.roles.role.table.all.header": "Todos",
     "service-providers.roles.role.table.action.header": "Acción",
     "service-providers.roles.role.table.actions.save": "Guardar",
@@ -662,15 +663,15 @@ export const serviceProvidersDict = {
     "service-providers.settings.payment-parameters.table.items-count-separator":
       " de ",
     "service-providers.settings.payment-parameters.inactive-dialog.title":
-      "Inactivar Parámetro de Pago",
+      "Desactivar Parámetro de Pago",
     "service-providers.settings.payment-parameters.inactive-dialog.description":
-      "Al inactivar este Parámetro de Pago, deshabilitará funciones y características de pago específicas. ¿Desea continuar?",
+      "Al desactivar este Parámetro de Pago, deshabilitará funciones y características de pago específicas. ¿Desea continuar?",
     "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
       "Sí",
     "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
       "No",
     "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
-      "El Parámetro de Pago ha sido inactivado satisfactoriamente.",
+      "El Parámetro de Pago ha sido desactivado satisfactoriamente.",
     "service-providers.settings.payment-parameters.activate-dialog.title":
       "Activar Parámetro de Pago",
     "service-providers.settings.payment-parameters.activate-dialog.description":
