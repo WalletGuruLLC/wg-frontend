@@ -2,16 +2,20 @@
 
 import { Card } from "@wg-frontend/ui/card";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
 import { PasswordInput } from "~/app/(auth)/_components/auth-password-input";
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
+import { useChangePasswordMutation } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
 import { changePasswordValidator } from "~/lib/validators";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
 
 export default function ChangePasswordPage() {
   const { values } = useI18n();
+  const errors = useErrors();
 
   const form = useForm({
     schema: changePasswordValidator,
@@ -19,6 +23,18 @@ export default function ChangePasswordPage() {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
+    },
+  });
+
+  const { mutate, isPending } = useChangePasswordMutation({
+    onSuccess: () => {
+      toast.success(values["dashboard.change-password.toast.success"]);
+      form.reset();
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
     },
   });
 
@@ -30,7 +46,7 @@ export default function ChangePasswordPage() {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit((data) => mutate(data))}
             className="space-y-6"
           >
             <FormField
@@ -121,12 +137,13 @@ export default function ChangePasswordPage() {
               {values["dashboard.change-password.information-label"]}
             </p>
             <div className="pt-12">
-              <Button type="submit" disabled={false}>
+              <Button type="submit" disabled={isPending}>
                 {
-                  // values[
-                  //   isPending ? "loading" : "dashboard.change-password.primary-button"
-                  // ]
-                  values["dashboard.change-password.primary-button"]
+                  values[
+                    isPending
+                      ? "loading"
+                      : "dashboard.change-password.primary-button"
+                  ]
                 }
               </Button>
             </div>
