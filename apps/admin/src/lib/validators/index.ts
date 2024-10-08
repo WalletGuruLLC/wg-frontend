@@ -149,6 +149,6 @@ export const toggleProviderStatusValidator = z.object({
 });
 
 export const toggleProviderPaymentParameterStatusValidator = z.object({
-  providerId: z.string().min(1),
+  serviceProviderId: z.string().min(1),
   paymentParameterId: z.string().min(1),
 });
