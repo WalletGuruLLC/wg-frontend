@@ -18,6 +18,7 @@ import { FormMessage } from "~/components/form";
 import {
   useForgotPasswordCodeStepMutation,
   useForgotPasswordEmailStepMutation,
+  useGetAuthedUserInfoQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
@@ -30,7 +31,12 @@ import { Input } from "../_components/auth-input";
 import { PasswordInput } from "../_components/auth-password-input";
 
 export default function ForgotPasswordPage() {
+  const router = useRouter();
+  const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
+
   const [email, setEmail] = useState<string | null>(null);
+
+  if (!isLoading && data) return router.replace("/dashboard");
 
   return email === null ? (
     <EmailStep setEmail={setEmail} />
