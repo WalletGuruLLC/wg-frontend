@@ -18,6 +18,7 @@ import type {
   addOrEditServiceProviderValidator,
   addOrEditUserValidator,
   addOrEditWalletValidator,
+  changePasswordValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -37,6 +38,7 @@ interface UseGetAuthedUserInfoQueryOutput {
   privacyPolicy: boolean;
   mfaEnabled: boolean;
   createDate: unknown;
+  phone: string;
   termsConditions: boolean;
   otp: string;
   sendSms: boolean;
@@ -370,6 +372,73 @@ export function useForgotPasswordCodeStepMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useChangePasswordMutation(
+  options: UseMutationOptions<
+    z.infer<typeof changePasswordValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["change-password"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/change-password",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useUploadUserImageMutation(
+  options: UseMutationOptions<
+    {
+      picture: File;
+      userId: string;
+    },
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["upload-user-image"],
+    mutationFn: (input) => {
+      const formData = new FormData();
+      formData.append("file", input.picture);
+
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/upload-image/" +
+          input.userId,
+        {
+          method: "PUT",
+          body: formData,
+          headers: {
+            "x-no-content-type": "true",
+          },
         },
       );
     },
