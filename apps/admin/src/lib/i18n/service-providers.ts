@@ -339,6 +339,11 @@ export const serviceProvidersDict = {
     "service-providers.settings.exchange-rates.table.header.valid-until":
       "Valid Until",
     "service-providers.transactions.title": "Transactions",
+    "service-providers.settings.sections.key": "Keys",
+    "service-providers.settings.key.dialog.title": "Keys",
+    "service-providers.settings.key.dialog.secretKey.label": "Secret Key: ",
+    "service-providers.settings.key.dialog.publicKey.label": "Public Key: ",
+    "service-providers.settings.key.dialog.no-key": "No key available",
   },
   es: {
     "service-providers.title": "Proveedores de servicios",
@@ -688,5 +693,10 @@ export const serviceProvidersDict = {
     "service-providers.settings.exchange-rates.table.header.valid-until":
       "Válido Hasta",
     "service-providers.transactions.title": "Transacciones",
+    "service-providers.settings.sections.key": "Llaves",
+    "service-providers.settings.key.dialog.title": "Llaves",
+    "service-providers.settings.key.dialog.secretKey.label": "Llave secreta: ",
+    "service-providers.settings.key.dialog.publicKey.label": "Llave pública: ",
+    "service-providers.settings.key.dialog.no-key": "No existe llave",
   },
 } satisfies I18nDictionary;

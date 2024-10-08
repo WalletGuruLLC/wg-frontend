@@ -828,6 +828,38 @@ export function useGetDashboardUsersTitleQuery(
   });
 }
 
+export function useGetProviderKeysQuery(
+  _: undefined,
+  options: UseQueryOptions<{ secretKey: string; publicKey: string }> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-keys"],
+    queryFn: async () => {
+      const userInfo = await customFetch<UseGetAuthedUserInfoQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
+      );
+      if (userInfo.type !== "PROVIDER") {
+        return { secretKey: "", publicKey: "" };
+      } else {
+        const providerInfo = await customFetch<{
+          socketKeys: {
+            secretKey: string;
+            publicKey: string;
+          };
+        }>(
+          env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+            "/api/v1/providers/" +
+            userInfo.serviceProviderId,
+        );
+        return {
+          secretKey: providerInfo.socketKeys.secretKey,
+          publicKey: providerInfo.socketKeys.publicKey,
+        };
+      }
+    },
+  });
+}
 export function useToggleContactInformationMutation(
   options: UseMutationOptions<
     {
