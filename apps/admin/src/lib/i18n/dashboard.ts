@@ -10,6 +10,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.service-providers": "Service Providers",
     "dashboard.layout.nav.users": "Users",
     "dashboard.layout.nav.roles": "Roles",
+    "dashboard.layout.nav.settings": "Settings",
     "dashboard.layout.logout": "Logout",
     "dashboard.layout.profile-dialog.title": "My Profile",
     "dashboard.layout.profile-dialog.subtitle": "My Info",
@@ -220,6 +221,7 @@ export const dashboardDict = {
     "dashboard.wallet-management.table.actions.edit": "Edit",
     "dashboard.wallet-management.table.items-label": "Items per page:",
     "dashboard.wallet-management.table.items-count-separator": " of ",
+    "dashboard.settings.title": "Settings",
     "dashboard.change-password.title": "Change Password",
     "dashboard.change-password.form.current-password.label": "Current Password",
     "dashboard.change-password.form.current-password.placeholder":
@@ -247,6 +249,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.service-providers": "Proveedores de Servicio",
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
+    "dashboard.layout.nav.settings": "Configurar",
     "dashboard.layout.logout": "Cerrar sesión",
     "dashboard.layout.profile-dialog.title": "Mi Perfil",
     "dashboard.layout.profile-dialog.subtitle": "Mi Información",
