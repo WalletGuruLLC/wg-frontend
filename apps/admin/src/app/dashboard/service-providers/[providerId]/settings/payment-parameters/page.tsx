@@ -317,7 +317,7 @@ function SwitchActiveStatusDialog(props: {
   );
 
   const valuesPrexif =
-    `dashboard.users.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `service-providers.settings.payment-parameters.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog
@@ -331,7 +331,7 @@ function SwitchActiveStatusDialog(props: {
           key="yes"
           onClick={() =>
             mutate({
-              providerId,
+              serviceProviderId: providerId,
               paymentParameterId: props.paymentParameter.id,
             })
           }
