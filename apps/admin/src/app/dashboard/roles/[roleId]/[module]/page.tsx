@@ -350,7 +350,7 @@ export default function RoleAccessLevels() {
                 page: "1",
               })
             }
-            value={paginationAndSearch.search}
+            defaultValue={paginationAndSearch.search}
           />
         </div>
       </div>
