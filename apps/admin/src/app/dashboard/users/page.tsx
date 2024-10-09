@@ -17,9 +17,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
-import { keepPreviousData } from "@wg-frontend/data-access";
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
-import { useDebouncedValue } from "@wg-frontend/hooks/use-debounced-value";
 import { cn } from "@wg-frontend/ui";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
 import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
@@ -182,23 +180,13 @@ export default function UsersPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const [paginationAndSearchDebounced] = useDebouncedValue(
-    paginationAndSearch,
-    500,
-  );
-
   const { data: dataUser, isLoading: userIsLoading } =
     useGetAuthedUserInfoQuery(undefined);
 
-  const { data, isLoading } = useGetUsersQuery(
-    {
-      ...paginationAndSearchDebounced,
-      type: !userIsLoading && dataUser ? dataUser.type : "PLATFORM",
-    },
-    {
-      placeholderData: keepPreviousData,
-    },
-  );
+  const { data, isLoading } = useGetUsersQuery({
+    ...paginationAndSearch,
+    type: !userIsLoading && dataUser ? dataUser.type : "PLATFORM",
+  });
   const { data: title, isLoading: isLoadingTitle } =
     useGetDashboardUsersTitleQuery(undefined);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
@@ -268,7 +256,7 @@ export default function UsersPage() {
                 page: "1",
               })
             }
-            value={paginationAndSearch.search}
+            defaultValue={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
