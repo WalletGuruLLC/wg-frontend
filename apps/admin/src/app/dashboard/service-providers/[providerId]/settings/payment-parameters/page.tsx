@@ -65,6 +65,35 @@ import { useI18n } from "~/lib/i18n";
 import { addOrEditProviderPaymentParameterValidator } from "~/lib/validators";
 import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
 
+function Actions({
+  paymentParameter,
+}: {
+  paymentParameter: {
+    id: string;
+    name: string;
+    cost: string;
+    interval: string;
+    frequency: string;
+  };
+}) {
+  const { providerId } = useParams<{ providerId: string }>();
+  const { value } = useI18n(
+    "service-providers.settings.payment-parameters.table.actions.edit",
+  );
+
+  return (
+    <AddOrEditDialog
+      serviceProviderId={providerId}
+      paymentParameter={paymentParameter}
+      trigger={
+        <Button className="font-normal no-underline" variant="link">
+          {value}
+        </Button>
+      }
+    />
+  );
+}
+
 const columnHelper = createColumnHelper<ProviderPaymentParameter>();
 
 const columns = [
@@ -122,15 +151,17 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.actions" />
     ),
-    cell: (_) => "-",
-    // <Actions
-    //   wallet={{
-    //     id: info.row.original.id,
-    //     name: info.row.original.name,
-    //     walletType: info.row.original.walletType,
-    //     walletAddress: info.row.original.walletAddress,
-    //   }}
-    // />
+    cell: (info) => (
+      <Actions
+        paymentParameter={{
+          id: info.row.original.id,
+          name: info.row.original.name,
+          cost: String(info.row.original.cost),
+          interval: info.row.original.interval,
+          frequency: String(info.row.original.frequency),
+        }}
+      />
+    ),
   }),
 ];
 
@@ -327,7 +358,6 @@ function AddOrEditDialog(props: {
   paymentParameter?: {
     id: string;
     name: string;
-    type: string;
     cost: string;
     interval: string;
     frequency: string;
