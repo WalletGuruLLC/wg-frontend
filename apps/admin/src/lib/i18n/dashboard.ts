@@ -507,6 +507,7 @@ export const dashboardDict = {
     "dashboard.change-password.information-label":
       "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
     "dashboard.change-password.primary-button": "Guardar",
+    "dashboard.settings.title": "Configuraciones",
     "dashboard.change-password.toast.success":
       "¡Tu contraseña ha sido actualizada Exitosamente!",
   },
