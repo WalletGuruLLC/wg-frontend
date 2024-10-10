@@ -445,7 +445,6 @@ function ProfileInfoDialog(props: DialogProps) {
 }
 
 function ProfilePopover(props: DialogProps) {
-  const router = useRouter();
   const { values } = useI18n();
   const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
@@ -458,7 +457,7 @@ function ProfilePopover(props: DialogProps) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      router.replace("/login");
+      window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
 
