@@ -231,7 +231,7 @@ export default function ServiceProviderPaymentParametersPage() {
                 page: "1",
               })
             }
-            value={paginationAndSearch.search}
+            defaultValue={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
@@ -317,7 +317,7 @@ function SwitchActiveStatusDialog(props: {
   );
 
   const valuesPrexif =
-    `dashboard.users.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `service-providers.settings.payment-parameters.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog
@@ -331,7 +331,7 @@ function SwitchActiveStatusDialog(props: {
           key="yes"
           onClick={() =>
             mutate({
-              providerId,
+              serviceProviderId: providerId,
               paymentParameterId: props.paymentParameter.id,
             })
           }

@@ -1346,9 +1346,10 @@ export function useToggleProviderPaymentParameterStatusMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters/${input.paymentParameterId}/toggle`,
+          `/api/v1/providers/payment-parameters/${input.paymentParameterId}/toggle`,
         {
           method: "PATCH",
+          body: JSON.stringify(input),
         },
       );
     },
