@@ -10,7 +10,11 @@ export const dashboardDict = {
     "dashboard.layout.nav.service-providers": "Service Providers",
     "dashboard.layout.nav.users": "Users",
     "dashboard.layout.nav.roles": "Roles",
+    "dashboard.layout.nav.settings": "Settings",
     "dashboard.layout.logout": "Logout",
+    "dashboard.layout.profile-dialog.title": "My Profile",
+    "dashboard.layout.profile-dialog.subtitle": "My Info",
+    "dashboard.layout.profile-dialog.change-password-button": "Change Password",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Search",
     "dashboard.roles.add-button": "Add Role",
@@ -217,6 +221,26 @@ export const dashboardDict = {
     "dashboard.wallet-management.table.actions.edit": "Edit",
     "dashboard.wallet-management.table.items-label": "Items per page:",
     "dashboard.wallet-management.table.items-count-separator": " of ",
+    "dashboard.settings.title": "Settings",
+    "dashboard.change-password.title": "Change Password",
+    "dashboard.change-password.form.current-password.label": "Current Password",
+    "dashboard.change-password.form.current-password.placeholder":
+      "Enter your current password",
+    "dashboard.change-password.form.current-password.error":
+      "The current password you entered is incorrect. Please check and try again.",
+    "dashboard.change-password.form.new-password.label": "New Password",
+    "dashboard.change-password.form.new-password.placeholder":
+      "Enter your new password",
+    "dashboard.change-password.form.new-password.error":
+      "The new password you entered doesn't meet our requirements. Please try a different one.",
+    "dashboard.change-password.form.confirm-password.label": "Confirm Password",
+    "dashboard.change-password.form.confirm-password.placeholder":
+      "Confirm your new password",
+    "dashboard.change-password.form.confirm-password.error":
+      "The password you entered doesn't match",
+    "dashboard.change-password.information-label":
+      "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
+    "dashboard.change-password.primary-button": "Save",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -225,7 +249,12 @@ export const dashboardDict = {
     "dashboard.layout.nav.service-providers": "Proveedores de Servicio",
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
+    "dashboard.layout.nav.settings": "Configurar",
     "dashboard.layout.logout": "Cerrar sesión",
+    "dashboard.layout.profile-dialog.title": "Mi Perfil",
+    "dashboard.layout.profile-dialog.subtitle": "Mi Información",
+    "dashboard.layout.profile-dialog.change-password-button":
+      "Cambiar Contraseña",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Buscar",
     "dashboard.roles.add-button": "Crear Rol",
@@ -440,5 +469,27 @@ export const dashboardDict = {
     "dashboard.wallet-management.table.actions.edit": "Editar",
     "dashboard.wallet-management.table.items-label": "Elementos por página:",
     "dashboard.wallet-management.table.items-count-separator": " de ",
+    "dashboard.change-password.title": "Cambiar Contraseña",
+    "dashboard.change-password.form.current-password.label":
+      "Contraseña Actual",
+    "dashboard.change-password.form.current-password.placeholder":
+      "Ingrese su contraseña actual",
+    "dashboard.change-password.form.current-password.error":
+      "La contraseña actual que ingresaste es incorrecta. Por favor verifica e intenta de nuevo.",
+    "dashboard.change-password.form.new-password.label": "Nueva Contraseña",
+    "dashboard.change-password.form.new-password.placeholder":
+      "Ingrese su nueva contraseña",
+    "dashboard.change-password.form.new-password.error":
+      "La nueva contraseña que ingresaste no cumple con nuestros requisitos. Por favor intenta con otra.",
+    "dashboard.change-password.form.confirm-password.label":
+      "Confirmar Contraseña",
+    "dashboard.change-password.form.confirm-password.placeholder":
+      "Confirma tu nueva contraseña",
+    "dashboard.change-password.form.confirm-password.error":
+      "La contraseña que ingresaste no coincide",
+    "dashboard.change-password.information-label":
+      "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
+    "dashboard.change-password.primary-button": "Guardar",
+    "dashboard.settings.title": "Configuraciones",
   },
 } satisfies I18nDictionary;
