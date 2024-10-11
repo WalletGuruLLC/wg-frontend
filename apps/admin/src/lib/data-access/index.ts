@@ -14,6 +14,7 @@ import {
 
 import type {
   addOrEditProviderFeeValidator,
+  addOrEditProviderPaymentParameterValidator,
   addOrEditRoleValidator,
   addOrEditServiceProviderValidator,
   addOrEditUserValidator,
@@ -1312,7 +1313,7 @@ interface UseGetProviderPaymentParametersQueryOutput {
 }
 export function useGetProviderPaymentParametersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
-    providerId: string;
+    serviceProviderId: string;
   },
   options: UseQueryOptions<
     UseGetProviderPaymentParametersQueryOutput | undefined
@@ -1325,7 +1326,7 @@ export function useGetProviderPaymentParametersQuery(
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters` +
+          `/api/v1/providers/list/payment-parameters` +
           "?" +
           params.toString(),
       );
@@ -1358,6 +1359,60 @@ export function useToggleProviderPaymentParameterStatusMutation(
         queryKey: ["get-provider-payment-parameters"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useAddOrEditProviderPaymentParameterMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderPaymentParameterValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-provider-payment-parameter"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/create/payment-parameters",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...input,
+            cost: Number(input.cost),
+            frequency: Number(input.frequency),
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+type UseGetTimeIntervalsQueryOutput = {
+  id: string;
+  seconds: number;
+  name: string;
+}[];
+export function useGetTimeIntervalsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetTimeIntervalsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-time-intervals"],
+    queryFn: () => {
+      return customFetch<UseGetTimeIntervalsQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/list/time-intervals",
+      );
     },
   });
 }

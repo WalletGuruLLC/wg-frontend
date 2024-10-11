@@ -332,6 +332,66 @@ export const serviceProvidersDict = {
       "No",
     "service-providers.settings.payment-parameters.activate-dialog.toast.success":
       "The Payment Parameter has been activated successfully.",
+    "service-providers.settings.payment-parameters.add-dialog.title":
+      "Add Payment Parameter",
+    "service-providers.settings.payment-parameters.add-dialog.name.label":
+      "Name",
+    "service-providers.settings.payment-parameters.add-dialog.name.placeholder":
+      "Parameter Name",
+    "service-providers.settings.payment-parameters.add-dialog.name.error":
+      "Parameter Name is required",
+    "service-providers.settings.payment-parameters.add-dialog.cost.label":
+      "Cost",
+    "service-providers.settings.payment-parameters.add-dialog.cost.placeholder":
+      "Cost",
+    "service-providers.settings.payment-parameters.add-dialog.cost.error":
+      "Cost is required",
+    "service-providers.settings.payment-parameters.add-dialog.interval.label":
+      "Interval",
+    "service-providers.settings.payment-parameters.add-dialog.interval.placeholder":
+      "Interval",
+    "service-providers.settings.payment-parameters.add-dialog.interval.error":
+      "Interval is required",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.label":
+      "Frequency",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.placeholder":
+      "Frequency",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.error":
+      "Frequency is required",
+    "service-providers.settings.payment-parameters.add-dialog.primary-button":
+      "Save",
+    "service-providers.settings.payment-parameters.add-dialog.toast.success":
+      "Payment Parameter Created Successfully",
+    "service-providers.settings.payment-parameters.edit-dialog.title":
+      "Edit Payment Parameter",
+    "service-providers.settings.payment-parameters.edit-dialog.name.label":
+      "Name",
+    "service-providers.settings.payment-parameters.edit-dialog.name.placeholder":
+      "Parameter Name",
+    "service-providers.settings.payment-parameters.edit-dialog.name.error":
+      "Parameter Name is required",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.label":
+      "Cost",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.placeholder":
+      "Cost",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.error":
+      "Cost is required",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.label":
+      "Interval",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.placeholder":
+      "Interval",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.error":
+      "Interval is required",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.label":
+      "Frequency",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.placeholder":
+      "Frequency",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.error":
+      "Frequency is required",
+    "service-providers.settings.payment-parameters.edit-dialog.primary-button":
+      "Save",
+    "service-providers.settings.payment-parameters.edit-dialog.toast.success":
+      "The Payment Parameter has been edited successfully.",
     "service-providers.settings.exchange-rates.title": "Exchange Rates",
     "service-providers.settings.exchange-rates.table.header.currency":
       "Currency",
@@ -687,6 +747,66 @@ export const serviceProvidersDict = {
       "No",
     "service-providers.settings.payment-parameters.activate-dialog.toast.success":
       "El Parámetro de Pago ha sido activado satisfactoriamente.",
+    "service-providers.settings.payment-parameters.add-dialog.title":
+      "Agregar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.add-dialog.name.label":
+      "Nombre",
+    "service-providers.settings.payment-parameters.add-dialog.name.placeholder":
+      "Nombre del Parámetro",
+    "service-providers.settings.payment-parameters.add-dialog.name.error":
+      "El Nombre del Parámetro es requerido",
+    "service-providers.settings.payment-parameters.add-dialog.cost.label":
+      "Costo",
+    "service-providers.settings.payment-parameters.add-dialog.cost.placeholder":
+      "Costo",
+    "service-providers.settings.payment-parameters.add-dialog.cost.error":
+      "El Costo es requerido",
+    "service-providers.settings.payment-parameters.add-dialog.interval.label":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.add-dialog.interval.placeholder":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.add-dialog.interval.error":
+      "Intervalo es requerido",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.label":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.placeholder":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.error":
+      "Frecuencia es requerida",
+    "service-providers.settings.payment-parameters.add-dialog.primary-button":
+      "Guardar",
+    "service-providers.settings.payment-parameters.add-dialog.toast.success":
+      "El Parámetro de Pago ha sido creado satisfactoriamente",
+    "service-providers.settings.payment-parameters.edit-dialog.title":
+      "Editar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.edit-dialog.name.label":
+      "Nombre",
+    "service-providers.settings.payment-parameters.edit-dialog.name.placeholder":
+      "Nombre del Parámetro",
+    "service-providers.settings.payment-parameters.edit-dialog.name.error":
+      "El Nombre del Parámetro es requerido",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.label":
+      "Costo",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.placeholder":
+      "Costo",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.error":
+      "El Costo es requerido",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.label":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.placeholder":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.error":
+      "Intervalo es requerido",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.label":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.placeholder":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.error":
+      "Frecuencia es requerida",
+    "service-providers.settings.payment-parameters.edit-dialog.primary-button":
+      "Guardar",
+    "service-providers.settings.payment-parameters.edit-dialog.toast.success":
+      "El Parámetro de Pago ha sido editado satisfactoriamente.",
     "service-providers.settings.exchange-rates.title": "Tasas de Cambio",
     "service-providers.settings.exchange-rates.table.header.currency": "Moneda",
     "service-providers.settings.exchange-rates.table.header.rate": "Tasa",

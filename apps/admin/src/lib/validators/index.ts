@@ -190,3 +190,40 @@ export const toggleProviderPaymentParameterStatusValidator = z.object({
   serviceProviderId: z.string().min(1),
   paymentParameterId: z.string().min(1),
 });
+
+export const addOrEditProviderPaymentParameterValidator = z.object({
+  name: z
+    .string()
+    .min(
+      1,
+      "service-providers.settings.payment-parameters.add-dialog.name.error",
+    ),
+  cost: z
+    .string()
+    .min(
+      1,
+      "service-providers.settings.payment-parameters.add-dialog.cost.error",
+    )
+    .refine((v) => !isNaN(Number(v)), {
+      message:
+        "service-providers.settings.payment-parameters.add-dialog.cost.error",
+    }),
+  frequency: z
+    .string()
+    .min(
+      1,
+      "service-providers.settings.payment-parameters.add-dialog.frequency.error",
+    )
+    .refine((v) => !isNaN(Number(v)), {
+      message:
+        "service-providers.settings.payment-parameters.add-dialog.frequency.error",
+    }),
+  timeIntervalId: z
+    .string()
+    .min(
+      1,
+      "service-providers.settings.payment-parameters.add-dialog.interval.error",
+    ),
+  serviceProviderId: z.string().min(1),
+  paymentParameterId: z.string().optional(),
+});
