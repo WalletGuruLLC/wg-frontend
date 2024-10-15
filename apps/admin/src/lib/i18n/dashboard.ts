@@ -510,5 +510,6 @@ export const dashboardDict = {
     "dashboard.settings.title": "Configuraciones",
     "dashboard.change-password.toast.success":
       "¡Tu contraseña ha sido actualizada Exitosamente!",
+    "dashboard.settings.title": "Configuraciones",
   },
 } satisfies I18nDictionary;
