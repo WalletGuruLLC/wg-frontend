@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Home,
   LogOut,
@@ -86,7 +86,6 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
 
   const pathname = usePathname();
-  const router = useRouter();
   const { values } = useI18n();
   const errors = useErrors();
 
@@ -98,7 +97,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      router.replace("/login");
+      window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
 
