@@ -546,6 +546,7 @@ function AddOrEditDialog(props: {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        disabled={!!props.provider}
                         placeholder={
                           values[`${valuesPrefix}.wallet-address.placeholder`]
                         }
@@ -553,7 +554,12 @@ function AddOrEditDialog(props: {
                         {...field}
                       />
                     </FormControl>
-                    <p className="overflow-auto text-nowrap text-xs">
+                    <p
+                      className={cn(
+                        "overflow-auto text-nowrap text-xs",
+                        props.provider && "text-gray-400",
+                      )}
+                    >
                       {urlWalletSetting?.value ?? ""}/
                       {form.watch("walletAddress")}
                     </p>
@@ -570,6 +576,7 @@ function AddOrEditDialog(props: {
                       {values[`${valuesPrefix}.asset.label`]}
                     </FormLabel>
                     <Select
+                      disabled={!!props.provider}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
