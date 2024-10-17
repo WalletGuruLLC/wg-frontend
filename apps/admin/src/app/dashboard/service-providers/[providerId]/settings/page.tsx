@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowRightLeft, DollarSign, Shuffle } from "lucide-react";
+import { ArrowRightLeft, DollarSign, KeySquare } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { DialogFooter } from "@wg-frontend/ui/dialog";
@@ -100,15 +100,20 @@ export default function ServiceProviderPage() {
             </div>
           }
         />
-        <Link
-          href={`/dashboard/service-providers/${providerId}/settings/exchange-rates`}
-          className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
-        >
-          <Shuffle size={32} strokeWidth={0.75} color="#3678B1" />
-          <span className="text-2xl">
-            {values["service-providers.settings.sections.exchange-rates"]}
-          </span>
-        </Link>
+        <KeyDialog
+          keyData={{
+            publicKey: String(data?.socketKeys.publicKey),
+            secretKey: String(data?.socketKeys.secretKey),
+          }}
+          trigger={
+            <div className="m-3 flex h-[200px] flex-1 cursor-pointer flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
+              <KeySquare size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["service-providers.settings.sections.key"]}
+              </span>
+            </div>
+          }
+        />
       </div>
     </div>
   );
@@ -276,6 +281,50 @@ function SetFeeDialog(props: {
             </DialogFooter>
           </form>
         </Form>
+      </div>
+    </Dialog>
+  );
+}
+
+function KeyDialog(props: {
+  keyData?: {
+    secretKey: string;
+    publicKey: string;
+  };
+  trigger: ReactNode;
+}) {
+  const { values } = useI18n();
+  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  return (
+    <Dialog
+      isOpen={isOpen}
+      toggleOpen={() => {
+        toggle();
+      }}
+      trigger={props.trigger}
+      ariaDescribedBy="key-dialog"
+    >
+      <div className="space-y-9 p-3">
+        <h1 className="text-3xl font-light">
+          {values[`service-providers.settings.key.dialog.title`]}
+        </h1>
+
+        <div className="columns-sm">
+          <p></p>
+          {values[`service-providers.settings.key.dialog.secretKey.label`]}
+          <span className="mb-4">
+            {props.keyData?.secretKey
+              ? props.keyData.secretKey
+              : values[`service-providers.settings.key.dialog.no-key`]}
+          </span>
+          <br />
+          {values[`service-providers.settings.key.dialog.publicKey.label`]}
+          <span>
+            {props.keyData?.publicKey
+              ? props.keyData.publicKey
+              : values[`service-providers.settings.key.dialog.no-key`]}
+          </span>
+        </div>
       </div>
     </Dialog>
   );
