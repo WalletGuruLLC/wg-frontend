@@ -24,6 +24,7 @@ import { FormMessage } from "~/components/form";
 import {
   useAddOrEditRoleMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetRolesQuery,
   useToggleRoleStatusMutation,
@@ -274,12 +275,14 @@ function AddOrEditDialog(props: {
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
+  const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
+
   const form = useForm({
     schema: addOrEditRoleValidator,
     defaultValues: {
       name: props.role?.name ?? "",
       description: props.role?.description ?? "",
-      providerId: "EMPTY",
+      providerId: dataUser?.serviceProviderId ?? "EMPTY",
       roleId: props.role?.id,
     },
   });
