@@ -1344,6 +1344,10 @@ interface UseGetProviderQueryOutput {
   phone: string;
   active: boolean;
   name: string;
+  socketKeys: {
+    publicKey: string;
+    secretKey: string;
+  };
 }
 
 export function useGetProviderQuery(
