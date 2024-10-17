@@ -22,7 +22,6 @@ import { FormMessage } from "~/components/form";
 import {
   useAddOrEditProviderFeeMutation,
   useGetProviderFeeQuery,
-  useGetProviderKeysQuery,
   useGetProviderQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
@@ -102,6 +101,10 @@ export default function ServiceProviderPage() {
           }
         />
         <KeyDialog
+          keyData={{
+            publicKey: String(data?.socketKeys.publicKey),
+            secretKey: String(data?.socketKeys.secretKey),
+          }}
           trigger={
             <div className="m-3 flex h-[200px] flex-1 cursor-pointer flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
               <KeySquare size={32} strokeWidth={0.75} color="#3678B1" />
@@ -283,12 +286,15 @@ function SetFeeDialog(props: {
   );
 }
 
-function KeyDialog(props: { trigger: ReactNode }) {
+function KeyDialog(props: {
+  keyData?: {
+    secretKey: string;
+    publicKey: string;
+  };
+  trigger: ReactNode;
+}) {
   const { values } = useI18n();
   const [isOpen, _, _close, toggle] = useBooleanHandlers();
-  const { data: keys, isLoading } = useGetProviderKeysQuery(undefined);
-
-  if (isLoading) return null;
   return (
     <Dialog
       isOpen={isOpen}
@@ -307,15 +313,15 @@ function KeyDialog(props: { trigger: ReactNode }) {
           <p></p>
           {values[`service-providers.settings.key.dialog.secretKey.label`]}
           <span className="mb-4">
-            {keys?.secretKey
-              ? keys.secretKey
+            {props.keyData?.secretKey
+              ? props.keyData.secretKey
               : values[`service-providers.settings.key.dialog.no-key`]}
           </span>
           <br />
           {values[`service-providers.settings.key.dialog.publicKey.label`]}
           <span>
-            {keys?.publicKey
-              ? keys.publicKey
+            {props.keyData?.publicKey
+              ? props.keyData.publicKey
               : values[`service-providers.settings.key.dialog.no-key`]}
           </span>
         </div>
