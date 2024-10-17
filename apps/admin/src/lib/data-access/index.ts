@@ -14,10 +14,12 @@ import {
 
 import type {
   addOrEditProviderFeeValidator,
+  addOrEditProviderPaymentParameterValidator,
   addOrEditRoleValidator,
   addOrEditServiceProviderValidator,
   addOrEditUserValidator,
   addOrEditWalletValidator,
+  changePasswordValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -37,6 +39,7 @@ interface UseGetAuthedUserInfoQueryOutput {
   privacyPolicy: boolean;
   mfaEnabled: boolean;
   createDate: unknown;
+  phone: string;
   termsConditions: boolean;
   otp: string;
   sendSms: boolean;
@@ -370,6 +373,73 @@ export function useForgotPasswordCodeStepMutation(
         {
           method: "POST",
           body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useChangePasswordMutation(
+  options: UseMutationOptions<
+    z.infer<typeof changePasswordValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["change-password"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/change-password",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useUploadUserImageMutation(
+  options: UseMutationOptions<
+    {
+      picture: File;
+      userId: string;
+    },
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["upload-user-image"],
+    mutationFn: (input) => {
+      const formData = new FormData();
+      formData.append("file", input.picture);
+
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/upload-image/" +
+          input.userId,
+        {
+          method: "PUT",
+          body: formData,
+          headers: {
+            "x-no-content-type": "true",
+          },
         },
       );
     },
@@ -759,6 +829,38 @@ export function useGetDashboardUsersTitleQuery(
   });
 }
 
+export function useGetProviderKeysQuery(
+  _: undefined,
+  options: UseQueryOptions<{ secretKey: string; publicKey: string }> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-keys"],
+    queryFn: async () => {
+      const userInfo = await customFetch<UseGetAuthedUserInfoQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
+      );
+      if (userInfo.type !== "PROVIDER") {
+        return { secretKey: "", publicKey: "" };
+      } else {
+        const providerInfo = await customFetch<{
+          socketKeys: {
+            secretKey: string;
+            publicKey: string;
+          };
+        }>(
+          env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+            "/api/v1/providers/" +
+            userInfo.serviceProviderId,
+        );
+        return {
+          secretKey: providerInfo.socketKeys.secretKey,
+          publicKey: providerInfo.socketKeys.publicKey,
+        };
+      }
+    },
+  });
+}
 export function useToggleContactInformationMutation(
   options: UseMutationOptions<
     {
@@ -1280,7 +1382,7 @@ interface UseGetProviderPaymentParametersQueryOutput {
 }
 export function useGetProviderPaymentParametersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
-    providerId: string;
+    serviceProviderId: string;
   },
   options: UseQueryOptions<
     UseGetProviderPaymentParametersQueryOutput | undefined
@@ -1293,7 +1395,7 @@ export function useGetProviderPaymentParametersQuery(
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters` +
+          `/api/v1/providers/list/payment-parameters` +
           "?" +
           params.toString(),
       );
@@ -1314,9 +1416,10 @@ export function useToggleProviderPaymentParameterStatusMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters/${input.paymentParameterId}/toggle`,
+          `/api/v1/providers/payment-parameters/${input.paymentParameterId}/toggle`,
         {
           method: "PATCH",
+          body: JSON.stringify(input),
         },
       );
     },
@@ -1325,6 +1428,60 @@ export function useToggleProviderPaymentParameterStatusMutation(
         queryKey: ["get-provider-payment-parameters"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useAddOrEditProviderPaymentParameterMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderPaymentParameterValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-provider-payment-parameter"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/create/payment-parameters",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...input,
+            cost: Number(input.cost),
+            frequency: Number(input.frequency),
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+type UseGetTimeIntervalsQueryOutput = {
+  id: string;
+  seconds: number;
+  name: string;
+}[];
+export function useGetTimeIntervalsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetTimeIntervalsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-time-intervals"],
+    queryFn: () => {
+      return customFetch<UseGetTimeIntervalsQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/list/time-intervals",
+      );
     },
   });
 }
@@ -1391,6 +1548,61 @@ export function useAddOrEditProviderFeeMutation(
         queryKey: ["get-provider-fee"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+
+export interface ExchangeRate {
+  rate: number;
+  currency: string;
+  validUntil: string;
+}
+
+export function useGetExchangeRatesQuery(
+  input: {
+    base: string;
+  },
+  options: UseQueryOptions<ExchangeRate[]> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-exchange-rates", input],
+    queryFn: async () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+
+      const res = await fetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets-rafiki/exchange-rates" +
+          "?" +
+          params.toString(),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const json = (await res.json()) as {
+        statusCode: number;
+        customCode: string;
+        createDate: number;
+        expirationTime: number;
+        updateDate: number;
+        rates: Record<string, number>;
+        id: string;
+        base: string;
+      };
+
+      if (!res.ok) throw new Error(json.customCode, { cause: json });
+
+      const date = new Date(json.expirationTime);
+
+      return Object.entries(json.rates).map(([currency, rate]) => ({
+        rate,
+        currency,
+        validUntil:
+          date.toLocaleDateString() + " - " + date.toLocaleTimeString(),
+      }));
     },
   });
 }

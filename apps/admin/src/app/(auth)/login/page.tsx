@@ -16,7 +16,7 @@ import {
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
-import { useLoginMutation } from "~/lib/data-access";
+import { useGetAuthedUserInfoQuery, useLoginMutation } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
 import { loginValidator } from "~/lib/validators";
@@ -28,6 +28,8 @@ export default function LoginPage() {
   const router = useRouter();
   const { values } = useI18n();
   const errors = useErrors();
+
+  const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
 
   const form = useForm({
     schema: loginValidator,
@@ -44,6 +46,8 @@ export default function LoginPage() {
       router.push("/login/2fa");
     },
   });
+
+  if (!isLoading && data) return router.replace("/dashboard");
 
   return (
     <Form {...form}>
