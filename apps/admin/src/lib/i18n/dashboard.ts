@@ -12,9 +12,16 @@ export const dashboardDict = {
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Settings",
     "dashboard.layout.logout": "Logout",
-    "dashboard.layout.profile-dialog.title": "My Profile",
-    "dashboard.layout.profile-dialog.subtitle": "My Info",
-    "dashboard.layout.profile-dialog.change-password-button": "Change Password",
+    "dashboard.layout.profile-dialog.option.my-info": "My Info",
+    "dashboard.layout.profile-dialog.option.change-password": "Change Password",
+    "dashboard.layout.profile-dialog.option.logout": "Logout",
+    "dashboard.layout.profile-dialog.my-info.title": "My Info",
+    "dashboard.layout.profile-dialog.my-info.email.label": "Email",
+    "dashboard.layout.profile-dialog.my-info.phone.label": "Phone No.",
+    "dashboard.layout.profile-dialog.my-info.save": "Save",
+    "dashboard.layout.profile-dialog.my-info.picture.label":
+      "Drop or Upload your picture",
+    "dashboard.layout.profile-dialog.my-info.picture.button": "Choose a file",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Search",
     "dashboard.roles.add-button": "Add Role",
@@ -41,8 +48,8 @@ export const dashboardDict = {
     "dashboard.roles.edit-dialog.primary-button": "Save",
     "dashboard.roles.edit-dialog.toast.success":
       "The role has been edited successfully.",
-    "dashboard.roles.inactive-dialog.title": "Inactive Role",
-    "dashboard.roles.inactive-dialog.description.first": "Inactiving ",
+    "dashboard.roles.inactive-dialog.title": "Deactivate Role",
+    "dashboard.roles.inactive-dialog.description.first": "Deactiviting ",
     "dashboard.roles.inactive-dialog.description.second":
       " Role, will remove their access to all system resources. Proceed?",
     "dashboard.roles.inactive-dialog.primary-button": "Yes",
@@ -69,7 +76,7 @@ export const dashboardDict = {
     "dashboard.roles.role.table.view.header": "View",
     "dashboard.roles.role.table.add.header": "Add",
     "dashboard.roles.role.table.edit.header": "Edit",
-    "dashboard.roles.role.table.inactive.header": "Inactive",
+    "dashboard.roles.role.table.inactive.header": "Deactivate",
     "dashboard.roles.role.table.all.header": "All",
     "dashboard.roles.role.table.action.header": "Action",
     "dashboard.roles.role.table.actions.save": "Save",
@@ -86,7 +93,7 @@ export const dashboardDict = {
     "dashboard.roles.role.module.table.view.header": "View",
     "dashboard.roles.role.module.table.add.header": "Add",
     "dashboard.roles.role.module.table.edit.header": "Edit",
-    "dashboard.roles.role.module.table.inactive.header": "Inactive",
+    "dashboard.roles.role.module.table.inactive.header": "Deactivate",
     "dashboard.roles.role.module.table.all.header": "All",
     "dashboard.roles.role.module.table.action.header": "Action",
     "dashboard.roles.role.module.table.actions.save": "Save",
@@ -138,7 +145,7 @@ export const dashboardDict = {
     "dashboard.users.edit-dialog.primary-button": "Save",
     "dashboard.users.edit-dialog.toast.success":
       "The User has been edited successfully.",
-    "dashboard.users.inactive-dialog.title": "Inactive user",
+    "dashboard.users.inactive-dialog.title": "Deactivate user",
     "dashboard.users.inactive-dialog.description":
       "By inactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
     "dashboard.users.inactive-dialog.primary-button": "Yes",
@@ -199,9 +206,9 @@ export const dashboardDict = {
     "dashboard.wallet-management.edit-dialog.primary-button": "Save",
     "dashboard.wallet-management.edit-dialog.toast.success":
       "The wallet was Successfully edited",
-    "dashboard.wallet-management.inactive-dialog.title": "Inactive Wallet",
+    "dashboard.wallet-management.inactive-dialog.title": "Deactivate Wallet",
     "dashboard.wallet-management.inactive-dialog.description":
-      "Deactivating the wallet will block transactions and access. Do you want to proceed?",
+      "Are you sure you want to proceed?",
     "dashboard.wallet-management.inactive-dialog.primary-button": "Yes",
     "dashboard.wallet-management.inactive-dialog.secondary-button": "No",
     "dashboard.wallet-management.inactive-dialog.toast.success":
@@ -241,6 +248,8 @@ export const dashboardDict = {
     "dashboard.change-password.information-label":
       "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
     "dashboard.change-password.primary-button": "Save",
+    "dashboard.change-password.toast.success":
+      "Your password has been successfully Updated!",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -251,10 +260,18 @@ export const dashboardDict = {
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
     "dashboard.layout.logout": "Cerrar sesión",
-    "dashboard.layout.profile-dialog.title": "Mi Perfil",
-    "dashboard.layout.profile-dialog.subtitle": "Mi Información",
-    "dashboard.layout.profile-dialog.change-password-button":
+    "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
+    "dashboard.layout.profile-dialog.option.change-password":
       "Cambiar Contraseña",
+    "dashboard.layout.profile-dialog.option.logout": "Cerrar Sesión",
+    "dashboard.layout.profile-dialog.my-info.title": "Mi Información",
+    "dashboard.layout.profile-dialog.my-info.email.label": "Correo",
+    "dashboard.layout.profile-dialog.my-info.phone.label": "Teléfono",
+    "dashboard.layout.profile-dialog.my-info.save": "Guardar",
+    "dashboard.layout.profile-dialog.my-info.picture.label":
+      "Arrastre o Suba su foto",
+    "dashboard.layout.profile-dialog.my-info.picture.button":
+      "Elija un archivo",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Buscar",
     "dashboard.roles.add-button": "Crear Rol",
@@ -309,7 +326,7 @@ export const dashboardDict = {
     "dashboard.roles.role.table.view.header": "Ver",
     "dashboard.roles.role.table.add.header": "Agregar",
     "dashboard.roles.role.table.edit.header": "Editar",
-    "dashboard.roles.role.table.inactive.header": "Inactivar",
+    "dashboard.roles.role.table.inactive.header": "Desactivar",
     "dashboard.roles.role.table.all.header": "Todos",
     "dashboard.roles.role.table.action.header": "Acción",
     "dashboard.roles.role.table.actions.save": "Guardar",
@@ -327,7 +344,7 @@ export const dashboardDict = {
     "dashboard.roles.role.module.table.view.header": "Ver",
     "dashboard.roles.role.module.table.add.header": "Agregar",
     "dashboard.roles.role.module.table.edit.header": "Editar",
-    "dashboard.roles.role.module.table.inactive.header": "Inactivar",
+    "dashboard.roles.role.module.table.inactive.header": "Desactivar",
     "dashboard.roles.role.module.table.all.header": "Todos",
     "dashboard.roles.role.module.table.action.header": "Acción",
     "dashboard.roles.role.module.table.actions.save": "Guardar",
@@ -379,7 +396,7 @@ export const dashboardDict = {
     "dashboard.users.edit-dialog.primary-button": "Guardar",
     "dashboard.users.edit-dialog.toast.success":
       "El Usuario se ha editado exitosamente.",
-    "dashboard.users.inactive-dialog.title": "Inactivar usuario",
+    "dashboard.users.inactive-dialog.title": "Desactivar usuario",
     "dashboard.users.inactive-dialog.description":
       "Al inactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
     "dashboard.users.inactive-dialog.primary-button": "Sí",
@@ -446,16 +463,16 @@ export const dashboardDict = {
     "dashboard.wallet-management.edit-dialog.primary-button": "Guardar",
     "dashboard.wallet-management.edit-dialog.toast.success":
       "La billetera se ha editado exitosamente",
-    "dashboard.wallet-management.inactive-dialog.title": "Billetera Inactiva",
+    "dashboard.wallet-management.inactive-dialog.title": "Desactivar Billetera",
     "dashboard.wallet-management.inactive-dialog.description":
-      "Al desactivar la billetera, se bloquearán las transacciones y el acceso. ¿Desea continuar?",
+      "Va a desactivar la billetera ¿Desea continuar?",
     "dashboard.wallet-management.inactive-dialog.primary-button": "Sí",
     "dashboard.wallet-management.inactive-dialog.secondary-button": "No",
     "dashboard.wallet-management.inactive-dialog.toast.success":
       "La billetera se ha desactivado exitosamente.",
     "dashboard.wallet-management.activate-dialog.title": "Activar Billetera",
     "dashboard.wallet-management.activate-dialog.description":
-      "Al activar la billetera, se restaurarán las transacciones y el acceso. ¿Desea continuar?",
+      "Va a activar la billetera. ¿Desea continuar?",
     "dashboard.wallet-management.activate-dialog.primary-button": "Sí",
     "dashboard.wallet-management.activate-dialog.secondary-button": "No",
     "dashboard.wallet-management.activate-dialog.toast.success":
@@ -491,5 +508,7 @@ export const dashboardDict = {
       "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
     "dashboard.change-password.primary-button": "Guardar",
     "dashboard.settings.title": "Configuraciones",
+    "dashboard.change-password.toast.success":
+      "¡Tu contraseña ha sido actualizada Exitosamente!",
   },
 } satisfies I18nDictionary;
