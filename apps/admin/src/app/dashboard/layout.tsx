@@ -39,6 +39,7 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import type { ModuleId } from "~/lib/data-access";
 import { Button } from "~/components/button";
+import { FormMessage } from "~/components/form";
 import Metatags from "~/components/metatags";
 import { SelectTrigger } from "~/components/select";
 import {
@@ -476,6 +477,7 @@ function ProfileInfoDialog(props: DialogProps) {
                           />
                         </div>
                       </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -484,7 +486,13 @@ function ProfileInfoDialog(props: DialogProps) {
                   type="submit"
                   disabled={isUpdatingPhone}
                 >
-                  {values["dashboard.layout.profile-dialog.my-info.save"]}
+                  {
+                    values[
+                      isUpdatingPhone
+                        ? "loading"
+                        : "dashboard.layout.profile-dialog.my-info.save"
+                    ]
+                  }
                 </Button>
               </form>
             </Form>
