@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Home,
   Loader2,
@@ -19,6 +19,7 @@ import {
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@wg-frontend/ui/avatar";
+import { Form, FormField, useForm } from "@wg-frontend/ui/form";
 import { Label } from "@wg-frontend/ui/label";
 import {
   Popover,
@@ -44,12 +45,15 @@ import {
   useGetAuthedUserInfoQuery,
   useGetCountryCodesQuery,
   useLogoutMutation,
+  useUpdateUserPhoneNumberMutation,
   useUploadUserImageMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAuthGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { updateUserPhoneNumberValidator } from "~/lib/validators";
 import Dialog from "./_components/dashboard-dialog";
+import { FormItem, FormLabel } from "./_components/dashboard-form";
 import { Input } from "./_components/dashboard-input";
 
 const NAV = [
@@ -98,7 +102,6 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
 
   const pathname = usePathname();
-  const router = useRouter();
   const { values } = useI18n();
   const errors = useErrors();
 
@@ -110,7 +113,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      router.replace("/login");
+      window.location.href = "/login";
     },
   });
 
@@ -270,11 +273,35 @@ interface DialogProps {
 }
 
 function ProfileInfoDialog(props: DialogProps) {
+  const errors = useErrors();
   const { values } = useI18n();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
   const [isOpenPopover, ___, ____, togglePopover] = useBooleanHandlers();
 
   const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
+
+  const form = useForm({
+    schema: updateUserPhoneNumberValidator,
+    defaultValues: {
+      phone: props.user.phone,
+      userId: props.user.id,
+    },
+  });
+
+  const { mutate: updatePhone, isPending: isUpdatingPhone } =
+    useUpdateUserPhoneNumberMutation({
+      onSuccess: () => {
+        toast.success(
+          values["dashboard.layout.profile-dialog.my-info.toast.success"],
+        );
+        close();
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    });
 
   const { mutate: uploadImage, isPending: isUploadingImage } =
     useUploadUserImageMutation({
@@ -363,74 +390,97 @@ function ProfileInfoDialog(props: DialogProps) {
             <Input disabled value={props.user.email} />
           </div>
           <div>
-            <Label className="text-sm font-normal">
-              {values["dashboard.layout.profile-dialog.my-info.phone.label"]}
-            </Label>
-            <div className="flex flex-row items-center space-x-2">
-              <div>
-                <Select
-                  // onValueChange={(value) => {
-                  //   field.onChange({
-                  //     target: {
-                  //       value:
-                  //         value + "-" + (field.value.split("-")[1] ?? ""),
-                  //     },
-                  //   });
-                  // }}
-                  // defaultValue={field.value.split("-")[0]}
-                  defaultValue="+12"
-                >
-                  <SelectTrigger
-                    className={cn(
-                      "rounded-none border-transparent border-b-black",
-                      // !field.value.split("-")[0] && "text-[#A1A1A1]",
-                    )}
-                  >
-                    <SelectValue className="h-full">
-                      {/* {field.value.split("-")[0]} */}
-                      +12
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {!dataCountryCodes && (
-                      <Loader2 className="animate-spin" strokeWidth={0.75} />
-                    )}
-                    {dataCountryCodes?.map((country) => (
-                      <SelectItem key={country.code} value={country.dial_code}>
-                        {country.name} {country.dial_code}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex-1">
-                <Input
-                  required
-                  inputMode="numeric"
-                  // onChange={(e) => {
-                  //   field.onChange({
-                  //     target: {
-                  //       value:
-                  //         (field.value.split("-")[0] ?? "") +
-                  //         "-" +
-                  //         e.target.value,
-                  //     },
-                  //   });
-                  // }}
-                  // value={field.value.split("-")[1] ?? ""}
-                  value="34567890"
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit((data) => updatePhone(data))}
+                className="space-y-9"
+              >
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-normal">
+                        {
+                          values[
+                            "dashboard.layout.profile-dialog.my-info.phone.label"
+                          ]
+                        }
+                      </FormLabel>
+                      <div className="flex flex-row items-center space-x-2">
+                        <div>
+                          <Select
+                            onValueChange={(value) => {
+                              field.onChange({
+                                target: {
+                                  value:
+                                    value +
+                                    "-" +
+                                    (field.value.split("-")[1] ?? ""),
+                                },
+                              });
+                            }}
+                            defaultValue={field.value.split("-")[0]}
+                          >
+                            <SelectTrigger
+                              className={cn(
+                                "rounded-none border-transparent border-b-black",
+                                !field.value.split("-")[0] && "text-[#A1A1A1]",
+                              )}
+                            >
+                              <SelectValue className="h-full">
+                                {field.value.split("-")[0]}
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {!dataCountryCodes && (
+                                <Loader2
+                                  className="animate-spin"
+                                  strokeWidth={0.75}
+                                />
+                              )}
+                              {dataCountryCodes?.map((country) => (
+                                <SelectItem
+                                  key={country.code}
+                                  value={country.dial_code}
+                                >
+                                  {country.name} {country.dial_code}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex-1">
+                          <Input
+                            required
+                            inputMode="numeric"
+                            onChange={(e) => {
+                              field.onChange({
+                                target: {
+                                  value:
+                                    (field.value.split("-")[0] ?? "") +
+                                    "-" +
+                                    e.target.value,
+                                },
+                              });
+                            }}
+                            value={field.value.split("-")[1] ?? ""}
+                          />
+                        </div>
+                      </div>
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </div>
+                <Button
+                  className="h-12 w-full"
+                  type="submit"
+                  disabled={isUpdatingPhone}
+                >
+                  {values["dashboard.layout.profile-dialog.my-info.save"]}
+                </Button>
+              </form>
+            </Form>
           </div>
-        </div>
-        <div>
-          <Button
-            className="h-12 w-full"
-            // onClick={toggle}
-          >
-            {values["dashboard.layout.profile-dialog.my-info.save"]}
-          </Button>
         </div>
       </div>
     </Dialog>
@@ -438,7 +488,6 @@ function ProfileInfoDialog(props: DialogProps) {
 }
 
 function ProfilePopover(props: DialogProps) {
-  const router = useRouter();
   const { values } = useI18n();
   const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
@@ -451,7 +500,7 @@ function ProfilePopover(props: DialogProps) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      router.replace("/login");
+      window.location.href = "/login";
     },
   });
 
