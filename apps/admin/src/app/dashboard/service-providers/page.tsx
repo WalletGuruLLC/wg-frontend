@@ -129,7 +129,7 @@ export default function ServiceProvidersPage() {
                 page: "1",
               })
             }
-            value={paginationAndSearch.search}
+            defaultValue={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
@@ -546,6 +546,7 @@ function AddOrEditDialog(props: {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        disabled={!!props.provider}
                         placeholder={
                           values[`${valuesPrefix}.wallet-address.placeholder`]
                         }
@@ -553,7 +554,12 @@ function AddOrEditDialog(props: {
                         {...field}
                       />
                     </FormControl>
-                    <p className="overflow-auto text-nowrap text-xs">
+                    <p
+                      className={cn(
+                        "overflow-auto text-nowrap text-xs",
+                        props.provider && "text-gray-400",
+                      )}
+                    >
                       {urlWalletSetting?.value ?? ""}/
                       {form.watch("walletAddress")}
                     </p>
@@ -570,6 +576,7 @@ function AddOrEditDialog(props: {
                       {values[`${valuesPrefix}.asset.label`]}
                     </FormLabel>
                     <Select
+                      disabled={!!props.provider}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >

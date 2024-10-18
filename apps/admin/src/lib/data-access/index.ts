@@ -14,6 +14,8 @@ import {
 
 import { env } from "~/env";
 import type {
+  addOrEditProviderFeeValidator,
+  addOrEditProviderPaymentParameterValidator,
   addOrEditRoleValidator,
   addOrEditServiceProviderValidator,
   addOrEditUserValidator,
@@ -857,6 +859,38 @@ export function useGetDashboardUsersTitleQuery(
   });
 }
 
+export function useGetProviderKeysQuery(
+  _: undefined,
+  options: UseQueryOptions<{ secretKey: string; publicKey: string }> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-keys"],
+    queryFn: async () => {
+      const userInfo = await customFetch<UseGetAuthedUserInfoQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
+      );
+      if (userInfo.type !== "PROVIDER") {
+        return { secretKey: "", publicKey: "" };
+      } else {
+        const providerInfo = await customFetch<{
+          socketKeys: {
+            secretKey: string;
+            publicKey: string;
+          };
+        }>(
+          env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+            "/api/v1/providers/" +
+            userInfo.serviceProviderId,
+        );
+        return {
+          secretKey: providerInfo.socketKeys.secretKey,
+          publicKey: providerInfo.socketKeys.publicKey,
+        };
+      }
+    },
+  });
+}
 export function useToggleContactInformationMutation(
   options: UseMutationOptions<
     {
@@ -1340,6 +1374,10 @@ interface UseGetProviderQueryOutput {
   phone: string;
   active: boolean;
   name: string;
+  socketKeys: {
+    publicKey: string;
+    secretKey: string;
+  };
 }
 
 export function useGetProviderQuery(
@@ -1378,7 +1416,7 @@ interface UseGetProviderPaymentParametersQueryOutput {
 }
 export function useGetProviderPaymentParametersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
-    providerId: string;
+    serviceProviderId: string;
   },
   options: UseQueryOptions<
     UseGetProviderPaymentParametersQueryOutput | undefined
@@ -1391,7 +1429,7 @@ export function useGetProviderPaymentParametersQuery(
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters` +
+          `/api/v1/providers/list/payment-parameters` +
           "?" +
           params.toString(),
       );
@@ -1412,9 +1450,10 @@ export function useToggleProviderPaymentParameterStatusMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/${input.providerId}/payment-parameters/${input.paymentParameterId}/toggle`,
+          `/api/v1/providers/payment-parameters/${input.paymentParameterId}/toggle`,
         {
           method: "PATCH",
+          body: JSON.stringify(input),
         },
       );
     },
@@ -1423,6 +1462,181 @@ export function useToggleProviderPaymentParameterStatusMutation(
         queryKey: ["get-provider-payment-parameters"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useAddOrEditProviderPaymentParameterMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderPaymentParameterValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-provider-payment-parameter"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/create/payment-parameters",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...input,
+            cost: Number(input.cost),
+            frequency: Number(input.frequency),
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+type UseGetTimeIntervalsQueryOutput = {
+  id: string;
+  seconds: number;
+  name: string;
+}[];
+export function useGetTimeIntervalsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetTimeIntervalsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-time-intervals"],
+    queryFn: () => {
+      return customFetch<UseGetTimeIntervalsQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/list/time-intervals",
+      );
+    },
+  });
+}
+
+interface UseGetProviderFeeQueryOutput {
+  updatedDate: number;
+  createdDate: number;
+  percent: number;
+  serviceProviderId: string;
+  createdBy: string;
+  id: string;
+  updatedBy: string;
+  comission: number;
+  base: number;
+}
+
+export function useGetProviderFeeQuery(
+  input: {
+    providerId: string;
+  },
+  options: UseQueryOptions<UseGetProviderFeeQueryOutput | null> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-provider-fee", input],
+    queryFn: async () => {
+      const fee = await customFetch<UseGetProviderFeeQueryOutput | undefined>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/providers/fee-configurations/${input.providerId}`,
+      );
+      return fee ?? null; // bacause backend does not even include the "data" attribute if no fee is set
+    },
+  });
+}
+
+export function useAddOrEditProviderFeeMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderFeeValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-or-edit-provider-fee"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/providers/create/fee-configurations/" +
+          input.feeId,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            comission: Number(input.comission),
+            base: Number(input.base),
+            percent: Number(input.percent),
+            serviceProviderId: input.serviceProviderId,
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-fee"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export interface ExchangeRate {
+  rate: number;
+  currency: string;
+  validUntil: string;
+}
+
+export function useGetExchangeRatesQuery(
+  input: {
+    base: string;
+  },
+  options: UseQueryOptions<ExchangeRate[]> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-exchange-rates", input],
+    queryFn: async () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+
+      const res = await fetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/wallets-rafiki/exchange-rates" +
+          "?" +
+          params.toString(),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const json = (await res.json()) as {
+        statusCode: number;
+        customCode: string;
+        createDate: number;
+        expirationTime: number;
+        updateDate: number;
+        rates: Record<string, number>;
+        id: string;
+        base: string;
+      };
+
+      if (!res.ok) throw new Error(json.customCode, { cause: json });
+
+      const date = new Date(json.expirationTime);
+
+      return Object.entries(json.rates).map(([currency, rate]) => ({
+        rate,
+        currency,
+        validUntil:
+          date.toLocaleDateString() + " - " + date.toLocaleTimeString(),
+      }));
     },
   });
 }

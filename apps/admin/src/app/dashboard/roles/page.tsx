@@ -24,6 +24,8 @@ import { FormMessage } from "~/components/form";
 import {
   useAddOrEditRoleMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
+  useGetDashboardUsersTitleQuery,
   useGetRolesQuery,
   useToggleRoleStatusMutation,
 } from "~/lib/data-access";
@@ -134,6 +136,8 @@ export default function RolesPage() {
   };
 
   const { data, isLoading } = useGetRolesQuery(paginationAndSearch);
+  const { data: title, isLoading: isLoadingTitle } =
+    useGetDashboardUsersTitleQuery(undefined);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -185,8 +189,8 @@ export default function RolesPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={values["dashboard.roles.title"]}
-        showLoadingIndicator={isLoading}
+        title={`${title ?? ""} ${values["dashboard.roles.title"]}`}
+        showLoadingIndicator={isLoading || isLoadingTitle}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative flex-1">
@@ -201,7 +205,7 @@ export default function RolesPage() {
                 page: "1",
               })
             }
-            value={paginationAndSearch.search}
+            defaultValue={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
@@ -271,12 +275,14 @@ function AddOrEditDialog(props: {
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
+  const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
+
   const form = useForm({
     schema: addOrEditRoleValidator,
     defaultValues: {
       name: props.role?.name ?? "",
       description: props.role?.description ?? "",
-      providerId: "EMPTY",
+      providerId: dataUser?.serviceProviderId ?? "EMPTY",
       roleId: props.role?.id,
     },
   });

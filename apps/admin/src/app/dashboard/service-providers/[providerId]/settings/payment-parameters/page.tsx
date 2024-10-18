@@ -1,6 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { z } from "zod";
+import { useEffect } from "react";
 import {
   useParams,
   usePathname,
@@ -12,14 +14,34 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { CircleCheck, Search, TriangleAlert } from "lucide-react";
+import {
+  CircleCheck,
+  Loader2,
+  PlusCircle,
+  Search,
+  TriangleAlert,
+} from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+import { cn } from "@wg-frontend/ui";
+import { DialogFooter } from "@wg-frontend/ui/dialog";
+import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { ProviderPaymentParameter } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import ConfirmDialog from "~/app/dashboard/_components/dashboard-confirm-dialog";
+import Dialog from "~/app/dashboard/_components/dashboard-dialog";
+import {
+  FormItem,
+  FormLabel,
+} from "~/app/dashboard/_components/dashboard-form";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
 import { Switch } from "~/app/dashboard/_components/dashboard-switch";
 import Table, {
@@ -27,16 +49,50 @@ import Table, {
   PaginationFooter,
 } from "~/app/dashboard/_components/dashboard-table";
 import { Button } from "~/components/button";
+import { FormMessage } from "~/components/form";
+import { SelectTrigger } from "~/components/select";
 import {
+  useAddOrEditProviderPaymentParameterMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetProviderPaymentParametersQuery,
   useGetProviderQuery,
+  useGetTimeIntervalsQuery,
   useToggleProviderPaymentParameterStatusMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { addOrEditProviderPaymentParameterValidator } from "~/lib/validators";
 import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
+
+function Actions({
+  paymentParameter,
+}: {
+  paymentParameter: {
+    id: string;
+    name: string;
+    cost: string;
+    interval: string;
+    frequency: string;
+  };
+}) {
+  const { providerId } = useParams<{ providerId: string }>();
+  const { value } = useI18n(
+    "service-providers.settings.payment-parameters.table.actions.edit",
+  );
+
+  return (
+    <AddOrEditDialog
+      serviceProviderId={providerId}
+      paymentParameter={paymentParameter}
+      trigger={
+        <Button className="font-normal no-underline" variant="link">
+          {value}
+        </Button>
+      }
+    />
+  );
+}
 
 const columnHelper = createColumnHelper<ProviderPaymentParameter>();
 
@@ -95,15 +151,17 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.actions" />
     ),
-    cell: (_) => "-",
-    // <Actions
-    //   wallet={{
-    //     id: info.row.original.id,
-    //     name: info.row.original.name,
-    //     walletType: info.row.original.walletType,
-    //     walletAddress: info.row.original.walletAddress,
-    //   }}
-    // />
+    cell: (info) => (
+      <Actions
+        paymentParameter={{
+          id: info.row.original.id,
+          name: info.row.original.name,
+          cost: String(info.row.original.cost),
+          interval: info.row.original.interval,
+          frequency: String(info.row.original.frequency),
+        }}
+      />
+    ),
   }),
 ];
 
@@ -132,7 +190,7 @@ export default function ServiceProviderPaymentParametersPage() {
 
   const { data, isLoading } = useGetProviderPaymentParametersQuery({
     ...paginationAndSearch,
-    providerId,
+    serviceProviderId: providerId,
   });
   const { data: providerData, isLoading: isLoadingProviderData } =
     useGetProviderQuery({ providerId });
@@ -231,25 +289,30 @@ export default function ServiceProviderPaymentParametersPage() {
                 page: "1",
               })
             }
-            value={paginationAndSearch.search}
+            defaultValue={paginationAndSearch.search}
           />
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
             strokeWidth={0.75}
           />
         </div>
-        {/* {accessLevelsData?.providers.wallets.includes("add") && (
+        {accessLevelsData?.providers[providerId]?.settings.includes("add") && (
           <AddOrEditDialog
+            serviceProviderId={providerId}
             trigger={
               <Button className="flex h-max flex-row items-center space-x-2">
                 <p className="flex-1 text-lg font-light">
-                  {values["dashboard.wallet-management.add-button"]}
+                  {
+                    values[
+                      "service-providers.settings.payment-parameters.add-button"
+                    ]
+                  }
                 </p>
                 <PlusCircle strokeWidth={0.75} className="size-6" />
               </Button>
             }
           />
-        )} */}
+        )}
       </div>
       <div className="flex-1 overflow-auto">
         <Table table={table} />
@@ -291,6 +354,210 @@ export default function ServiceProviderPaymentParametersPage() {
   );
 }
 
+function AddOrEditDialog(props: {
+  paymentParameter?: {
+    id: string;
+    name: string;
+    cost: string;
+    interval: string;
+    frequency: string;
+  };
+  serviceProviderId: string;
+  trigger: ReactNode;
+}) {
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+
+  const form = useForm({
+    schema: addOrEditProviderPaymentParameterValidator,
+    defaultValues: {
+      name: props.paymentParameter?.name ?? "",
+      cost: props.paymentParameter?.cost ?? "",
+      timeIntervalId: props.paymentParameter?.interval ?? "",
+      frequency: props.paymentParameter?.frequency ?? "",
+      serviceProviderId: props.serviceProviderId,
+      paymentParameterId: props.paymentParameter?.id,
+    },
+  });
+
+  const { data: timeInvervals } = useGetTimeIntervalsQuery(undefined);
+
+  const { mutate, isPending } = useAddOrEditProviderPaymentParameterMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(values[`${valuesPrefix}.toast.success` as const]);
+      close();
+      form.reset();
+    },
+  });
+
+  const valuesPrefix =
+    `service-providers.settings.payment-parameters.${props.paymentParameter ? "edit" : "add"}-dialog` as const;
+
+  // This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
+  useEffect(() => {
+    if (props.paymentParameter) {
+      form.reset({
+        name: props.paymentParameter.name,
+        cost: props.paymentParameter.cost,
+        timeIntervalId: props.paymentParameter.interval,
+        frequency: props.paymentParameter.frequency,
+        serviceProviderId: props.serviceProviderId,
+        paymentParameterId: props.paymentParameter.id,
+      });
+    }
+  }, [props.paymentParameter, form, props.serviceProviderId]);
+
+  return (
+    <Dialog
+      key={props.paymentParameter?.id ?? "add"}
+      isOpen={isOpen}
+      toggleOpen={() => {
+        form.reset();
+        toggle();
+      }}
+      trigger={props.trigger}
+      ariaDescribedBy="add-or-edit-dialog"
+    >
+      <div className="space-y-9">
+        <h1 className="text-3xl font-light">
+          {values[`${valuesPrefix}.title`]}
+        </h1>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((data) => mutate(data))}
+            className="space-y-9"
+          >
+            <div className="flex space-x-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>
+                      {values[`${valuesPrefix}.name.label`]}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={values[`${valuesPrefix}.name.placeholder`]}
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cost"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>
+                      {values[`${valuesPrefix}.cost.label`]}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={values[`${valuesPrefix}.cost.placeholder`]}
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex space-x-2">
+              <FormField
+                control={form.control}
+                name="timeIntervalId"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>
+                      {values[`${valuesPrefix}.interval.label`]}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-none border-transparent border-b-black",
+                            !field.value && "text-[#A1A1A1]",
+                          )}
+                        >
+                          <SelectValue
+                            placeholder={
+                              values[`${valuesPrefix}.interval.placeholder`]
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {!timeInvervals && (
+                          <Loader2
+                            className="animate-spin"
+                            strokeWidth={0.75}
+                          />
+                        )}
+                        {timeInvervals?.map((ti) => (
+                          <SelectItem key={ti.id} value={ti.id}>
+                            {ti.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="frequency"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>
+                      {values[`${valuesPrefix}.frequency.label`]}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={
+                          values[`${valuesPrefix}.frequency.placeholder`]
+                        }
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="pt-9">
+              <Button className="w-full" type="submit" disabled={isPending}>
+                {
+                  values[
+                    isPending
+                      ? "loading"
+                      : (`${valuesPrefix}.primary-button` as const)
+                  ]
+                }
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </div>
+    </Dialog>
+  );
+}
+
 function SwitchActiveStatusDialog(props: {
   paymentParameter: {
     id: string;
@@ -317,7 +584,7 @@ function SwitchActiveStatusDialog(props: {
   );
 
   const valuesPrexif =
-    `dashboard.users.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `service-providers.settings.payment-parameters.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog
@@ -331,7 +598,7 @@ function SwitchActiveStatusDialog(props: {
           key="yes"
           onClick={() =>
             mutate({
-              providerId,
+              serviceProviderId: providerId,
               paymentParameterId: props.paymentParameter.id,
             })
           }

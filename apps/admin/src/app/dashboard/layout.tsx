@@ -9,6 +9,7 @@ import {
   LogOut,
   Menu,
   RectangleEllipsis,
+  Settings,
   SquareUserRound,
   Upload,
   User,
@@ -92,6 +93,13 @@ const NAV = [
     id: "roles",
     moduleId: "roles" satisfies ModuleId,
   },
+  {
+    Icon: Settings,
+    i18nTitleKey: "dashboard.layout.nav.settings",
+    path: "/dashboard/settings",
+    id: "settings",
+    moduleId: "settings" satisfies ModuleId,
+  },
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
@@ -113,7 +121,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      window.location.href = "/login";
+      window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
 
@@ -500,7 +508,7 @@ function ProfilePopover(props: DialogProps) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      window.location.href = "/login";
+      window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
 

@@ -21,9 +21,9 @@ export const serviceProvidersDict = {
     "service-providers.add-dialog.country.label": "Country",
     "service-providers.add-dialog.country.placeholder": "Choose the country",
     "service-providers.add-dialog.country.error": "The country is required",
-    "service-providers.add-dialog.city.label": "City",
-    "service-providers.add-dialog.city.placeholder": "Choose the city",
-    "service-providers.add-dialog.city.error": "The city is required",
+    "service-providers.add-dialog.city.label": "State",
+    "service-providers.add-dialog.city.placeholder": "Choose the state",
+    "service-providers.add-dialog.city.error": "The state is required",
     "service-providers.add-dialog.zip-code.label": "Zip Code",
     "service-providers.add-dialog.zip-code.placeholder": "Enter the Zip Code",
     "service-providers.add-dialog.zip-code.error": "The zip code is required",
@@ -64,9 +64,9 @@ export const serviceProvidersDict = {
     "service-providers.edit-dialog.country.label": "Country",
     "service-providers.edit-dialog.country.placeholder": "Choose the country",
     "service-providers.edit-dialog.country.error": "The country is required",
-    "service-providers.edit-dialog.city.label": "City",
-    "service-providers.edit-dialog.city.placeholder": "Choose the city",
-    "service-providers.edit-dialog.city.error": "The city is required",
+    "service-providers.edit-dialog.city.label": "State",
+    "service-providers.edit-dialog.city.placeholder": "Choose the state",
+    "service-providers.edit-dialog.city.error": "The state is required",
     "service-providers.edit-dialog.zip-code.label": "Zip Code",
     "service-providers.edit-dialog.zip-code.placeholder": "Enter the Zip Code",
     "service-providers.edit-dialog.zip-code.error": "The zip code is required",
@@ -94,13 +94,13 @@ export const serviceProvidersDict = {
       "The Service Provider has been edited successfully.",
     "service-providers.edit-dialog.image.toast.success":
       "Service Provider Image Uploaded Successfully",
-    "service-providers.inactive-dialog.title": "Inactivate Service Provider",
+    "service-providers.inactive-dialog.title": "Deactivate Service Provider",
     "service-providers.inactive-dialog.description":
-      "By inactivating this Service Provider, you will revoke the Service Provider's access to certain system privileges. Do you want to proceed?",
+      "By deactivating this service provider, you will revoke the service provider's access to certain system privileges. Do you want to proceed?",
     "service-providers.inactive-dialog.primary-button": "Yes",
     "service-providers.inactive-dialog.secondary-button": "No",
     "service-providers.inactive-dialog.toast.success":
-      "The Service Provider has been inactive successfully.",
+      "The Service Provider has been deactivate successfully.",
     "service-providers.activate-dialog.title": "Activate Service Provider",
     "service-providers.activate-dialog.description":
       "By activating this Service Provider, you are granting the access to specific system privileges. Do you want to proceed?",
@@ -169,9 +169,9 @@ export const serviceProvidersDict = {
     "service-providers.users.edit-dialog.primary-button": "Save",
     "service-providers.users.edit-dialog.toast.success":
       "The User has been edited successfully.",
-    "service-providers.users.inactive-dialog.title": "Inactive user",
+    "service-providers.users.inactive-dialog.title": "Deactivate User",
     "service-providers.users.inactive-dialog.description":
-      "By inactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
+      "By deactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
     "service-providers.users.inactive-dialog.primary-button": "Yes",
     "service-providers.users.inactive-dialog.secondary-button": "No",
     "service-providers.users.inactive-dialog.toast.success":
@@ -221,8 +221,9 @@ export const serviceProvidersDict = {
     "service-providers.roles.edit-dialog.primary-button": "Save",
     "service-providers.roles.edit-dialog.toast.success":
       "The role has been edited successfully.",
-    "service-providers.roles.inactive-dialog.title": "Inactive Role",
-    "service-providers.roles.inactive-dialog.description.first": "Inactiving ",
+    "service-providers.roles.inactive-dialog.title": "Deactivate Role",
+    "service-providers.roles.inactive-dialog.description.first":
+      "Deactivating ",
     "service-providers.roles.inactive-dialog.description.second":
       " Role, will remove their access to all system resources. Proceed?",
     "service-providers.roles.inactive-dialog.primary-button": "Yes",
@@ -250,7 +251,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.table.view.header": "View",
     "service-providers.roles.role.table.add.header": "Add",
     "service-providers.roles.role.table.edit.header": "Edit",
-    "service-providers.roles.role.table.inactive.header": "Inactive",
+    "service-providers.roles.role.table.inactive.header": "Deactivate",
     "service-providers.roles.role.table.all.header": "All",
     "service-providers.roles.role.table.action.header": "Action",
     "service-providers.roles.role.table.actions.save": "Save",
@@ -267,6 +268,24 @@ export const serviceProvidersDict = {
       "Payment Parameters",
     "service-providers.settings.sections.fee": "Set Fee",
     "service-providers.settings.sections.exchange-rates": "Exchange Rates",
+    "service-providers.settings.fee.dialog.title": "Set Fee",
+    "service-providers.settings.fee.dialog.percent.label": "Percent",
+    "service-providers.settings.fee.dialog.percent.placeholder":
+      "Enter percent",
+    "service-providers.settings.fee.dialog.percent.error":
+      "Percent is required and must be a number",
+    "service-providers.settings.fee.dialog.commission.label": "Commission",
+    "service-providers.settings.fee.dialog.commission.placeholder":
+      "Enter commission",
+    "service-providers.settings.fee.dialog.commission.error":
+      "Commission is required and must be a number",
+    "service-providers.settings.fee.dialog.base.label": "Base",
+    "service-providers.settings.fee.dialog.base.placeholder": "Enter base",
+    "service-providers.settings.fee.dialog.base.error":
+      "Base is required and must be a number",
+    "service-providers.settings.fee.dialog.primary-button": "Save",
+    "service-providers.settings.fee.dialog.toast.success":
+      "Fee has been set successfully",
     "service-providers.settings.payment-parameters.title": "Payment Parameters",
     "service-providers.settings.payment-parameters.search.placeholder":
       "Search",
@@ -294,15 +313,15 @@ export const serviceProvidersDict = {
     "service-providers.settings.payment-parameters.table.items-count-separator":
       " of ",
     "service-providers.settings.payment-parameters.inactive-dialog.title":
-      "Inactive Payment Parameter",
+      "Deactivate Payment Parameter",
     "service-providers.settings.payment-parameters.inactive-dialog.description":
-      "By inactivating this Payment Parameter, you will disable specific payment features and functionalities. Do you want to proceed?",
+      "By deactivating this Payment Parameter, you will disable specific payment features and functionalities. Do you want to proceed?",
     "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
       "Yes",
     "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
       "No",
     "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
-      "The Payment Parameter has been inactive successfully.",
+      "The Payment Parameter has been deactivate successfully.",
     "service-providers.settings.payment-parameters.activate-dialog.title":
       "Activate Payment Parameter",
     "service-providers.settings.payment-parameters.activate-dialog.description":
@@ -313,7 +332,78 @@ export const serviceProvidersDict = {
       "No",
     "service-providers.settings.payment-parameters.activate-dialog.toast.success":
       "The Payment Parameter has been activated successfully.",
+    "service-providers.settings.payment-parameters.add-dialog.title":
+      "Add Payment Parameter",
+    "service-providers.settings.payment-parameters.add-dialog.name.label":
+      "Name",
+    "service-providers.settings.payment-parameters.add-dialog.name.placeholder":
+      "Parameter Name",
+    "service-providers.settings.payment-parameters.add-dialog.name.error":
+      "Parameter Name is required",
+    "service-providers.settings.payment-parameters.add-dialog.cost.label":
+      "Cost",
+    "service-providers.settings.payment-parameters.add-dialog.cost.placeholder":
+      "Cost",
+    "service-providers.settings.payment-parameters.add-dialog.cost.error":
+      "Cost is required",
+    "service-providers.settings.payment-parameters.add-dialog.interval.label":
+      "Interval",
+    "service-providers.settings.payment-parameters.add-dialog.interval.placeholder":
+      "Interval",
+    "service-providers.settings.payment-parameters.add-dialog.interval.error":
+      "Interval is required",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.label":
+      "Frequency",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.placeholder":
+      "Frequency",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.error":
+      "Frequency is required",
+    "service-providers.settings.payment-parameters.add-dialog.primary-button":
+      "Save",
+    "service-providers.settings.payment-parameters.add-dialog.toast.success":
+      "Payment Parameter Created Successfully",
+    "service-providers.settings.payment-parameters.edit-dialog.title":
+      "Edit Payment Parameter",
+    "service-providers.settings.payment-parameters.edit-dialog.name.label":
+      "Name",
+    "service-providers.settings.payment-parameters.edit-dialog.name.placeholder":
+      "Parameter Name",
+    "service-providers.settings.payment-parameters.edit-dialog.name.error":
+      "Parameter Name is required",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.label":
+      "Cost",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.placeholder":
+      "Cost",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.error":
+      "Cost is required",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.label":
+      "Interval",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.placeholder":
+      "Interval",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.error":
+      "Interval is required",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.label":
+      "Frequency",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.placeholder":
+      "Frequency",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.error":
+      "Frequency is required",
+    "service-providers.settings.payment-parameters.edit-dialog.primary-button":
+      "Save",
+    "service-providers.settings.payment-parameters.edit-dialog.toast.success":
+      "The Payment Parameter has been edited successfully.",
+    "service-providers.settings.exchange-rates.title": "Exchange Rates",
+    "service-providers.settings.exchange-rates.table.header.currency":
+      "Currency",
+    "service-providers.settings.exchange-rates.table.header.rate": "Rate",
+    "service-providers.settings.exchange-rates.table.header.valid-until":
+      "Valid Until",
     "service-providers.transactions.title": "Transactions",
+    "service-providers.settings.sections.key": "Keys",
+    "service-providers.settings.key.dialog.title": "Keys",
+    "service-providers.settings.key.dialog.secretKey.label": "Secret Key: ",
+    "service-providers.settings.key.dialog.publicKey.label": "Public Key: ",
+    "service-providers.settings.key.dialog.no-key": "No key available",
   },
   es: {
     "service-providers.title": "Proveedores de servicios",
@@ -333,9 +423,9 @@ export const serviceProvidersDict = {
     "service-providers.add-dialog.country.label": "País",
     "service-providers.add-dialog.country.placeholder": "Elija el país",
     "service-providers.add-dialog.country.error": "El país es requerido",
-    "service-providers.add-dialog.city.label": "Ciudad",
-    "service-providers.add-dialog.city.placeholder": "Elija la ciudad",
-    "service-providers.add-dialog.city.error": "La ciudad es requerida",
+    "service-providers.add-dialog.city.label": "Estado",
+    "service-providers.add-dialog.city.placeholder": "Elija el estado",
+    "service-providers.add-dialog.city.error": "El estado es requerida",
     "service-providers.add-dialog.zip-code.label": "Código Postal",
     "service-providers.add-dialog.zip-code.placeholder":
       "Ingrese el Código Postal",
@@ -415,13 +505,13 @@ export const serviceProvidersDict = {
     "service-providers.edit-dialog.image.toast.success":
       "Imagen de Proveedor de servicios subida satisfactoriamente",
     "service-providers.inactive-dialog.title":
-      "Inactivar Proveedor de Servicios",
+      "Desactivar Proveedor de Servicios",
     "service-providers.inactive-dialog.description":
-      "Inactivando este Proveedor de Servicios, quitaras los provilegios de acceso al sistema. ¿Desea proceder?",
+      "Desactivando este Proveedor de Servicios, quitaras los provilegios de acceso al sistema. ¿Desea proceder?",
     "service-providers.inactive-dialog.primary-button": "Si",
     "service-providers.inactive-dialog.secondary-button": "No",
     "service-providers.inactive-dialog.toast.success":
-      "El Proveedor de servicio ha sido inactivado satisfactoriamente.",
+      "El Proveedor de servicio ha sido desactivado satisfactoriamente.",
     "service-providers.activate-dialog.title": "Activar Proveedor de Servicios",
     "service-providers.activate-dialog.description":
       "Activando este Proveedor de Servicios, quitaras los provilegios de acceso al sistema. ¿Desea proceder?",
@@ -494,7 +584,7 @@ export const serviceProvidersDict = {
       "El Usuario se ha editado exitosamente.",
     "service-providers.users.inactive-dialog.title": "Inactivar usuario",
     "service-providers.users.inactive-dialog.description":
-      "Al inactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
+      "Al desactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
     "service-providers.users.inactive-dialog.primary-button": "Sí",
     "service-providers.users.inactive-dialog.secondary-button": "No",
     "service-providers.users.inactive-dialog.toast.success":
@@ -548,7 +638,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.inactive-dialog.description.first":
       "Al desactivar Rol ",
     "service-providers.roles.inactive-dialog.description.second":
-      " se le quitará el acceso a todos los recursos del sistema. ¿Desea continuar?",
+      "Se le quitará el acceso a todos los recursos del sistema. ¿Desea continuar?",
     "service-providers.roles.inactive-dialog.primary-button": "Sí",
     "service-providers.roles.inactive-dialog.secondary-button": "No",
     "service-providers.roles.inactive-dialog.toast.success":
@@ -574,7 +664,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.table.view.header": "Ver",
     "service-providers.roles.role.table.add.header": "Agregar",
     "service-providers.roles.role.table.edit.header": "Editar",
-    "service-providers.roles.role.table.inactive.header": "Inactivar",
+    "service-providers.roles.role.table.inactive.header": "Desactivar",
     "service-providers.roles.role.table.all.header": "Todos",
     "service-providers.roles.role.table.action.header": "Acción",
     "service-providers.roles.role.table.actions.save": "Guardar",
@@ -592,6 +682,24 @@ export const serviceProvidersDict = {
       "Parámetros de Pago",
     "service-providers.settings.sections.fee": "Establecer Tarifa",
     "service-providers.settings.sections.exchange-rates": "Tasas de Cambio",
+    "service-providers.settings.fee.dialog.title": "Establecer Tarifa",
+    "service-providers.settings.fee.dialog.percent.label": "Porcentaje",
+    "service-providers.settings.fee.dialog.percent.placeholder":
+      "Ingrese el porcentaje",
+    "service-providers.settings.fee.dialog.percent.error":
+      "El porcentaje es requerido y debe ser un número",
+    "service-providers.settings.fee.dialog.commission.label": "Comisión",
+    "service-providers.settings.fee.dialog.commission.placeholder":
+      "Ingrese la comisión",
+    "service-providers.settings.fee.dialog.commission.error":
+      "La comisión es requerida y debe ser un número",
+    "service-providers.settings.fee.dialog.base.label": "Base",
+    "service-providers.settings.fee.dialog.base.placeholder": "Ingrese la base",
+    "service-providers.settings.fee.dialog.base.error":
+      "La base es requerida y debe ser un número",
+    "service-providers.settings.fee.dialog.primary-button": "Guardar",
+    "service-providers.settings.fee.dialog.toast.success":
+      "La tarifa ha sido establecida satisfactoriamente",
     "service-providers.settings.payment-parameters.search.placeholder":
       "Buscar",
     "service-providers.settings.payment-parameters.title": "Parámetros de Pago",
@@ -620,15 +728,15 @@ export const serviceProvidersDict = {
     "service-providers.settings.payment-parameters.table.items-count-separator":
       " de ",
     "service-providers.settings.payment-parameters.inactive-dialog.title":
-      "Inactivar Parámetro de Pago",
+      "Desactivar Parámetro de Pago",
     "service-providers.settings.payment-parameters.inactive-dialog.description":
-      "Al inactivar este Parámetro de Pago, deshabilitará funciones y características de pago específicas. ¿Desea continuar?",
+      "Al desactivar este Parámetro de Pago, deshabilitará funciones y características de pago específicas. ¿Desea continuar?",
     "service-providers.settings.payment-parameters.inactive-dialog.primary-button":
       "Sí",
     "service-providers.settings.payment-parameters.inactive-dialog.secondary-button":
       "No",
     "service-providers.settings.payment-parameters.inactive-dialog.toast.success":
-      "El Parámetro de Pago ha sido inactivado satisfactoriamente.",
+      "El Parámetro de Pago ha sido desactivado satisfactoriamente.",
     "service-providers.settings.payment-parameters.activate-dialog.title":
       "Activar Parámetro de Pago",
     "service-providers.settings.payment-parameters.activate-dialog.description":
@@ -639,6 +747,76 @@ export const serviceProvidersDict = {
       "No",
     "service-providers.settings.payment-parameters.activate-dialog.toast.success":
       "El Parámetro de Pago ha sido activado satisfactoriamente.",
+    "service-providers.settings.payment-parameters.add-dialog.title":
+      "Agregar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.add-dialog.name.label":
+      "Nombre",
+    "service-providers.settings.payment-parameters.add-dialog.name.placeholder":
+      "Nombre del Parámetro",
+    "service-providers.settings.payment-parameters.add-dialog.name.error":
+      "El Nombre del Parámetro es requerido",
+    "service-providers.settings.payment-parameters.add-dialog.cost.label":
+      "Costo",
+    "service-providers.settings.payment-parameters.add-dialog.cost.placeholder":
+      "Costo",
+    "service-providers.settings.payment-parameters.add-dialog.cost.error":
+      "El Costo es requerido",
+    "service-providers.settings.payment-parameters.add-dialog.interval.label":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.add-dialog.interval.placeholder":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.add-dialog.interval.error":
+      "Intervalo es requerido",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.label":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.placeholder":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.add-dialog.frequency.error":
+      "Frecuencia es requerida",
+    "service-providers.settings.payment-parameters.add-dialog.primary-button":
+      "Guardar",
+    "service-providers.settings.payment-parameters.add-dialog.toast.success":
+      "El Parámetro de Pago ha sido creado satisfactoriamente",
+    "service-providers.settings.payment-parameters.edit-dialog.title":
+      "Editar Parámetro de Pago",
+    "service-providers.settings.payment-parameters.edit-dialog.name.label":
+      "Nombre",
+    "service-providers.settings.payment-parameters.edit-dialog.name.placeholder":
+      "Nombre del Parámetro",
+    "service-providers.settings.payment-parameters.edit-dialog.name.error":
+      "El Nombre del Parámetro es requerido",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.label":
+      "Costo",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.placeholder":
+      "Costo",
+    "service-providers.settings.payment-parameters.edit-dialog.cost.error":
+      "El Costo es requerido",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.label":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.placeholder":
+      "Intervalo",
+    "service-providers.settings.payment-parameters.edit-dialog.interval.error":
+      "Intervalo es requerido",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.label":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.placeholder":
+      "Frecuencia",
+    "service-providers.settings.payment-parameters.edit-dialog.frequency.error":
+      "Frecuencia es requerida",
+    "service-providers.settings.payment-parameters.edit-dialog.primary-button":
+      "Guardar",
+    "service-providers.settings.payment-parameters.edit-dialog.toast.success":
+      "El Parámetro de Pago ha sido editado satisfactoriamente.",
+    "service-providers.settings.exchange-rates.title": "Tasas de Cambio",
+    "service-providers.settings.exchange-rates.table.header.currency": "Moneda",
+    "service-providers.settings.exchange-rates.table.header.rate": "Tasa",
+    "service-providers.settings.exchange-rates.table.header.valid-until":
+      "Válido Hasta",
     "service-providers.transactions.title": "Transacciones",
+    "service-providers.settings.sections.key": "Llaves",
+    "service-providers.settings.key.dialog.title": "Llaves",
+    "service-providers.settings.key.dialog.secretKey.label": "Llave secreta: ",
+    "service-providers.settings.key.dialog.publicKey.label": "Llave pública: ",
+    "service-providers.settings.key.dialog.no-key": "No existe llave",
   },
 } satisfies I18nDictionary;
