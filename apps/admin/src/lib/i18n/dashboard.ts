@@ -19,6 +19,7 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.email.label": "Email",
     "dashboard.layout.profile-dialog.my-info.phone.label": "Phone No.",
     "dashboard.layout.profile-dialog.my-info.save": "Save",
+    "dashboard.layout.profile-dialog.my-info.toast.success" :"Phone has been changed succesfully",
     "dashboard.layout.profile-dialog.my-info.picture.label":
       "Drop or Upload your picture",
     "dashboard.layout.profile-dialog.my-info.picture.button": "Choose a file",
@@ -288,6 +289,7 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.email.label": "Correo",
     "dashboard.layout.profile-dialog.my-info.phone.label": "Teléfono",
     "dashboard.layout.profile-dialog.my-info.save": "Guardar",
+    "dashboard.layout.profile-dialog.my-info.toast.success":"El número de telefono ha sido cambiado correctamente",
     "dashboard.layout.profile-dialog.my-info.picture.label":
       "Arrastre o Suba su foto",
     "dashboard.layout.profile-dialog.my-info.picture.button":

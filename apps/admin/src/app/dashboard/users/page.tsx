@@ -333,6 +333,8 @@ function AddOrEditDialog(props: {
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
+  const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
+
   const form = useForm({
     schema: addOrEditUserValidator,
     defaultValues: {
@@ -341,8 +343,8 @@ function AddOrEditDialog(props: {
       email: props.user?.email ?? "",
       phone: props.user?.phone ?? "",
       roleId: props.user?.role.id ?? "",
-      serviceProviderId: "EMPTY",
-      type: "PLATFORM",
+      serviceProviderId: dataUser?.serviceProviderId ?? "EMPTY",
+      type: dataUser?.type ?? "PLATFORM",
       userId: props.user?.id,
     },
   });
