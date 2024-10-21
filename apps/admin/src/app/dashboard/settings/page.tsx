@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowRightLeft,
@@ -26,6 +27,7 @@ import {
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetProviderKeysQuery,
+  useGetSettingQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
@@ -147,13 +149,22 @@ export default function SettingsPage() {
 function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
   const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const { data: termConditionsSetting } = useGetSettingQuery({
+    key: "terms-condition",
+  });
   const form = useForm({
     schema: termsAndConditionsValidator,
     defaultValues: {
-      termsAndConditionsLink: "www.walletguru.com/terms-and-conditions",
+      termsAndConditionsLink: String(termConditionsSetting?.value),
     },
   });
-
+  useEffect(() => {
+    if (termConditionsSetting) {
+      form.reset({
+        termsAndConditionsLink: termConditionsSetting.value,
+      });
+    }
+  }, [termConditionsSetting, form]);
   return (
     <Dialog
       isOpen={isOpen}
@@ -181,15 +192,7 @@ function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
                     {values[`dashboard.settings.terms-and-conditions.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={
-                        values[
-                          `dashboard.settings.terms-and-conditions.placeholder`
-                        ]
-                      }
-                      required
-                      {...field}
-                    />
+                    <Input required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -208,13 +211,22 @@ function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
 function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
   const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const { data: privacySetting } = useGetSettingQuery({
+    key: "privacy-police",
+  });
   const form = useForm({
     schema: privacyPolicyValidator,
     defaultValues: {
-      privacyPolicyLink: "www.walletguru.com/privacy-policy",
+      privacyPolicyLink: privacySetting?.value,
     },
   });
-
+  useEffect(() => {
+    if (privacySetting) {
+      form.reset({
+        privacyPolicyLink: privacySetting.value,
+      });
+    }
+  }, [privacySetting, form]);
   return (
     <Dialog
       isOpen={isOpen}
@@ -242,13 +254,7 @@ function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
                     {values[`dashboard.settings.privacy-policy.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={
-                        values[`dashboard.settings.privacy-policy.placeholder`]
-                      }
-                      required
-                      {...field}
-                    />
+                    <Input required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -267,13 +273,22 @@ function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
 function WalletRootDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
   const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const { data: walletSetting } = useGetSettingQuery({
+    key: "url-wallet",
+  });
   const form = useForm({
     schema: walletRootValidator,
     defaultValues: {
-      walletRootLink: "www.walletguru.com/wallet-root",
+      walletRootLink: walletSetting?.value,
     },
   });
-
+  useEffect(() => {
+    if (walletSetting) {
+      form.reset({
+        walletRootLink: walletSetting.value,
+      });
+    }
+  }, [walletSetting, form]);
   return (
     <Dialog
       isOpen={isOpen}
@@ -301,13 +316,7 @@ function WalletRootDialog(props: { trigger: ReactNode }) {
                     {values[`dashboard.settings.wallet-root.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={
-                        values[`dashboard.settings.wallet-root.placeholder`]
-                      }
-                      required
-                      {...field}
-                    />
+                    <Input required {...field} />
                   </FormControl>
                   <FormMessage />
                   <p className="text-sm font-normal">
