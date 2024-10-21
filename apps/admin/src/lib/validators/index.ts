@@ -181,6 +181,7 @@ export const addOrEditProviderFeeValidator = z.object({
   serviceProviderId: z.string().min(1),
 });
 
+
 export const toggleProviderStatusValidator = z.object({
   providerId: z.string().min(1),
   active: z.boolean(),
@@ -226,4 +227,16 @@ export const addOrEditProviderPaymentParameterValidator = z.object({
     ),
   serviceProviderId: z.string().min(1),
   paymentParameterId: z.string().optional(),
+});
+
+export const termsAndConditionsValidator = z.object({
+  termsAndConditionsLink: z.string().min(1,"dashboard.settings.terms-and-conditions.error").url("dashboard.settings.terms-and-conditions.error"),
+});
+
+export const privacyPolicyValidator = z.object({
+  privacyPolicyLink: z.string().min(1,"dashboard.settings.privacy-policy.error").url("dashboard.settings.privacy-policy.error"),
+});
+
+export const walletRootValidator = z.object({
+  walletRootLink: z.string().min(1,"dashboard.settings.wallet-root.error").url("dashboard.settings.wallet-root.error"),
 });
