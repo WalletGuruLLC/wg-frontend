@@ -168,13 +168,11 @@ function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
     },
     onSuccess: () => {
       toast.success(
-        values[`service-providers.settings.fee.dialog.toast.success`],
+        values[`dashboard.settings.term-conditions.dialog.toast.success`],
       );
       close();
-      form.reset();
     },
   });
-  //const onSubmit = (data) => mutate(data)};
 
   useEffect(() => {
     if (termConditionsSetting) {
@@ -256,10 +254,9 @@ function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
     },
     onSuccess: () => {
       toast.success(
-        values[`service-providers.settings.fee.dialog.toast.success`],
+        values[`dashboard.settings.privacy-policy.dialog.toast.success`],
       );
       close();
-      form.reset();
     },
   });
   useEffect(() => {
@@ -342,10 +339,9 @@ function WalletRootDialog(props: { trigger: ReactNode }) {
     },
     onSuccess: () => {
       toast.success(
-        values[`service-providers.settings.fee.dialog.toast.success`],
+        values[`dashboard.settings.wallet-root.dialog.toast.success`],
       );
       close();
-      form.reset();
     },
   });
   useEffect(() => {

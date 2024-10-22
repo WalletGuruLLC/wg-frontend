@@ -19,7 +19,8 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.email.label": "Email",
     "dashboard.layout.profile-dialog.my-info.phone.label": "Phone No.",
     "dashboard.layout.profile-dialog.my-info.save": "Save",
-    "dashboard.layout.profile-dialog.my-info.toast.success" :"Phone has been changed succesfully",
+    "dashboard.layout.profile-dialog.my-info.toast.success":
+      "Phone has been changed succesfully",
     "dashboard.layout.profile-dialog.my-info.picture.label":
       "Drop or Upload your picture",
     "dashboard.layout.profile-dialog.my-info.picture.button": "Choose a file",
@@ -235,18 +236,23 @@ export const dashboardDict = {
     "dashboard.settings.privacy-policy": "Privacy Policy",
     "dashboard.settings.wallet-root": "Wallet Root",
     "dashboard.settings.terms-and-conditions.title": "Terms and Conditions",
-    "dashboard.settings.terms-and-conditions.label": "Terms and Conditions link",
-    "dashboard.settings.terms-and-conditions.placeholder": "www.walletguru.com/terms-and-conditions",
+    "dashboard.settings.terms-and-conditions.label":
+      "Terms and Conditions link",
+    "dashboard.settings.terms-and-conditions.placeholder":
+      "www.walletguru.com/terms-and-conditions",
     "dashboard.settings.terms-and-conditions.error": "URL is invalid",
     "dashboard.settings.privacy-policy.title": "Privacy policy",
     "dashboard.settings.privacy-policy.label": "Privacy policy link",
-    "dashboard.settings.privacy-policy.placeholder": "www.walletguru.com/privacy-policy",
+    "dashboard.settings.privacy-policy.placeholder":
+      "www.walletguru.com/privacy-policy",
     "dashboard.settings.privacy-policy.error": "URL is invalid",
     "dashboard.settings.privacy-policy.save": "Save",
     "dashboard.settings.wallet-root.title": "Wallet Root",
     "dashboard.settings.wallet-root.label": "Wallet Root link",
-    "dashboard.settings.wallet-root.placeholder": "www.walletguru.com/wallet-root",
-    "dashboard.settings.wallet-root.information.label" : "Please note that it is necessary to modify the environment variable in the environment. The current wallets will not change their URL.",
+    "dashboard.settings.wallet-root.placeholder":
+      "www.walletguru.com/wallet-root",
+    "dashboard.settings.wallet-root.information.label":
+      "Please note that it is necessary to modify the environment variable in the environment. The current wallets will not change their URL.",
     "dashboard.settings.wallet-root.error": "URL is invalid",
     "dashboard.settings.wallet-root.save": "Save",
     "dashboard.settings.terms-and-conditions.save": "Save",
@@ -271,6 +277,12 @@ export const dashboardDict = {
     "dashboard.change-password.primary-button": "Save",
     "dashboard.change-password.toast.success":
       "Your password has been successfully Updated!",
+    "dashboard.settings.term-conditions.dialog.toast.success":
+      "Terms and conditions updated successfully.",
+    "dashboard.settings.privacy-policy.dialog.toast.success":
+      "Privacy Policy updated successfully.",
+    "dashboard.settings.wallet-root.dialog.toast.success":
+      "Wallet Root updated successfully.",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -289,7 +301,8 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.email.label": "Correo",
     "dashboard.layout.profile-dialog.my-info.phone.label": "Teléfono",
     "dashboard.layout.profile-dialog.my-info.save": "Guardar",
-    "dashboard.layout.profile-dialog.my-info.toast.success":"El número de telefono ha sido cambiado correctamente",
+    "dashboard.layout.profile-dialog.my-info.toast.success":
+      "El número de telefono ha sido cambiado correctamente",
     "dashboard.layout.profile-dialog.my-info.picture.label":
       "Arrastre o Suba su foto",
     "dashboard.layout.profile-dialog.my-info.picture.button":
@@ -530,16 +543,39 @@ export const dashboardDict = {
       "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
     "dashboard.change-password.primary-button": "Guardar",
     "dashboard.settings.title": "Configuraciones",
-    "dashboard.settings.terms-and-conditions": "Terminos y condiciones",
+    "dashboard.settings.terms-and-conditions": "Términos y condiciones",
     "dashboard.settings.exchange-rates": "Tasas de cambio",
-    "dashboard.settings.privacy-policy": "Politica de privacidad",
+    "dashboard.settings.privacy-policy": "Política de privacidad",
     "dashboard.settings.wallet-root": "Billetera base",
-    "dashboard.settings.terms-and-conditions.title": "Terminos y condiciones",
-    "dashboard.settings.terms-and-conditions.label": "Enlace a Terminos y condiciones",
-    "dashboard.settings.terms-and-conditions.placeholder": "www.walletguru.com/terms-and-conditions",
+    "dashboard.settings.terms-and-conditions.title": "Términos y condiciones",
+    "dashboard.settings.terms-and-conditions.label":
+      "Enlace a Términos y condiciones",
+    "dashboard.settings.terms-and-conditions.placeholder":
+      "www.walletguru.com/terms-and-conditions",
     "dashboard.settings.terms-and-conditions.error": "URL no valida",
     "dashboard.settings.terms-and-conditions.save": "Guardar",
     "dashboard.change-password.toast.success":
       "¡Tu contraseña ha sido actualizada Exitosamente!",
+    "dashboard.settings.term-conditions.dialog.toast.success":
+      "Términos y Condiciones actualizados satisfactoriamente.",
+    "dashboard.settings.privacy-policy.dialog.toast.success":
+      "Política de privacidad actualizada satisfactoriamente.",
+    "dashboard.settings.wallet-root.dialog.toast.success":
+      "Raíz de la billetera actualizada satisfactoriamente.",
+    "dashboard.settings.privacy-policy.title": "Política de privacidad",
+    "dashboard.settings.privacy-policy.label":
+      "Link a la política de privacidad.",
+    "dashboard.settings.privacy-policy.placeholder":
+      "www.walletguru.com/privacy-policy",
+    "dashboard.settings.privacy-policy.error": "La URL es inválida.",
+    "dashboard.settings.privacy-policy.save": "Guardar",
+    "dashboard.settings.wallet-root.title": "Billetera base",
+    "dashboard.settings.wallet-root.label": "Link a la billetera base",
+    "dashboard.settings.wallet-root.placeholder":
+      "www.walletguru.com/wallet-root",
+    "dashboard.settings.wallet-root.information.label":
+      "Tener en cuenta que es necesario modificar la variable de entorno en el ambiente. Las billeteras actuales no cambiaran su URL.",
+    "dashboard.settings.wallet-root.error": "URL is invalid",
+    "dashboard.settings.wallet-root.save": "Save",
   },
 } satisfies I18nDictionary;
