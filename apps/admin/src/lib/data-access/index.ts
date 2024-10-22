@@ -12,6 +12,7 @@ import {
   useQueryClient,
 } from "@wg-frontend/data-access";
 
+import { env } from "~/env";
 import type {
   addOrEditProviderFeeValidator,
   addOrEditProviderPaymentParameterValidator,
@@ -31,8 +32,8 @@ import type {
   toggleUserStatusValidator,
   toggleWalletStatusValidator,
   twoFactorAuthenticationValidator,
+  updateUserPhoneNumberValidator,
 } from "../validators";
-import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
 interface UseGetAuthedUserInfoQueryOutput {
@@ -452,6 +453,35 @@ export function useUploadUserImageMutation(
   });
 }
 
+export function useUpdateUserPhoneNumberMutation(
+  options: UseMutationOptions<
+    z.infer<typeof updateUserPhoneNumberValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["update-user-phone-number"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/update-profile/" +
+          (input.userId),
+        {
+          method: "PUT",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
 export interface Role {
   createDate: string;
   updateDate: string;
