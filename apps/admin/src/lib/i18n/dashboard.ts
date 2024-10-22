@@ -278,11 +278,11 @@ export const dashboardDict = {
     "dashboard.change-password.toast.success":
       "Your password has been successfully Updated!",
     "dashboard.settings.term-conditions.dialog.toast.success":
-      "Terms and conditions updated successfully.",
+      "The Terms and Conditions have been updated successfully.",
     "dashboard.settings.privacy-policy.dialog.toast.success":
-      "Privacy Policy updated successfully.",
+      "The Privacy Policy has been updated successfully.",
     "dashboard.settings.wallet-root.dialog.toast.success":
-      "Wallet Root updated successfully.",
+      "The wallet address have been updated successfully.",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -557,11 +557,11 @@ export const dashboardDict = {
     "dashboard.change-password.toast.success":
       "¡Tu contraseña ha sido actualizada Exitosamente!",
     "dashboard.settings.term-conditions.dialog.toast.success":
-      "Términos y Condiciones actualizados satisfactoriamente.",
+      "Los Términos y Condiciones han sido actualizados correctamente.",
     "dashboard.settings.privacy-policy.dialog.toast.success":
-      "Política de privacidad actualizada satisfactoriamente.",
+      "La Política de Privacidad ha sido actualizada exitosamente.",
     "dashboard.settings.wallet-root.dialog.toast.success":
-      "Raíz de la billetera actualizada satisfactoriamente.",
+      "La raíz de la billetera ha sido actualizada correctamente.",
     "dashboard.settings.privacy-policy.title": "Política de privacidad",
     "dashboard.settings.privacy-policy.label":
       "Link a la política de privacidad.",
