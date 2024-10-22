@@ -12,7 +12,6 @@ import {
   useQueryClient,
 } from "@wg-frontend/data-access";
 
-import { env } from "~/env";
 import type {
   addOrEditProviderFeeValidator,
   addOrEditProviderPaymentParameterValidator,
@@ -26,6 +25,7 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  settingsValidator,
   toggleProviderPaymentParameterStatusValidator,
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
@@ -34,6 +34,7 @@ import type {
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
 } from "../validators";
+import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
 interface UseGetAuthedUserInfoQueryOutput {
@@ -467,7 +468,7 @@ export function useUpdateUserPhoneNumberMutation(
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
           "/api/v1/users/update-profile/" +
-          (input.userId),
+          input.userId,
         {
           method: "PUT",
           body: JSON.stringify(input),
@@ -1671,6 +1672,35 @@ export function useErrorsQuery(
         },
         {} as Record<string, string>,
       );
+    },
+  });
+}
+
+export function useEditSettingMutation(
+  settingId: string,
+  settingKey: string,
+  options: UseMutationOptions<z.infer<typeof settingsValidator>, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["edit-setting", settingId],
+    mutationFn: (input) => {
+      return customFetch(
+        `${env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL}/api/v1/settings/${settingId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            value: input.value,
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-setting", { key: settingKey }],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }

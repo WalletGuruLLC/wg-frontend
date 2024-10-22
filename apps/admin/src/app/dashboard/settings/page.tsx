@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowRightLeft,
@@ -19,21 +20,21 @@ import {
   FormItem,
   useForm,
 } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
 import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import {
+  useEditSettingMutation,
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetProviderKeysQuery,
+  useGetSettingQuery,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import {
-  privacyPolicyValidator,
-  termsAndConditionsValidator,
-  walletRootValidator,
-} from "~/lib/validators";
+import { settingsValidator } from "~/lib/validators";
 import Dialog from "../_components/dashboard-dialog";
 import { FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
@@ -146,18 +147,45 @@ export default function SettingsPage() {
 
 function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
-  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const errors = useErrors();
+  const settingId = "SWG001";
+  const settingKey = "terms-condition";
+  const { data: termConditionsSetting } = useGetSettingQuery({
+    key: settingKey,
+  });
   const form = useForm({
-    schema: termsAndConditionsValidator,
+    schema: settingsValidator,
     defaultValues: {
-      termsAndConditionsLink: "www.walletguru.com/terms-and-conditions",
+      value: String(termConditionsSetting?.value),
+    },
+  });
+  const { mutate, isPending } = useEditSettingMutation(settingId, settingKey, {
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(
+        values[`dashboard.settings.term-conditions.dialog.toast.success`],
+      );
+      close();
     },
   });
 
+  useEffect(() => {
+    if (termConditionsSetting) {
+      form.reset({
+        value: termConditionsSetting.value,
+      });
+    }
+  }, [termConditionsSetting, form]);
   return (
     <Dialog
       isOpen={isOpen}
       toggleOpen={() => {
+        form.reset();
         toggle();
       }}
       trigger={props.trigger}
@@ -169,34 +197,32 @@ function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit((data) => mutate(data))}
             className="space-y-9"
           >
             <FormField
               control={form.control}
-              name="termsAndConditionsLink"
+              name="value"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
                     {values[`dashboard.settings.terms-and-conditions.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={
-                        values[
-                          `dashboard.settings.terms-and-conditions.placeholder`
-                        ]
-                      }
-                      required
-                      {...field}
-                    />
+                    <Input required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="h-12 w-full" onClick={toggle}>
-              {values["dashboard.settings.terms-and-conditions.save"]}
+            <Button className="h-12 w-full" type="submit" disabled={isPending}>
+              {
+                values[
+                  isPending
+                    ? "loading"
+                    : `dashboard.settings.terms-and-conditions.save`
+                ]
+              }
             </Button>
           </form>
         </Form>
@@ -207,18 +233,44 @@ function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
 
 function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
-  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const errors = useErrors();
+  const settingId = "SWG002";
+  const settingKey = "privacy-police";
+  const { data: privacySetting } = useGetSettingQuery({
+    key: settingKey,
+  });
   const form = useForm({
-    schema: privacyPolicyValidator,
+    schema: settingsValidator,
     defaultValues: {
-      privacyPolicyLink: "www.walletguru.com/privacy-policy",
+      value: String(privacySetting?.value),
     },
   });
-
+  const { mutate, isPending } = useEditSettingMutation(settingId, settingKey, {
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(
+        values[`dashboard.settings.privacy-policy.dialog.toast.success`],
+      );
+      close();
+    },
+  });
+  useEffect(() => {
+    if (privacySetting) {
+      form.reset({
+        value: privacySetting.value,
+      });
+    }
+  }, [privacySetting, form]);
   return (
     <Dialog
       isOpen={isOpen}
       toggleOpen={() => {
+        form.reset();
         toggle();
       }}
       trigger={props.trigger}
@@ -230,32 +282,32 @@ function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit((data) => mutate(data))}
             className="space-y-9"
           >
             <FormField
               control={form.control}
-              name="privacyPolicyLink"
+              name="value"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
                     {values[`dashboard.settings.privacy-policy.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={
-                        values[`dashboard.settings.privacy-policy.placeholder`]
-                      }
-                      required
-                      {...field}
-                    />
+                    <Input required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="h-12 w-full" onClick={toggle}>
-              {values["dashboard.settings.privacy-policy.save"]}
+            <Button className="h-12 w-full" type="submit" disabled={isPending}>
+              {
+                values[
+                  isPending
+                    ? "loading"
+                    : `dashboard.settings.privacy-policy.save`
+                ]
+              }
             </Button>
           </form>
         </Form>
@@ -266,18 +318,44 @@ function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
 
 function WalletRootDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
-  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const errors = useErrors();
+  const settingId = "SWG003";
+  const settingKey = "url-wallet";
+  const { data: walletSetting } = useGetSettingQuery({
+    key: settingKey,
+  });
   const form = useForm({
-    schema: walletRootValidator,
+    schema: settingsValidator,
     defaultValues: {
-      walletRootLink: "www.walletguru.com/wallet-root",
+      value: String(walletSetting?.value),
     },
   });
-
+  const { mutate, isPending } = useEditSettingMutation(settingId, settingKey, {
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(
+        values[`dashboard.settings.wallet-root.dialog.toast.success`],
+      );
+      close();
+    },
+  });
+  useEffect(() => {
+    if (walletSetting) {
+      form.reset({
+        value: walletSetting.value,
+      });
+    }
+  }, [walletSetting, form]);
   return (
     <Dialog
       isOpen={isOpen}
       toggleOpen={() => {
+        form.reset();
         toggle();
       }}
       trigger={props.trigger}
@@ -289,25 +367,19 @@ function WalletRootDialog(props: { trigger: ReactNode }) {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data) => console.log(data))}
+            onSubmit={form.handleSubmit((data) => mutate(data))}
             className="space-y-9"
           >
             <FormField
               control={form.control}
-              name="walletRootLink"
+              name="value"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
                     {values[`dashboard.settings.wallet-root.label`]}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={
-                        values[`dashboard.settings.wallet-root.placeholder`]
-                      }
-                      required
-                      {...field}
-                    />
+                    <Input required {...field} />
                   </FormControl>
                   <FormMessage />
                   <p className="text-sm font-normal">
@@ -316,9 +388,12 @@ function WalletRootDialog(props: { trigger: ReactNode }) {
                 </FormItem>
               )}
             />
-
-            <Button className="h-12 w-full" onClick={toggle}>
-              {values["dashboard.settings.wallet-root.save"]}
+            <Button className="h-12 w-full" type="submit" disabled={isPending}>
+              {
+                values[
+                  isPending ? "loading" : `dashboard.settings.wallet-root.save`
+                ]
+              }
             </Button>
           </form>
         </Form>
