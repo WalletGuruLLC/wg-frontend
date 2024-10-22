@@ -160,7 +160,7 @@ function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
       value: String(termConditionsSetting?.value),
     },
   });
-  const { mutate, isPending } = useEditSettingMutation(settingId, {
+  const { mutate, isPending } = useEditSettingMutation(settingId, settingKey, {
     onError: (error) => {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,
@@ -246,7 +246,7 @@ function PrivacyPolicyDialog(props: { trigger: ReactNode }) {
       value: String(privacySetting?.value),
     },
   });
-  const { mutate, isPending } = useEditSettingMutation(settingId, {
+  const { mutate, isPending } = useEditSettingMutation(settingId, settingKey, {
     onError: (error) => {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,
@@ -331,7 +331,7 @@ function WalletRootDialog(props: { trigger: ReactNode }) {
       value: String(walletSetting?.value),
     },
   });
-  const { mutate, isPending } = useEditSettingMutation(settingId, {
+  const { mutate, isPending } = useEditSettingMutation(settingId, settingKey, {
     onError: (error) => {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,

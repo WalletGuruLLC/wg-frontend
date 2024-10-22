@@ -1678,6 +1678,7 @@ export function useErrorsQuery(
 
 export function useEditSettingMutation(
   settingId: string,
+  settingKey: string,
   options: UseMutationOptions<z.infer<typeof settingsValidator>, unknown> = {},
 ) {
   const cq = useQueryClient();
@@ -1697,7 +1698,7 @@ export function useEditSettingMutation(
     },
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
-        queryKey: ["get-setting", settingId],
+        queryKey: ["get-setting", { key: settingKey }],
       });
       options.onSuccess?.(...input);
     },
