@@ -102,7 +102,7 @@ export default function SettingsPage() {
         <div className="flex w-full flex-wrap">
           <TermsAndConditionsDialog
             trigger={
-              <div className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
+              <div className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
                 <FileText size={32} strokeWidth={0.75} color="#3678B1" />
                 <span className="text-2xl">
                   {values["dashboard.settings.terms-and-conditions"]}
@@ -112,7 +112,7 @@ export default function SettingsPage() {
           />
           <PrivacyPolicyDialog
             trigger={
-              <div className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
+              <div className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
                 <FileCheck size={32} strokeWidth={0.75} color="#3678B1" />
                 <span className="text-2xl">
                   {values["dashboard.settings.privacy-policy"]}
@@ -123,7 +123,7 @@ export default function SettingsPage() {
 
           <Link
             href={`/dashboard/settings/exchange-rates`}
-            className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
           >
             <Shuffle size={32} strokeWidth={0.75} color="#3678B1" />
             <span className="text-2xl">
@@ -132,7 +132,7 @@ export default function SettingsPage() {
           </Link>
           <WalletRootDialog
             trigger={
-              <div className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
+              <div className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
                 <Wallet size={32} strokeWidth={0.75} color="#3678B1" />
                 <span className="text-2xl">
                   {values["dashboard.settings.wallet-root"]}
