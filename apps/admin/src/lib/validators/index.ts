@@ -244,3 +244,7 @@ export const addOrEditProviderPaymentParameterValidator = z.object({
   serviceProviderId: z.string().min(1),
   paymentParameterId: z.string().optional(),
 });
+
+export const settingsValidator = z.object({
+  value: z.string().url(),
+});
