@@ -69,7 +69,18 @@ export function useGetAuthedUserInfoQuery(
     ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
     queryKey: ["get-authed-user-info"],
-    queryFn: () => {
+    queryFn: async () => {
+      const userRefreshData = await customFetch<{ token: string }>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/refresh-token",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            token: localStorage.getItem("refresh-token"),
+            email: localStorage.getItem("email"),
+          }),
+        },
+      );
+      localStorage.setItem("access-token", userRefreshData.token);
       return customFetch<UseGetAuthedUserInfoQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
       );
@@ -242,6 +253,7 @@ export function useTwoFactorAuthenticationMutation(
         accessLevel: ApiSimpleAccessLevels;
       };
       token: string;
+      refresToken: string;
     }
   > = {},
 ) {

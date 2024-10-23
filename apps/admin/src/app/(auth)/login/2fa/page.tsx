@@ -43,7 +43,6 @@ export default function TwoFactorAuthenticationPage() {
 
   const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
     onSuccess: (data) => {
-      localStorage.removeItem("email");
       if (data.user.type === "WALLET") {
         router.replace("/login");
         return toast.error(values["auth.2fa.errors.unauthorized"], {
@@ -53,6 +52,8 @@ export default function TwoFactorAuthenticationPage() {
         });
       }
       localStorage.setItem("access-token", data.token);
+      localStorage.setItem("refresh-token", data.refresToken);
+      localStorage.setItem("email", data.user.email);
       if (data.user.first) return router.replace("/reset-password");
       return router.replace("/dashboard");
     },
