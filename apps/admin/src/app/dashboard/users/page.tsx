@@ -362,7 +362,7 @@ function AddOrEditDialog(props: {
     },
   });
   const { data: dataRoles } = useGetActiveRolesQuery({
-    providerId: "EMPTY",
+    providerId: dataUser?.serviceProviderId ?? "EMPTY",
   });
 
   const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
@@ -380,11 +380,11 @@ function AddOrEditDialog(props: {
         phone: props.user.phone,
         roleId: props.user.role.id,
         userId: props.user.id,
-        serviceProviderId: "EMPTY",
-        type: "PLATFORM",
+        serviceProviderId: dataUser?.serviceProviderId ?? "EMPTY",
+        type: dataUser?.type ?? "PLATFORM",
       });
     }
-  }, [props.user, form]);
+  }, [props.user, form, dataUser?.serviceProviderId, dataUser?.type]);
 
   return (
     <Dialog
