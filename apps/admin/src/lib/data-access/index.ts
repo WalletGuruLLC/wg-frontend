@@ -1399,7 +1399,7 @@ export function useGetProviderPaymentParametersQuery(
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/list/payment-parameters` +
+          `/api/v1/payments/list/payment-parameters` +
           "?" +
           params.toString(),
       );
@@ -1484,7 +1484,7 @@ export function useGetTimeIntervalsQuery(
     queryFn: () => {
       return customFetch<UseGetTimeIntervalsQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/list/time-intervals",
+          "/api/v1/payments/list/time-intervals",
       );
     },
   });
