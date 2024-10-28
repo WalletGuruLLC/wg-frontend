@@ -122,6 +122,8 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
+      localStorage.removeItem("refresh-token");
+      localStorage.removeItem("email");
       window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
@@ -516,6 +518,8 @@ function ProfilePopover(props: DialogProps) {
     },
     onSuccess: () => {
       localStorage.removeItem("access-token");
+      localStorage.removeItem("refresh-token");
+      localStorage.removeItem("email");
       window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
