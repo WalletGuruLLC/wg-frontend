@@ -82,6 +82,7 @@ const MODULES_MAP = {
   SP95: "serviceProviders",
   SE37: "settings",
   TR91: "transactions",
+  PY38: "payments",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -156,6 +157,7 @@ export function useGetAuthedUserAccessLevelsQuery(
                 serviceProviders: [],
                 settings: [],
                 transactions: [],
+                payments: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
                   numberToAccessLevels(numericAccessLevel),
@@ -1420,7 +1422,7 @@ export function useToggleProviderPaymentParameterStatusMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/payment-parameters/${input.paymentParameterId}/toggle`,
+          `/api/v1/payments/payment-parameters/${input.paymentParameterId}/toggle`,
         {
           method: "PATCH",
           body: JSON.stringify(input),
@@ -1449,7 +1451,7 @@ export function useAddOrEditProviderPaymentParameterMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/create/payment-parameters",
+          "/api/v1/payments/create/payment-parameters",
         {
           method: "POST",
           body: JSON.stringify({

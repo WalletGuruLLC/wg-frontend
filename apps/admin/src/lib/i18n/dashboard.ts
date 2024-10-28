@@ -87,6 +87,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.roles": "Roles",
     "dashboard.roles.role.modules.settings": "Settings",
     "dashboard.roles.role.modules.transactions": "Transactions",
+    "dashboard.roles.role.modules.payments": "Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -337,6 +338,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.roles": "Roles",
     "dashboard.roles.role.modules.settings": "Configuraciones",
     "dashboard.roles.role.modules.transactions": "Transacciones",
+    "dashboard.roles.role.modules.payments": "Pagos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
