@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Activity,
   Home,
   Loader2,
   LogOut,
@@ -80,6 +81,13 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.users",
     path: "/dashboard/users",
     id: "users",
+    moduleId: "users" satisfies ModuleId,
+  },
+  {
+    Icon: Activity,
+    i18nTitleKey: "dashboard.layout.nav.reports",
+    path: "/dashboard/reports",
+    id: "reports",
     moduleId: "users" satisfies ModuleId,
   },
   {
