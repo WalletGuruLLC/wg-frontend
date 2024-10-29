@@ -89,6 +89,13 @@ const NAV = [
     moduleId: "users" satisfies ModuleId,
   },
   {
+    Icon: Activity,
+    i18nTitleKey: "dashboard.layout.nav.reports",
+    path: "/dashboard/reports",
+    id: "reports",
+    moduleId: "users" satisfies ModuleId,
+  },
+  {
     Icon: SquareUserRound,
     i18nTitleKey: "dashboard.layout.nav.roles",
     path: "/dashboard/roles",
@@ -101,13 +108,6 @@ const NAV = [
     path: "/dashboard/settings",
     id: "settings",
     moduleId: "settings" satisfies ModuleId,
-  },
-  {
-    Icon: Activity,
-    i18nTitleKey: "dashboard.layout.nav.reports",
-    path: "/dashboard/reports",
-    id: "reports",
-    moduleId: "reports" satisfies ModuleId,
   },
 ] as const;
 
