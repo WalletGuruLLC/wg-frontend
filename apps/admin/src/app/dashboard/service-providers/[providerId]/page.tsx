@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowRightLeft, Settings, SquareUserRound, Users } from "lucide-react";
+import { Settings, SquareUserRound, Users } from "lucide-react";
 
 import type { ModuleId } from "~/lib/data-access";
 import {
@@ -34,13 +34,6 @@ const SECTIONS = [
     path: "/settings",
     moduleId: "settings" satisfies ModuleId,
     Icon: Settings,
-  },
-  {
-    id: "transactions",
-    i18nTitleKey: "service-providers.home.sections.transactions.label",
-    path: "/transactions",
-    moduleId: "transactions" satisfies ModuleId,
-    Icon: ArrowRightLeft,
   },
 ] as const;
 
