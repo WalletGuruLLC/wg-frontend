@@ -25,12 +25,14 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  settingsValidator,
   toggleProviderPaymentParameterStatusValidator,
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
   toggleWalletStatusValidator,
   twoFactorAuthenticationValidator,
+  updateUserPhoneNumberValidator,
 } from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
@@ -67,7 +69,18 @@ export function useGetAuthedUserInfoQuery(
     ...options,
     retry: 0, // Disable retries because endpoints returns error when not authed and we want that error to be taken as "no user authed"
     queryKey: ["get-authed-user-info"],
-    queryFn: () => {
+    queryFn: async () => {
+      const userRefreshData = await customFetch<{ token: string }>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/refresh-token",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            token: localStorage.getItem("refresh-token"),
+            email: localStorage.getItem("email"),
+          }),
+        },
+      );
+      localStorage.setItem("access-token", userRefreshData.token);
       return customFetch<UseGetAuthedUserInfoQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/current-user",
       );
@@ -240,6 +253,7 @@ export function useTwoFactorAuthenticationMutation(
         accessLevel: ApiSimpleAccessLevels;
       };
       token: string;
+      refresToken: string;
     }
   > = {},
 ) {
@@ -452,6 +466,35 @@ export function useUploadUserImageMutation(
   });
 }
 
+export function useUpdateUserPhoneNumberMutation(
+  options: UseMutationOptions<
+    z.infer<typeof updateUserPhoneNumberValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["update-user-phone-number"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/users/update-profile/" +
+          input.userId,
+        {
+          method: "PUT",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
 export interface Role {
   createDate: string;
   updateDate: string;
@@ -1641,6 +1684,35 @@ export function useErrorsQuery(
         },
         {} as Record<string, string>,
       );
+    },
+  });
+}
+
+export function useEditSettingMutation(
+  settingId: string,
+  settingKey: string,
+  options: UseMutationOptions<z.infer<typeof settingsValidator>, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["edit-setting", settingId],
+    mutationFn: (input) => {
+      return customFetch(
+        `${env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL}/api/v1/settings/${settingId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            value: input.value,
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-setting", { key: settingKey }],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
