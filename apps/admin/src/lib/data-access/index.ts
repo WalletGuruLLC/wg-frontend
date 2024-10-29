@@ -1644,3 +1644,14 @@ export function useErrorsQuery(
     },
   });
 }
+
+export interface ReportsByUser {
+  id: string;
+  type: string;
+  description: string;
+  startdate: string;
+  enddate: string;
+  state: "Active" | "Completed";
+  ammount: number;
+  currency: string;
+}

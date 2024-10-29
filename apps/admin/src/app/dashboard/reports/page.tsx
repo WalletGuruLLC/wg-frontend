@@ -8,10 +8,10 @@ import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { SimpleTitle } from "../_components/dashboard-title";
 
-export default function ServiceProviderPage() {
+export default function ReportsPage() {
   const loading = useAccessLevelGuard({
     general: {
-      module: "settings", // DUDA
+      module: "transactions",
     },
   });
   const { values } = useI18n();
@@ -28,7 +28,7 @@ export default function ServiceProviderPage() {
       />
       <div className="flex w-full">
         <Link
-          href={`/dashboard/reports/created-by-user`}
+          href={`/dashboard/reports/transactions-by-user`}
           className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
         >
           <User size={32} strokeWidth={0.75} color="#3678B1" />
@@ -37,7 +37,7 @@ export default function ServiceProviderPage() {
           </span>
         </Link>
         <Link
-          href={`/dashboard/reports/created-by-provider`}
+          href={`/dashboard/reports/transactions-by-provider`}
           className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
         >
           <Calendar size={32} strokeWidth={0.75} color="#3678B1" />
