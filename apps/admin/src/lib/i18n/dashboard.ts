@@ -11,6 +11,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.users": "Users",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Settings",
+    "dashboard.layout.nav.reports": "Reports",
     "dashboard.layout.logout": "Logout",
     "dashboard.layout.profile-dialog.option.my-info": "My Info",
     "dashboard.layout.profile-dialog.option.change-password": "Change Password",
@@ -250,6 +251,12 @@ export const dashboardDict = {
     "dashboard.change-password.primary-button": "Save",
     "dashboard.change-password.toast.success":
       "Your password has been successfully Updated!",
+    "dashboard.reports.title": "Reports",
+    "dashboard.reports.sections.transactions-by-user": "Transactions by User",
+    "dashboard.reports.sections.transactions-by-provider":
+      "Transactions by Provider",
+    "dashboard.reports.sections.revenue": "Revenue",
+    "dashboard.reports.sections.clear-payments": "Clear Payments",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -259,6 +266,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
+    "dashboard.layout.nav.reports": "Reportes",
     "dashboard.layout.logout": "Cerrar sesión",
     "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
     "dashboard.layout.profile-dialog.option.change-password":
@@ -510,5 +518,12 @@ export const dashboardDict = {
     "dashboard.settings.title": "Configuraciones",
     "dashboard.change-password.toast.success":
       "¡Tu contraseña ha sido actualizada Exitosamente!",
+    "dashboard.reports.title": "Reportes",
+    "dashboard.reports.sections.transactions-by-user":
+      "Transacciones por Usuario",
+    "dashboard.reports.sections.transactions-by-provider":
+      "Transacciones por Proveedor",
+    "dashboard.reports.sections.revenue": "Ganancia",
+    "dashboard.reports.sections.clear-payments": "Limpiar pagos",
   },
 } satisfies I18nDictionary;
