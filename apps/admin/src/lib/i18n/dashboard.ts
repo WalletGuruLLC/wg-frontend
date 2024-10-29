@@ -286,6 +286,12 @@ export const dashboardDict = {
     "dashboard.settings.wallet-root.dialog.toast.success":
       "The wallet address have been updated successfully.",
     "dashboard.reports.title": "Reports",
+    "dashboard.reports.title": "Reports",
+    "dashboard.reports.sections.transactions-by-user": "Transactions by User",
+    "dashboard.reports.sections.transactions-by-provider":
+      "Transactions by Provider",
+    "dashboard.reports.sections.revenue": "Revenue",
+    "dashboard.reports.sections.clear-payments": "Clear Payments",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -295,6 +301,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
+    "dashboard.layout.nav.reports": "Reportes",
     "dashboard.layout.nav.reports": "Reportes",
     "dashboard.layout.logout": "Cerrar sesión",
     "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
@@ -583,5 +590,12 @@ export const dashboardDict = {
     "dashboard.settings.wallet-root.error": "URL is invalid",
     "dashboard.settings.wallet-root.save": "Save",
     "dashboard.reports.title": "Reportes",
+    "dashboard.reports.title": "Reportes",
+    "dashboard.reports.sections.transactions-by-user":
+      "Transacciones por Usuario",
+    "dashboard.reports.sections.transactions-by-provider":
+      "Transacciones por Proveedor",
+    "dashboard.reports.sections.revenue": "Ganancia",
+    "dashboard.reports.sections.clear-payments": "Limpiar pagos",
   },
 } satisfies I18nDictionary;
