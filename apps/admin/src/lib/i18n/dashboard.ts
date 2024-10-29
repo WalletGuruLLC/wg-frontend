@@ -286,7 +286,6 @@ export const dashboardDict = {
     "dashboard.settings.wallet-root.dialog.toast.success":
       "The wallet address have been updated successfully.",
     "dashboard.reports.title": "Reports",
-    "dashboard.reports.title": "Reports",
     "dashboard.reports.sections.transactions-by-user": "Transactions by User",
     "dashboard.reports.sections.transactions-by-provider":
       "Transactions by Provider",
@@ -301,7 +300,6 @@ export const dashboardDict = {
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
-    "dashboard.layout.nav.reports": "Reportes",
     "dashboard.layout.nav.reports": "Reportes",
     "dashboard.layout.logout": "Cerrar sesión",
     "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
@@ -589,7 +587,6 @@ export const dashboardDict = {
       "Tener en cuenta que es necesario modificar la variable de entorno en el ambiente. Las billeteras actuales no cambiaran su URL.",
     "dashboard.settings.wallet-root.error": "URL is invalid",
     "dashboard.settings.wallet-root.save": "Save",
-    "dashboard.reports.title": "Reportes",
     "dashboard.reports.title": "Reportes",
     "dashboard.reports.sections.transactions-by-user":
       "Transacciones por Usuario",

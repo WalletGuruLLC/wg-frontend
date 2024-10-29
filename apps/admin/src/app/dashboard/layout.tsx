@@ -109,13 +109,6 @@ const NAV = [
     id: "settings",
     moduleId: "settings" satisfies ModuleId,
   },
-  {
-    Icon: Activity,
-    i18nTitleKey: "dashboard.layout.nav.reports",
-    path: "/dashboard/reports",
-    id: "reports",
-    moduleId: "reports" satisfies ModuleId,
-  },
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
