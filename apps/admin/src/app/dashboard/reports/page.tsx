@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { ArrowRightLeft, Calendar, DollarSign, User } from "lucide-react";
 
-import { useGetDashboardUsersTitleQuery } from "~/lib/data-access";
+import {
+  useGetAuthedUserInfoQuery,
+  useGetDashboardUsersTitleQuery,
+} from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { SimpleTitle } from "../_components/dashboard-title";

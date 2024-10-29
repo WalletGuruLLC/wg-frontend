@@ -12,7 +12,6 @@ export const dashboardDict = {
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Settings",
     "dashboard.layout.nav.reports": "Reports",
-    "dashboard.layout.nav.reports": "Reports",
     "dashboard.layout.logout": "Logout",
     "dashboard.layout.profile-dialog.option.my-info": "My Info",
     "dashboard.layout.profile-dialog.option.change-password": "Change Password",
