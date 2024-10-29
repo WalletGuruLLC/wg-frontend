@@ -88,7 +88,7 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.reports",
     path: "/dashboard/reports",
     id: "reports",
-    moduleId: "users" satisfies ModuleId,
+    moduleId: "transactions" satisfies ModuleId,
   },
   {
     Icon: SquareUserRound,
