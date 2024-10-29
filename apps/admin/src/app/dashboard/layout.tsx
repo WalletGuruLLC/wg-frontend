@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Activity,
   Home,
   Loader2,
   LogOut,
@@ -100,6 +101,13 @@ const NAV = [
     path: "/dashboard/settings",
     id: "settings",
     moduleId: "settings" satisfies ModuleId,
+  },
+  {
+    Icon: Activity,
+    i18nTitleKey: "dashboard.layout.nav.reports",
+    path: "/dashboard/reports",
+    id: "reports",
+    moduleId: "reports" satisfies ModuleId,
   },
 ] as const;
 

@@ -11,6 +11,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.users": "Users",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Settings",
+    "dashboard.layout.nav.reports": "Reports",
     "dashboard.layout.logout": "Logout",
     "dashboard.layout.profile-dialog.option.my-info": "My Info",
     "dashboard.layout.profile-dialog.option.change-password": "Change Password",
@@ -88,7 +89,8 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.serviceProviders": "Service/\nProviders",
     "dashboard.roles.role.modules.roles": "Roles",
     "dashboard.roles.role.modules.settings": "Settings",
-    "dashboard.roles.role.modules.transactions": "Transactions",
+    "dashboard.roles.role.modules.reports": "Reports",
+    "dashboard.roles.role.modules.payments": "Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -283,6 +285,7 @@ export const dashboardDict = {
       "The Privacy Policy has been updated successfully.",
     "dashboard.settings.wallet-root.dialog.toast.success":
       "The wallet address have been updated successfully.",
+    "dashboard.reports.title": "Reports",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -292,6 +295,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.users": "Usuarios",
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
+    "dashboard.layout.nav.reports": "Reportes",
     "dashboard.layout.logout": "Cerrar sesión",
     "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
     "dashboard.layout.profile-dialog.option.change-password":
@@ -371,7 +375,8 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.serviceProviders": "Servicios/\nProveedores",
     "dashboard.roles.role.modules.roles": "Roles",
     "dashboard.roles.role.modules.settings": "Configuraciones",
-    "dashboard.roles.role.modules.transactions": "Transacciones",
+    "dashboard.roles.role.modules.reports": "Reportes",
+    "dashboard.roles.role.modules.payments": "Pagos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -577,5 +582,6 @@ export const dashboardDict = {
       "Tener en cuenta que es necesario modificar la variable de entorno en el ambiente. Las billeteras actuales no cambiaran su URL.",
     "dashboard.settings.wallet-root.error": "URL is invalid",
     "dashboard.settings.wallet-root.save": "Save",
+    "dashboard.reports.title": "Reportes",
   },
 } satisfies I18nDictionary;
