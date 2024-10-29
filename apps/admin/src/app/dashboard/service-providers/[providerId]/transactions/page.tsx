@@ -18,7 +18,7 @@ export default function ServiceProviderTransactionsPage() {
     },
     providers: {
       id: providerId,
-      module: "transactions",
+      module: "reports",
     },
   });
   const { values } = useI18n();
