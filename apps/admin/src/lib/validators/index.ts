@@ -115,6 +115,23 @@ export const addOrEditUserValidator = z.object({
   userId: z.string().optional(),
 });
 
+export const updateUserPhoneNumberValidator = z.object({
+  phone: z
+    .string()
+    .min(1, "dashboard.users.edit-dialog.phone.error")
+    .refine(
+      (v) =>
+        v.split("-")[0] !== "" &&
+        !isNaN(Number(v.split("-")[0])) &&
+        v.split("-")[1] !== "" &&
+        !isNaN(Number(v.split("-")[1])),
+      {
+        message: "dashboard.users.edit-dialog.phone.error",
+      },
+    ),
+  userId: z.string().min(1),
+});
+
 export const toggleUserStatusValidator = z.object({
   userId: z.string().min(1),
   email: z.string().min(1),
@@ -226,4 +243,8 @@ export const addOrEditProviderPaymentParameterValidator = z.object({
     ),
   serviceProviderId: z.string().min(1),
   paymentParameterId: z.string().optional(),
+});
+
+export const settingsValidator = z.object({
+  value: z.string().url(),
 });

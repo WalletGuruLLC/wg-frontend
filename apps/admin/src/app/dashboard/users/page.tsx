@@ -333,6 +333,8 @@ function AddOrEditDialog(props: {
   const errors = useErrors();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
 
+  const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
+
   const form = useForm({
     schema: addOrEditUserValidator,
     defaultValues: {
@@ -341,8 +343,8 @@ function AddOrEditDialog(props: {
       email: props.user?.email ?? "",
       phone: props.user?.phone ?? "",
       roleId: props.user?.role.id ?? "",
-      serviceProviderId: "EMPTY",
-      type: "PLATFORM",
+      serviceProviderId: dataUser?.serviceProviderId ?? "EMPTY",
+      type: dataUser?.type ?? "PLATFORM",
       userId: props.user?.id,
     },
   });
@@ -360,7 +362,7 @@ function AddOrEditDialog(props: {
     },
   });
   const { data: dataRoles } = useGetActiveRolesQuery({
-    providerId: "EMPTY",
+    providerId: dataUser?.serviceProviderId ?? "EMPTY",
   });
 
   const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
@@ -378,11 +380,11 @@ function AddOrEditDialog(props: {
         phone: props.user.phone,
         roleId: props.user.role.id,
         userId: props.user.id,
-        serviceProviderId: "EMPTY",
-        type: "PLATFORM",
+        serviceProviderId: dataUser?.serviceProviderId ?? "EMPTY",
+        type: dataUser?.type ?? "PLATFORM",
       });
     }
-  }, [props.user, form]);
+  }, [props.user, form, dataUser?.serviceProviderId, dataUser?.type]);
 
   return (
     <Dialog
