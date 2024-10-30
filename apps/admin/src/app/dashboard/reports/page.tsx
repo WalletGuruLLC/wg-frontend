@@ -1,50 +1,21 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useEffect } from "react";
 import Link from "next/link";
-import {
-  ArrowRightLeft,
-  FileCheck,
-  FileText,
-  KeySquare,
-  Shuffle,
-  Wallet,
-} from "lucide-react";
+import { ArrowRightLeft, Calendar, DollarSign, User } from "lucide-react";
 
-import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  useForm,
-} from "@wg-frontend/ui/form";
-import { toast } from "@wg-frontend/ui/toast";
-
-import { Button } from "~/components/button";
-import { FormMessage } from "~/components/form";
-import {
-  useEditSettingMutation,
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
-  useGetProviderKeysQuery,
-  useGetSettingQuery,
 } from "~/lib/data-access";
-import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { settingsValidator } from "~/lib/validators";
-import Dialog from "../_components/dashboard-dialog";
-import { FormLabel } from "../_components/dashboard-form";
-import { Input } from "../_components/dashboard-input";
 import { SimpleTitle } from "../_components/dashboard-title";
 
-export default function SettingsPage() {
+export default function ReportsPage() {
   const userData = useGetAuthedUserInfoQuery(undefined);
   const loading = useAccessLevelGuard({
     general: {
-      module: "settings",
+      module: "reports",
     },
   });
   const { values } = useI18n();
@@ -57,36 +28,26 @@ export default function SettingsPage() {
     return (
       <div className="flex h-[83vh] flex-col space-y-10 pb-4">
         <SimpleTitle
-          title={`${title ?? ""} ${values["dashboard.settings.title"]}`}
+          title={`${title ?? ""} ${values["dashboard.reports.title"]}`}
           showLoadingIndicator={isLoadingTitle}
         />
-        <div className="flex w-full">
+        <div className="flex w-full flex-wrap">
           <Link
-            href={`/dashboard/settings/payment-parameters`}
-            className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            href={`/dashboard/reports/created-by-user`}
+            className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
           >
-            <ArrowRightLeft size={32} strokeWidth={0.75} color="#3678B1" />
+            <User size={32} strokeWidth={0.75} color="#3678B1" />
             <span className="text-2xl">
-              {values["service-providers.settings.sections.payment-parameters"]}
+              {values["dashboard.reports.sections.transactions-by-user"]}
             </span>
           </Link>
-          <KeyDialog
-            trigger={
-              <div className="m-3 flex h-[200px] flex-1 cursor-pointer flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
-                <KeySquare size={32} strokeWidth={0.75} color="#3678B1" />
-                <span className="text-2xl">
-                  {values["service-providers.settings.sections.key"]}
-                </span>
-              </div>
-            }
-          />
           <Link
-            href={`/dashboard/settings/exchange-rates`}
-            className="m-3 flex h-[200px] flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            href={`/dashboard/reports/created-by-provider`}
+            className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
           >
-            <Shuffle size={32} strokeWidth={0.75} color="#3678B1" />
+            <Calendar size={32} strokeWidth={0.75} color="#3678B1" />
             <span className="text-2xl">
-              {values["service-providers.settings.sections.exchange-rates"]}
+              {values["dashboard.reports.sections.transactions-by-provider"]}
             </span>
           </Link>
         </div>
@@ -96,55 +57,52 @@ export default function SettingsPage() {
     return (
       <div className="flex h-[83vh] flex-col space-y-10 pb-4">
         <SimpleTitle
-          title={`${title ?? ""} ${values["dashboard.settings.title"]}`}
+          title={`${title ?? ""} ${values["dashboard.reports.title"]}`}
           showLoadingIndicator={isLoadingTitle}
         />
-        <div className="flex w-full flex-wrap">
-          <TermsAndConditionsDialog
-            trigger={
-              <div className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
-                <FileText size={32} strokeWidth={0.75} color="#3678B1" />
-                <span className="text-2xl">
-                  {values["dashboard.settings.terms-and-conditions"]}
-                </span>
-              </div>
-            }
-          />
-          <PrivacyPolicyDialog
-            trigger={
-              <div className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
-                <FileCheck size={32} strokeWidth={0.75} color="#3678B1" />
-                <span className="text-2xl">
-                  {values["dashboard.settings.privacy-policy"]}
-                </span>
-              </div>
-            }
-          />
 
+        <div className="flex w-full flex-wrap">
           <Link
-            href={`/dashboard/settings/exchange-rates`}
+            href={`/dashboard/reports/created-by-user`}
             className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
           >
-            <Shuffle size={32} strokeWidth={0.75} color="#3678B1" />
+            <User size={32} strokeWidth={0.75} color="#3678B1" />
             <span className="text-2xl">
-              {values["service-providers.settings.sections.exchange-rates"]}
+              {values["dashboard.reports.sections.transactions-by-user"]}
             </span>
           </Link>
-          <WalletRootDialog
-            trigger={
-              <div className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center">
-                <Wallet size={32} strokeWidth={0.75} color="#3678B1" />
-                <span className="text-2xl">
-                  {values["dashboard.settings.wallet-root"]}
-                </span>
-              </div>
-            }
-          />
+          <Link
+            href={`/dashboard/reports/created-by-provider`}
+            className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+          >
+            <Calendar size={32} strokeWidth={0.75} color="#3678B1" />
+            <span className="text-2xl">
+              {values["dashboard.reports.sections.transactions-by-provider"]}
+            </span>
+          </Link>
+          <Link
+            href={`/dashboard/reports/revenue`}
+            className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+          >
+            <DollarSign size={32} strokeWidth={0.75} color="#3678B1" />
+            <span className="text-2xl">
+              {values["dashboard.reports.sections.revenue"]}
+            </span>
+          </Link>
+          <Link
+            href={`/dashboard/reports/clear-payments`}
+            className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+          >
+            <ArrowRightLeft size={32} strokeWidth={0.75} color="#3678B1" />
+            <span className="text-2xl">
+              {values["dashboard.reports.sections.clear-payments"]}
+            </span>
+          </Link>
         </div>
       </div>
     );
 }
-
+/*
 function TermsAndConditionsDialog(props: { trigger: ReactNode }) {
   const { values } = useI18n();
   const [isOpen, _, close, toggle] = useBooleanHandlers();
@@ -442,3 +400,4 @@ function KeyDialog(props: { trigger: ReactNode }) {
     </Dialog>
   );
 }
+  */
