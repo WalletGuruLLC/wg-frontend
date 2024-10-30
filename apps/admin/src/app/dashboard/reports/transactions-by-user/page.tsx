@@ -15,13 +15,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  CircleCheck,
-  Loader2,
-  PlusCircle,
-  Search,
-  TriangleAlert,
-} from "lucide-react";
+import { Calendar, CircleCheck, Loader2, TriangleAlert } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
@@ -160,7 +154,7 @@ export default function ServiceProviderPaymentParametersPage() {
   const { providerId } = useParams<{ providerId: string }>();
   const loading = useAccessLevelGuard({
     general: {
-      module: "transactions",
+      module: "reports",
     },
   });
   const { values } = useI18n();
@@ -217,7 +211,7 @@ export default function ServiceProviderPaymentParametersPage() {
     columns: columns.filter(
       (c) =>
         c.id !== "actions" ||
-        accessLevelsData?.general.transactions.includes("edit"),
+        accessLevelsData?.general.reports.includes("edit"),
     ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -268,12 +262,17 @@ export default function ServiceProviderPaymentParametersPage() {
         ]}
         showLoadingIndicator={isLoading}
       />
-      <div className="flex flex-row items-center space-x-6">
-        <div className="relative flex-1">
+      <div className="flex flex-row space-x-6 align-baseline">
+        <div className="flex-1">
+          {
+            values[
+              "dashboard.reports.sections-transactions-by-user.search.wallet-address.label"
+            ]
+          }
           <Input
             placeholder={
               values[
-                "service-providers.settings.payment-parameters.search.placeholder"
+                "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder"
               ]
             }
             className="rounded-full border border-black"
@@ -287,10 +286,96 @@ export default function ServiceProviderPaymentParametersPage() {
             }
             defaultValue={paginationAndSearch.search}
           />
-          <Search
-            className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
-            strokeWidth={0.75}
-          />
+        </div>
+        <div className="flex-1">
+          {
+            values[
+              "dashboard.reports.sections-transactions-by-user.search.period.label"
+            ]
+          }
+          <div className="relative flex-1">
+            <Input
+              placeholder={
+                values[
+                  "dashboard.reports.sections-transactions-by-user.search.period.placeholder"
+                ]
+              }
+              className="rounded-full border border-black"
+              name="search"
+              onChange={(e) =>
+                handlePaginationAndSearchChange({
+                  ...paginationAndSearch,
+                  search: e.target.value,
+                  page: "1",
+                })
+              }
+              defaultValue={paginationAndSearch.search}
+            />
+            <Calendar
+              className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
+              strokeWidth={0.75}
+            />
+          </div>
+        </div>
+        <div>
+          {
+            values[
+              "dashboard.reports.sections-transactions-by-user.search.type.label"
+            ]
+          }
+          <Select>
+            <SelectTrigger
+              className={cn("rounded-full border border-black text-gray-400")}
+            >
+              <SelectValue
+                placeholder={
+                  values[
+                    `dashboard.reports.sections-transactions-by-user.search.type.placeholder`
+                  ]
+                }
+              />
+            </SelectTrigger>
+          </Select>
+        </div>
+        <div>
+          {
+            values[
+              "dashboard.reports.sections-transactions-by-user.search.state.label"
+            ]
+          }
+          <Select>
+            <SelectTrigger
+              className={cn("rounded-full border border-black text-gray-400")}
+            >
+              <SelectValue
+                placeholder={
+                  values[
+                    `dashboard.reports.sections-transactions-by-user.search.state.placeholder`
+                  ]
+                }
+              />
+            </SelectTrigger>
+          </Select>
+        </div>
+        <div>
+          {
+            values[
+              "dashboard.reports.sections-transactions-by-user.search.provider.label"
+            ]
+          }
+          <Select>
+            <SelectTrigger
+              className={cn("rounded-full border border-black text-gray-400")}
+            >
+              <SelectValue
+                placeholder={
+                  values[
+                    `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
+                  ]
+                }
+              />
+            </SelectTrigger>
+          </Select>
         </div>
         <Button className="flex h-max flex-row items-center space-x-2">
           <p className="flex-1 text-lg font-light">
@@ -300,7 +385,6 @@ export default function ServiceProviderPaymentParametersPage() {
               ]
             }
           </p>
-          <PlusCircle strokeWidth={0.75} className="size-6" />
         </Button>
       </div>
       <div className="flex-1 overflow-auto">
