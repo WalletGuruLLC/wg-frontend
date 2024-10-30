@@ -819,6 +819,23 @@ export interface User {
   roleName: string;
   phone: string;
   contactUser?: boolean;
+  name: string;
+  wallet?: {
+    rafikiId: string;
+    pendingCredits: number;
+    pendingDebits: number;
+    postedCredits: number;
+    postedDebits: number;
+    keyId: string;
+    id: string;
+    active: boolean;
+    walletAddress: string;
+    name: string;
+  };
+  asset?: {
+    code: string;
+    scale: number;
+  };
 }
 interface UseGetUsersQueryOutput {
   users: User[];

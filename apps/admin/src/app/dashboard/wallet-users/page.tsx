@@ -1,8 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -10,47 +9,33 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  ArrowRightLeft,
+  Asterisk,
+  BadgeCheck,
+  BadgeX,
   CircleCheck,
-  Loader2,
-  PlusCircle,
+  Lock,
   Search,
   TriangleAlert,
+  UserIcon,
 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
-import { cn } from "@wg-frontend/ui";
-import { DialogFooter } from "@wg-frontend/ui/dialog";
-import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@wg-frontend/ui/select";
+import { Button } from "@wg-frontend/ui/button";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { User } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
-import { Button } from "~/components/button";
-import { FormMessage } from "~/components/form";
-import { SelectTrigger } from "~/components/select";
 import {
-  useAddOrEditUserMutation,
-  useGetActiveRolesQuery,
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
-  useGetCountryCodesQuery,
-  useGetDashboardUsersTitleQuery,
   useGetUsersQuery,
   useToggleUserStatusMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { addOrEditUserValidator } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
-import Dialog from "../_components/dashboard-dialog";
-import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
 import Table, {
@@ -59,6 +44,7 @@ import Table, {
 } from "../_components/dashboard-table";
 import { SimpleTitle } from "../_components/dashboard-title";
 
+/*
 function Actions({
   user,
 }: {
@@ -76,8 +62,65 @@ function Actions({
   };
 }) {
   const { value } = useI18n("dashboard.users.table.actions.edit");
-
+  */
+function Actions({
+  user,
+}: {
+  user: {
+    state: number;
+  };
+}) {
+  const IconComponent = user.state === 3 ? BadgeCheck : BadgeX;
+  const titleKyc = user.state === 3 ? "KYC Validated" : "KYC not validated";
   return (
+    <div className="flex">
+      <Link href={`/dashboard/wallet-users`}>
+        <Lock
+          strokeWidth={0.75}
+          className="size-6 font-semibold"
+          stroke="#3678B1"
+        />
+      </Link>
+      <Link href={`/dashboard/wallet-users`}>
+        <Asterisk
+          stroke="#3678B1"
+          strokeWidth={0.75}
+          className="size-6 font-semibold"
+        />
+      </Link>
+      <Link href={`/dashboard/wallet-users`}>
+        <UserIcon
+          stroke="#3678B1"
+          strokeWidth={0.75}
+          className="size-6 font-semibold"
+        />
+      </Link>
+      <div className="relative flex items-center">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="hover:bg-transparent hover:text-[#3678B1]"
+        >
+          <IconComponent
+            stroke="#3678B1"
+            strokeWidth={0.75}
+            className="size-6 font-semibold"
+          />
+        </Button>
+        <span className="absolute bottom-full mb-2 hidden whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white shadow-lg group-hover:block">
+          {titleKyc}
+        </span>
+      </div>
+      <Link href={`/dashboard/wallet-users`}>
+        <ArrowRightLeft
+          stroke="#3678B1"
+          strokeWidth={0.75}
+          className="size-6 font-semibold"
+        />
+      </Link>
+    </div>
+    /*
     <AddOrEditDialog
       user={{
         ...user,
@@ -88,42 +131,132 @@ function Actions({
           {value}
         </Button>
       }
-    />
+    />*/
   );
 }
 
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
-  columnHelper.accessor("firstName", {
-    id: "firstName",
-    cell: (info) => info.getValue() || "-",
+  columnHelper.accessor("name", {
+    id: "name",
+    cell: (info) => {
+      const user = info.row.original;
+      return `${user.firstName || ""} ${user.lastName || ""}`.trim() || "-";
+    },
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.first-name" />
+      <ColumnHeader i18nKey="dashboard.wallet-users.table.header.name" />
     ),
   }),
-  columnHelper.accessor("lastName", {
-    id: "lastName",
-    cell: (info) => info.getValue() || "-",
+  columnHelper.accessor("wallet", {
+    id: "wallet",
+    cell: (info) => {
+      const wallet = info.getValue();
+      if (wallet?.walletAddress) {
+        return wallet.walletAddress.replace("https://walletguru.me/", "");
+      }
+      return "-";
+    },
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.last-name" />
+      <ColumnHeader i18nKey="dashboard.wallet-users.table.header.wallet" />
     ),
   }),
-  columnHelper.accessor("email", {
-    id: "email",
-    cell: (info) => info.getValue(),
-    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.email" />,
-  }),
-  columnHelper.accessor("phone", {
-    id: "phone",
-    cell: (info) => info.getValue() || "-",
-    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.phone" />,
-  }),
-  columnHelper.accessor("roleName", {
-    id: "roleName",
-    cell: (info) => info.getValue() || "-",
-    header: () => <ColumnHeader i18nKey="dashboard.users.table.header.role" />,
-  }),
+  columnHelper.accessor(
+    (row) => {
+      const wallet = row.wallet;
+      const balance =
+        (wallet?.postedCredits ?? 0) - (wallet?.postedDebits ?? 0);
+      return balance;
+    },
+    {
+      id: "balance",
+      cell: (info) => {
+        const balance = info.getValue();
+        const asset = info.row.original.asset;
+        const currencyCode = asset?.code ?? "USD";
+        const scale = asset?.scale ?? 2;
+        const formattedBalance = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: currencyCode,
+          minimumFractionDigits: scale,
+          maximumFractionDigits: scale,
+        }).format(balance / Math.pow(10, scale));
+        return `${formattedBalance}`;
+      },
+      header: () => (
+        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.balance" />
+      ),
+    },
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const wallet = row.wallet;
+      const reserved = wallet?.pendingDebits ?? 0;
+      return reserved;
+    },
+    {
+      id: "reserved",
+      cell: (info) => {
+        const balance = info.getValue();
+        const asset = info.row.original.asset;
+        const formattedReserved = new Intl.NumberFormat("en-En", {
+          minimumFractionDigits: asset?.scale ?? 0,
+          maximumFractionDigits: asset?.scale ?? 0,
+        }).format(balance || 0);
+        return `${formattedReserved} ${asset?.code ?? ""}`;
+      },
+      header: () => (
+        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.reserved" />
+      ),
+    },
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const wallet = row.wallet;
+      const available =
+        (wallet?.postedCredits ?? 0) -
+        ((wallet?.pendingDebits ?? 0) + (wallet?.postedDebits ?? 0));
+      return available;
+    },
+    {
+      id: "available",
+      cell: (info) => {
+        const balance = info.getValue();
+        const asset = info.row.original.asset;
+        const formattedAvailable = new Intl.NumberFormat("en-En", {
+          minimumFractionDigits: asset?.scale ?? 0,
+          maximumFractionDigits: asset?.scale ?? 0,
+        }).format(balance || 0);
+        return `${formattedAvailable} ${asset?.code ?? ""}`;
+      },
+      header: () => (
+        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.available" />
+      ),
+    },
+  ),
+  columnHelper.accessor(
+    () => {
+      const formatDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      };
+      const currentDate = new Date();
+      const formattedDate = formatDate(currentDate);
+      return formattedDate;
+    },
+    {
+      id: "timestamp",
+      cell: (info) => info.getValue(),
+      header: () => (
+        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.time" />
+      ),
+    },
+  ),
   columnHelper.accessor("active", {
     id: "active",
     header: () => (
@@ -147,6 +280,12 @@ const columns = [
     cell: (info) => (
       <Actions
         user={{
+          state: info.row.original.state,
+        }}
+      />
+      /*
+      <Actions 
+        user={{
           id: info.row.original.id,
           firstName: info.row.original.firstName,
           lastName: info.row.original.lastName,
@@ -158,7 +297,7 @@ const columns = [
           },
           first: info.row.original.first,
         }}
-      />
+      />*/
     ),
   }),
 ];
@@ -185,10 +324,10 @@ export default function WalletUsersPage() {
 
   const { data, isLoading } = useGetUsersQuery({
     ...paginationAndSearch,
-    type: !userIsLoading && dataUser ? dataUser.type : "PLATFORM",
+    type: !userIsLoading && dataUser ? "WALLET" : "WALLET",
   });
-  const { data: title, isLoading: isLoadingTitle } =
-    useGetDashboardUsersTitleQuery(undefined);
+  /* const { data: title, isLoading: isLoadingTitle } =
+    useGetDashboardUsersTitleQuery(undefined);*/
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -240,11 +379,13 @@ export default function WalletUsersPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={`${title ?? ""} ${values["dashboard.users.title"]}`}
-        showLoadingIndicator={isLoading || isLoadingTitle}
+        // title={`${title ?? ""} ${values["dashboard.wallet-users.title"]}`}
+        title={`${values["dashboard.wallet-users.title"]}`}
+        //showLoadingIndicator={isLoading || isLoadingTitle}
+        showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
-        <div className="relative flex-1">
+        <div className="relative w-10/12">
           <Input
             placeholder={values["dashboard.users.search.placeholder"]}
             className="rounded-full border border-black"
@@ -258,23 +399,12 @@ export default function WalletUsersPage() {
             }
             defaultValue={paginationAndSearch.search}
           />
+
           <Search
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.general.users.includes("add") && (
-          <AddOrEditDialog
-            trigger={
-              <Button className="flex h-max flex-row items-center space-x-2">
-                <p className="flex-1 text-lg font-light">
-                  {values["dashboard.users.add-button"]}
-                </p>
-                <PlusCircle strokeWidth={0.75} className="size-6" />
-              </Button>
-            }
-          />
-        )}
       </div>
       <div className="flex-1 overflow-auto">
         <Table table={table} />
@@ -313,7 +443,7 @@ export default function WalletUsersPage() {
     </div>
   );
 }
-
+/*
 function AddOrEditDialog(props: {
   user?: {
     id: string;
@@ -600,7 +730,7 @@ function AddOrEditDialog(props: {
       </div>
     </Dialog>
   );
-}
+} */
 
 function SwitchActiveStatusDialog(props: {
   user: {
