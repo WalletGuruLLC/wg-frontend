@@ -12,6 +12,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Settings",
     "dashboard.layout.nav.reports": "Reports",
+    "dashboard.layout.nav.wallet-users": "Wallet Users",
     "dashboard.layout.logout": "Logout",
     "dashboard.layout.profile-dialog.option.my-info": "My Info",
     "dashboard.layout.profile-dialog.option.change-password": "Change Password",
@@ -91,6 +92,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.settings": "Settings",
     "dashboard.roles.role.modules.reports": "Reports",
     "dashboard.roles.role.modules.payments": "Payments",
+    "dashboard.roles.role.modules.walletUsers": "Wallet Users",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -301,6 +303,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
     "dashboard.layout.nav.reports": "Reportes",
+    "dashboard.layout.nav.wallet-users": "Billeterahabientes",
     "dashboard.layout.logout": "Cerrar sesión",
     "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
     "dashboard.layout.profile-dialog.option.change-password":
@@ -382,6 +385,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.settings": "Configuraciones",
     "dashboard.roles.role.modules.reports": "Reportes",
     "dashboard.roles.role.modules.payments": "Pagos",
+    "dashboard.roles.role.modules.walletUsers": "Billeterahabientes",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
