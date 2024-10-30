@@ -96,6 +96,7 @@ const MODULES_MAP = {
   SE37: "settings",
   TR91: "reports",
   PY38: "payments",
+  WU47: "walletUsers",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -170,6 +171,7 @@ export function useGetAuthedUserAccessLevelsQuery(
                 serviceProviders: [],
                 settings: [],
                 reports: [],
+                walletUsers: [],
                 payments: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
