@@ -54,8 +54,8 @@ import { SelectTrigger } from "~/components/select";
 import {
   useAddOrEditProviderPaymentParameterMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
   useGetProviderPaymentParametersQuery,
-  useGetProviderQuery,
   useGetTimeIntervalsQuery,
   useToggleProviderPaymentParameterStatusMutation,
 } from "~/lib/data-access";
@@ -63,7 +63,7 @@ import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { addOrEditProviderPaymentParameterValidator } from "~/lib/validators";
-import { BreadcrumbTitle } from "../../../../_components/dashboard-title";
+import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
 function Actions({
   paymentParameter,
@@ -76,14 +76,14 @@ function Actions({
     frequency: string;
   };
 }) {
-  const { providerId } = useParams<{ providerId: string }>();
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { value } = useI18n(
     "service-providers.settings.payment-parameters.table.actions.edit",
   );
 
   return (
     <AddOrEditDialog
-      serviceProviderId={providerId}
+      serviceProviderId={userData?.serviceProviderId ?? ""}
       paymentParameter={paymentParameter}
       trigger={
         <Button className="font-normal no-underline" variant="link">
@@ -166,13 +166,10 @@ const columns = [
 ];
 
 export default function ServiceProviderPaymentParametersPage() {
-  const { providerId } = useParams<{ providerId: string }>();
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  const providerId = userData?.serviceProviderId ?? "";
   const loading = useAccessLevelGuard({
     general: {
-      module: "serviceProviders",
-    },
-    providers: {
-      id: providerId,
       module: "payments",
     },
   });
@@ -192,8 +189,6 @@ export default function ServiceProviderPaymentParametersPage() {
     ...paginationAndSearch,
     serviceProviderId: providerId,
   });
-  const { data: providerData, isLoading: isLoadingProviderData } =
-    useGetProviderQuery({ providerId });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -203,14 +198,12 @@ export default function ServiceProviderPaymentParametersPage() {
       .filter(
         (c) =>
           c.id !== "actions" ||
-          accessLevelsData?.providers[providerId]?.payments.includes("edit"),
+          accessLevelsData?.general.payments.includes("edit"),
       )
       .filter(
         (c) =>
           c.id !== "active" ||
-          accessLevelsData?.providers[providerId]?.payments.includes(
-            "inactive",
-          ),
+          accessLevelsData?.general.payments.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -249,24 +242,14 @@ export default function ServiceProviderPaymentParametersPage() {
       <BreadcrumbTitle
         sections={[
           {
-            title: values["service-providers.home.title"],
-            href: "/dashboard/service-providers",
-            isLoading: false,
-          },
-          {
-            title: providerData?.name,
-            href: `/dashboard/service-providers/${providerId}`,
-            isLoading: isLoadingProviderData,
-          },
-          {
             title: values["service-providers.settings.title"],
-            href: `/dashboard/service-providers/${providerId}/settings`,
+            href: `/dashboard/settings`,
             isLoading: false,
           },
           {
             title:
               values["service-providers.settings.payment-parameters.title"],
-            href: `/dashboard/service-providers/${providerId}/settings/payment-parameters`,
+            href: `/dashboard/settings/payment-parameters`,
             isLoading: false,
           },
         ]}
@@ -296,7 +279,7 @@ export default function ServiceProviderPaymentParametersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.providers[providerId]?.payments.includes("add") && (
+        {accessLevelsData?.general.payments.includes("add") && (
           <AddOrEditDialog
             serviceProviderId={providerId}
             trigger={
@@ -382,7 +365,6 @@ function AddOrEditDialog(props: {
   });
 
   const { data: timeInvervals } = useGetTimeIntervalsQuery(undefined);
-
   const { mutate, isPending } = useAddOrEditProviderPaymentParameterMutation({
     onError: (error) => {
       toast.error(errors[error.message], {
