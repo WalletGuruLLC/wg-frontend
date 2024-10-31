@@ -1,7 +1,6 @@
 "use client";
 
 import type { z } from "zod";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -16,7 +15,9 @@ import {
   CircleCheck,
   Lock,
   Search,
+  ShieldAlert,
   TriangleAlert,
+  Unlock,
   UserIcon,
 } from "lucide-react";
 
@@ -43,6 +44,12 @@ import Table, {
   PaginationFooter,
 } from "../_components/dashboard-table";
 import { SimpleTitle } from "../_components/dashboard-title";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../_components/dashboard-tooltip";
 
 /*
 function Actions({
@@ -68,57 +75,133 @@ function Actions({
 }: {
   user: {
     state: number;
+    active: string;
   };
 }) {
+  const { values } = useI18n();
   const IconComponent = user.state === 3 ? BadgeCheck : BadgeX;
-  const titleKyc = user.state === 3 ? "KYC Validated" : "KYC not validated";
+  const titleKyc =
+    user.state === 3
+      ? values["dashboard.wallet-users.tooltip.validated"]
+      : values["dashboard.wallet-users.tooltip.invalid"];
+  const WalletComponent =
+    user.active === "undefined"
+      ? ShieldAlert
+      : user.active === "true"
+        ? Unlock
+        : Lock;
+
+  const titleWallet =
+    user.active === "undefined"
+      ? values["dashboard.wallet-users.tooltip.no-wallet"]
+      : user.active === "true"
+        ? values["dashboard.wallet-users.tooltip.lock-wallet"]
+        : values["dashboard.wallet-users.tooltip.unlock-wallet"];
+  const walletInactive = !user.active ? true : false;
   return (
     <div className="flex">
-      <Link href={`/dashboard/wallet-users`}>
-        <Lock
-          strokeWidth={0.75}
-          className="size-6 font-semibold"
-          stroke="#3678B1"
-        />
-      </Link>
-      <Link href={`/dashboard/wallet-users`}>
-        <Asterisk
-          stroke="#3678B1"
-          strokeWidth={0.75}
-          className="size-6 font-semibold"
-        />
-      </Link>
-      <Link href={`/dashboard/wallet-users`}>
-        <UserIcon
-          stroke="#3678B1"
-          strokeWidth={0.75}
-          className="size-6 font-semibold"
-        />
-      </Link>
-      <div className="relative flex items-center">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="hover:bg-transparent hover:text-[#3678B1]"
-        >
-          <IconComponent
-            stroke="#3678B1"
-            strokeWidth={0.75}
-            className="size-6 font-semibold"
-          />
-        </Button>
-        <span className="absolute bottom-full mb-2 hidden whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white shadow-lg group-hover:block">
-          {titleKyc}
-        </span>
-      </div>
-      <Link href={`/dashboard/wallet-users`}>
-        <ArrowRightLeft
-          stroke="#3678B1"
-          strokeWidth={0.75}
-          className="size-6 font-semibold"
-        />
-      </Link>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="hover:bg-transparent hover:text-[#3678B1]"
+              disabled={walletInactive}
+            >
+              <WalletComponent
+                strokeWidth={0.75}
+                className="size-6 font-semibold"
+                stroke="#3678B1"
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{titleWallet}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="hover:bg-transparent hover:text-[#3678B1]"
+            >
+              <Asterisk
+                stroke="#3678B1"
+                strokeWidth={0.75}
+                className="size-6 font-semibold"
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {values["dashboard.wallet-users.tooltip.reset"]}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="hover:bg-transparent hover:text-[#3678B1]"
+            >
+              <UserIcon
+                stroke="#3678B1"
+                strokeWidth={0.75}
+                className="size-6 font-semibold"
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {values["dashboard.wallet-users.tooltip.details"]}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="hover:bg-transparent hover:text-[#3678B1]"
+            >
+              <IconComponent
+                stroke="#3678B1"
+                strokeWidth={0.75}
+                className="size-6 font-semibold"
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{titleKyc}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="hover:bg-transparent hover:text-[#3678B1]"
+            >
+              <ArrowRightLeft
+                stroke="#3678B1"
+                strokeWidth={0.75}
+                className="size-6 font-semibold"
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {values["dashboard.wallet-users.tooltip.transactions"]}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
     /*
     <AddOrEditDialog
@@ -281,6 +364,7 @@ const columns = [
       <Actions
         user={{
           state: info.row.original.state,
+          active: String(info.row.original.wallet?.active),
         }}
       />
       /*
