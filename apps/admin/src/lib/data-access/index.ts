@@ -828,7 +828,7 @@ export interface User {
     postedDebits: number;
     keyId: string;
     id: string;
-    active: boolean;
+    active: string;
     walletAddress: string;
     name: string;
   };
