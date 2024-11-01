@@ -12,7 +12,7 @@ import Table, {
 import { useGetDashboardUsersTitleQuery } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { SimpleTitle } from "../../_components/dashboard-title";
+import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
 const columnHelper = createColumnHelper<{
   currency: string;
@@ -75,8 +75,19 @@ export default function ServiceProviderExchangeRatesPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <SimpleTitle
-        title={values["service-providers.settings.exchange-rates.title"]}
+      <BreadcrumbTitle
+        sections={[
+          {
+            title: values["service-providers.settings.title"],
+            href: `/dashboard/settings`,
+            isLoading: false,
+          },
+          {
+            title: values["service-providers.settings.exchange-rates.title"],
+            href: `/dashboard/settings/exchange-rates`,
+            isLoading: false,
+          },
+        ]}
         showLoadingIndicator={isLoadingTitle}
       />
       <div className="flex-1 overflow-auto">

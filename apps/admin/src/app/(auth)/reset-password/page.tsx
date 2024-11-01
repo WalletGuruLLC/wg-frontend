@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import {
   Form,
@@ -24,7 +24,6 @@ import { PasswordInput } from "../_components/auth-password-input";
 
 export default function ResetPasswordPage() {
   const { data, isLoading } = useGetAuthedUserInfoQuery(undefined);
-  const router = useRouter();
 
   const { values } = useI18n();
   const errors = useErrors();
@@ -41,7 +40,7 @@ export default function ResetPasswordPage() {
   const { mutate, isPending, error } = useResetPasswordMutation({
     onSuccess: () => {
       localStorage.removeItem("access-token");
-      router.replace("/login");
+      window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
 
