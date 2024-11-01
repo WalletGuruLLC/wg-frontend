@@ -305,21 +305,33 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Ammount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
       "Enter the wallet address",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
+      "Enter a valid wallet address",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
       "Wallet Address",
     "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
       "Select a range of time",
-    "dashboard.reports.sections-transactions-by-user.search.period.label":
-      "Period",
+    "dashboard.reports.sections-transactions-by-user.search.period.error":
+      "Enter a valid period",
+    "dashboard.reports.sections-transactions-by-user.search.start-date.label":
+      "Start Date",
+    "dashboard.reports.sections-transactions-by-user.search.end-date.label":
+      "End Date",
     "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
       "Select a type",
+    "dashboard.reports.sections-transactions-by-user.search.type.error":
+      "Enter a valid type",
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Type",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
       "Select a state",
+    "dashboard.reports.sections-transactions-by-user.search.state.error":
+      "Enter a valid state",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
       "State",
     "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
       "Select a provider",
+    "dashboard.reports.sections-transactions-by-user.search.provider.error":
+      "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
   },
@@ -643,19 +655,31 @@ export const dashboardDict = {
       "Ingrese la dirección de la billetera",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
       "Dirección de billetera",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
+      "Ingrese una dirección de billetera válida",
     "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
       "Seleccione un rango de tiempo",
-    "dashboard.reports.sections-transactions-by-user.search.period.label":
-      "Periodo",
+    "dashboard.reports.sections-transactions-by-user.search.period.error":
+      "Ingrese un periodo válido",
+    "dashboard.reports.sections-transactions-by-user.search.start-date.label":
+      "Fecha de inicio",
+    "dashboard.reports.sections-transactions-by-user.search.end-date.label":
+      "Fecha de fin",
     "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
       "Seleccione un tipo",
+    "dashboard.reports.sections-transactions-by-user.search.type.error":
+      "Ingrese un tipo válido",
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
       "Seleccione un estado",
+    "dashboard.reports.sections-transactions-by-user.search.state.error":
+      "Ingrese un estado válido",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
       "Estado",
     "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
       "Seleccione un proveedor",
+    "dashboard.reports.sections-transactions-by-user.search.provider.error":
+      "Ingrese un provider válido",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
   },

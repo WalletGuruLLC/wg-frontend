@@ -1,8 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
 import Link from "next/link";
 import {
   useParams,
@@ -15,30 +13,26 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Calendar, CircleCheck, Loader2, TriangleAlert } from "lucide-react";
+import { Download } from "lucide-react";
 
-import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
-import { DialogFooter } from "@wg-frontend/ui/dialog";
-import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  useForm,
+} from "@wg-frontend/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectValue,
 } from "@wg-frontend/ui/select";
-import { toast } from "@wg-frontend/ui/toast";
 
 import type { ReportsByUser } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
-import ConfirmDialog from "~/app/dashboard/_components/dashboard-confirm-dialog";
-import Dialog from "~/app/dashboard/_components/dashboard-dialog";
-import {
-  FormItem,
-  FormLabel,
-} from "~/app/dashboard/_components/dashboard-form";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
-import { Switch } from "~/app/dashboard/_components/dashboard-switch";
 import Table, {
   ColumnHeader,
   PaginationFooter,
@@ -47,17 +41,13 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
 import {
-  useAddOrEditProviderPaymentParameterMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetProviderPaymentParametersQuery,
-  useGetProviderQuery,
-  useGetTimeIntervalsQuery,
-  useToggleProviderPaymentParameterStatusMutation,
 } from "~/lib/data-access";
-import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { addOrEditProviderPaymentParameterValidator } from "~/lib/validators";
+import { transactionsByUserValidator } from "~/lib/validators";
+import { FormLabel } from "../../_components/dashboard-form";
 import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
 function Actions({
@@ -173,8 +163,6 @@ export default function ServiceProviderPaymentParametersPage() {
     ...paginationAndSearch,
     serviceProviderId: providerId,
   });
-  const { data: providerData, isLoading: isLoadingProviderData } =
-    useGetProviderQuery({ providerId });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -183,8 +171,8 @@ export default function ServiceProviderPaymentParametersPage() {
       id: "hola",
       type: "HOLA",
       description: "PRUEBA",
-      startdate: "1",
-      enddate: "2",
+      startdate: "1/11/2024 11:08:05",
+      enddate: "1/11/2024 11:08:05",
       state: "Active",
       ammount: -50,
       currency: "USD",
@@ -193,8 +181,8 @@ export default function ServiceProviderPaymentParametersPage() {
       id: "hola2",
       type: "HOLA2",
       description: "PRUEBA2",
-      startdate: "12",
-      enddate: "22",
+      startdate: "1/11/2024 11:08:05",
+      enddate: "1/11/2024 11:08:05",
       state: "Active",
       ammount: 100,
       currency: "EUR",
@@ -236,7 +224,10 @@ export default function ServiceProviderPaymentParametersPage() {
       scroll: false,
     });
   }
-
+  const form = useForm({
+    schema: transactionsByUserValidator,
+    defaultValues: {},
+  });
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
@@ -256,136 +247,258 @@ export default function ServiceProviderPaymentParametersPage() {
           },
           {
             title: values["dashboard.reports.sections.transactions-by-user"],
-            href: `/dashboard/reports/created-by-user}`,
-            isLoading: isLoadingProviderData,
+            href: `/dashboard/reports/created-by-user`,
+            isLoading: false,
           },
         ]}
         showLoadingIndicator={isLoading}
       />
-      <div className="flex flex-row space-x-6 align-baseline">
-        <div className="flex-1">
-          {
-            values[
-              "dashboard.reports.sections-transactions-by-user.search.wallet-address.label"
-            ]
-          }
-          <Input
-            placeholder={
-              values[
-                "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder"
-              ]
-            }
-            className="rounded-full border border-black"
-            name="search"
-            onChange={(e) =>
-              handlePaginationAndSearchChange({
-                ...paginationAndSearch,
-                search: e.target.value,
-                page: "1",
-              })
-            }
-            defaultValue={paginationAndSearch.search}
-          />
-        </div>
-        <div className="flex-1">
-          {
-            values[
-              "dashboard.reports.sections-transactions-by-user.search.period.label"
-            ]
-          }
-          <div className="relative flex-1">
-            <Input
-              placeholder={
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.period.placeholder"
-                ]
-              }
-              className="rounded-full border border-black"
-              name="search"
-              onChange={(e) =>
-                handlePaginationAndSearchChange({
-                  ...paginationAndSearch,
-                  search: e.target.value,
-                  page: "1",
-                })
-              }
-              defaultValue={paginationAndSearch.search}
-            />
-            <Calendar
-              className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
-              strokeWidth={0.75}
-            />
+      <div className="space-y-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+            <div className="flex flex-row flex-wrap space-x-4">
+              <FormField
+                control={form.control}
+                name="walletAddress"
+                render={({ field }) => (
+                  <FormItem className="min-w-60 flex-1 space-y-0">
+                    <FormLabel className="font-normal">
+                      {
+                        values[
+                          "dashboard.reports.sections-transactions-by-user.search.wallet-address.label"
+                        ]
+                      }
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={
+                          values[
+                            "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder"
+                          ]
+                        }
+                        className="rounded-lg border border-black"
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormLabel className="font-normal">
+                      {
+                        values[
+                          "dashboard.reports.sections-transactions-by-user.search.start-date.label"
+                        ]
+                      }
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="Date"
+                        className={cn(
+                          "rounded-lg border border-black",
+
+                          !form.watch("startDate") && "text-gray-400",
+                        )}
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormLabel className="font-normal">
+                      {
+                        values[
+                          "dashboard.reports.sections-transactions-by-user.search.end-date.label"
+                        ]
+                      }
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="Date"
+                        className={cn(
+                          "rounded-lg border border-black",
+
+                          !form.watch("endDate") && "text-gray-400",
+                        )}
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormLabel className="font-normal">
+                      {
+                        values[
+                          "dashboard.reports.sections-transactions-by-user.search.type.label"
+                        ]
+                      }
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-lg border border-black",
+                            !field.value && "text-gray-400",
+                          )}
+                        >
+                          <SelectValue
+                            placeholder={
+                              values[
+                                `dashboard.reports.sections-transactions-by-user.search.type.placeholder`
+                              ]
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Provider">Provider</SelectItem>
+                        <SelectItem value="Platform">Platform</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormLabel className="font-normal">
+                      {
+                        values[
+                          "dashboard.reports.sections-transactions-by-user.search.state.label"
+                        ]
+                      }
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-lg border border-black",
+                            !field.value && "text-[#A1A1A1]",
+                          )}
+                        >
+                          <SelectValue
+                            placeholder={
+                              values[
+                                `dashboard.reports.sections-transactions-by-user.search.state.placeholder`
+                              ]
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Buenos Aires">
+                          Buenos Aires
+                        </SelectItem>
+                        <SelectItem value="Cordoba">Cordoba</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="provider"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormLabel className="font-normal">
+                      {
+                        values[
+                          "dashboard.reports.sections-transactions-by-user.search.provider.label"
+                        ]
+                      }
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "rounded-lg border border-black",
+                            !field.value && "text-gray-400",
+                          )}
+                        >
+                          <SelectValue
+                            placeholder={
+                              values[
+                                `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
+                              ]
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Rodrigo Provider 1">
+                          Rodrigo Provider 1
+                        </SelectItem>
+                        <SelectItem value="Rodrigo Provider 2">
+                          Rodrigo Provider 2
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button className="h-max self-end">
+                <p className="flex-1 text-lg font-light">
+                  {
+                    values[
+                      "dashboard.reports.sections.transactions-by-user.search-button"
+                    ]
+                  }
+                </p>
+              </Button>
+            </div>
+          </form>
+        </Form>
+        <div className="flex flex-row justify-between">
+          <div>
+            <p>User: Rodrigo Bestard Pino</p>
+            <p>Period: Octubre 31 2024 - Octubre 31 2025</p>
           </div>
+          <Button className="px-2" variant="secondary">
+            <Download strokeWidth={0.75} className="size-6" />
+          </Button>
         </div>
-        <div>
-          {
-            values[
-              "dashboard.reports.sections-transactions-by-user.search.type.label"
-            ]
-          }
-          <Select>
-            <SelectTrigger
-              className={cn("rounded-full border border-black text-gray-400")}
-            >
-              <SelectValue
-                placeholder={
-                  values[
-                    `dashboard.reports.sections-transactions-by-user.search.type.placeholder`
-                  ]
-                }
-              />
-            </SelectTrigger>
-          </Select>
-        </div>
-        <div>
-          {
-            values[
-              "dashboard.reports.sections-transactions-by-user.search.state.label"
-            ]
-          }
-          <Select>
-            <SelectTrigger
-              className={cn("rounded-full border border-black text-gray-400")}
-            >
-              <SelectValue
-                placeholder={
-                  values[
-                    `dashboard.reports.sections-transactions-by-user.search.state.placeholder`
-                  ]
-                }
-              />
-            </SelectTrigger>
-          </Select>
-        </div>
-        <div>
-          {
-            values[
-              "dashboard.reports.sections-transactions-by-user.search.provider.label"
-            ]
-          }
-          <Select>
-            <SelectTrigger
-              className={cn("rounded-full border border-black text-gray-400")}
-            >
-              <SelectValue
-                placeholder={
-                  values[
-                    `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
-                  ]
-                }
-              />
-            </SelectTrigger>
-          </Select>
-        </div>
-        <Button className="flex h-max flex-row items-center space-x-2">
-          <p className="flex-1 text-lg font-light">
-            {
-              values[
-                "dashboard.reports.sections.transactions-by-user.search-button"
-              ]
-            }
-          </p>
-        </Button>
       </div>
       <div className="flex-1 overflow-auto">
         <Table table={table} />
@@ -428,295 +541,5 @@ export default function ServiceProviderPaymentParametersPage() {
         />
       </div>
     </div>
-  );
-}
-
-function AddOrEditDialog(props: {
-  paymentParameter?: {
-    id: string;
-    name: string;
-    cost: string;
-    interval: string;
-    frequency: string;
-  };
-  serviceProviderId: string;
-  trigger: ReactNode;
-}) {
-  const { values } = useI18n();
-  const errors = useErrors();
-  const [isOpen, _, close, toggle] = useBooleanHandlers();
-
-  const form = useForm({
-    schema: addOrEditProviderPaymentParameterValidator,
-    defaultValues: {
-      name: props.paymentParameter?.name ?? "",
-      cost: props.paymentParameter?.cost ?? "",
-      timeIntervalId: props.paymentParameter?.interval ?? "",
-      frequency: props.paymentParameter?.frequency ?? "",
-      serviceProviderId: props.serviceProviderId,
-      paymentParameterId: props.paymentParameter?.id,
-    },
-  });
-
-  const { data: timeInvervals } = useGetTimeIntervalsQuery(undefined);
-
-  const { mutate, isPending } = useAddOrEditProviderPaymentParameterMutation({
-    onError: (error) => {
-      toast.error(errors[error.message], {
-        description: "Error code: " + error.message,
-      });
-    },
-    onSuccess: () => {
-      toast.success(values[`${valuesPrefix}.toast.success` as const]);
-      close();
-      form.reset();
-    },
-  });
-
-  const valuesPrefix =
-    `service-providers.settings.payment-parameters.${props.paymentParameter ? "edit" : "add"}-dialog` as const;
-
-  // This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
-  useEffect(() => {
-    if (props.paymentParameter) {
-      form.reset({
-        name: props.paymentParameter.name,
-        cost: props.paymentParameter.cost,
-        timeIntervalId: props.paymentParameter.interval,
-        frequency: props.paymentParameter.frequency,
-        serviceProviderId: props.serviceProviderId,
-        paymentParameterId: props.paymentParameter.id,
-      });
-    }
-  }, [props.paymentParameter, form, props.serviceProviderId]);
-
-  return (
-    <Dialog
-      key={props.paymentParameter?.id ?? "add"}
-      isOpen={isOpen}
-      toggleOpen={() => {
-        form.reset();
-        toggle();
-      }}
-      trigger={props.trigger}
-      ariaDescribedBy="add-or-edit-dialog"
-    >
-      <div className="space-y-9">
-        <h1 className="text-3xl font-light">
-          {values[`${valuesPrefix}.title`]}
-        </h1>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((data) => mutate(data))}
-            className="space-y-9"
-          >
-            <div className="flex space-x-2">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>
-                      {values[`${valuesPrefix}.name.label`]}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={values[`${valuesPrefix}.name.placeholder`]}
-                        required
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="cost"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>
-                      {values[`${valuesPrefix}.cost.label`]}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={values[`${valuesPrefix}.cost.placeholder`]}
-                        required
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex space-x-2">
-              <FormField
-                control={form.control}
-                name="timeIntervalId"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>
-                      {values[`${valuesPrefix}.interval.label`]}
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger
-                          className={cn(
-                            "rounded-none border-transparent border-b-black",
-                            !field.value && "text-[#A1A1A1]",
-                          )}
-                        >
-                          <SelectValue
-                            placeholder={
-                              values[`${valuesPrefix}.interval.placeholder`]
-                            }
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {!timeInvervals && (
-                          <Loader2
-                            className="animate-spin"
-                            strokeWidth={0.75}
-                          />
-                        )}
-                        {timeInvervals?.map((ti) => (
-                          <SelectItem key={ti.id} value={ti.id}>
-                            {ti.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="frequency"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>
-                      {values[`${valuesPrefix}.frequency.label`]}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={
-                          values[`${valuesPrefix}.frequency.placeholder`]
-                        }
-                        required
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter className="pt-9">
-              <Button className="w-full" type="submit" disabled={isPending}>
-                {
-                  values[
-                    isPending
-                      ? "loading"
-                      : (`${valuesPrefix}.primary-button` as const)
-                  ]
-                }
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </div>
-    </Dialog>
-  );
-}
-
-function SwitchActiveStatusDialog(props: {
-  paymentParameter: {
-    id: string;
-    isActive: boolean;
-  };
-}) {
-  const { providerId } = useParams<{ providerId: string }>();
-  const { values } = useI18n();
-  const errors = useErrors();
-  const [isOpen, _, close, toggle] = useBooleanHandlers();
-
-  const { mutate, isPending } = useToggleProviderPaymentParameterStatusMutation(
-    {
-      onSuccess: () => {
-        toast.success(values[`${valuesPrexif}.toast.success` as const]);
-        close();
-      },
-      onError: (error) => {
-        toast.error(errors[error.message], {
-          description: "Error code: " + error.message,
-        });
-      },
-    },
-  );
-
-  const valuesPrexif =
-    `service-providers.settings.payment-parameters.${props.paymentParameter.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
-
-  return (
-    <ConfirmDialog
-      key={props.paymentParameter.id}
-      isOpen={isOpen}
-      toggleOpen={toggle}
-      trigger={<Switch checked={props.paymentParameter.isActive} />}
-      actions={[
-        <Button
-          className="w-full"
-          key="yes"
-          onClick={() =>
-            mutate({
-              serviceProviderId: providerId,
-              paymentParameterId: props.paymentParameter.id,
-            })
-          }
-          disabled={isPending}
-        >
-          {
-            values[
-              isPending
-                ? "loading"
-                : (`${valuesPrexif}.primary-button` as const)
-            ]
-          }
-        </Button>,
-        <Button
-          className="w-full"
-          variant="secondary"
-          key="no"
-          onClick={close}
-          disabled={isPending}
-        >
-          {values[`${valuesPrexif}.secondary-button`]}
-        </Button>,
-      ]}
-      ariaDescribedBy="switch-active-status-dialog"
-      Icon={
-        props.paymentParameter.isActive ? (
-          <TriangleAlert
-            strokeWidth={0.75}
-            className="h-12 w-12"
-            color="#3678B1"
-          />
-        ) : (
-          <CircleCheck
-            strokeWidth={0.75}
-            className="h-12 w-12"
-            color="#3678B1"
-          />
-        )
-      }
-      title={values[`${valuesPrexif}.title`]}
-      description={<span>{values[`${valuesPrexif}.description`]}</span>}
-    />
   );
 }
