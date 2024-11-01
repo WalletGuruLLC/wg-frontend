@@ -246,5 +246,37 @@ export const addOrEditProviderPaymentParameterValidator = z.object({
 });
 
 export const settingsValidator = z.object({
-  value: z.string().url(),
+  value: z.string().url().min(1),
+});
+
+export const transactionsByUserValidator = z.object({
+  walletAddress: z
+    .string()
+    .min(
+      1,
+      "dashboard.reports.sections-transactions-by-user.search.wallet-address.error",
+    ),
+  startDate: z
+    .string()
+    .refine(
+      (date) =>
+        !isNaN(new Date(date).getUTCDate()) && new Date(date) <= new Date(),
+      {
+        message:
+          "dashboard.reports.sections-transactions-by-user.search.period.error",
+      },
+    ),
+  endDate: z
+    .string()
+    .refine(
+      (date) =>
+        !isNaN(new Date(date).getUTCDate()) && new Date(date) <= new Date(),
+      {
+        message:
+          "dashboard.reports.sections-transactions-by-user.search.period.error",
+      },
+    ),
+  type: z.string().min(1),
+  provider: z.string().min(1),
+  state: z.string().min(1),
 });
