@@ -250,19 +250,15 @@ const columns = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={`/dashboard/wallet-users/${idUser}`}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="hover:bg-transparent hover:text-[#3678B1]"
-                  >
-                    <ChevronRight
-                      stroke="#3678B1"
-                      strokeWidth={0.75}
-                      className="size-6 font-semibold"
-                    />
-                  </Button>
+                <Link
+                  className="text-[#3678B1]"
+                  href={`/dashboard/wallet-users/${idUser}`}
+                >
+                  <ChevronRight
+                    stroke="#3678B1"
+                    strokeWidth={0.75}
+                    className="size-6 font-semibold"
+                  />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>{tooltip}</TooltipContent>
