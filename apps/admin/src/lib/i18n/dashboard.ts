@@ -359,6 +359,9 @@ export const dashboardDict = {
       "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
+    "dashboard.wallet-users.select-state": "Select state",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -690,5 +693,8 @@ export const dashboardDict = {
     "dashboard.wallet-users.locked-wallet": "Billetera bloqueada",
     "dashboard.wallet-users.active-wallet": "Billetera Activa",
     "dashboard.wallet-users.no-wallet": "No hay billetera",
+    "dashboard.wallet-users.select-state": "Seleccionar estado",
+    "dashboard.wallet-users.select-wallet": "Seleccionar billetera",
+    "dashboard.wallet-users.search.placeholder": "Buscar por nombre",
   },
 } satisfies I18nDictionary;
