@@ -248,3 +248,8 @@ export const addOrEditProviderPaymentParameterValidator = z.object({
 export const settingsValidator = z.object({
   value: z.string().url(),
 });
+
+export const walletusersValidator = z.object({
+  state: z.string().min(1),
+  wallet: z.string().min(1),
+});
