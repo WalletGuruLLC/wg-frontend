@@ -321,6 +321,9 @@ export const dashboardDict = {
     "dashboard.wallet-users.locked-wallet": "Locked Wallet",
     "dashboard.wallet-users.active-wallet": "Active Wallet",
     "dashboard.wallet-users.no-wallet": "No wallet",
+    "dashboard.wallet-users.select-state": "Select state",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
