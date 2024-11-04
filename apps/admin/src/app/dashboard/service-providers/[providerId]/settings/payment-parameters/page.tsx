@@ -173,7 +173,7 @@ export default function ServiceProviderPaymentParametersPage() {
     },
     providers: {
       id: providerId,
-      module: "settings",
+      module: "payments",
     },
   });
   const { values } = useI18n();
@@ -203,12 +203,12 @@ export default function ServiceProviderPaymentParametersPage() {
       .filter(
         (c) =>
           c.id !== "actions" ||
-          accessLevelsData?.providers[providerId]?.settings.includes("edit"),
+          accessLevelsData?.providers[providerId]?.payments.includes("edit"),
       )
       .filter(
         (c) =>
           c.id !== "active" ||
-          accessLevelsData?.providers[providerId]?.settings.includes(
+          accessLevelsData?.providers[providerId]?.payments.includes(
             "inactive",
           ),
       ),
@@ -296,7 +296,7 @@ export default function ServiceProviderPaymentParametersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.providers[providerId]?.settings.includes("add") && (
+        {accessLevelsData?.providers[providerId]?.payments.includes("add") && (
           <AddOrEditDialog
             serviceProviderId={providerId}
             trigger={

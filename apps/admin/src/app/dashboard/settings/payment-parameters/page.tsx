@@ -170,7 +170,7 @@ export default function ServiceProviderPaymentParametersPage() {
   const providerId = userData?.serviceProviderId ?? "";
   const loading = useAccessLevelGuard({
     general: {
-      module: "settings",
+      module: "payments",
     },
   });
   const { values } = useI18n();
@@ -198,12 +198,12 @@ export default function ServiceProviderPaymentParametersPage() {
       .filter(
         (c) =>
           c.id !== "actions" ||
-          accessLevelsData?.general.settings.includes("edit"),
+          accessLevelsData?.general.payments.includes("edit"),
       )
       .filter(
         (c) =>
           c.id !== "active" ||
-          accessLevelsData?.general.settings.includes("inactive"),
+          accessLevelsData?.general.payments.includes("inactive"),
       ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -279,7 +279,7 @@ export default function ServiceProviderPaymentParametersPage() {
             strokeWidth={0.75}
           />
         </div>
-        {accessLevelsData?.general.settings.includes("add") && (
+        {accessLevelsData?.general.payments.includes("add") && (
           <AddOrEditDialog
             serviceProviderId={providerId}
             trigger={
