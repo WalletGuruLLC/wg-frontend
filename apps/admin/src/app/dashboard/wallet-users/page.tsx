@@ -355,7 +355,7 @@ export default function WalletUsersPage() {
       <div className="flex flex-row items-center space-x-6">
         <div className="relative w-1/2">
           <Input
-            placeholder={values["dashboard.users.search.placeholder"]}
+            placeholder={values["dashboard.wallet-users.search.placeholder"]}
             className="rounded-full border border-black"
             name="search"
             onChange={(e) =>
@@ -373,16 +373,59 @@ export default function WalletUsersPage() {
             strokeWidth={0.75}
           />
         </div>
-        <div className="relative w-1/2">
+        <div className="relative -top-4 w-1/2">
           <Form {...form}>
             <form onSubmit={form.handleSubmit((data) => console.log(data))}>
-              <div className="flex flex-row flex-wrap space-x-2">
+              <div className="flex w-full flex-row flex-wrap space-x-2">
+                <FormField
+                  control={form.control}
+                  name="wallet"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel className="text-gray-400">
+                        {values["dashboard.wallet-users.table.header.wallet"]}
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger
+                            className={cn(
+                              "rounded-none border-transparent border-b-black",
+                            )}
+                          >
+                            <SelectValue
+                              placeholder={
+                                values["dashboard.wallet-users.select-wallet"]
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"0"}>
+                            {values["dashboard.wallet-users.active-wallet"]}
+                          </SelectItem>
+                          <SelectItem value={"1"}>
+                            {values["dashboard.wallet-users.locked-wallet"]}
+                          </SelectItem>
+                          <SelectItem value={"2"}>
+                            {values["dashboard.wallet-users.no-wallet"]}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="state"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>State</FormLabel>
+                    <FormItem className="flex-1">
+                      <FormLabel className="text-gray-400">
+                        {values["dashboard.wallet-users.table.header.state"]}
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -396,49 +439,9 @@ export default function WalletUsersPage() {
                             <SelectValue
                               className="h-full"
                               placeholder={
-                                values["dashboard.wallet-users.state"]
+                                values["dashboard.wallet-users.select-state"]
                               }
                             />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value={"0"}>Hola</SelectItem>
-                          <SelectItem value={"1"}>
-                            {`${values["dashboard.wallet-users.state1"]}`}
-                          </SelectItem>
-                          <SelectItem value={"2"}>
-                            {values["dashboard.wallet-users.state1"]}
-                          </SelectItem>
-                          <SelectItem value={"3"}>
-                            {values["dashboard.wallet-users.state1"]}
-                          </SelectItem>
-                          <SelectItem value={"4"}>
-                            `{values["dashboard.wallet-users.state1"]}`
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="wallet"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Wallet</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger
-                            className={cn(
-                              "rounded-none border-transparent border-b-black",
-                              !field.value && "text-gray-400",
-                            )}
-                          >
-                            <SelectValue placeholder={"Select state"} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -451,15 +454,26 @@ export default function WalletUsersPage() {
                           <SelectItem value={"2"}>
                             {values["dashboard.wallet-users.state2"]}
                           </SelectItem>
+                          <SelectItem value={"3"}>
+                            {values["dashboard.wallet-users.state3"]}
+                          </SelectItem>
+                          <SelectItem value={"4"}>
+                            {values["dashboard.wallet-users.state4"]}
+                          </SelectItem>
+                          <SelectItem value={"5"}>
+                            {values["dashboard.wallet-users.state5"]}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button className="h-max self-end">
-                  <p className="flex-1 text-lg font-light">Filter</p>
-                </Button>
+                <div className="flex-1">
+                  <Button className="h-max self-end">
+                    <p className="flex-1 text-lg font-light">Filter</p>
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>
