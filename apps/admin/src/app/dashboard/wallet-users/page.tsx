@@ -1,25 +1,14 @@
 "use client";
 
 import type { z } from "zod";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ArrowRightLeft,
-  Asterisk,
-  BadgeCheck,
-  BadgeX,
-  CircleCheck,
-  Lock,
-  Search,
-  ShieldAlert,
-  TriangleAlert,
-  Unlock,
-  UserIcon,
-} from "lucide-react";
+import { ChevronRight, CircleCheck, Search, TriangleAlert } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { Button } from "@wg-frontend/ui/button";
@@ -51,172 +40,13 @@ import {
   TooltipTrigger,
 } from "../_components/dashboard-tooltip";
 
-/*
-function Actions({
-  user,
-}: {
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    role: {
-      id: string;
-      name: string;
-    };
-    email: string;
-    phone: string;
-    first: boolean;
-  };
-}) {
-  const { value } = useI18n("dashboard.users.table.actions.edit");
-  */
-function Actions({
-  user,
-}: {
-  user: {
-    state: number;
-    active: string;
-  };
-}) {
-  const { values } = useI18n();
-  const IconComponent = user.state === 3 ? BadgeCheck : BadgeX;
-  const titleKyc =
-    user.state === 3
-      ? values["dashboard.wallet-users.tooltip.validated"]
-      : values["dashboard.wallet-users.tooltip.invalid"];
-  const WalletComponent =
-    user.active === "undefined"
-      ? ShieldAlert
-      : user.active === "true"
-        ? Unlock
-        : Lock;
-
-  const titleWallet =
-    user.active === "undefined"
-      ? values["dashboard.wallet-users.tooltip.no-wallet"]
-      : user.active === "true"
-        ? values["dashboard.wallet-users.tooltip.lock-wallet"]
-        : values["dashboard.wallet-users.tooltip.unlock-wallet"];
-  const walletInactive = !user.active ? true : false;
-  return (
-    <div className="flex">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="hover:bg-transparent hover:text-[#3678B1]"
-              disabled={walletInactive}
-            >
-              <WalletComponent
-                strokeWidth={0.75}
-                className="size-6 font-semibold"
-                stroke="#3678B1"
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{titleWallet}</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="hover:bg-transparent hover:text-[#3678B1]"
-            >
-              <Asterisk
-                stroke="#3678B1"
-                strokeWidth={0.75}
-                className="size-6 font-semibold"
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            {values["dashboard.wallet-users.tooltip.reset"]}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="hover:bg-transparent hover:text-[#3678B1]"
-            >
-              <UserIcon
-                stroke="#3678B1"
-                strokeWidth={0.75}
-                className="size-6 font-semibold"
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            {values["dashboard.wallet-users.tooltip.details"]}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="hover:bg-transparent hover:text-[#3678B1]"
-            >
-              <IconComponent
-                stroke="#3678B1"
-                strokeWidth={0.75}
-                className="size-6 font-semibold"
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{titleKyc}</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="hover:bg-transparent hover:text-[#3678B1]"
-            >
-              <ArrowRightLeft
-                stroke="#3678B1"
-                strokeWidth={0.75}
-                className="size-6 font-semibold"
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            {values["dashboard.wallet-users.tooltip.transactions"]}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
-    /*
-    <AddOrEditDialog
-      user={{
-        ...user,
-        phone: (user.phone as string | undefined) ?? "+1-",
-      }}
-      trigger={
-        <Button className="font-normal no-underline" variant="link">
-          {value}
-        </Button>
-      }
-    />*/
-  );
-}
+const formatCurrency = (value: number, code: string, scale: number) => {
+  const formattedValue = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: scale,
+    maximumFractionDigits: scale,
+  }).format(value / Math.pow(10, scale));
+  return `${formattedValue} ${code}`;
+};
 
 const columnHelper = createColumnHelper<User>();
 
@@ -254,17 +84,10 @@ const columns = [
     {
       id: "balance",
       cell: (info) => {
-        const balance = info.getValue();
-        const asset = info.row.original.asset;
-        const currencyCode = asset?.code ?? "USD";
-        const scale = asset?.scale ?? 2;
-        const formattedBalance = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: currencyCode,
-          minimumFractionDigits: scale,
-          maximumFractionDigits: scale,
-        }).format(balance / Math.pow(10, scale));
-        return `${formattedBalance}`;
+        const money = info.getValue();
+        const code = info.row.original.asset?.code ?? "USD";
+        const scale = info.row.original.asset?.scale ?? 2;
+        return formatCurrency(money, code, scale);
       },
       header: () => (
         <ColumnHeader i18nKey="dashboard.wallet-users.table.header.balance" />
@@ -280,13 +103,10 @@ const columns = [
     {
       id: "reserved",
       cell: (info) => {
-        const balance = info.getValue();
-        const asset = info.row.original.asset;
-        const formattedReserved = new Intl.NumberFormat("en-En", {
-          minimumFractionDigits: asset?.scale ?? 0,
-          maximumFractionDigits: asset?.scale ?? 0,
-        }).format(balance || 0);
-        return `${formattedReserved} ${asset?.code ?? ""}`;
+        const money = info.getValue();
+        const code = info.row.original.asset?.code ?? "USD";
+        const scale = info.row.original.asset?.scale ?? 2;
+        return formatCurrency(money, code, scale);
       },
       header: () => (
         <ColumnHeader i18nKey="dashboard.wallet-users.table.header.reserved" />
@@ -304,13 +124,10 @@ const columns = [
     {
       id: "available",
       cell: (info) => {
-        const balance = info.getValue();
-        const asset = info.row.original.asset;
-        const formattedAvailable = new Intl.NumberFormat("en-En", {
-          minimumFractionDigits: asset?.scale ?? 0,
-          maximumFractionDigits: asset?.scale ?? 0,
-        }).format(balance || 0);
-        return `${formattedAvailable} ${asset?.code ?? ""}`;
+        const money = info.getValue();
+        const code = info.row.original.asset?.code ?? "USD";
+        const scale = info.row.original.asset?.scale ?? 2;
+        return formatCurrency(money, code, scale);
       },
       header: () => (
         <ColumnHeader i18nKey="dashboard.wallet-users.table.header.available" />
@@ -355,35 +172,90 @@ const columns = [
       />
     ),
   }),
-  columnHelper.display({
-    id: "actions",
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.actions" />
-    ),
-    cell: (info) => (
-      <Actions
-        user={{
-          state: info.row.original.state,
-          active: String(info.row.original.wallet?.active),
-        }}
-      />
-      /*
-      <Actions 
-        user={{
-          id: info.row.original.id,
-          firstName: info.row.original.firstName,
-          lastName: info.row.original.lastName,
-          email: info.row.original.email,
-          phone: info.row.original.phone,
-          role: {
-            id: info.row.original.roleId,
-            name: info.row.original.roleName,
-          },
-          first: info.row.original.first,
-        }}
-      />*/
-    ),
-  }),
+  columnHelper.accessor(
+    (row) => {
+      const { values } = useI18n();
+      const state = row.state;
+      const statesName = {
+        0: values["dashboard.wallet-users.state0"],
+        1: values["dashboard.wallet-users.state1"],
+        2: values["dashboard.wallet-users.state2"],
+        3: values["dashboard.wallet-users.state3"],
+        4: values["dashboard.wallet-users.state4"],
+        5: values["dashboard.wallet-users.state5"],
+      };
+      return (
+        String(statesName[state]) || values["dashboard.wallet-users.state"]
+      );
+    },
+    {
+      id: "stateName",
+      cell: (info) => info.getValue(),
+      header: () => (
+        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.state" />
+      ),
+    },
+  ),
+  columnHelper.accessor(
+    (row) => {
+      const { values } = useI18n();
+      const walletState = String(row.wallet?.active);
+      const walletStateName =
+        walletState === "undefined"
+          ? values["dashboard.wallet-users.no-wallet"]
+          : walletState === "true"
+            ? values["dashboard.wallet-users.active-wallet"]
+            : values["dashboard.wallet-users.locked-wallet"];
+      return walletStateName;
+    },
+    {
+      id: "walletName",
+      cell: (info) => info.getValue(),
+      header: () => (
+        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.wallet" />
+      ),
+    },
+  ),
+  columnHelper.accessor(
+    (info) => {
+      const { values } = useI18n();
+      const data = {
+        idUser: info.id,
+        tooltip: values["dashboard.wallet-users.tooltip.details"],
+      };
+      return data;
+    },
+    {
+      id: "actions",
+      cell: (data) => {
+        const { idUser, tooltip } = data.getValue();
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={`/dashboard/wallet-users/${idUser}`}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-transparent hover:text-[#3678B1]"
+                  >
+                    <ChevronRight
+                      stroke="#3678B1"
+                      strokeWidth={0.75}
+                      className="size-6 font-semibold"
+                    />
+                  </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>{tooltip}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      },
+      header: () => "",
+    },
+  ),
 ];
 
 export default function WalletUsersPage() {
