@@ -11,11 +11,26 @@ import {
 import { ChevronRight, CircleCheck, Search, TriangleAlert } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
-import { Button } from "@wg-frontend/ui/button";
+import { cn } from "@wg-frontend/ui";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormMessage,
+  useForm,
+} from "@wg-frontend/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { User } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
+import { Button } from "~/components/button";
+import { SelectTrigger } from "~/components/select";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
@@ -25,7 +40,9 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { walletusersValidator } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
+import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
 import Table, {
@@ -233,19 +250,15 @@ const columns = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={`/dashboard/wallet-users/${idUser}`}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="hover:bg-transparent hover:text-[#3678B1]"
-                  >
-                    <ChevronRight
-                      stroke="#3678B1"
-                      strokeWidth={0.75}
-                      className="size-6 font-semibold"
-                    />
-                  </Button>
+                <Link
+                  className="text-[#3678B1]"
+                  href={`/dashboard/wallet-users/${idUser}`}
+                >
+                  <ChevronRight
+                    stroke="#3678B1"
+                    strokeWidth={0.75}
+                    className="size-6 font-semibold"
+                  />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>{tooltip}</TooltipContent>
@@ -282,8 +295,6 @@ export default function WalletUsersPage() {
     ...paginationAndSearch,
     type: !userIsLoading && dataUser ? "WALLET" : "WALLET",
   });
-  /* const { data: title, isLoading: isLoadingTitle } =
-    useGetDashboardUsersTitleQuery(undefined);*/
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
 
@@ -323,7 +334,10 @@ export default function WalletUsersPage() {
       scroll: false,
     });
   }
-
+  const form = useForm({
+    schema: walletusersValidator,
+    defaultValues: {},
+  });
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
@@ -335,13 +349,11 @@ export default function WalletUsersPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        // title={`${title ?? ""} ${values["dashboard.wallet-users.title"]}`}
         title={`${values["dashboard.wallet-users.title"]}`}
-        //showLoadingIndicator={isLoading || isLoadingTitle}
         showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
-        <div className="relative w-10/12">
+        <div className="relative w-1/2">
           <Input
             placeholder={values["dashboard.users.search.placeholder"]}
             className="rounded-full border border-black"
@@ -360,6 +372,97 @@ export default function WalletUsersPage() {
             className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
             strokeWidth={0.75}
           />
+        </div>
+        <div className="relative w-1/2">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+              <div className="flex flex-row flex-wrap space-x-2">
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>State</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger
+                            className={cn(
+                              "rounded-none border-transparent border-b-black",
+                            )}
+                          >
+                            <SelectValue
+                              className="h-full"
+                              placeholder={
+                                values["dashboard.wallet-users.state"]
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"0"}>Hola</SelectItem>
+                          <SelectItem value={"1"}>
+                            {`${values["dashboard.wallet-users.state1"]}`}
+                          </SelectItem>
+                          <SelectItem value={"2"}>
+                            {values["dashboard.wallet-users.state1"]}
+                          </SelectItem>
+                          <SelectItem value={"3"}>
+                            {values["dashboard.wallet-users.state1"]}
+                          </SelectItem>
+                          <SelectItem value={"4"}>
+                            `{values["dashboard.wallet-users.state1"]}`
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="wallet"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Wallet</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger
+                            className={cn(
+                              "rounded-none border-transparent border-b-black",
+                              !field.value && "text-gray-400",
+                            )}
+                          >
+                            <SelectValue placeholder={"Select state"} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"0"}>
+                            {values["dashboard.wallet-users.state0"]}
+                          </SelectItem>
+                          <SelectItem value={"1"}>
+                            {values["dashboard.wallet-users.state1"]}
+                          </SelectItem>
+                          <SelectItem value={"2"}>
+                            {values["dashboard.wallet-users.state2"]}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button className="h-max self-end">
+                  <p className="flex-1 text-lg font-light">Filter</p>
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
       </div>
       <div className="flex-1 overflow-auto">
@@ -399,294 +502,6 @@ export default function WalletUsersPage() {
     </div>
   );
 }
-/*
-function AddOrEditDialog(props: {
-  user?: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    role: {
-      id: string;
-      name: string;
-    };
-    first: boolean;
-  };
-  trigger: ReactNode;
-}) {
-  const { values } = useI18n();
-  const errors = useErrors();
-  const [isOpen, _, close, toggle] = useBooleanHandlers();
-
-  const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
-
-  const form = useForm({
-    schema: addOrEditUserValidator,
-    defaultValues: {
-      firstName: props.user?.firstName ?? "",
-      lastName: props.user?.lastName ?? "",
-      email: props.user?.email ?? "",
-      phone: props.user?.phone ?? "",
-      roleId: props.user?.role.id ?? "",
-      serviceProviderId: dataUser?.serviceProviderId ?? "EMPTY",
-      type: dataUser?.type ?? "PLATFORM",
-      userId: props.user?.id,
-    },
-  });
-
-  const { mutate, isPending } = useAddOrEditUserMutation({
-    onError: (error) => {
-      toast.error(errors[error.message], {
-        description: "Error code: " + error.message,
-      });
-    },
-    onSuccess: () => {
-      toast.success(values[`${valuesPrefix}.toast.success` as const]);
-      close();
-      form.reset();
-    },
-  });
-  const { data: dataRoles } = useGetActiveRolesQuery({
-    providerId: dataUser?.serviceProviderId ?? "EMPTY",
-  });
-
-  const { data: dataCountryCodes } = useGetCountryCodesQuery(undefined);
-
-  const valuesPrefix =
-    `dashboard.users.${props.user ? "edit" : "add"}-dialog` as const;
-
-  // This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
-  useEffect(() => {
-    if (props.user) {
-      form.reset({
-        firstName: props.user.firstName,
-        lastName: props.user.lastName,
-        email: props.user.email,
-        phone: props.user.phone,
-        roleId: props.user.role.id,
-        userId: props.user.id,
-        serviceProviderId: dataUser?.serviceProviderId ?? "EMPTY",
-        type: dataUser?.type ?? "PLATFORM",
-      });
-    }
-  }, [props.user, form, dataUser?.serviceProviderId, dataUser?.type]);
-
-  return (
-    <Dialog
-      key={props.user?.id ?? "add"}
-      isOpen={isOpen}
-      toggleOpen={() => {
-        form.reset();
-        toggle();
-      }}
-      trigger={props.trigger}
-      ariaDescribedBy="add-or-edit-dialog"
-    >
-      <div className="space-y-9">
-        <h1 className="text-3xl font-light">
-          {values[`${valuesPrefix}.title`]}
-        </h1>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((data) => mutate(data))}
-            className="space-y-9"
-          >
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {values[`${valuesPrefix}.first-name.label`]}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={
-                        values[`${valuesPrefix}.first-name.placeholder`]
-                      }
-                      required
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {values[`${valuesPrefix}.last-name.label`]}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={
-                        values[`${valuesPrefix}.last-name.placeholder`]
-                      }
-                      required
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{values[`${valuesPrefix}.email.label`]}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={values[`${valuesPrefix}.email.placeholder`]}
-                      required
-                      disabled={props.user && !props.user.first}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{values[`${valuesPrefix}.phone.label`]}</FormLabel>
-                  <div className="flex flex-row items-center space-x-2">
-                    <div>
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange({
-                            target: {
-                              value:
-                                value + "-" + (field.value.split("-")[1] ?? ""),
-                            },
-                          });
-                        }}
-                        defaultValue={field.value.split("-")[0]}
-                      >
-                        <SelectTrigger
-                          className={cn(
-                            "rounded-none border-transparent border-b-black",
-                            !field.value.split("-")[0] && "text-[#A1A1A1]",
-                          )}
-                        >
-                          <SelectValue
-                            className="h-full"
-                            placeholder={
-                              values[`${valuesPrefix}.phone.code-placeholder`]
-                            }
-                          >
-                            {field.value.split("-")[0]}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {!dataCountryCodes && (
-                            <Loader2
-                              className="animate-spin"
-                              strokeWidth={0.75}
-                            />
-                          )}
-                          {dataCountryCodes?.map((country) => (
-                            <SelectItem
-                              key={country.code}
-                              value={country.dial_code}
-                            >
-                              {country.name} {country.dial_code}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex-1">
-                      <FormControl>
-                        <Input
-                          placeholder={
-                            values[`${valuesPrefix}.phone.phone-placeholder`]
-                          }
-                          required
-                          inputMode="numeric"
-                          onChange={(e) => {
-                            field.onChange({
-                              target: {
-                                value:
-                                  (field.value.split("-")[0] ?? "") +
-                                  "-" +
-                                  e.target.value,
-                              },
-                            });
-                          }}
-                          value={field.value.split("-")[1] ?? ""}
-                        />
-                      </FormControl>
-                    </div>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="roleId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{values[`${valuesPrefix}.role.label`]}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={cn(
-                          "rounded-none border-transparent border-b-black",
-                          !field.value && "text-[#A1A1A1]",
-                        )}
-                      >
-                        <SelectValue
-                          placeholder={
-                            values[`${valuesPrefix}.role.placeholder`]
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {!dataRoles && (
-                        <Loader2 className="animate-spin" strokeWidth={0.75} />
-                      )}
-                      {dataRoles?.map((role) => (
-                        <SelectItem key={role.id} value={role.id}>
-                          {role.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter className="pt-9">
-              <Button className="w-full" type="submit" disabled={isPending}>
-                {
-                  values[
-                    isPending
-                      ? "loading"
-                      : (`${valuesPrefix}.primary-button` as const)
-                  ]
-                }
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </div>
-    </Dialog>
-  );
-} */
 
 function SwitchActiveStatusDialog(props: {
   user: {
