@@ -1463,7 +1463,7 @@ export function useGetProviderPaymentParametersQuery(
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/list/payment-parameters` +
+          `/api/v1/payments/list/payment-parameters` +
           "?" +
           params.toString(),
       );
@@ -1484,7 +1484,7 @@ export function useToggleProviderPaymentParameterStatusMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/payment-parameters/${input.paymentParameterId}/toggle`,
+          `/api/v1/payments/payment-parameters/${input.paymentParameterId}/toggle`,
         {
           method: "PATCH",
           body: JSON.stringify(input),
@@ -1513,7 +1513,7 @@ export function useAddOrEditProviderPaymentParameterMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/create/payment-parameters",
+          "/api/v1/payments/create/payment-parameters",
         {
           method: "POST",
           body: JSON.stringify({
@@ -1548,7 +1548,7 @@ export function useGetTimeIntervalsQuery(
     queryFn: () => {
       return customFetch<UseGetTimeIntervalsQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/list/time-intervals",
+          "/api/v1/payments/list/time-intervals",
       );
     },
   });
