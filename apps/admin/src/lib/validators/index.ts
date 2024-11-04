@@ -295,3 +295,8 @@ export const walletuserDetailValidator = z.object({
   city: z.string(),
   zipCode: z.string(),
 });
+
+export const walletusersValidator = z.object({
+  state: z.string().min(1),
+  wallet: z.string().min(1),
+});
