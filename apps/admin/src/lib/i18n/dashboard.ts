@@ -300,14 +300,22 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.reserved": "Reserved",
     "dashboard.wallet-users.table.header.available": "Available",
     "dashboard.wallet-users.table.header.time": "Time Review",
-    "dashboard.wallet-users.tooltip.lock-wallet": "Lock Wallet",
-    "dashboard.wallet-users.tooltip.unlock-wallet": "Unlock Wallet",
+    "dashboard.wallet-users.table.header.state": "State",
     "dashboard.wallet-users.tooltip.reset": "Reset Password",
     "dashboard.wallet-users.tooltip.details": "User Detail",
     "dashboard.wallet-users.tooltip.transactions": "View transactions",
     "dashboard.wallet-users.tooltip.validated": "KYC Validated",
     "dashboard.wallet-users.tooltip.invalid": "KYC no validated",
-    "dashboard.wallet-users.tooltip.no-wallet": "Doesn't exist wallet",
+    "dashboard.wallet-users.state": "Unknown state",
+    "dashboard.wallet-users.state0": "Account created",
+    "dashboard.wallet-users.state1": "Email verified",
+    "dashboard.wallet-users.state2": "KYC verified",
+    "dashboard.wallet-users.state3": "Profile completed",
+    "dashboard.wallet-users.state4": "Wallet created",
+    "dashboard.wallet-users.state5": "KYC No verified",
+    "dashboard.wallet-users.locked-wallet": "Locked Wallet",
+    "dashboard.wallet-users.active-wallet": "Active Wallet",
+    "dashboard.wallet-users.no-wallet": "No wallet",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -351,6 +359,9 @@ export const dashboardDict = {
       "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
+    "dashboard.wallet-users.select-state": "Select state",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -663,58 +674,27 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.reserved": "Reservado",
     "dashboard.wallet-users.table.header.available": "Disponible",
     "dashboard.wallet-users.table.header.time": "Tiempo Revisado",
+    "dashboard.wallet-users.table.header.state": "Estado",
     "dashboard.wallet-users.tooltip.lock-wallet": "Bloquear billetera",
     "dashboard.wallet-users.tooltip.unlock-wallet": "Desbloquear billetera",
+    "dashboard.wallet-users.tooltip.no-wallet": "No existe billetera",
     "dashboard.wallet-users.tooltip.reset": "Resetear Contraseña",
     "dashboard.wallet-users.tooltip.details": "Detalles usuario",
     "dashboard.wallet-users.tooltip.transactions": "Ver transacciones",
     "dashboard.wallet-users.tooltip.validated": "KYC Validado",
     "dashboard.wallet-users.tooltip.invalid": "KYC No validado",
-    "dashboard.wallet-users.tooltip.no-wallet": "No existe billetera",
-    "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
-    "dashboard.reports.sections.transactions-by-user.header.description":
-      "Descripcion",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Fecha de inicio",
-    "dashboard.reports.sections.transactions-by-user.header.finish":
-      "Fecha de fin",
-    "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
-    "dashboard.reports.sections.transactions-by-user.header.actions":
-      "Acciones",
-    "dashboard.reports.sections.transactions-by-user.header.actions.details":
-      "Detalles",
-    "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
-    "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
-    "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
-      "Ingrese la dirección de la billetera",
-    "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
-      "Dirección de billetera",
-    "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
-      "Ingrese una dirección de billetera válida",
-    "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
-      "Seleccione un rango de tiempo",
-    "dashboard.reports.sections-transactions-by-user.search.period.error":
-      "Ingrese un periodo válido",
-    "dashboard.reports.sections-transactions-by-user.search.start-date.label":
-      "Fecha de inicio",
-    "dashboard.reports.sections-transactions-by-user.search.end-date.label":
-      "Fecha de fin",
-    "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
-      "Seleccione un tipo",
-    "dashboard.reports.sections-transactions-by-user.search.type.error":
-      "Ingrese un tipo válido",
-    "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
-    "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
-      "Seleccione un estado",
-    "dashboard.reports.sections-transactions-by-user.search.state.error":
-      "Ingrese un estado válido",
-    "dashboard.reports.sections-transactions-by-user.search.state.label":
-      "Estado",
-    "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
-      "Seleccione un proveedor",
-    "dashboard.reports.sections-transactions-by-user.search.provider.error":
-      "Ingrese un provider válido",
-    "dashboard.reports.sections-transactions-by-user.search.provider.label":
-      "Proveedor",
+    "dashboard.wallet-users.state": "Estado desconocido",
+    "dashboard.wallet-users.state0": "Cuenta creada",
+    "dashboard.wallet-users.state1": "Correo verificado",
+    "dashboard.wallet-users.state2": "KYC verificado",
+    "dashboard.wallet-users.state3": "Perfil completado",
+    "dashboard.wallet-users.state4": "Billetera Creada",
+    "dashboard.wallet-users.state5": "KYC No verificado",
+    "dashboard.wallet-users.locked-wallet": "Billetera bloqueada",
+    "dashboard.wallet-users.active-wallet": "Billetera Activa",
+    "dashboard.wallet-users.no-wallet": "No hay billetera",
+    "dashboard.wallet-users.select-state": "Seleccionar estado",
+    "dashboard.wallet-users.select-wallet": "Seleccionar billetera",
+    "dashboard.wallet-users.search.placeholder": "Buscar por nombre",
   },
 } satisfies I18nDictionary;
