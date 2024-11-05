@@ -311,9 +311,8 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Start Date",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "End Date",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Start",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Finish",
     "dashboard.reports.sections.transactions-by-user.header.state": "State",
     "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
@@ -674,10 +673,8 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Fecha de inicio",
-    "dashboard.reports.sections.transactions-by-user.header.finish":
-      "Fecha de fin",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
     "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
     "dashboard.reports.sections.transactions-by-user.header.actions":
       "Acciones",
