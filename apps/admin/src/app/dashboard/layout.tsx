@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
+  HandCoins,
   Home,
   Loader2,
   LogOut,
@@ -66,6 +67,13 @@ const NAV = [
     path: "/dashboard",
     id: "home",
     moduleId: null,
+  },
+  {
+    Icon: HandCoins,
+    i18nTitleKey: "dashboard.layout.nav.wallet-users",
+    path: "/dashboard/wallet-users",
+    id: "wallet-users",
+    moduleId: "walletUsers" satisfies ModuleId,
   },
   {
     Icon: Wallet,

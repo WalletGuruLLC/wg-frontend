@@ -263,6 +263,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.settings": "Settings",
     "service-providers.roles.role.modules.reports": "Reports",
     "service-providers.roles.role.modules.payments": "Payments",
+    "service-providers.roles.role.modules.walletUsers": "Wallet Users",
     "service-providers.roles.role.success-toast": "Role Access Levels Updated",
     "service-providers.settings.title": "Settings",
     "service-providers.settings.sections.payment-parameters":
@@ -677,6 +678,7 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.settings": "Configuraciones",
     "service-providers.roles.role.modules.reports": "Reportes",
     "service-providers.roles.role.modules.payments": "Pagos",
+    "service-providers.roles.role.modules.walletUsers": "Billeterahabientes",
     "service-providers.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "service-providers.settings.title": "Configuraciones",
