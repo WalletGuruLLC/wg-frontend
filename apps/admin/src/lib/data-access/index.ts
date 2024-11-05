@@ -1748,3 +1748,11 @@ export interface ReportsByUser {
   ammount: number;
   currency: string;
 }
+
+export interface DetailsTransactionByUser {
+  type: string;
+  description: string;
+  amount: number;
+  date: string;
+  state: "Active" | "Completed";
+}

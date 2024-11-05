@@ -1,7 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { z } from "zod";
-import Link from "next/link";
 import {
   useParams,
   usePathname,
@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-table";
 import { Download } from "lucide-react";
 
+import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import {
   Form,
@@ -30,7 +31,10 @@ import {
   SelectValue,
 } from "@wg-frontend/ui/select";
 
-import type { ReportsByUser } from "~/lib/data-access";
+import type {
+  DetailsTransactionByUser,
+  ReportsByUser,
+} from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
 import Table, {
@@ -47,6 +51,7 @@ import {
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { transactionsByUserValidator } from "~/lib/validators";
+import Dialog from "../../_components/dashboard-dialog";
 import { FormLabel } from "../../_components/dashboard-form";
 import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
@@ -57,22 +62,27 @@ function Actions({
     id: string;
   };
 }) {
-  const { value } = useI18n(
-    "dashboard.reports.sections.transactions-by-user.header.actions.details",
-  );
+  const { values } = useI18n();
 
   return (
     <div className="flex flex-row space-x-4">
-      <Link
-        href={
-          `/dashboard/reports/transactions-by-user/` +
-          transactionsByUserParameters.id
+      <DetailsDialog
+        id={transactionsByUserParameters.id}
+        trigger={
+          <Button
+            className="flex h-max flex-row items-center space-x-2"
+            variant="link"
+          >
+            <p className="flex-1 text-lg font-light">
+              {
+                values[
+                  "dashboard.reports.sections.transactions-by-user.header.actions.details"
+                ]
+              }
+            </p>
+          </Button>
         }
-      >
-        <Button className="font-normal no-underline" variant="link">
-          {value}
-        </Button>
-      </Link>
+      />
     </div>
   );
 }
@@ -435,7 +445,7 @@ export default function ServiceProviderPaymentParametersPage() {
                 control={form.control}
                 name="provider"
                 render={({ field }) => (
-                  <FormItem className="space-y-0">
+                  <FormItem className="flex-1 space-y-0">
                     <FormLabel className="font-normal">
                       {
                         values[
@@ -541,5 +551,103 @@ export default function ServiceProviderPaymentParametersPage() {
         />
       </div>
     </div>
+  );
+}
+
+const columnHelperDetails = createColumnHelper<DetailsTransactionByUser>();
+const columnsDetails = [
+  columnHelperDetails.accessor("type", {
+    id: "type",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.type" />
+    ),
+  }),
+  columnHelperDetails.accessor("description", {
+    id: "description",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.description" />
+    ),
+  }),
+  columnHelperDetails.accessor("amount", {
+    id: "amount",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
+    ),
+  }),
+  columnHelperDetails.accessor("date", {
+    id: "date",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.details.date" />
+    ),
+  }),
+  columnHelperDetails.accessor("state", {
+    id: "state",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
+    ),
+  }),
+];
+
+function DetailsDialog(props: {
+  role?: {
+    id: string;
+    name: string;
+    description: string;
+  };
+  trigger: ReactNode;
+}) {
+  const { values } = useI18n();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const detailsData: DetailsTransactionByUser[] = [
+    {
+      type: "HOLA",
+      description: "PRUEBA",
+      date: "1/11/2024 11:08:05",
+      amount: -50,
+      state: "Active",
+    },
+  ];
+  const tableDetails = useReactTable({
+    data: detailsData,
+    columns: columnsDetails,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+  });
+
+  return (
+    <Dialog
+      key={props.role?.id ?? "add"}
+      isOpen={isOpen}
+      contentClassName="max-w-3xl"
+      toggleOpen={() => {
+        toggle();
+      }}
+      trigger={props.trigger}
+      ariaDescribedBy="service-transaction-details"
+    >
+      <div className="space-y-7">
+        <h1 className="text-2xl font-light">
+          {
+            values[
+              "dashboard.reports.sections.transactions-by-user.details.header"
+            ]
+          }
+        </h1>
+        <div className="flex flex-row items-center justify-between">
+          Session ID: 2583-1234-5678-0000
+          <Button className="px-2" variant="secondary">
+            <Download strokeWidth={0.75} className="size-6" />
+          </Button>
+        </div>
+        <div className="flex-1 overflow-auto">
+          <Table table={tableDetails} />
+        </div>
+      </div>
+    </Dialog>
   );
 }

@@ -311,13 +311,15 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Start Date",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "End Date",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Start",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Finish",
     "dashboard.reports.sections.transactions-by-user.header.state": "State",
     "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Details",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Details Transaction Service",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Date",
     "dashboard.reports.sections.transactions-by-user.search-button": "Search",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Ammount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
@@ -674,15 +676,16 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Fecha de inicio",
-    "dashboard.reports.sections.transactions-by-user.header.finish":
-      "Fecha de fin",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
     "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
     "dashboard.reports.sections.transactions-by-user.header.actions":
       "Acciones",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Detalles",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Detalles del servicio de transacciones",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Fecha",
     "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
