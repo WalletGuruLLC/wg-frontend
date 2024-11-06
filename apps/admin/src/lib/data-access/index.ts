@@ -95,6 +95,10 @@ const MODULES_MAP = {
   SP95: "serviceProviders",
   SE37: "settings",
   TR91: "reports",
+  TU16: "transactionsByUser",
+  TP59: "transactionsByProvider",
+  REV3: "revenue",
+  CPWG: "clearPayments",
   PY38: "payments",
   WU47: "walletUsers",
 } as const;
@@ -171,6 +175,10 @@ export function useGetAuthedUserAccessLevelsQuery(
                 serviceProviders: [],
                 settings: [],
                 reports: [],
+                transactionsByUser: [],
+                transactionsByProvider: [],
+                revenue: [],
+                clearPayments: [],
                 walletUsers: [],
                 payments: [],
                 ...acc[serviceProviderId],
@@ -594,6 +602,7 @@ export function useToggleRoleStatusMutation(
 export type UseGetRoleAccessLevelsQueryOutput = {
   module: ModuleId;
   accessLevels: AccessLevel[];
+  description: string;
 }[];
 export function useGetRoleAccessLevelsQuery(
   input: {
@@ -614,6 +623,8 @@ export function useGetRoleAccessLevelsQuery(
           id: ModuleDatabaseId;
           belongs: string;
           description: string;
+          index: number;
+          subIndex: number;
         }[]
       >(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
@@ -630,6 +641,7 @@ export function useGetRoleAccessLevelsQuery(
       return modules.map((m) => ({
         module: MODULES_MAP[m.id],
         accessLevels: numberToAccessLevels(accessLevels[m.id] ?? 0),
+        description: m.description,
       }));
     },
   });
