@@ -316,6 +316,9 @@ export const dashboardDict = {
     "dashboard.wallet-users.locked-wallet": "Locked Wallet",
     "dashboard.wallet-users.active-wallet": "Active Wallet",
     "dashboard.wallet-users.no-wallet": "No wallet",
+    "dashboard.wallet-users.select-state": "Select status",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -361,9 +364,6 @@ export const dashboardDict = {
       "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
-    "dashboard.wallet-users.select-state": "Select state",
-    "dashboard.wallet-users.select-wallet": "Select wallet",
-    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
     "dashboard.wallet-users.inactive-dialog.description":
       "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
@@ -758,5 +758,19 @@ export const dashboardDict = {
       "Ingrese un provider válido",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
+    "dashboard.wallet-users.inactive-dialog.title": "Dsactivar Usuario",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "Desactivando este usuario, revocaras el acceso del usuario a ciertos privilegios del sistema.\n Quiere proceder?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Si",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "El usuario ha sido desactivado satisfactoriamente.",
+    "dashboard.wallet-users.activate-dialog.title": "Activar Usuario",
+    "dashboard.wallet-users.activate-dialog.description":
+      "Activando este usuario, estÃ¡s dando al usuario acceso a ciertos privilegios del sistema.\n Quiere proceder?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Si",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "El usuario ha sido activado satisfactoriamente.",
   },
 } satisfies I18nDictionary;
