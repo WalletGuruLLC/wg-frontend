@@ -300,13 +300,13 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.reserved": "Reserved",
     "dashboard.wallet-users.table.header.available": "Available",
     "dashboard.wallet-users.table.header.time": "Time Review",
-    "dashboard.wallet-users.table.header.state": "State",
+    "dashboard.wallet-users.table.header.state": "Status",
     "dashboard.wallet-users.tooltip.reset": "Reset Password",
     "dashboard.wallet-users.tooltip.details": "User Detail",
     "dashboard.wallet-users.tooltip.transactions": "View transactions",
     "dashboard.wallet-users.tooltip.validated": "KYC Validated",
     "dashboard.wallet-users.tooltip.invalid": "KYC no validated",
-    "dashboard.wallet-users.state": "Unknown state",
+    "dashboard.wallet-users.state": "Unknown status",
     "dashboard.wallet-users.state0": "Account created",
     "dashboard.wallet-users.state1": "Email verified",
     "dashboard.wallet-users.state2": "KYC verified",
@@ -316,9 +316,23 @@ export const dashboardDict = {
     "dashboard.wallet-users.locked-wallet": "Locked Wallet",
     "dashboard.wallet-users.active-wallet": "Active Wallet",
     "dashboard.wallet-users.no-wallet": "No wallet",
-    "dashboard.wallet-users.select-state": "Select state",
+    "dashboard.wallet-users.select-state": "Select status",
     "dashboard.wallet-users.select-wallet": "Select wallet",
     "dashboard.wallet-users.search.placeholder": "Search by name",
+    "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "The user has been deactivated successfully.",
+    "dashboard.wallet-users.activate-dialog.title": "Activate User",
+    "dashboard.wallet-users.activate-dialog.description":
+      "By activating this user, you are granting the user access to specific system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "The user has been activated successfully.",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -653,5 +667,19 @@ export const dashboardDict = {
     "dashboard.wallet-users.select-state": "Seleccionar estado",
     "dashboard.wallet-users.select-wallet": "Seleccionar billetera",
     "dashboard.wallet-users.search.placeholder": "Buscar por nombre",
+    "dashboard.wallet-users.inactive-dialog.title": "Dsactivar Usuario",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "Desactivando este usuario, revocaras el acceso del usuario a ciertos privilegios del sistema.\n Quiere proceder?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Si",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "El usuario ha sido desactivado satisfactoriamente.",
+    "dashboard.wallet-users.activate-dialog.title": "Activar Usuario",
+    "dashboard.wallet-users.activate-dialog.description":
+      "Activando este usuario, estás dando al usuario acceso a ciertos privilegios del sistema.\n Quiere proceder?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Si",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "El usuario ha sido activado satisfactoriamente.",
   },
 } satisfies I18nDictionary;
