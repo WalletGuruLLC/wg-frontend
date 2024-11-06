@@ -93,6 +93,11 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reports": "Reports",
     "dashboard.roles.role.modules.payments": "Payments",
     "dashboard.roles.role.modules.walletUsers": "Wallet Users",
+    "dashboard.roles.role.modules.transactionsByUser": "Transactions by User",
+    "dashboard.roles.role.modules.transactionsByProvider":
+      "Transactions by Provider",
+    "dashboard.roles.role.modules.revenue": "Revenue",
+    "dashboard.roles.role.modules.clearPayments": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -322,13 +327,15 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Start Date",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "End Date",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Start",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Finish",
     "dashboard.reports.sections.transactions-by-user.header.state": "State",
     "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Details",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Details Transaction Service",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Date",
     "dashboard.reports.sections.transactions-by-user.search-button": "Search",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Ammount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
@@ -362,7 +369,6 @@ export const dashboardDict = {
       "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
-
     "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
     "dashboard.wallet-users.inactive-dialog.description":
       "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
@@ -470,6 +476,12 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reports": "Reportes",
     "dashboard.roles.role.modules.payments": "Pagos",
     "dashboard.roles.role.modules.walletUsers": "Billeterahabientes",
+    "dashboard.roles.role.modules.transactionsByUser":
+      "Transacciones por Usuario",
+    "dashboard.roles.role.modules.transactionsByProvider":
+      "Transacciones por Proveedor",
+    "dashboard.roles.role.modules.revenue": "Ingresos",
+    "dashboard.roles.role.modules.clearPayments": "Limpiar Pagos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -714,15 +726,16 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
-    "dashboard.reports.sections.transactions-by-user.header.start":
-      "Fecha de inicio",
-    "dashboard.reports.sections.transactions-by-user.header.finish":
-      "Fecha de fin",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
     "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
     "dashboard.reports.sections.transactions-by-user.header.actions":
       "Acciones",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Detalles",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Detalles del servicio de transacciones",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Fecha",
     "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":

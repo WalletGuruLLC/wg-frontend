@@ -264,6 +264,12 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.reports": "Reports",
     "service-providers.roles.role.modules.payments": "Payments",
     "service-providers.roles.role.modules.walletUsers": "Wallet Users",
+    "service-providers.roles.role.modules.transactionsByUser":
+      "Transactions by User",
+    "service-providers.roles.role.modules.transactionsByProvider":
+      "Transactions by Provider",
+    "service-providers.roles.role.modules.revenue": "Revenue",
+    "service-providers.roles.role.modules.clearPayments": "Clear Payments",
     "service-providers.roles.role.success-toast": "Role Access Levels Updated",
     "service-providers.settings.title": "Settings",
     "service-providers.settings.sections.payment-parameters":
@@ -679,6 +685,12 @@ export const serviceProvidersDict = {
     "service-providers.roles.role.modules.reports": "Reportes",
     "service-providers.roles.role.modules.payments": "Pagos",
     "service-providers.roles.role.modules.walletUsers": "Billeterahabientes",
+    "service-providers.roles.role.modules.transactionsByUser":
+      "Transacciones por Usuario",
+    "service-providers.roles.role.modules.transactionsByProvider":
+      "Transacciones por Proveedor",
+    "service-providers.roles.role.modules.revenue": "Ingresos",
+    "service-providers.roles.role.modules.clearPayments": "Limpiar Pagos",
     "service-providers.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "service-providers.settings.title": "Configuraciones",

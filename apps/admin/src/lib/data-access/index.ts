@@ -95,6 +95,10 @@ const MODULES_MAP = {
   SP95: "serviceProviders",
   SE37: "settings",
   TR91: "reports",
+  TU16: "transactionsByUser",
+  TP59: "transactionsByProvider",
+  REV3: "revenue",
+  CPWG: "clearPayments",
   PY38: "payments",
   WU47: "walletUsers",
 } as const;
@@ -171,6 +175,10 @@ export function useGetAuthedUserAccessLevelsQuery(
                 serviceProviders: [],
                 settings: [],
                 reports: [],
+                transactionsByUser: [],
+                transactionsByProvider: [],
+                revenue: [],
+                clearPayments: [],
                 walletUsers: [],
                 payments: [],
                 ...acc[serviceProviderId],
@@ -594,6 +602,7 @@ export function useToggleRoleStatusMutation(
 export type UseGetRoleAccessLevelsQueryOutput = {
   module: ModuleId;
   accessLevels: AccessLevel[];
+  description: string;
 }[];
 export function useGetRoleAccessLevelsQuery(
   input: {
@@ -614,6 +623,8 @@ export function useGetRoleAccessLevelsQuery(
           id: ModuleDatabaseId;
           belongs: string;
           description: string;
+          index: number;
+          subIndex: number;
         }[]
       >(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
@@ -630,6 +641,7 @@ export function useGetRoleAccessLevelsQuery(
       return modules.map((m) => ({
         module: MODULES_MAP[m.id],
         accessLevels: numberToAccessLevels(accessLevels[m.id] ?? 0),
+        description: m.description,
       }));
     },
   });
@@ -1747,4 +1759,45 @@ export interface ReportsByUser {
   state: "Active" | "Completed";
   ammount: number;
   currency: string;
+}
+
+export interface DetailsTransactionByUser {
+  type: string;
+  description: string;
+  amount: number;
+  date: string;
+  state: "Active" | "Completed";
+}
+
+export type UseGetSidebarItemsQueryOutput = {
+  id: ModuleId;
+  description: string;
+}[];
+export function useGetSidebarItemsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetSidebarItemsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-sidebar-items"],
+    queryFn: async () => {
+      const modules = await customFetch<
+        {
+          id: ModuleDatabaseId;
+          belongs: string;
+          index: number;
+          subIndex: number;
+          description: string;
+        }[]
+      >(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/modules");
+
+      return modules
+        .filter((m) => m.subIndex === 0)
+        .sort((a, b) => a.index - b.index)
+        .map((m) => ({
+          id: MODULES_MAP[m.id],
+          description: m.description,
+        }));
+    },
+  });
 }
