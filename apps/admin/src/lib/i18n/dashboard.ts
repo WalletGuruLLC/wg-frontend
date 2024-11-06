@@ -93,6 +93,11 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reports": "Reports",
     "dashboard.roles.role.modules.payments": "Payments",
     "dashboard.roles.role.modules.walletUsers": "Wallet Users",
+    "dashboard.roles.role.modules.transactionsByUser": "Transactions by User",
+    "dashboard.roles.role.modules.transactionsByProvider":
+      "Transactions by Provider",
+    "dashboard.roles.role.modules.revenue": "Revenue",
+    "dashboard.roles.role.modules.clearPayments": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -471,6 +476,12 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reports": "Reportes",
     "dashboard.roles.role.modules.payments": "Pagos",
     "dashboard.roles.role.modules.walletUsers": "Billeterahabientes",
+    "dashboard.roles.role.modules.transactionsByUser":
+      "Transacciones por Usuario",
+    "dashboard.roles.role.modules.transactionsByProvider":
+      "Transacciones por Proveedor",
+    "dashboard.roles.role.modules.revenue": "Ingresos",
+    "dashboard.roles.role.modules.clearPayments": "Limpiar Pagos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",

@@ -85,9 +85,17 @@ function Actions({
   );
 }
 
-function ModuleColumnValue({ module }: { module: ModuleId }) {
+function ModuleColumnValue({
+  module,
+  textFallback,
+}: {
+  module: ModuleId;
+  textFallback: string;
+}) {
   const { value } = useI18n(`dashboard.roles.role.modules.${module}`);
-  return <span className="font-normal text-black">{value}</span>;
+  return (
+    <span className="font-normal text-black">{value ?? textFallback}</span>
+  );
 }
 
 function CheckboxCell({
@@ -142,7 +150,10 @@ const columns = [
       <ColumnHeader i18nKey="dashboard.roles.role.table.modules.header" />
     ),
     cell: (info) => (
-      <ModuleColumnValue module={info.row.original.data.module} />
+      <ModuleColumnValue
+        module={info.row.original.data.module}
+        textFallback={info.row.original.data.description}
+      />
     ),
   }),
   columnHelper.display({

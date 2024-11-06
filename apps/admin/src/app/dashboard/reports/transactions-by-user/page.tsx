@@ -150,11 +150,11 @@ const columns = [
   }),
 ];
 
-export default function ServiceProviderPaymentParametersPage() {
+export default function TransactionsByUserPage() {
   const { providerId } = useParams<{ providerId: string }>();
   const loading = useAccessLevelGuard({
     general: {
-      module: "reports",
+      module: "transactionsByUser",
     },
   });
   const { values } = useI18n();
