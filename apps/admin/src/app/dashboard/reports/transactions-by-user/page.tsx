@@ -67,7 +67,7 @@ function Actions({
   return (
     <div className="flex flex-row space-x-4">
       <DetailsDialog
-        id={transactionsByUserParameters.id}
+        //id={transactionsByUserParameters.id}
         trigger={
           <Button
             className="flex h-max flex-row items-center space-x-2"
@@ -602,7 +602,7 @@ function DetailsDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
-  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const [isOpen, _, _close, toggle] = useBooleanHandlers();
   const detailsData: DetailsTransactionByUser[] = [
     {
       type: "HOLA",
