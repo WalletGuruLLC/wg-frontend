@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
+  HandCoins,
   Home,
   Loader,
   Loader2,
@@ -63,6 +64,12 @@ import { Input } from "./_components/dashboard-input";
 
 const NAV = [
   {
+    Icon: HandCoins,
+    i18nTitleKey: "dashboard.layout.nav.wallet-users",
+    path: "/dashboard/wallet-users",
+    moduleId: "walletUsers" satisfies ModuleId,
+  },
+  {
     Icon: Wallet,
     i18nTitleKey: "dashboard.layout.nav.wallet-management",
     path: "/dashboard/wallet-management",
@@ -79,6 +86,13 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.users",
     path: "/dashboard/users",
     moduleId: "users" satisfies ModuleId,
+  },
+  {
+    Icon: Activity,
+    i18nTitleKey: "dashboard.layout.nav.reports",
+    path: "/dashboard/reports",
+    id: "reports",
+    moduleId: "reports" satisfies ModuleId,
   },
   {
     Icon: SquareUserRound,

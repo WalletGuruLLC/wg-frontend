@@ -94,7 +94,9 @@ const MODULES_MAP = {
   U783: "users",
   SP95: "serviceProviders",
   SE37: "settings",
-  TR91: "transactions",
+  TR91: "reports",
+  PY38: "payments",
+  WU47: "walletUsers",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -168,7 +170,9 @@ export function useGetAuthedUserAccessLevelsQuery(
                 users: [],
                 serviceProviders: [],
                 settings: [],
-                transactions: [],
+                reports: [],
+                walletUsers: [],
+                payments: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
                   numberToAccessLevels(numericAccessLevel),
@@ -815,6 +819,23 @@ export interface User {
   roleName: string;
   phone: string;
   contactUser?: boolean;
+  name: string;
+  wallet?: {
+    rafikiId: string;
+    pendingCredits: number;
+    pendingDebits: number;
+    postedCredits: number;
+    postedDebits: number;
+    keyId: string;
+    id: string;
+    active: string;
+    walletAddress: string;
+    name: string;
+  };
+  asset?: {
+    code: string;
+    scale: number;
+  };
 }
 interface UseGetUsersQueryOutput {
   users: User[];
@@ -1442,7 +1463,7 @@ export function useGetProviderPaymentParametersQuery(
       const params = new URLSearchParams(input as Record<string, string>);
       return customFetch<UseGetProviderPaymentParametersQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/list/payment-parameters` +
+          `/api/v1/payments/list/payment-parameters` +
           "?" +
           params.toString(),
       );
@@ -1463,7 +1484,7 @@ export function useToggleProviderPaymentParameterStatusMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/providers/payment-parameters/${input.paymentParameterId}/toggle`,
+          `/api/v1/payments/payment-parameters/${input.paymentParameterId}/toggle`,
         {
           method: "PATCH",
           body: JSON.stringify(input),
@@ -1492,7 +1513,7 @@ export function useAddOrEditProviderPaymentParameterMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/create/payment-parameters",
+          "/api/v1/payments/create/payment-parameters",
         {
           method: "POST",
           body: JSON.stringify({
@@ -1527,7 +1548,7 @@ export function useGetTimeIntervalsQuery(
     queryFn: () => {
       return customFetch<UseGetTimeIntervalsQueryOutput>(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/list/time-intervals",
+          "/api/v1/payments/list/time-intervals",
       );
     },
   });
@@ -1715,6 +1736,25 @@ export function useEditSettingMutation(
       options.onSuccess?.(...input);
     },
   });
+}
+
+export interface ReportsByUser {
+  id: string;
+  type: string;
+  description: string;
+  startdate: string;
+  enddate: string;
+  state: "Active" | "Completed";
+  ammount: number;
+  currency: string;
+}
+
+export interface DetailsTransactionByUser {
+  type: string;
+  description: string;
+  amount: number;
+  date: string;
+  state: "Active" | "Completed";
 }
 
 export type UseGetSidebarItemsQueryOutput = {
