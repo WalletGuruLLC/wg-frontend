@@ -1756,3 +1756,36 @@ export interface DetailsTransactionByUser {
   date: string;
   state: "Active" | "Completed";
 }
+
+export type UseGetSidebarItemsQueryOutput = {
+  id: ModuleId;
+  description: string;
+}[];
+export function useGetSidebarItemsQuery(
+  _: undefined,
+  options: UseQueryOptions<UseGetSidebarItemsQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-sidebar-items"],
+    queryFn: async () => {
+      const modules = await customFetch<
+        {
+          id: ModuleDatabaseId;
+          belongs: string;
+          index: number;
+          subIndex: number;
+          description: string;
+        }[]
+      >(env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/modules");
+
+      return modules
+        .filter((m) => m.subIndex === 0)
+        .sort((a, b) => a.index - b.index)
+        .map((m) => ({
+          id: MODULES_MAP[m.id],
+          description: m.description,
+        }));
+    },
+  });
+}
