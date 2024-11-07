@@ -541,7 +541,7 @@ function SwitchActiveStatusDialog(props: {
   });
 
   const valuesPrexif =
-    `dashboard.users.${props.user.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `dashboard.wallet-users.${props.user.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog
@@ -585,13 +585,13 @@ function SwitchActiveStatusDialog(props: {
         props.user.isActive ? (
           <TriangleAlert
             strokeWidth={0.75}
-            className="h-12 w-12"
+            className="h-10 w-10"
             color="#3678B1"
           />
         ) : (
           <CircleCheck
             strokeWidth={0.75}
-            className="h-12 w-12"
+            className="h-10 w-10"
             color="#3678B1"
           />
         )

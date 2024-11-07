@@ -319,6 +319,66 @@ export const dashboardDict = {
     "dashboard.wallet-users.select-state": "Select status",
     "dashboard.wallet-users.select-wallet": "Select wallet",
     "dashboard.wallet-users.search.placeholder": "Search by name",
+    "dashboard.reports.sections.transactions-by-user.header.type": "Type",
+    "dashboard.reports.sections.transactions-by-user.header.description":
+      "Description",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Start",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Finish",
+    "dashboard.reports.sections.transactions-by-user.header.state": "State",
+    "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
+    "dashboard.reports.sections.transactions-by-user.header.actions.details":
+      "Details",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Details Transaction Service",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Date",
+    "dashboard.reports.sections.transactions-by-user.search-button": "Search",
+    "dashboard.reports.sections.transactions-by-user.header.ammount": "Ammount",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
+      "Enter the wallet address",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
+      "Enter a valid wallet address",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
+      "Wallet Address",
+    "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
+      "Select a range of time",
+    "dashboard.reports.sections-transactions-by-user.search.period.error":
+      "Enter a valid period",
+    "dashboard.reports.sections-transactions-by-user.search.start-date.label":
+      "Start Date",
+    "dashboard.reports.sections-transactions-by-user.search.end-date.label":
+      "End Date",
+    "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
+      "Select a type",
+    "dashboard.reports.sections-transactions-by-user.search.type.error":
+      "Enter a valid type",
+    "dashboard.reports.sections-transactions-by-user.search.type.label": "Type",
+    "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
+      "Select a state",
+    "dashboard.reports.sections-transactions-by-user.search.state.error":
+      "Enter a valid state",
+    "dashboard.reports.sections-transactions-by-user.search.state.label":
+      "State",
+    "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
+      "Select a provider",
+    "dashboard.reports.sections-transactions-by-user.search.provider.error":
+      "Enter a valid provider",
+    "dashboard.reports.sections-transactions-by-user.search.provider.label":
+      "Provider",
+
+    "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "The user has been deactivated successfully.",
+    "dashboard.wallet-users.activate-dialog.title": "Activate User",
+    "dashboard.wallet-users.activate-dialog.description":
+      "By activating this user, you are granting the user access to specific system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "The user has been activated successfully.",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -653,5 +713,65 @@ export const dashboardDict = {
     "dashboard.wallet-users.select-state": "Seleccionar estado",
     "dashboard.wallet-users.select-wallet": "Seleccionar billetera",
     "dashboard.wallet-users.search.placeholder": "Buscar por nombre",
+    "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
+    "dashboard.reports.sections.transactions-by-user.header.description":
+      "Descripcion",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
+    "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
+    "dashboard.reports.sections.transactions-by-user.header.actions":
+      "Acciones",
+    "dashboard.reports.sections.transactions-by-user.header.actions.details":
+      "Detalles",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Detalles del servicio de transacciones",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Fecha",
+    "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
+    "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
+      "Ingrese la dirección de la billetera",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
+      "Dirección de billetera",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
+      "Ingrese una dirección de billetera válida",
+    "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
+      "Seleccione un rango de tiempo",
+    "dashboard.reports.sections-transactions-by-user.search.period.error":
+      "Ingrese un periodo válido",
+    "dashboard.reports.sections-transactions-by-user.search.start-date.label":
+      "Fecha de inicio",
+    "dashboard.reports.sections-transactions-by-user.search.end-date.label":
+      "Fecha de fin",
+    "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
+      "Seleccione un tipo",
+    "dashboard.reports.sections-transactions-by-user.search.type.error":
+      "Ingrese un tipo válido",
+    "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
+    "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
+      "Seleccione un estado",
+    "dashboard.reports.sections-transactions-by-user.search.state.error":
+      "Ingrese un estado válido",
+    "dashboard.reports.sections-transactions-by-user.search.state.label":
+      "Estado",
+    "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
+      "Seleccione un proveedor",
+    "dashboard.reports.sections-transactions-by-user.search.provider.error":
+      "Ingrese un provider válido",
+    "dashboard.reports.sections-transactions-by-user.search.provider.label":
+      "Proveedor",
+    "dashboard.wallet-users.inactive-dialog.title": "Desactivar Usuario",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "Al desactivar a este usuario, revocarás su acceso a ciertos privilegios del sistema. ¿Deseas continuar?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Si",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "El usuario ha sido desactivado satisfactoriamente.",
+    "dashboard.wallet-users.activate-dialog.title": "Activar Usuario",
+    "dashboard.wallet-users.activate-dialog.description":
+      "Al activar a este usuario, le estás otorgando acceso a privilegios específicos del sistema. ¿Deseas continuar?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Si",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "El usuario ha sido activado satisfactoriamente.",
   },
 } satisfies I18nDictionary;
