@@ -311,14 +311,15 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
-    "dashboard.reports.sections.transactions-by-user.header.start": "Start",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "Finish",
-    "dashboard.reports.sections.transactions-by-user.header.state": "State",
+    "dashboard.reports.sections.transactions-by-user.header.start":
+      "Start Date",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "End Date",
+    "dashboard.reports.sections.transactions-by-user.header.state": "Status",
     "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Details",
     "dashboard.reports.sections.transactions-by-user.search-button": "Search",
-    "dashboard.reports.sections.transactions-by-user.header.ammount": "Ammount",
+    "dashboard.reports.sections.transactions-by-user.header.ammount": "Amount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
       "Enter the wallet address",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
@@ -350,6 +351,12 @@ export const dashboardDict = {
       "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
+    "dashboard.reports.sections-transactions-by-user.user.label": "User",
+    "dashboard.reports.sections-transactions-by-user.period.label": "Period",
+    "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
+      "No start date selected",
+    "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
+      "No end date selected",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -673,8 +680,10 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
-    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
+    "dashboard.reports.sections.transactions-by-user.header.start":
+      "Fecha de Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish":
+      "Fecha de Fin",
     "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
     "dashboard.reports.sections.transactions-by-user.header.actions":
       "Acciones",
@@ -713,5 +722,11 @@ export const dashboardDict = {
       "Ingrese un provider válido",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
+    "dashboard.reports.sections-transactions-by-user.user.label": "Usuario",
+    "dashboard.reports.sections-transactions-by-user.period.label": "Periodo",
+    "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
+      "No se ha seleccionado una fecha de inicio",
+    "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
+      "No se ha seleccionado una fecha de fin",
   },
 } satisfies I18nDictionary;
