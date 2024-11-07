@@ -250,6 +250,7 @@ export const settingsValidator = z.object({
 });
 
 export const transactionsByUserValidator = z.object({
+  id: z.string().min(1),
   walletAddress: z
     .string()
     .min(
@@ -267,4 +268,9 @@ export const transactionsByUserValidator = z.object({
   type: z.string().min(1),
   provider: z.string().min(1),
   state: z.string().min(1),
+});
+
+export const walletusersValidator = z.object({
+  state: z.string().min(1),
+  wallet: z.string().min(1),
 });

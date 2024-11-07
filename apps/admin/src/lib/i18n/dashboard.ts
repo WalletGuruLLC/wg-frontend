@@ -93,6 +93,11 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reports": "Reports",
     "dashboard.roles.role.modules.payments": "Payments",
     "dashboard.roles.role.modules.walletUsers": "Wallet Users",
+    "dashboard.roles.role.modules.transactionsByUser": "Transactions by User",
+    "dashboard.roles.role.modules.transactionsByProvider":
+      "Transactions by Provider",
+    "dashboard.roles.role.modules.revenue": "Revenue",
+    "dashboard.roles.role.modules.clearPayments": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -300,14 +305,22 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.reserved": "Reserved",
     "dashboard.wallet-users.table.header.available": "Available",
     "dashboard.wallet-users.table.header.time": "Time Review",
-    "dashboard.wallet-users.tooltip.lock-wallet": "Lock Wallet",
-    "dashboard.wallet-users.tooltip.unlock-wallet": "Unlock Wallet",
+    "dashboard.wallet-users.table.header.state": "Status",
     "dashboard.wallet-users.tooltip.reset": "Reset Password",
     "dashboard.wallet-users.tooltip.details": "User Detail",
     "dashboard.wallet-users.tooltip.transactions": "View transactions",
     "dashboard.wallet-users.tooltip.validated": "KYC Validated",
     "dashboard.wallet-users.tooltip.invalid": "KYC no validated",
-    "dashboard.wallet-users.tooltip.no-wallet": "Doesn't exist wallet",
+    "dashboard.wallet-users.state": "Unknown status",
+    "dashboard.wallet-users.state0": "Account created",
+    "dashboard.wallet-users.state1": "Email verified",
+    "dashboard.wallet-users.state2": "KYC verified",
+    "dashboard.wallet-users.state3": "Profile completed",
+    "dashboard.wallet-users.state4": "Wallet created",
+    "dashboard.wallet-users.state5": "KYC No verified",
+    "dashboard.wallet-users.locked-wallet": "Locked Wallet",
+    "dashboard.wallet-users.active-wallet": "Active Wallet",
+    "dashboard.wallet-users.no-wallet": "No wallet",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -318,6 +331,9 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Details",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Details Transaction Service",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Date",
     "dashboard.reports.sections.transactions-by-user.search-button": "Search",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Amount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
@@ -357,6 +373,23 @@ export const dashboardDict = {
       "No start date selected",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No end date selected",
+    "dashboard.wallet-users.select-state": "Select state",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
+    "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "The user has been deactivated successfully.",
+    "dashboard.wallet-users.activate-dialog.title": "Activate User",
+    "dashboard.wallet-users.activate-dialog.description":
+      "By activating this user, you are granting the user access to specific system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "The user has been activated successfully.",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -450,6 +483,12 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reports": "Reportes",
     "dashboard.roles.role.modules.payments": "Pagos",
     "dashboard.roles.role.modules.walletUsers": "Billeterahabientes",
+    "dashboard.roles.role.modules.transactionsByUser":
+      "Transacciones por Usuario",
+    "dashboard.roles.role.modules.transactionsByProvider":
+      "Transacciones por Proveedor",
+    "dashboard.roles.role.modules.revenue": "Ingresos",
+    "dashboard.roles.role.modules.clearPayments": "Limpiar Pagos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -669,14 +708,28 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.reserved": "Reservado",
     "dashboard.wallet-users.table.header.available": "Disponible",
     "dashboard.wallet-users.table.header.time": "Tiempo Revisado",
+    "dashboard.wallet-users.table.header.state": "Estado",
     "dashboard.wallet-users.tooltip.lock-wallet": "Bloquear billetera",
     "dashboard.wallet-users.tooltip.unlock-wallet": "Desbloquear billetera",
+    "dashboard.wallet-users.tooltip.no-wallet": "No existe billetera",
     "dashboard.wallet-users.tooltip.reset": "Resetear Contraseña",
     "dashboard.wallet-users.tooltip.details": "Detalles usuario",
     "dashboard.wallet-users.tooltip.transactions": "Ver transacciones",
     "dashboard.wallet-users.tooltip.validated": "KYC Validado",
     "dashboard.wallet-users.tooltip.invalid": "KYC No validado",
-    "dashboard.wallet-users.tooltip.no-wallet": "No existe billetera",
+    "dashboard.wallet-users.state": "Estado desconocido",
+    "dashboard.wallet-users.state0": "Cuenta creada",
+    "dashboard.wallet-users.state1": "Correo verificado",
+    "dashboard.wallet-users.state2": "KYC verificado",
+    "dashboard.wallet-users.state3": "Perfil completado",
+    "dashboard.wallet-users.state4": "Billetera Creada",
+    "dashboard.wallet-users.state5": "KYC No verificado",
+    "dashboard.wallet-users.locked-wallet": "Billetera bloqueada",
+    "dashboard.wallet-users.active-wallet": "Billetera Activa",
+    "dashboard.wallet-users.no-wallet": "No hay billetera",
+    "dashboard.wallet-users.select-state": "Seleccionar estado",
+    "dashboard.wallet-users.select-wallet": "Seleccionar billetera",
+    "dashboard.wallet-users.search.placeholder": "Buscar por nombre",
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
@@ -689,6 +742,9 @@ export const dashboardDict = {
       "Acciones",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Detalles",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Detalles del servicio de transacciones",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Fecha",
     "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
