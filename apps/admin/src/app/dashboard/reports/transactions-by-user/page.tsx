@@ -76,7 +76,7 @@ function Actions({
   return (
     <div className="flex flex-row space-x-4">
       <DetailsDialog
-        id={transactionsByUserParameters.id}
+        //id={transactionsByUserParameters.id}
         trigger={
           <Button
             className="flex h-max flex-row items-center space-x-2"
