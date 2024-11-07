@@ -360,7 +360,7 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.state.error":
       "Enter a valid state",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
-      "State",
+      "Status",
     "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
       "Select a provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.error":
