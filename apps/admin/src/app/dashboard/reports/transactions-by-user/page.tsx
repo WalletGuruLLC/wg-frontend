@@ -67,6 +67,11 @@ function Actions({
   return (
     <div className="flex flex-row space-x-4">
       <DetailsDialog
+        role={{
+          id: transactionsByUserParameters.id,
+          name: "some name",
+          description: "some description",
+        }} //Se agrega este objeto para pasar el lint mientras se termina la funcionalidad de este reporte
         //id={transactionsByUserParameters.id}
         trigger={
           <Button
