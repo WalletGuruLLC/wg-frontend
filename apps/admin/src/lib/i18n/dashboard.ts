@@ -756,16 +756,16 @@ export const dashboardDict = {
       "Ingrese un provider válido",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
-    "dashboard.wallet-users.inactive-dialog.title": "Dsactivar Usuario",
+    "dashboard.wallet-users.inactive-dialog.title": "Desactivar Usuario",
     "dashboard.wallet-users.inactive-dialog.description":
-      "Desactivando este usuario, revocaras el acceso del usuario a ciertos privilegios del sistema.\n Quiere proceder?",
+      "Desactivando este usuario, revocaras el acceso del usuario a ciertos privilegios del sistema.\n ¿Quiere proceder?",
     "dashboard.wallet-users.inactive-dialog.primary-button": "Si",
     "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
     "dashboard.wallet-users.inactive-dialog.toast.success":
       "El usuario ha sido desactivado satisfactoriamente.",
     "dashboard.wallet-users.activate-dialog.title": "Activar Usuario",
     "dashboard.wallet-users.activate-dialog.description":
-      "Activando este usuario, estÃ¡s dando al usuario acceso a ciertos privilegios del sistema.\n Quiere proceder?",
+      "Activando este usuario, estás dando al usuario acceso a ciertos privilegios del sistema.\n ¿Quiere proceder?",
     "dashboard.wallet-users.activate-dialog.primary-button": "Si",
     "dashboard.wallet-users.activate-dialog.secondary-button": "No",
     "dashboard.wallet-users.activate-dialog.toast.success":
