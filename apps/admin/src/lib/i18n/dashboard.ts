@@ -321,6 +321,9 @@ export const dashboardDict = {
     "dashboard.wallet-users.locked-wallet": "Locked Wallet",
     "dashboard.wallet-users.active-wallet": "Active Wallet",
     "dashboard.wallet-users.no-wallet": "No wallet",
+    "dashboard.wallet-users.select-state": "Select status",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -373,9 +376,6 @@ export const dashboardDict = {
       "No start date selected",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No end date selected",
-    "dashboard.wallet-users.select-state": "Select state",
-    "dashboard.wallet-users.select-wallet": "Select wallet",
-    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
     "dashboard.wallet-users.inactive-dialog.description":
       "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
@@ -778,6 +778,20 @@ export const dashboardDict = {
       "Ingrese un provider válido",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
+    "dashboard.wallet-users.inactive-dialog.title": "Desactivar Usuario",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "Al desactivar a este usuario, revocarás su acceso a ciertos privilegios del sistema. ¿Deseas continuar?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Si",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "El usuario ha sido desactivado satisfactoriamente.",
+    "dashboard.wallet-users.activate-dialog.title": "Activar Usuario",
+    "dashboard.wallet-users.activate-dialog.description":
+      "Al activar a este usuario, le estás otorgando acceso a privilegios específicos del sistema. ¿Deseas continuar?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Si",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "El usuario ha sido activado satisfactoriamente.",
     "dashboard.reports.sections-transactions-by-user.user.label": "Usuario",
     "dashboard.reports.sections-transactions-by-user.period.label": "Periodo",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
