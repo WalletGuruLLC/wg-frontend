@@ -306,6 +306,7 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.available": "Available",
     "dashboard.wallet-users.table.header.time": "Time Review",
     "dashboard.wallet-users.table.header.state": "Status",
+    "dashboard.wallet-users.table.header.state": "Status",
     "dashboard.wallet-users.tooltip.reset": "Reset Password",
     "dashboard.wallet-users.tooltip.details": "User Detail",
     "dashboard.wallet-users.tooltip.transactions": "View transactions",
@@ -702,14 +703,89 @@ export const dashboardDict = {
     "dashboard.wallet-users.table.header.available": "Disponible",
     "dashboard.wallet-users.table.header.time": "Tiempo Revisado",
     "dashboard.wallet-users.table.header.state": "Estado",
+    "dashboard.wallet-users.table.header.state": "Estado",
     "dashboard.wallet-users.tooltip.lock-wallet": "Bloquear billetera",
     "dashboard.wallet-users.tooltip.unlock-wallet": "Desbloquear billetera",
+    "dashboard.wallet-users.tooltip.no-wallet": "No existe billetera",
     "dashboard.wallet-users.tooltip.no-wallet": "No existe billetera",
     "dashboard.wallet-users.tooltip.reset": "Resetear Contraseña",
     "dashboard.wallet-users.tooltip.details": "Detalles usuario",
     "dashboard.wallet-users.tooltip.transactions": "Ver transacciones",
     "dashboard.wallet-users.tooltip.validated": "KYC Validado",
     "dashboard.wallet-users.tooltip.invalid": "KYC No validado",
+    "dashboard.wallet-users.state": "Estado desconocido",
+    "dashboard.wallet-users.state0": "Cuenta creada",
+    "dashboard.wallet-users.state1": "Correo verificado",
+    "dashboard.wallet-users.state2": "KYC verificado",
+    "dashboard.wallet-users.state3": "Perfil completado",
+    "dashboard.wallet-users.state4": "Billetera Creada",
+    "dashboard.wallet-users.state5": "KYC No verificado",
+    "dashboard.wallet-users.locked-wallet": "Billetera bloqueada",
+    "dashboard.wallet-users.active-wallet": "Billetera Activa",
+    "dashboard.wallet-users.no-wallet": "No hay billetera",
+    "dashboard.wallet-users.select-state": "Seleccionar estado",
+    "dashboard.wallet-users.select-wallet": "Seleccionar billetera",
+    "dashboard.wallet-users.search.placeholder": "Buscar por nombre",
+    "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
+    "dashboard.reports.sections.transactions-by-user.header.description":
+      "Descripcion",
+    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
+    "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
+    "dashboard.reports.sections.transactions-by-user.header.actions":
+      "Acciones",
+    "dashboard.reports.sections.transactions-by-user.header.actions.details":
+      "Detalles",
+    "dashboard.reports.sections.transactions-by-user.details.header":
+      "Detalles del servicio de transacciones",
+    "dashboard.reports.sections.transactions-by-user.details.date": "Fecha",
+    "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
+    "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
+      "Ingrese la dirección de la billetera",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
+      "Dirección de billetera",
+    "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
+      "Ingrese una dirección de billetera válida",
+    "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
+      "Seleccione un rango de tiempo",
+    "dashboard.reports.sections-transactions-by-user.search.period.error":
+      "Ingrese un periodo válido",
+    "dashboard.reports.sections-transactions-by-user.search.start-date.label":
+      "Fecha de inicio",
+    "dashboard.reports.sections-transactions-by-user.search.end-date.label":
+      "Fecha de fin",
+    "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
+      "Seleccione un tipo",
+    "dashboard.reports.sections-transactions-by-user.search.type.error":
+      "Ingrese un tipo válido",
+    "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
+    "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
+      "Seleccione un estado",
+    "dashboard.reports.sections-transactions-by-user.search.state.error":
+      "Ingrese un estado válido",
+    "dashboard.reports.sections-transactions-by-user.search.state.label":
+      "Estado",
+    "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
+      "Seleccione un proveedor",
+    "dashboard.reports.sections-transactions-by-user.search.provider.error":
+      "Ingrese un provider válido",
+    "dashboard.reports.sections-transactions-by-user.search.provider.label":
+      "Proveedor",
+    "dashboard.wallet-users.inactive-dialog.title": "Desactivar Usuario",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "Al desactivar a este usuario, revocarás su acceso a ciertos privilegios del sistema. ¿Deseas continuar?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Si",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "El usuario ha sido desactivado satisfactoriamente.",
+    "dashboard.wallet-users.activate-dialog.title": "Activar Usuario",
+    "dashboard.wallet-users.activate-dialog.description":
+      "Al activar a este usuario, le estás otorgando acceso a privilegios específicos del sistema. ¿Deseas continuar?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Si",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "El usuario ha sido activado satisfactoriamente.",
     "dashboard.wallet-users.state": "Estado desconocido",
     "dashboard.wallet-users.state0": "Cuenta creada",
     "dashboard.wallet-users.state1": "Correo verificado",
