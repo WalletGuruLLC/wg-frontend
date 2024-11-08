@@ -320,18 +320,14 @@ export default function TransactionsByUserPage() {
                             variant="outline"
                             className={cn(
                               "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
-                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                               !field.value && "text-[#A1A1A1]",
                             )}
                           >
-                            {
-                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                              field.value ? (
-                                format(field.value, "yyyy/MM/dd")
-                              ) : (
-                                <span>yyyy/mm/dd</span>
-                              )
-                            }
+                            {field.value ? (
+                              format(field.value, "yyyy/MM/dd")
+                            ) : (
+                              <span>yyyy/mm/dd</span>
+                            )}
                             <CalendarIcon
                               className="absolute right-2 size-5"
                               strokeWidth={0.95}
@@ -345,8 +341,11 @@ export default function TransactionsByUserPage() {
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={[
-                            { after: form.watch("endDate") },
                             { after: new Date() },
+                            form.watch("endDate")
+                              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                { after: form.watch("endDate")! }
+                              : true,
                           ]}
                           initialFocus
                         />
@@ -375,18 +374,15 @@ export default function TransactionsByUserPage() {
                             variant="outline"
                             className={cn(
                               "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
-                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                               !field.value && "text-[#A1A1A1]",
                             )}
                           >
-                            {
-                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                              field.value ? (
-                                format(field.value, "yyyy/MM/dd")
-                              ) : (
-                                <span>yyyy/mm/dd</span>
-                              )
-                            }
+                            {field.value ? (
+                              format(field.value, "yyyy/MM/dd")
+                            ) : (
+                              <span>yyyy/mm/dd</span>
+                            )}
                             <CalendarIcon
                               className="absolute right-2 size-5"
                               strokeWidth={0.95}
@@ -399,9 +395,14 @@ export default function TransactionsByUserPage() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={{
-                            before: form.watch("startDate"),
-                          }}
+                          disabled={[
+                            form.watch("startDate")
+                              ? {
+                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                  before: form.watch("startDate")!,
+                                }
+                              : true,
+                          ]}
                           initialFocus
                         />
                       </PopoverContent>
@@ -496,7 +497,7 @@ export default function TransactionsByUserPage() {
               />
               <FormField
                 control={form.control}
-                name="provider"
+                name="providerIds"
                 render={({ field }) => (
                   <FormItem className="min-w-60 flex-1 space-y-0">
                     <FormLabel className="font-normal">
@@ -568,23 +569,17 @@ export default function TransactionsByUserPage() {
                 ]
               }
               :{" "}
-              {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                form.watch("startDate")
-                  ? format(form.watch("startDate"), "MMMM do, yyyy")
-                  : values[
-                      "dashboard.reports.sections-transactions-by-user.period.no-start-selected"
-                    ]
-              }{" "}
+              {form.watch("startDate")
+                ? format(form.watch("startDate"), "MMMM do, yyyy")
+                : values[
+                    "dashboard.reports.sections-transactions-by-user.period.no-start-selected"
+                  ]}{" "}
               -{" "}
-              {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                form.watch("endDate")
-                  ? format(form.watch("endDate"), "MMMM do, yyyy")
-                  : values[
-                      "dashboard.reports.sections-transactions-by-user.period.no-end-selected"
-                    ]
-              }
+              {form.watch("endDate")
+                ? format(form.watch("endDate"), "MMMM do, yyyy")
+                : values[
+                    "dashboard.reports.sections-transactions-by-user.period.no-end-selected"
+                  ]}
             </p>
           </div>
           <Button className="px-2" variant="secondary">

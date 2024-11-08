@@ -31,6 +31,7 @@ import type {
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
   toggleWalletStatusValidator,
+  transactionsByUserValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
 } from "../validators";
@@ -1767,6 +1768,28 @@ export interface DetailsTransactionByUser {
   amount: number;
   date: string;
   state: "Active" | "Completed";
+}
+interface UseGetTransactionsByUserQueryOutput {
+  transactions: ReportsByUser[];
+}
+export function useGetTransactionsByUserQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof transactionsByUserValidator>,
+  options: UseQueryOptions<UseGetTransactionsByUserQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-transactions-by-user", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseGetTransactionsByUserQueryOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/list-transactions` +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
 }
 
 export type UseGetSidebarItemsQueryOutput = {
