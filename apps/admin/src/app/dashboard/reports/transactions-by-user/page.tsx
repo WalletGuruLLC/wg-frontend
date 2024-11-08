@@ -13,7 +13,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Download } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Download } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
@@ -24,6 +25,11 @@ import {
   FormItem,
   useForm,
 } from "@wg-frontend/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@wg-frontend/ui/popover";
 import {
   Select,
   SelectContent,
@@ -46,14 +52,17 @@ import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
 import {
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
+  useGetDashboardUsersTitleQuery,
   useGetProviderPaymentParametersQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { transactionsByUserValidator } from "~/lib/validators";
+import { Calendar } from "../../_components/dashboard-calendar";
 import Dialog from "../../_components/dashboard-dialog";
 import { FormLabel } from "../../_components/dashboard-form";
-import { BreadcrumbTitle } from "../../_components/dashboard-title";
+import { SimpleTitle } from "../../_components/dashboard-title";
 
 function Actions({
   transactionsByUserParameters,
@@ -169,12 +178,15 @@ export default function TransactionsByUserPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data, isLoading } = useGetProviderPaymentParametersQuery({
+  const { data } = useGetProviderPaymentParametersQuery({
     ...paginationAndSearch,
     serviceProviderId: providerId,
   });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
+  const { data: title, isLoading: isLoadingTitle } =
+    useGetDashboardUsersTitleQuery(undefined);
+  const { data: userInfo } = useGetAuthedUserInfoQuery(undefined);
 
   const reportData: ReportsByUser[] = [
     {
@@ -215,6 +227,10 @@ export default function TransactionsByUserPage() {
     manualPagination: true,
   });
 
+  const form = useForm({
+    schema: transactionsByUserValidator,
+  });
+
   function handlePaginationAndSearchChange(
     newPaginationAndSearch: Partial<
       z.infer<typeof paginationAndSearchValidator>
@@ -234,10 +250,7 @@ export default function TransactionsByUserPage() {
       scroll: false,
     });
   }
-  const form = useForm({
-    schema: transactionsByUserValidator,
-    defaultValues: {},
-  });
+
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
@@ -248,20 +261,13 @@ export default function TransactionsByUserPage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <BreadcrumbTitle
-        sections={[
-          {
-            title: values["dashboard.layout.nav.reports"],
-            href: "/dashboard/reports",
-            isLoading: false,
-          },
-          {
-            title: values["dashboard.reports.sections.transactions-by-user"],
-            href: `/dashboard/reports/created-by-user`,
-            isLoading: false,
-          },
-        ]}
-        showLoadingIndicator={isLoading}
+      <SimpleTitle
+        title={
+          (title ?? "") +
+          " " +
+          values["dashboard.reports.sections.transactions-by-user"]
+        }
+        showLoadingIndicator={isLoadingTitle}
       />
       <div className="space-y-4">
         <Form {...form}>
@@ -295,12 +301,11 @@ export default function TransactionsByUserPage() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="startDate"
                 render={({ field }) => (
-                  <FormItem className="space-y-0">
+                  <FormItem className="flex flex-col space-y-1 self-end">
                     <FormLabel className="font-normal">
                       {
                         values[
@@ -308,28 +313,54 @@ export default function TransactionsByUserPage() {
                         ]
                       }
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="Date"
-                        className={cn(
-                          "rounded-lg border border-black",
-
-                          !form.watch("startDate") && "text-gray-400",
-                        )}
-                        {...field}
-                        required
-                      />
-                    </FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
+                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                              !field.value && "text-[#A1A1A1]",
+                            )}
+                          >
+                            {
+                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                              field.value ? (
+                                format(field.value, "yyyy/MM/dd")
+                              ) : (
+                                <span>yyyy/mm/dd</span>
+                              )
+                            }
+                            <CalendarIcon
+                              className="absolute right-2 size-5"
+                              strokeWidth={0.95}
+                            />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={[
+                            { after: form.watch("endDate") },
+                            { after: new Date() },
+                          ]}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="endDate"
                 render={({ field }) => (
-                  <FormItem className="space-y-0">
+                  <FormItem className="flex flex-col space-y-1 self-end">
                     <FormLabel className="font-normal">
                       {
                         values[
@@ -337,23 +368,48 @@ export default function TransactionsByUserPage() {
                         ]
                       }
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="Date"
-                        className={cn(
-                          "rounded-lg border border-black",
-
-                          !form.watch("endDate") && "text-gray-400",
-                        )}
-                        {...field}
-                        required
-                      />
-                    </FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
+                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                              !field.value && "text-[#A1A1A1]",
+                            )}
+                          >
+                            {
+                              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                              field.value ? (
+                                format(field.value, "yyyy/MM/dd")
+                              ) : (
+                                <span>yyyy/mm/dd</span>
+                              )
+                            }
+                            <CalendarIcon
+                              className="absolute right-2 size-5"
+                              strokeWidth={0.95}
+                            />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={{
+                            before: form.watch("startDate"),
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="type"
@@ -391,12 +447,10 @@ export default function TransactionsByUserPage() {
                         <SelectItem value="Platform">Platform</SelectItem>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="state"
@@ -436,7 +490,6 @@ export default function TransactionsByUserPage() {
                         <SelectItem value="Cordoba">Cordoba</SelectItem>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -445,7 +498,7 @@ export default function TransactionsByUserPage() {
                 control={form.control}
                 name="provider"
                 render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0">
+                  <FormItem className="min-w-60 flex-1 space-y-0">
                     <FormLabel className="font-normal">
                       {
                         values[
@@ -482,12 +535,10 @@ export default function TransactionsByUserPage() {
                         </SelectItem>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <Button className="h-max self-end">
                 <p className="flex-1 text-lg font-light">
                   {
@@ -502,8 +553,39 @@ export default function TransactionsByUserPage() {
         </Form>
         <div className="flex flex-row justify-between">
           <div>
-            <p>User: Rodrigo Bestard Pino</p>
-            <p>Period: Octubre 31 2024 - Octubre 31 2025</p>
+            <p>
+              {
+                values[
+                  "dashboard.reports.sections-transactions-by-user.user.label"
+                ]
+              }
+              : {userInfo?.firstName} {userInfo?.lastName}
+            </p>
+            <p>
+              {
+                values[
+                  "dashboard.reports.sections-transactions-by-user.period.label"
+                ]
+              }
+              :{" "}
+              {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                form.watch("startDate")
+                  ? format(form.watch("startDate"), "MMMM do, yyyy")
+                  : values[
+                      "dashboard.reports.sections-transactions-by-user.period.no-start-selected"
+                    ]
+              }{" "}
+              -{" "}
+              {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                form.watch("endDate")
+                  ? format(form.watch("endDate"), "MMMM do, yyyy")
+                  : values[
+                      "dashboard.reports.sections-transactions-by-user.period.no-end-selected"
+                    ]
+              }
+            </p>
           </div>
           <Button className="px-2" variant="secondary">
             <Download strokeWidth={0.75} className="size-6" />
@@ -602,7 +684,7 @@ function DetailsDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
-  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
   const detailsData: DetailsTransactionByUser[] = [
     {
       type: "HOLA",
