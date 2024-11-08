@@ -257,26 +257,14 @@ export const transactionsByUserValidator = z.object({
       1,
       "dashboard.reports.sections-transactions-by-user.search.wallet-address.error",
     ),
-  startDate: z
-    .string()
-    .refine(
-      (date) =>
-        !isNaN(new Date(date).getUTCDate()) && new Date(date) <= new Date(),
-      {
-        message:
-          "dashboard.reports.sections-transactions-by-user.search.period.error",
-      },
-    ),
-  endDate: z
-    .string()
-    .refine(
-      (date) =>
-        !isNaN(new Date(date).getUTCDate()) && new Date(date) <= new Date(),
-      {
-        message:
-          "dashboard.reports.sections-transactions-by-user.search.period.error",
-      },
-    ),
+  startDate: z.date({
+    required_error:
+      "dashboard.reports.sections-transactions-by-user.search.period.error",
+  }),
+  endDate: z.date({
+    required_error:
+      "dashboard.reports.sections-transactions-by-user.search.period.error",
+  }),
   type: z.string().min(1),
   provider: z.string().min(1),
   state: z.string().min(1),

@@ -327,9 +327,10 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
-    "dashboard.reports.sections.transactions-by-user.header.start": "Start",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "Finish",
-    "dashboard.reports.sections.transactions-by-user.header.state": "State",
+    "dashboard.reports.sections.transactions-by-user.header.start":
+      "Start Date",
+    "dashboard.reports.sections.transactions-by-user.header.finish": "End Date",
+    "dashboard.reports.sections.transactions-by-user.header.state": "Status",
     "dashboard.reports.sections.transactions-by-user.header.actions": "Actions",
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Details",
@@ -337,7 +338,7 @@ export const dashboardDict = {
       "Details Transaction Service",
     "dashboard.reports.sections.transactions-by-user.details.date": "Date",
     "dashboard.reports.sections.transactions-by-user.search-button": "Search",
-    "dashboard.reports.sections.transactions-by-user.header.ammount": "Ammount",
+    "dashboard.reports.sections.transactions-by-user.header.ammount": "Amount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
       "Enter the wallet address",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
@@ -362,13 +363,19 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.state.error":
       "Enter a valid state",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
-      "State",
+      "Status",
     "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
       "Select a provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.error":
       "Enter a valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
+    "dashboard.reports.sections-transactions-by-user.user.label": "User",
+    "dashboard.reports.sections-transactions-by-user.period.label": "Period",
+    "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
+      "No start date selected",
+    "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
+      "No end date selected",
     "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
     "dashboard.wallet-users.inactive-dialog.description":
       "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
@@ -726,8 +733,10 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
-    "dashboard.reports.sections.transactions-by-user.header.start": "Inicio",
-    "dashboard.reports.sections.transactions-by-user.header.finish": "Fin",
+    "dashboard.reports.sections.transactions-by-user.header.start":
+      "Fecha de Inicio",
+    "dashboard.reports.sections.transactions-by-user.header.finish":
+      "Fecha de Fin",
     "dashboard.reports.sections.transactions-by-user.header.state": "Estado",
     "dashboard.reports.sections.transactions-by-user.header.actions":
       "Acciones",
@@ -783,5 +792,11 @@ export const dashboardDict = {
     "dashboard.wallet-users.activate-dialog.secondary-button": "No",
     "dashboard.wallet-users.activate-dialog.toast.success":
       "El usuario ha sido activado satisfactoriamente.",
+    "dashboard.reports.sections-transactions-by-user.user.label": "Usuario",
+    "dashboard.reports.sections-transactions-by-user.period.label": "Periodo",
+    "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
+      "No se ha seleccionado una fecha de inicio",
+    "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
+      "No se ha seleccionado una fecha de fin",
   },
 } satisfies I18nDictionary;
