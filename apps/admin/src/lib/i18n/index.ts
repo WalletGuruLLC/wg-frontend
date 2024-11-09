@@ -14,7 +14,7 @@ const dict = {
     ...authDict.en,
     ...dashboardDict.en,
     ...serviceProvidersDict.en,
-    ...walletUsersDict.es,
+    ...walletUsersDict.en,
   },
   es: {
     loading: "Cargando...",
