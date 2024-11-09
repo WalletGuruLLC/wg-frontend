@@ -25,6 +25,7 @@ import type {
   loginValidator,
   paginationAndSearchValidator,
   resetPasswordValidator,
+  sendOtpAuthenticationValidator,
   settingsValidator,
   toggleProviderPaymentParameterStatusValidator,
   toggleProviderStatusValidator,
@@ -285,6 +286,43 @@ export function useTwoFactorAuthenticationMutation(
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useSendOtpAuthenticationMutation(
+  options: UseMutationOptions<
+    z.infer<typeof sendOtpAuthenticationValidator>,
+    {
+      user: {
+        id: string;
+        otp: string;
+        email: string;
+        accessLevel: ApiSimpleAccessLevels;
+      };
+      token: string;
+      refresToken: string;
+    }
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["send-otp"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/verify/otp/mfa",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-verify-user-info"],
       });
       options.onSuccess?.(...input);
     },

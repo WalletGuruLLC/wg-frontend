@@ -37,14 +37,14 @@ import {
   useGetAuthedUserInfoQuery,
   useGetUsersQuery,
   useResendCodeMutation,
+  useSendOtpAuthenticationMutation,
   useToggleUserStatusMutation,
-  useTwoFactorAuthenticationMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import {
-  twoFactorAuthenticationValidator,
+  sendOtpAuthenticationValidator,
   walletusersValidator,
 } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
@@ -264,17 +264,6 @@ const columns = [
                     </Button>
                   }
                 />
-                {/*
-                <Link
-                  className="text-[#3678B1]"
-                  href={`/dashboard/wallet-users/${idUser}`}
-                >
-                  <ChevronRight
-                    stroke="#3678B1"
-                    strokeWidth={0.75}
-                    className="size-6 font-semibold"
-                  />
-                </Link>*/}
               </TooltipTrigger>
               <TooltipContent>{tooltip}</TooltipContent>
             </Tooltip>
@@ -537,7 +526,7 @@ function interpolate(
 }
 
 function ValidateOtp(props: {
-  user?: {
+  user: {
     email: string;
     id: string;
     name: string;
@@ -551,14 +540,17 @@ function ValidateOtp(props: {
   const [countDown, setCountDown] = useState(COUNTDOWN_TIME);
 
   const form = useForm({
-    schema: twoFactorAuthenticationValidator,
+    schema: sendOtpAuthenticationValidator,
     defaultValues: {
-      email: "",
+      email: props.user.email,
       otp: "",
     },
   });
-
-  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
+  const {
+    mutate: sendOtp,
+    isPending,
+    error,
+  } = useSendOtpAuthenticationMutation({
     onSuccess: (data) => {
       return router.replace(`/dashboard/wallet-users/${data.user.id}`);
     },
@@ -569,19 +561,23 @@ function ValidateOtp(props: {
     },
   });
   useEffect(() => {
+    if (isOpen) {
+      const email = props.user.email;
+      resendCode({ email });
+    }
+  }, [isOpen, resendCode, props.user.email]);
+  useEffect(() => {
     const interval = setInterval(() => {
       setCountDown((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
-
   const minutesRemaining = Math.floor(countDown / 60);
   const secondsRemaining = countDown % 60;
-
   return (
     <Dialog
-      key={props.user?.id}
+      key={props.user.id}
       isOpen={isOpen}
       toggleOpen={() => {
         toggle();
@@ -596,12 +592,11 @@ function ValidateOtp(props: {
         ></SimpleTitle>
         <p>
           {interpolate(values["wallet-users.otp.description"], {
-            name:
-              props.user?.name ?? values["wallet-users.otp.description.name"],
+            name: props.user.name,
           })}
         </p>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit((data) => mutate(data))}>
+          <form onSubmit={form.handleSubmit((data) => sendOtp(data))}>
             <div className="text-gray space-y-4">
               {error !== null && (
                 <p className="text-lg text-[#E21D1D]">
@@ -655,7 +650,7 @@ function ValidateOtp(props: {
               disabled={isSending}
               type="button"
               onClick={() => {
-                const email = localStorage.getItem("email");
+                const email = props.user.email;
                 if (email) resendCode({ email });
               }}
             >
