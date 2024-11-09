@@ -32,6 +32,11 @@ export const twoFactorAuthenticationValidator = z.object({
   otp: z.string().min(1, "auth.2fa.code.errors.invalid"),
 });
 
+export const sendOtpAuthenticationValidator = z.object({
+  email: z.string().email(),
+  otp: z.string().min(1, "wallet-users.otp.code.errors.invalid"),
+});
+
 export const forgotPasswordEmailStepValidator = z.object({
   email: z.string().email("auth.login.email.errors.invalid"),
 });
