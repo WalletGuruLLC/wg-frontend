@@ -45,6 +45,13 @@ export const walletUsersDict = {
     "wallet-users.activate-dialog.toast.success":
       "The user has been activated successfully.",
     "wallet-users.table.header.is-active": "Active",
+    "wallet-users.otp.title": "Access Requirement",
+    "wallet-users.otp.description":
+      "An OTP has been sent to {{name}}'s email please enter it to continue.",
+    "wallet-users.otp.description.name": "Name",
+    "wallet-users.otp.primary-button": "Continue",
+    "wallet-users.otp.secondary-button": "Resend Code",
+    "wallet-users.otp.code.placeholder": "Enter the code",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -91,5 +98,12 @@ export const walletUsersDict = {
     "wallet-users.activate-dialog.toast.success":
       "El usuario ha sido activado satisfactoriamente.",
     "wallet-users.table.header.is-active": "Activo",
+    "wallet-users.otp.title": "Requisito de acceso",
+    "wallet-users.otp.description":
+      "Se ha enviado un OTP al correo electrónico de {{name}}, por favor ingrésalo para continuar.",
+    "wallet-users.otp.description.name": "Nombre",
+    "wallet-users.otp.primary-button": "Continuar",
+    "wallet-users.otp.secondary-button": "Reenviar código",
+    "wallet-users.otp.code.placeholder": "Ingresar el código",
   },
 } satisfies I18nDictionary;
