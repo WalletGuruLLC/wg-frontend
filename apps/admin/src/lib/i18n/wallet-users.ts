@@ -52,6 +52,7 @@ export const walletUsersDict = {
     "wallet-users.otp.primary-button": "Continue",
     "wallet-users.otp.secondary-button": "Resend Code",
     "wallet-users.otp.code.placeholder": "Enter the code",
+    "wallet-user.detail.title": "User Details",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -105,5 +106,6 @@ export const walletUsersDict = {
     "wallet-users.otp.primary-button": "Continuar",
     "wallet-users.otp.secondary-button": "Reenviar código",
     "wallet-users.otp.code.placeholder": "Ingresar el código",
+    "wallet-user.detail.title": "Detalles del usuario",
   },
 } satisfies I18nDictionary;
