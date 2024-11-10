@@ -527,9 +527,10 @@ function interpolate(
 
 function ValidateOtp(props: {
   user: {
+  user: {
     email: string;
     id: string;
-    name: string;
+    name?: string;
   };
   trigger: ReactNode;
 }) {
@@ -553,6 +554,9 @@ function ValidateOtp(props: {
   } = useSendOtpAuthenticationMutation({
     onSuccess: (data) => {
       return router.replace(`/dashboard/wallet-users/${data.user.id}`);
+    },
+    onError: () => {
+      return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
   });
   const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({
@@ -592,7 +596,8 @@ function ValidateOtp(props: {
         ></SimpleTitle>
         <p>
           {interpolate(values["wallet-users.otp.description"], {
-            name: props.user.name,
+            name:
+              props.user.name ?? values["wallet-users.otp.description.name"],
           })}
         </p>
         <Form {...form}>
