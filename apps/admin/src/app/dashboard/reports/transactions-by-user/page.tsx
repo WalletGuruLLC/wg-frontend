@@ -689,7 +689,7 @@ function DetailsDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
-  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const [isOpen, _, _close, toggle] = useBooleanHandlers();
   const detailsData: DetailsTransactionByUser[] = [
     {
       type: "HOLA",
