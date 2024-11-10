@@ -321,6 +321,9 @@ export const dashboardDict = {
     "dashboard.wallet-users.locked-wallet": "Locked Wallet",
     "dashboard.wallet-users.active-wallet": "Active Wallet",
     "dashboard.wallet-users.no-wallet": "No wallet",
+    "dashboard.wallet-users.select-state": "Select status",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -373,9 +376,6 @@ export const dashboardDict = {
       "No start date selected",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No end date selected",
-    "dashboard.wallet-users.select-state": "Select state",
-    "dashboard.wallet-users.select-wallet": "Select wallet",
-    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
     "dashboard.wallet-users.inactive-dialog.description":
       "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
