@@ -14,7 +14,7 @@ import {
 } from "@wg-frontend/ui/form";
 
 import { Button } from "~/components/button";
-import { useGetWalletUserMutation } from "~/lib/data-access";
+import { useGetWalletUserQuery } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { walletuserDetailValidator } from "~/lib/validators";
 import { FormItem, FormLabel } from "../../_components/dashboard-form";
@@ -24,35 +24,19 @@ import { BreadcrumbTitle } from "../../_components/dashboard-title";
 export default function UserDetailsPage() {
   const { values } = useI18n();
   const { userId } = useParams<{ userId: string }>();
-  interface User {
-    id: string;
-    name: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    socialSecurityNumber: string;
-    identificationType: string;
-    identificationNumber: string;
-    stateLocation: string;
-    country: string;
-    city: string;
-    zipCode: string;
-  }
+  const { data: dataUser, isLoading } = useGetWalletUserQuery(userId);
   const form = useForm({
     schema: walletuserDetailValidator,
-    defaultValues: {},
   });
-  const { mutate } = useGetWalletUserMutation({
-    onSuccess: (data) => {
-      form.reset(data);
-    },
-  });
+
   useEffect(() => {
-    if (userId) {
-      mutate({ id: userId });
+    if (dataUser) {
+      form.reset(dataUser);
     }
-  }, [userId, mutate]);
+  }, [dataUser, form]);
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className="-mt-2">
       <BreadcrumbTitle
