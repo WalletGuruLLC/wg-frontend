@@ -237,6 +237,7 @@ const columns = [
           id: info.id,
           email: info.email,
           name: info.firstName + " " + info.lastName,
+          /*
           firstName: info.firstName,
           lastName: info.lastName,
           phone: info.phone,
@@ -244,6 +245,10 @@ const columns = [
           identificationType: info.identificationType ?? "",
           identificationNumber: info.identificationNumber ?? "",
           stateLocation: info.stateLocation ?? "",
+          country: info.country ?? "",
+          city: info.city ?? "",
+          zipCode: info.zipCode ?? "",
+          */
         },
         tooltip: values["wallet-users.tooltip.details"],
       };
@@ -528,7 +533,7 @@ function ValidateOtp(props: {
   user: {
     email: string;
     id: string;
-    name: string;
+    name: string /*
     firstName: string;
     lastName: string;
     phone: string;
@@ -536,6 +541,9 @@ function ValidateOtp(props: {
     identificationType: string;
     identificationNumber: string;
     stateLocation: string;
+    country: string;
+    city: string;
+    zipCode: string;*/;
   };
   trigger: ReactNode;
 }) {
@@ -554,14 +562,13 @@ function ValidateOtp(props: {
   });
   const { mutate: sendOtp, isPending } = useSendOtpAuthenticationMutation({
     onSuccess: () => {
-      sessionStorage.setItem("walletUser", JSON.stringify(props.user));
       return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
     onError: (error) => {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,
       });
-      sessionStorage.setItem("walletUser", JSON.stringify(props.user));
+      //sessionStorage.setItem("walletUser", JSON.stringify(props.user));
       return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
   });

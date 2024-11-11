@@ -47,7 +47,7 @@ export const walletUsersDict = {
     "wallet-users.table.header.is-active": "Active",
     "wallet-users.otp.title": "Access Requirement",
     "wallet-users.otp.description":
-      "An OTP has been sent to {{name}}'s email please enter it to continue.",
+      "An OTP has been sent to {{name}}'s email, please enter it to continue.",
     "wallet-users.otp.description.name": "Name",
     "wallet-users.otp.primary-button": "Continue",
     "wallet-users.otp.secondary-button": "Resend Code",
@@ -63,6 +63,10 @@ export const walletUsersDict = {
     "wallet-users.details.label.state": "State",
     "wallet-users.details.label.city": "City",
     "wallet-users.details.label.zipcode": "Zip Code",
+    "wallet-users.details.button.reset": "Reset Password ",
+    "wallet-users.details.button.lock": "Lock Wallet ",
+    "wallet-users.details.button.unlock": "Unlock Wallet ",
+    "wallet-users.details.button.transactions": "Transactions ",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -128,5 +132,9 @@ export const walletUsersDict = {
     "wallet-users.details.label.state": "Estado",
     "wallet-users.details.label.city": "Ciudad",
     "wallet-users.details.label.zipcode": "Código Postal",
+    "wallet-users.details.button.reset": "Reiniciar Contraseña ",
+    "wallet-users.details.button.lock": "Bloquear Billetera ",
+    "wallet-users.details.button.unlock": "Desbloquear Billetera ",
+    "wallet-users.details.button.transactions": "Transacciones ",
   },
 } satisfies I18nDictionary;
