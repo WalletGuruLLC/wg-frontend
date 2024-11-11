@@ -34,6 +34,7 @@ import type {
   toggleWalletStatusValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
+  walletuserDetailValidator,
 } from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
@@ -890,6 +891,9 @@ export interface User {
   identificationType?: string;
   identificationNumber?: string;
   stateLocation?: string;
+  country?: string;
+  city?: string;
+  zipCode?: string;
 }
 interface UseGetUsersQueryOutput {
   users: User[];
@@ -1840,6 +1844,32 @@ export function useGetSidebarItemsQuery(
           id: MODULES_MAP[m.id],
           description: m.description,
         }));
+    },
+  });
+}
+export function useGetWalletUserMutation(
+  options: UseMutationOptions<
+    z.infer<typeof walletuserDetailValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["get-wallet-user"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/" + input.id,
+        {
+          method: "GET",
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-wallet-user"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
