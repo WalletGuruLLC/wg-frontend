@@ -1,7 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { z } from "zod";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -35,13 +36,19 @@ import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetUsersQuery,
+  useResendCodeMutation,
   useToggleUserStatusMutation,
+  useTwoFactorAuthenticationMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { walletusersValidator } from "~/lib/validators";
+import {
+  twoFactorAuthenticationValidator,
+  walletusersValidator,
+} from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
+import Dialog from "../_components/dashboard-dialog";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
 import { Input } from "../_components/dashboard-input";
 import { Switch } from "../_components/dashboard-switch";
@@ -57,6 +64,7 @@ import {
   TooltipTrigger,
 } from "../_components/dashboard-tooltip";
 
+const COUNTDOWN_TIME = 60 * 5; // 5 minutes
 const formatCurrency = (value: number, code: string, scale: number) => {
   const formattedValue = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: scale,
@@ -74,9 +82,7 @@ const columns = [
       const user = info.row.original;
       return `${user.firstName || ""} ${user.lastName || ""}`.trim() || "-";
     },
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.wallet-users.table.header.name" />
-    ),
+    header: () => <ColumnHeader i18nKey="wallet-users.table.header.name" />,
   }),
   columnHelper.accessor("wallet", {
     id: "wallet",
@@ -87,9 +93,7 @@ const columns = [
       }
       return "-";
     },
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.wallet-users.table.header.wallet" />
-    ),
+    header: () => <ColumnHeader i18nKey="wallet-users.table.header.wallet" />,
   }),
   columnHelper.accessor(
     (row) => {
@@ -107,7 +111,7 @@ const columns = [
         return formatCurrency(money, code, scale);
       },
       header: () => (
-        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.balance" />
+        <ColumnHeader i18nKey="wallet-users.table.header.balance" />
       ),
     },
   ),
@@ -126,7 +130,7 @@ const columns = [
         return formatCurrency(money, code, scale);
       },
       header: () => (
-        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.reserved" />
+        <ColumnHeader i18nKey="wallet-users.table.header.reserved" />
       ),
     },
   ),
@@ -147,7 +151,7 @@ const columns = [
         return formatCurrency(money, code, scale);
       },
       header: () => (
-        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.available" />
+        <ColumnHeader i18nKey="wallet-users.table.header.available" />
       ),
     },
   ),
@@ -169,15 +173,13 @@ const columns = [
     {
       id: "timestamp",
       cell: (info) => info.getValue(),
-      header: () => (
-        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.time" />
-      ),
+      header: () => <ColumnHeader i18nKey="wallet-users.table.header.time" />,
     },
   ),
   columnHelper.accessor("active", {
     id: "active",
     header: () => (
-      <ColumnHeader i18nKey="dashboard.users.table.header.is-active" />
+      <ColumnHeader i18nKey="wallet-users.table.header.is-active" />
     ),
     cell: (info) => (
       <SwitchActiveStatusDialog
@@ -194,23 +196,19 @@ const columns = [
       const { values } = useI18n();
       const state = row.state;
       const statesName = {
-        0: values["dashboard.wallet-users.state0"],
-        1: values["dashboard.wallet-users.state1"],
-        2: values["dashboard.wallet-users.state2"],
-        3: values["dashboard.wallet-users.state3"],
-        4: values["dashboard.wallet-users.state4"],
-        5: values["dashboard.wallet-users.state5"],
+        0: values["wallet-users.state0"],
+        1: values["wallet-users.state1"],
+        2: values["wallet-users.state2"],
+        3: values["wallet-users.state3"],
+        4: values["wallet-users.state4"],
+        5: values["wallet-users.state5"],
       };
-      return (
-        String(statesName[state]) || values["dashboard.wallet-users.state"]
-      );
+      return String(statesName[state]) || values["wallet-users.state"];
     },
     {
       id: "stateName",
       cell: (info) => info.getValue(),
-      header: () => (
-        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.state" />
-      ),
+      header: () => <ColumnHeader i18nKey="wallet-users.table.header.state" />,
     },
   ),
   columnHelper.accessor(
@@ -219,18 +217,16 @@ const columns = [
       const walletState = String(row.wallet?.active);
       const walletStateName =
         walletState === "undefined"
-          ? values["dashboard.wallet-users.no-wallet"]
+          ? values["wallet-users.no-wallet"]
           : walletState === "true"
-            ? values["dashboard.wallet-users.active-wallet"]
-            : values["dashboard.wallet-users.locked-wallet"];
+            ? values["wallet-users.active-wallet"]
+            : values["wallet-users.locked-wallet"];
       return walletStateName;
     },
     {
       id: "walletName",
       cell: (info) => info.getValue(),
-      header: () => (
-        <ColumnHeader i18nKey="dashboard.wallet-users.table.header.wallet" />
-      ),
+      header: () => <ColumnHeader i18nKey="wallet-users.table.header.wallet" />,
     },
   ),
   columnHelper.accessor(
@@ -238,18 +234,37 @@ const columns = [
       const { values } = useI18n();
       const data = {
         idUser: info.id,
-        tooltip: values["dashboard.wallet-users.tooltip.details"],
+        idEmail: info.email,
+        idName: info.firstName + " " + info.lastName,
+        tooltip: values["wallet-users.tooltip.details"],
       };
       return data;
     },
     {
       id: "actions",
       cell: (data) => {
-        const { idUser, tooltip } = data.getValue();
+        const { idUser, tooltip, idEmail, idName } = data.getValue();
         return (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
+                <ValidateOtp
+                  user={{
+                    name: idName,
+                    email: idEmail,
+                    id: idUser,
+                  }}
+                  trigger={
+                    <Button className="font-normal no-underline" variant="link">
+                      <ChevronRight
+                        stroke="#3678B1"
+                        strokeWidth={0.75}
+                        className="size-6 font-semibold"
+                      />
+                    </Button>
+                  }
+                />
+                {/*
                 <Link
                   className="text-[#3678B1]"
                   href={`/dashboard/wallet-users/${idUser}`}
@@ -259,7 +274,7 @@ const columns = [
                     strokeWidth={0.75}
                     className="size-6 font-semibold"
                   />
-                </Link>
+                </Link>*/}
               </TooltipTrigger>
               <TooltipContent>{tooltip}</TooltipContent>
             </Tooltip>
@@ -349,13 +364,13 @@ export default function WalletUsersPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={`${values["dashboard.wallet-users.title"]}`}
+        title={`${values["wallet-users.title"]}`}
         showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-6">
         <div className="relative w-1/2">
           <Input
-            placeholder={values["dashboard.wallet-users.search.placeholder"]}
+            placeholder={values["wallet-users.search.placeholder"]}
             className="rounded-full border border-black"
             name="search"
             onChange={(e) =>
@@ -383,7 +398,7 @@ export default function WalletUsersPage() {
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel className="text-gray-400">
-                        {values["dashboard.wallet-users.table.header.wallet"]}
+                        {values["wallet-users.table.header.wallet"]}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -396,21 +411,19 @@ export default function WalletUsersPage() {
                             )}
                           >
                             <SelectValue
-                              placeholder={
-                                values["dashboard.wallet-users.select-wallet"]
-                              }
+                              placeholder={values["wallet-users.select-wallet"]}
                             />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value={"0"}>
-                            {values["dashboard.wallet-users.active-wallet"]}
+                            {values["wallet-users.active-wallet"]}
                           </SelectItem>
                           <SelectItem value={"1"}>
-                            {values["dashboard.wallet-users.locked-wallet"]}
+                            {values["wallet-users.locked-wallet"]}
                           </SelectItem>
                           <SelectItem value={"2"}>
-                            {values["dashboard.wallet-users.no-wallet"]}
+                            {values["wallet-users.no-wallet"]}
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -424,7 +437,7 @@ export default function WalletUsersPage() {
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel className="text-gray-400">
-                        {values["dashboard.wallet-users.table.header.state"]}
+                        {values["wallet-users.table.header.state"]}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -438,30 +451,28 @@ export default function WalletUsersPage() {
                           >
                             <SelectValue
                               className="h-full"
-                              placeholder={
-                                values["dashboard.wallet-users.select-state"]
-                              }
+                              placeholder={values["wallet-users.select-state"]}
                             />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value={"0"}>
-                            {values["dashboard.wallet-users.state0"]}
+                            {values["wallet-users.state0"]}
                           </SelectItem>
                           <SelectItem value={"1"}>
-                            {values["dashboard.wallet-users.state1"]}
+                            {values["wallet-users.state1"]}
                           </SelectItem>
                           <SelectItem value={"2"}>
-                            {values["dashboard.wallet-users.state2"]}
+                            {values["wallet-users.state2"]}
                           </SelectItem>
                           <SelectItem value={"3"}>
-                            {values["dashboard.wallet-users.state3"]}
+                            {values["wallet-users.state3"]}
                           </SelectItem>
                           <SelectItem value={"4"}>
-                            {values["dashboard.wallet-users.state4"]}
+                            {values["wallet-users.state4"]}
                           </SelectItem>
                           <SelectItem value={"5"}>
-                            {values["dashboard.wallet-users.state5"]}
+                            {values["wallet-users.state5"]}
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -516,6 +527,150 @@ export default function WalletUsersPage() {
     </div>
   );
 }
+function interpolate(
+  template: string,
+  variables: Record<string, string>,
+): string {
+  return template.replace(/{{(.*?)}}/g, (match: string, key: string) => {
+    return variables[key.trim()] ?? "";
+  });
+}
+
+function ValidateOtp(props: {
+  user?: {
+    email: string;
+    id: string;
+    name: string;
+  };
+  trigger: ReactNode;
+}) {
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const router = useRouter();
+  const [countDown, setCountDown] = useState(COUNTDOWN_TIME);
+
+  const form = useForm({
+    schema: twoFactorAuthenticationValidator,
+    defaultValues: {
+      email: "",
+      otp: "",
+    },
+  });
+
+  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
+    onSuccess: (data) => {
+      return router.replace(`/dashboard/wallet-users/${data.user.id}`);
+    },
+  });
+  const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({
+    onSuccess: () => {
+      setCountDown(COUNTDOWN_TIME);
+    },
+  });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountDown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const minutesRemaining = Math.floor(countDown / 60);
+  const secondsRemaining = countDown % 60;
+
+  return (
+    <Dialog
+      key={props.user?.id}
+      isOpen={isOpen}
+      toggleOpen={() => {
+        toggle();
+      }}
+      trigger={props.trigger}
+      ariaDescribedBy="send-otp"
+    >
+      <div className="space-y-9">
+        <SimpleTitle
+          title={values["wallet-users.otp.title"]}
+          showLoadingIndicator={false}
+        ></SimpleTitle>
+        <p>
+          {interpolate(values["wallet-users.otp.description"], {
+            name:
+              props.user?.name ?? values["wallet-users.otp.description.name"],
+          })}
+        </p>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit((data) => mutate(data))}>
+            <div className="text-gray space-y-4">
+              {error !== null && (
+                <p className="text-lg text-[#E21D1D]">
+                  {errors[error.message]}
+                </p>
+              )}
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-black">{"OTP"}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={
+                          values["wallet-users.otp.code.placeholder"]
+                        }
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <p className="text-base text-[#3678B1]">
+                {values["auth.2fa.code.valid-for"]}{" "}
+                {countDown <= 0 ? (
+                  "00:00"
+                ) : (
+                  <>
+                    {minutesRemaining.toString().padStart(2, "0")}
+                    {":"}
+                    {secondsRemaining.toString().padStart(2, "0")}
+                  </>
+                )}
+              </p>
+            </div>
+            <br />
+            <Button type="submit" disabled={isPending} className="w-full">
+              {
+                values[
+                  isPending ? "loading" : "wallet-users.otp.primary-button"
+                ]
+              }
+            </Button>
+
+            <Button
+              variant="link"
+              disabled={isSending}
+              type="button"
+              onClick={() => {
+                const email = localStorage.getItem("email");
+                if (email) resendCode({ email });
+              }}
+            >
+              {
+                values[
+                  isSending ? "loading" : "wallet-users.otp.secondary-button"
+                ]
+              }
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </Dialog>
+  );
+}
 
 function SwitchActiveStatusDialog(props: {
   user: {
@@ -541,7 +696,7 @@ function SwitchActiveStatusDialog(props: {
   });
 
   const valuesPrexif =
-    `dashboard.wallet-users.${props.user.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
+    `wallet-users.${props.user.isActive ? "inactive-dialog" : "activate-dialog"}` as const;
 
   return (
     <ConfirmDialog

@@ -7,6 +7,7 @@ import {
   Activity,
   HandCoins,
   Home,
+  Loader,
   Loader2,
   LogOut,
   Menu,
@@ -48,6 +49,7 @@ import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetCountryCodesQuery,
+  useGetSidebarItemsQuery,
   useLogoutMutation,
   useUpdateUserPhoneNumberMutation,
   useUploadUserImageMutation,
@@ -62,38 +64,27 @@ import { Input } from "./_components/dashboard-input";
 
 const NAV = [
   {
-    Icon: Home,
-    i18nTitleKey: "dashboard.layout.nav.home",
-    path: "/dashboard",
-    id: "home",
-    moduleId: null,
-  },
-  {
     Icon: HandCoins,
     i18nTitleKey: "dashboard.layout.nav.wallet-users",
     path: "/dashboard/wallet-users",
-    id: "wallet-users",
     moduleId: "walletUsers" satisfies ModuleId,
   },
   {
     Icon: Wallet,
     i18nTitleKey: "dashboard.layout.nav.wallet-management",
     path: "/dashboard/wallet-management",
-    id: "wallet-management",
     moduleId: "wallets" satisfies ModuleId,
   },
   {
     Icon: User,
     i18nTitleKey: "dashboard.layout.nav.service-providers",
     path: "/dashboard/service-providers",
-    id: "service-providers",
     moduleId: "serviceProviders" satisfies ModuleId,
   },
   {
     Icon: Users,
     i18nTitleKey: "dashboard.layout.nav.users",
     path: "/dashboard/users",
-    id: "users",
     moduleId: "users" satisfies ModuleId,
   },
   {
@@ -101,21 +92,25 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.reports",
     path: "/dashboard/reports",
     id: "reports",
-    moduleId: "users" satisfies ModuleId,
+    moduleId: "reports" satisfies ModuleId,
   },
   {
     Icon: SquareUserRound,
     i18nTitleKey: "dashboard.layout.nav.roles",
     path: "/dashboard/roles",
-    id: "roles",
     moduleId: "roles" satisfies ModuleId,
   },
   {
     Icon: Settings,
     i18nTitleKey: "dashboard.layout.nav.settings",
     path: "/dashboard/settings",
-    id: "settings",
     moduleId: "settings" satisfies ModuleId,
+  },
+  {
+    Icon: Activity,
+    i18nTitleKey: "dashboard.layout.nav.reports",
+    path: "/dashboard/reports",
+    moduleId: "users" satisfies ModuleId,
   },
 ] as const;
 
@@ -125,6 +120,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  const { data: sidebarData } = useGetSidebarItemsQuery(undefined);
 
   const pathname = usePathname();
   const { values } = useI18n();
@@ -166,24 +162,41 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
             <Separator className="ml-4 w-1/2" />
             <div className="flex-1 pt-8">
               <nav className="grid items-start gap-4 px-4">
-                {NAV.map((page) => {
-                  if (
-                    page.moduleId &&
-                    !data?.general[page.moduleId].includes("view")
-                  )
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
+                    "/dashboard" === pathname &&
+                      "border-transparent bg-[#3678B1]",
+                  )}
+                >
+                  <Home className="size-6" strokeWidth={0.75} />
+                  {values["dashboard.layout.nav.home"]}
+                </Link>
+                {sidebarData?.map((sidebarItem) => {
+                  if (!data?.general[sidebarItem.id]?.includes("view"))
                     return null;
+
+                  const navItem = NAV.find(
+                    (nav) => nav.moduleId === sidebarItem.id,
+                  );
+
+                  const Icon = navItem?.Icon ?? Loader;
+
                   return (
                     <Link
-                      key={page.id}
-                      href={page.path}
+                      key={sidebarItem.id}
+                      href={navItem?.path ?? "/dashboard"}
                       className={cn(
                         "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
-                        page.path === pathname &&
+                        navItem?.path === pathname &&
                           "border-transparent bg-[#3678B1]",
                       )}
                     >
-                      <page.Icon className="size-6" strokeWidth={0.75} />
-                      {values[page.i18nTitleKey]}
+                      <Icon className="size-6" strokeWidth={0.75} />
+                      {navItem
+                        ? values[navItem.i18nTitleKey]
+                        : sidebarItem.description}
                     </Link>
                   );
                 })}
@@ -229,24 +242,41 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
                       height={52}
                     />
                   </Link>
-                  {NAV.map((page) => {
-                    if (
-                      page.moduleId &&
-                      !data?.general[page.moduleId].includes("view")
-                    )
+                  <Link
+                    href="/dashboard"
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
+                      "/dashboard" === pathname &&
+                        "border-transparent bg-[#3678B1]",
+                    )}
+                  >
+                    <Home className="size-6" strokeWidth={0.75} />
+                    {values["dashboard.layout.nav.home"]}
+                  </Link>
+                  {sidebarData?.map((sidebarItem) => {
+                    if (!data?.general[sidebarItem.id]?.includes("view"))
                       return null;
+
+                    const navItem = NAV.find(
+                      (nav) => nav.moduleId === sidebarItem.id,
+                    );
+
+                    const Icon = navItem?.Icon ?? Loader;
+
                     return (
                       <Link
-                        key={page.id}
-                        href={page.path}
+                        key={sidebarItem.id}
+                        href={navItem?.path ?? "/dashboard"}
                         className={cn(
                           "flex items-center gap-3 rounded-lg border border-white bg-transparent px-3 py-2 text-sm",
-                          page.path === pathname &&
+                          navItem?.path === pathname &&
                             "border-transparent bg-[#3678B1]",
                         )}
                       >
-                        <page.Icon className="size-6" strokeWidth={0.75} />
-                        {values[page.i18nTitleKey]}
+                        <Icon className="size-6" strokeWidth={0.75} />
+                        {navItem
+                          ? values[navItem.i18nTitleKey]
+                          : sidebarItem.description}
                       </Link>
                     );
                   })}
