@@ -279,3 +279,19 @@ export const walletusersValidator = z.object({
   state: z.string().min(1),
   wallet: z.string().min(1),
 });
+
+export const walletuserDetailValidator = z.object({
+  id: z.string().min(1),
+  name: z.string(),
+  email: z.string().email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  phone: z.string(),
+  socialSecurityNumber: z.string(),
+  identificationType: z.string(),
+  identificationNumber: z.string(),
+  stateLocation: z.string(),
+  country: z.string(),
+  city: z.string(),
+  zipCode: z.string(),
+});
