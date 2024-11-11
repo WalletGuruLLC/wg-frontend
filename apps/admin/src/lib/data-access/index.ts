@@ -34,7 +34,6 @@ import type {
   toggleWalletStatusValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
-  walletuserDetailValidator,
 } from "../validators";
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
@@ -1847,29 +1846,36 @@ export function useGetSidebarItemsQuery(
     },
   });
 }
-export function useGetWalletUserMutation(
-  options: UseMutationOptions<
-    z.infer<typeof walletuserDetailValidator>,
-    unknown
-  > = {},
+export interface WalletUser {
+  id: string;
+  name: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  socialSecurityNumber: string;
+  identificationType: string;
+  identificationNumber: string;
+  stateLocation: string;
+  country: string;
+  city: string;
+  zipCode: string;
+}
+
+export function useGetWalletUserQuery(
+  id: string,
+  options: UseQueryOptions<WalletUser> = {},
 ) {
-  const cq = useQueryClient();
-  return useMutation({
+  return useQuery({
     ...options,
-    mutationKey: ["get-wallet-user"],
-    mutationFn: (input) => {
-      return customFetch(
-        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/" + input.id,
+    queryKey: ["get-wallet-user", id],
+    queryFn: () => {
+      return customFetch<WalletUser>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/" + id,
         {
           method: "GET",
         },
       );
-    },
-    onSuccess: async (...input) => {
-      await cq.invalidateQueries({
-        queryKey: ["get-wallet-user"],
-      });
-      options.onSuccess?.(...input);
     },
   });
 }
