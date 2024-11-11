@@ -886,6 +886,10 @@ export interface User {
     code: string;
     scale: number;
   };
+  socialSecurityNumber?: string;
+  identificationType?: string;
+  identificationNumber?: string;
+  stateLocation?: string;
 }
 interface UseGetUsersQueryOutput {
   users: User[];

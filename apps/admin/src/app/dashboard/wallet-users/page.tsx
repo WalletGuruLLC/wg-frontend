@@ -233,9 +233,18 @@ const columns = [
     (info) => {
       const { values } = useI18n();
       const data = {
-        idUser: info.id,
-        idEmail: info.email,
-        idName: info.firstName + " " + info.lastName,
+        user: {
+          id: info.id,
+          email: info.email,
+          name: info.firstName + " " + info.lastName,
+          firstName: info.firstName,
+          lastName: info.lastName,
+          phone: info.phone,
+          socialSecurityNumber: info.socialSecurityNumber ?? "",
+          identificationType: info.identificationType ?? "",
+          identificationNumber: info.identificationNumber ?? "",
+          stateLocation: info.stateLocation ?? "",
+        },
         tooltip: values["wallet-users.tooltip.details"],
       };
       return data;
@@ -243,17 +252,13 @@ const columns = [
     {
       id: "actions",
       cell: (data) => {
-        const { idUser, tooltip, idEmail, idName } = data.getValue();
+        const { user, tooltip } = data.getValue();
         return (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <ValidateOtp
-                  user={{
-                    name: idName,
-                    email: idEmail,
-                    id: idUser,
-                  }}
+                  user={user}
                   trigger={
                     <Button className="font-normal no-underline" variant="link">
                       <ChevronRight
@@ -304,17 +309,11 @@ export default function WalletUsersPage() {
 
   const table = useReactTable({
     data: data?.users ?? [],
-    columns: columns
-      .filter(
-        (c) =>
-          c.id !== "actions" ||
-          accessLevelsData?.general.users.includes("edit"),
-      )
-      .filter(
-        (c) =>
-          c.id !== "active" ||
-          accessLevelsData?.general.users.includes("inactive"),
-      ),
+    columns: columns.filter(
+      (c) =>
+        c.id !== "active" ||
+        accessLevelsData?.general.users.includes("inactive"),
+    ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
@@ -527,10 +526,16 @@ function interpolate(
 
 function ValidateOtp(props: {
   user: {
-  user: {
     email: string;
     id: string;
-    name?: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    socialSecurityNumber: string;
+    identificationType: string;
+    identificationNumber: string;
+    stateLocation: string;
   };
   trigger: ReactNode;
 }) {
@@ -547,15 +552,16 @@ function ValidateOtp(props: {
       otp: "",
     },
   });
-  const {
-    mutate: sendOtp,
-    isPending,
-    error,
-  } = useSendOtpAuthenticationMutation({
-    onSuccess: (data) => {
-      return router.replace(`/dashboard/wallet-users/${data.user.id}`);
+  const { mutate: sendOtp, isPending } = useSendOtpAuthenticationMutation({
+    onSuccess: () => {
+      sessionStorage.setItem("walletUser", JSON.stringify(props.user));
+      return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
-    onError: () => {
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+      sessionStorage.setItem("walletUser", JSON.stringify(props.user));
       return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
   });
@@ -596,18 +602,12 @@ function ValidateOtp(props: {
         ></SimpleTitle>
         <p>
           {interpolate(values["wallet-users.otp.description"], {
-            name:
-              props.user.name ?? values["wallet-users.otp.description.name"],
+            name: props.user.name,
           })}
         </p>
         <Form {...form}>
           <form onSubmit={form.handleSubmit((data) => sendOtp(data))}>
             <div className="text-gray space-y-4">
-              {error !== null && (
-                <p className="text-lg text-[#E21D1D]">
-                  {errors[error.message]}
-                </p>
-              )}
               <FormField
                 control={form.control}
                 name="otp"
