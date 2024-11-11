@@ -34,23 +34,6 @@ export default function UserDetailsPage() {
       form.reset(dataUser);
     }
   }, [dataUser, form]);
-  /*
-  const form = useForm({
-    schema: walletuserDetailValidator,
-    defaultValues: {
-      firstName: dataUser?.firstName ?? "",
-      lastName: dataUser?.lastName ?? "",
-      phone: dataUser?.phone ?? "",
-      socialSecurityNumber: dataUser?.socialSecurityNumber ?? "",
-      identificationType: dataUser?.identificationType ?? "",
-      identificationNumber: dataUser?.identificationNumber ?? "",
-      country: dataUser?.country ?? "",
-      stateLocation: dataUser?.stateLocation ?? "",
-      city: dataUser?.city ?? "",
-      zipCode: dataUser?.zipCode ?? "",
-    },
-  });
-*/
   if (isLoading) {
     return <p>Loading...</p>;
   }
