@@ -303,4 +303,7 @@ export const walletuserDetailValidator = z.object({
   identificationType: z.string(),
   identificationNumber: z.string(),
   stateLocation: z.string(),
+  country: z.string(),
+  city: z.string(),
+  zipCode: z.string(),
 });

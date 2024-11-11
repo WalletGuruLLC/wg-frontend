@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import { ArrowRightLeft, Asterisk, Lock } from "lucide-react";
 
 import { Card, CardContent, CardTitle } from "@wg-frontend/ui/card";
 import {
@@ -11,60 +13,46 @@ import {
   useForm,
 } from "@wg-frontend/ui/form";
 
+import { Button } from "~/components/button";
+import { useGetWalletUserMutation } from "~/lib/data-access";
 import { useI18n } from "~/lib/i18n";
 import { walletuserDetailValidator } from "~/lib/validators";
 import { FormItem, FormLabel } from "../../_components/dashboard-form";
 import { Input } from "../../_components/dashboard-input";
 import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
-//import { Input } from "../../_components/dashboard-input";
-
 export default function UserDetailsPage() {
   const { values } = useI18n();
+  const { userId } = useParams<{ userId: string }>();
   interface User {
     id: string;
     name: string;
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
     phone: string;
     socialSecurityNumber: string;
     identificationType: string;
     identificationNumber: string;
     stateLocation: string;
+    country: string;
+    city: string;
+    zipCode: string;
   }
-  const [user, setUser] = useState<User>();
   const form = useForm({
     schema: walletuserDetailValidator,
     defaultValues: {},
   });
+  const { mutate } = useGetWalletUserMutation({
+    onSuccess: (data) => {
+      form.reset(data);
+    },
+  });
   useEffect(() => {
-    // Recupera los datos del sessionStorage
-    const storedUser = sessionStorage.getItem("walletUser");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser) as User;
-        setUser(parsedUser);
-        form.reset({
-          id: parsedUser.id,
-          name: parsedUser.name || values["wallet-users.otp.description.name"],
-          firstName: parsedUser.firstName,
-          lastName: parsedUser.lastName,
-          email: parsedUser.email,
-          phone: parsedUser.phone,
-          socialSecurityNumber: parsedUser.socialSecurityNumber,
-          identificationType: parsedUser.identificationType,
-          identificationNumber: parsedUser.identificationNumber,
-          stateLocation: parsedUser.stateLocation,
-        });
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-      }
+    if (userId) {
+      mutate({ id: userId });
     }
-  }, [form, values]);
-
-  if (!user) return <div>Loading...</div>;
-
+  }, [userId, mutate]);
   return (
     <div className="-mt-2">
       <BreadcrumbTitle
@@ -186,7 +174,7 @@ export default function UserDetailsPage() {
               <div className="flex w-full flex-row space-x-2">
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="country"
                   render={({ field }) => (
                     <FormItem className="w-full pr-8">
                       <FormLabel>
@@ -218,7 +206,7 @@ export default function UserDetailsPage() {
               <div className="flex w-full flex-row space-x-2">
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="city"
                   render={({ field }) => (
                     <FormItem className="w-full pr-8">
                       <FormLabel>
@@ -233,7 +221,7 @@ export default function UserDetailsPage() {
                 />
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="zipCode"
                   render={({ field }) => (
                     <FormItem className="w-full pl-8">
                       <FormLabel>
@@ -249,6 +237,38 @@ export default function UserDetailsPage() {
               </div>
             </form>
           </Form>
+          <div className="mt-8 flex w-full justify-center space-x-4">
+            <div>
+              <Button type="submit">
+                <p className="flex-1 text-base font-light">
+                  {values[`wallet-users.details.button.reset`]}
+                </p>
+
+                <Asterisk strokeWidth={0.75} className="size-6" />
+              </Button>
+            </div>
+            <div>
+              <Button type="submit">
+                <p className="flex-1 text-base font-light">
+                  {values[`wallet-users.details.button.lock`]}
+                </p>
+
+                <Lock strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
+              </Button>
+            </div>
+            <div>
+              <Button type="submit">
+                <p className="flex-1 text-base font-light">
+                  {values[`wallet-users.details.button.transactions`]}
+                </p>
+
+                <ArrowRightLeft
+                  strokeWidth={0.75}
+                  className="-mt-1 ml-1 size-5"
+                />
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
