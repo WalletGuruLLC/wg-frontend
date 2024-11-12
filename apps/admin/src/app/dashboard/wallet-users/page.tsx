@@ -533,17 +533,7 @@ function ValidateOtp(props: {
   user: {
     email: string;
     id: string;
-    name: string /*
-    firstName: string;
-    lastName: string;
-    phone: string;
-    socialSecurityNumber: string;
-    identificationType: string;
-    identificationNumber: string;
-    stateLocation: string;
-    country: string;
-    city: string;
-    zipCode: string;*/;
+    name: string;
   };
   trigger: ReactNode;
 }) {
@@ -568,8 +558,6 @@ function ValidateOtp(props: {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,
       });
-      //sessionStorage.setItem("walletUser", JSON.stringify(props.user));
-      return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
   });
   const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({
