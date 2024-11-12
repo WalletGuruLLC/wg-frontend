@@ -37,14 +37,14 @@ import {
   useGetAuthedUserInfoQuery,
   useGetUsersQuery,
   useResendCodeMutation,
+  useSendOtpAuthenticationMutation,
   useToggleUserStatusMutation,
-  useTwoFactorAuthenticationMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import {
-  twoFactorAuthenticationValidator,
+  sendOtpAuthenticationValidator,
   walletusersValidator,
 } from "~/lib/validators";
 import ConfirmDialog from "../_components/dashboard-confirm-dialog";
@@ -233,9 +233,23 @@ const columns = [
     (info) => {
       const { values } = useI18n();
       const data = {
-        idUser: info.id,
-        idEmail: info.email,
-        idName: info.firstName + " " + info.lastName,
+        user: {
+          id: info.id,
+          email: info.email,
+          name: info.firstName + " " + info.lastName,
+          /*
+          firstName: info.firstName,
+          lastName: info.lastName,
+          phone: info.phone,
+          socialSecurityNumber: info.socialSecurityNumber ?? "",
+          identificationType: info.identificationType ?? "",
+          identificationNumber: info.identificationNumber ?? "",
+          stateLocation: info.stateLocation ?? "",
+          country: info.country ?? "",
+          city: info.city ?? "",
+          zipCode: info.zipCode ?? "",
+          */
+        },
         tooltip: values["wallet-users.tooltip.details"],
       };
       return data;
@@ -243,17 +257,13 @@ const columns = [
     {
       id: "actions",
       cell: (data) => {
-        const { idUser, tooltip, idEmail, idName } = data.getValue();
+        const { user, tooltip } = data.getValue();
         return (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <ValidateOtp
-                  user={{
-                    name: idName,
-                    email: idEmail,
-                    id: idUser,
-                  }}
+                  user={user}
                   trigger={
                     <Button className="font-normal no-underline" variant="link">
                       <ChevronRight
@@ -264,17 +274,6 @@ const columns = [
                     </Button>
                   }
                 />
-                {/*
-                <Link
-                  className="text-[#3678B1]"
-                  href={`/dashboard/wallet-users/${idUser}`}
-                >
-                  <ChevronRight
-                    stroke="#3678B1"
-                    strokeWidth={0.75}
-                    className="size-6 font-semibold"
-                  />
-                </Link>*/}
               </TooltipTrigger>
               <TooltipContent>{tooltip}</TooltipContent>
             </Tooltip>
@@ -315,17 +314,11 @@ export default function WalletUsersPage() {
 
   const table = useReactTable({
     data: data?.users ?? [],
-    columns: columns
-      .filter(
-        (c) =>
-          c.id !== "actions" ||
-          accessLevelsData?.general.users.includes("edit"),
-      )
-      .filter(
-        (c) =>
-          c.id !== "active" ||
-          accessLevelsData?.general.users.includes("inactive"),
-      ),
+    columns: columns.filter(
+      (c) =>
+        c.id !== "active" ||
+        accessLevelsData?.general.users.includes("inactive"),
+    ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
@@ -537,10 +530,20 @@ function interpolate(
 }
 
 function ValidateOtp(props: {
-  user?: {
+  user: {
     email: string;
     id: string;
-    name: string;
+    name: string /*
+    firstName: string;
+    lastName: string;
+    phone: string;
+    socialSecurityNumber: string;
+    identificationType: string;
+    identificationNumber: string;
+    stateLocation: string;
+    country: string;
+    city: string;
+    zipCode: string;*/;
   };
   trigger: ReactNode;
 }) {
@@ -551,16 +554,22 @@ function ValidateOtp(props: {
   const [countDown, setCountDown] = useState(COUNTDOWN_TIME);
 
   const form = useForm({
-    schema: twoFactorAuthenticationValidator,
+    schema: sendOtpAuthenticationValidator,
     defaultValues: {
-      email: "",
+      email: props.user.email,
       otp: "",
     },
   });
-
-  const { mutate, isPending, error } = useTwoFactorAuthenticationMutation({
-    onSuccess: (data) => {
-      return router.replace(`/dashboard/wallet-users/${data.user.id}`);
+  const { mutate: sendOtp, isPending } = useSendOtpAuthenticationMutation({
+    onSuccess: () => {
+      return router.replace(`/dashboard/wallet-users/${props.user.id}`);
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+      //sessionStorage.setItem("walletUser", JSON.stringify(props.user));
+      return router.replace(`/dashboard/wallet-users/${props.user.id}`);
     },
   });
   const { mutate: resendCode, isPending: isSending } = useResendCodeMutation({
@@ -569,19 +578,23 @@ function ValidateOtp(props: {
     },
   });
   useEffect(() => {
+    if (isOpen) {
+      const email = props.user.email;
+      resendCode({ email });
+    }
+  }, [isOpen, resendCode, props.user.email]);
+  useEffect(() => {
     const interval = setInterval(() => {
       setCountDown((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
-
   const minutesRemaining = Math.floor(countDown / 60);
   const secondsRemaining = countDown % 60;
-
   return (
     <Dialog
-      key={props.user?.id}
+      key={props.user.id}
       isOpen={isOpen}
       toggleOpen={() => {
         toggle();
@@ -596,18 +609,12 @@ function ValidateOtp(props: {
         ></SimpleTitle>
         <p>
           {interpolate(values["wallet-users.otp.description"], {
-            name:
-              props.user?.name ?? values["wallet-users.otp.description.name"],
+            name: props.user.name,
           })}
         </p>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit((data) => mutate(data))}>
+          <form onSubmit={form.handleSubmit((data) => sendOtp(data))}>
             <div className="text-gray space-y-4">
-              {error !== null && (
-                <p className="text-lg text-[#E21D1D]">
-                  {errors[error.message]}
-                </p>
-              )}
               <FormField
                 control={form.control}
                 name="otp"
@@ -655,7 +662,7 @@ function ValidateOtp(props: {
               disabled={isSending}
               type="button"
               onClick={() => {
-                const email = localStorage.getItem("email");
+                const email = props.user.email;
                 if (email) resendCode({ email });
               }}
             >
