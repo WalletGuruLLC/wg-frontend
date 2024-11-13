@@ -1,6 +1,7 @@
 "use client";
 
 import type { z } from "zod";
+import { format } from "date-fns";
 
 import type {
   UseMutationOptions,
@@ -1751,26 +1752,22 @@ export function useEditSettingMutation(
   });
 }
 
-export interface ReportsByUser {
+export interface Transactions {
   id: string;
-  type: string;
+  startDate: string;
+  endDate: string;
   description: string;
-  startdate: string;
-  enddate: string;
-  state: "Active" | "Completed";
-  ammount: number;
-  currency: string;
+  state: string;
+  type: string;
+  amount: string;
 }
 
-export interface DetailsTransactionByUser {
-  type: string;
-  description: string;
-  amount: number;
-  date: string;
-  state: "Active" | "Completed";
-}
 interface UseGetTransactionsByUserQueryOutput {
-  transactions: ReportsByUser[];
+  transactions: Transactions[];
+  currentPage: number;
+  total: number;
+  totalPages: number;
+  totalPrice: number;
 }
 export function useGetTransactionsByUserQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
@@ -1780,16 +1777,92 @@ export function useGetTransactionsByUserQuery(
   return useQuery({
     ...options,
     queryKey: ["get-transactions-by-user", input],
-    queryFn: () => {
+    queryFn: async () => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
       const params = new URLSearchParams(input as Record<string, string>);
-      return customFetch<UseGetTransactionsByUserQueryOutput>(
+      const result = await customFetch<{
+        transactions: {
+          outgoingPaymentId: string;
+          createdAt: number;
+          description: string;
+          walletAddressId: string;
+          state: string;
+          type: string;
+          updatedAt: number;
+          receiverUrl: string;
+          receiver: string;
+          metadata: {
+            type: string;
+            description: string;
+            wgUser: string;
+          };
+          id: string;
+          receiveAmount?: {
+            assetScale: number;
+            assetCode: string;
+            value: string;
+            typename: string;
+          };
+          incomingAmount?: {
+            assetScale: number;
+            assetCode: string;
+            value: string;
+            typename: string;
+          };
+          senderUrl: string;
+          senderName: string;
+          receiverName: string;
+        }[];
+        currentPage: number;
+        total: number;
+        totalPages: number;
+      }>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
           `/api/v1/wallets-rafiki/list-transactions` +
           "?" +
           params.toString(),
       );
+
+      return {
+        total: result.total,
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        transactions: result.transactions.map((t) => {
+          const isIncoming = !!t.incomingAmount;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const amount = isIncoming ? t.incomingAmount! : t.receiveAmount!;
+
+          return {
+            id: t.id,
+            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(t.updatedAt, "yyyy-MM-dd HH:mm:ss"),
+            description: t.description,
+            state: t.state,
+            type: t.type,
+            amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(Number(amount.value), amount.assetScale)} ${amount.assetCode}`,
+          };
+        }),
+        totalPrice: result.transactions.reduce((acc, t) => {
+          const isIncoming = !!t.incomingAmount;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const amount = isIncoming ? t.incomingAmount! : t.receiveAmount!;
+          const parsedAmount = convertAmountWithScale(
+            Number(amount.value),
+            amount.assetScale,
+          );
+          return acc + (!isIncoming ? -parsedAmount : parsedAmount);
+        }, 0),
+      };
     },
   });
+}
+
+function convertAmountWithScale(amount: number, scale: number) {
+  return amount / Math.pow(10, scale);
 }
 
 export type UseGetSidebarItemsQueryOutput = {

@@ -2,12 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -37,10 +32,7 @@ import {
   SelectValue,
 } from "@wg-frontend/ui/select";
 
-import type {
-  DetailsTransactionByUser,
-  ReportsByUser,
-} from "~/lib/data-access";
+import type { Transactions } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
 import Table, {
@@ -51,10 +43,9 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
 import {
-  useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
-  useGetProviderPaymentParametersQuery,
+  useGetTransactionsByUserQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
@@ -72,6 +63,7 @@ function Actions({
   };
 }) {
   const { values } = useI18n();
+  console.log(transactionsByUserParameters);
 
   return (
     <div className="flex flex-row space-x-4">
@@ -96,7 +88,7 @@ function Actions({
   );
 }
 
-const columnHelper = createColumnHelper<ReportsByUser>();
+const columnHelper = createColumnHelper<Transactions>();
 const columns = [
   columnHelper.accessor("type", {
     id: "type",
@@ -107,20 +99,20 @@ const columns = [
   }),
   columnHelper.accessor("description", {
     id: "description",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue() || "-",
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.description" />
     ),
   }),
-  columnHelper.accessor("startdate", {
-    id: "startdate",
+  columnHelper.accessor("startDate", {
+    id: "startDate",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.start" />
     ),
   }),
-  columnHelper.accessor("enddate", {
-    id: "enddate",
+  columnHelper.accessor("endDate", {
+    id: "endDate",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.finish" />
@@ -133,15 +125,15 @@ const columns = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
     ),
   }),
-  columnHelper.accessor("ammount", {
-    id: "ammount",
+  columnHelper.accessor("amount", {
+    id: "amount",
+    cell: (info) => (
+      <span className={info.getValue().startsWith("-") ? "text-[#FF0000]" : ""}>
+        {info.getValue()}
+      </span>
+    ),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
-    ),
-    cell: (info) => (
-      <span className={info.getValue() < 0 ? "text-red-600" : "text-black"}>
-        {info.getValue() + " " + info.row.original.currency}
-      </span>
     ),
   }),
   columnHelper.display({
@@ -160,7 +152,6 @@ const columns = [
 ];
 
 export default function TransactionsByUserPage() {
-  const { providerId } = useParams<{ providerId: string }>();
   const loading = useAccessLevelGuard({
     general: {
       module: "transactionsByUser",
@@ -178,57 +169,26 @@ export default function TransactionsByUserPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const { data } = useGetProviderPaymentParametersQuery({
-    ...paginationAndSearch,
-    serviceProviderId: providerId,
-  });
-  const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
-    useGetAuthedUserAccessLevelsQuery(undefined);
-  const { data: title, isLoading: isLoadingTitle } =
-    useGetDashboardUsersTitleQuery(undefined);
-  const { data: userInfo } = useGetAuthedUserInfoQuery(undefined);
-
-  const reportData: ReportsByUser[] = [
-    {
-      id: "hola",
-      type: "HOLA",
-      description: "PRUEBA",
-      startdate: "1/11/2024 11:08:05",
-      enddate: "1/11/2024 11:08:05",
-      state: "Active",
-      ammount: -50,
-      currency: "USD",
-    },
-    {
-      id: "hola2",
-      type: "HOLA2",
-      description: "PRUEBA2",
-      startdate: "1/11/2024 11:08:05",
-      enddate: "1/11/2024 11:08:05",
-      state: "Active",
-      ammount: 100,
-      currency: "EUR",
-    },
-  ];
-
-  const total = reportData.reduce(
-    (acumulador, report) => acumulador + report.ammount,
-    0,
-  );
-
-  const table = useReactTable({
-    data: reportData,
-    columns: columns.filter(
-      (c) =>
-        c.id !== "actions" ||
-        accessLevelsData?.general.reports.includes("edit"),
-    ),
-    getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
-  });
-
   const form = useForm({
     schema: transactionsByUserValidator,
+  });
+
+  const { data: title } = useGetDashboardUsersTitleQuery(undefined);
+  const { data: userInfo } = useGetAuthedUserInfoQuery(undefined);
+  const {
+    data: transactionsData,
+    isLoading,
+    refetch,
+  } = useGetTransactionsByUserQuery({
+    ...paginationAndSearch,
+    ...form.getValues(),
+  });
+
+  const table = useReactTable({
+    data: transactionsData?.transactions ?? [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
   });
 
   function handlePaginationAndSearchChange(
@@ -257,7 +217,9 @@ export default function TransactionsByUserPage() {
     1;
   const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
 
-  if (loading || isLoadingAccessLevels) return null;
+  console.log(form.watch("endDate"));
+
+  if (loading) return null;
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
@@ -267,11 +229,11 @@ export default function TransactionsByUserPage() {
           " " +
           values["dashboard.reports.sections.transactions-by-user"]
         }
-        showLoadingIndicator={isLoadingTitle}
+        showLoadingIndicator={isLoading}
       />
       <div className="space-y-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+          <form onSubmit={form.handleSubmit(() => refetch())}>
             <div className="flex flex-row flex-wrap gap-4">
               <FormField
                 control={form.control}
@@ -293,7 +255,6 @@ export default function TransactionsByUserPage() {
                           ]
                         }
                         className="rounded-lg border border-black"
-                        required
                         {...field}
                       />
                     </FormControl>
@@ -341,11 +302,12 @@ export default function TransactionsByUserPage() {
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={[
-                            { after: new Date() },
-                            form.watch("endDate")
-                              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                { after: form.watch("endDate")! }
-                              : true,
+                            {
+                              after: form.watch("endDate")
+                                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                  form.watch("endDate")!
+                                : new Date(),
+                            },
                           ]}
                           initialFocus
                         />
@@ -395,14 +357,12 @@ export default function TransactionsByUserPage() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={[
+                          disabled={
                             form.watch("startDate")
-                              ? {
-                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                  before: form.watch("startDate")!,
-                                }
-                              : true,
-                          ]}
+                              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                [{ before: form.watch("startDate")! }]
+                              : []
+                          }
                           initialFocus
                         />
                       </PopoverContent>
@@ -444,8 +404,12 @@ export default function TransactionsByUserPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Provider">Provider</SelectItem>
-                        <SelectItem value="Platform">Platform</SelectItem>
+                        <SelectItem value="IncomingPayment">
+                          IncomingPayment
+                        </SelectItem>
+                        <SelectItem value="OutgoingPayment">
+                          OutgoingPayment
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -485,10 +449,20 @@ export default function TransactionsByUserPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Buenos Aires">
-                          Buenos Aires
+                        <SelectItem value="PENDING">
+                          {
+                            values[
+                              "dashboard.reports.sections-transactions-by-user.search.state.pending"
+                            ]
+                          }
                         </SelectItem>
-                        <SelectItem value="Cordoba">Cordoba</SelectItem>
+                        <SelectItem value="COMPLETED">
+                          {
+                            values[
+                              "dashboard.reports.sections-transactions-by-user.search.state.completed"
+                            ]
+                          }
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -570,13 +544,15 @@ export default function TransactionsByUserPage() {
               }
               :{" "}
               {form.watch("startDate")
-                ? format(form.watch("startDate"), "MMMM do, yyyy")
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  format(form.watch("startDate")!, "MMMM do, yyyy")
                 : values[
                     "dashboard.reports.sections-transactions-by-user.period.no-start-selected"
                   ]}{" "}
               -{" "}
               {form.watch("endDate")
-                ? format(form.watch("endDate"), "MMMM do, yyyy")
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  format(form.watch("endDate")!, "MMMM do, yyyy")
                 : values[
                     "dashboard.reports.sections-transactions-by-user.period.no-end-selected"
                   ]}
@@ -592,12 +568,13 @@ export default function TransactionsByUserPage() {
       </div>
       <div>
         <div className="flex">
-          <span className="ml-[75%] text-lg">Total | {total}</span>
+          <span className="ml-[75%] text-lg">
+            Total | {transactionsData?.totalPrice}
+          </span>
         </div>
-
         <PaginationFooter
           count={{
-            total: data?.total ?? 0,
+            total: transactionsData?.total ?? 0,
             firstRowIdx,
             lastRowIdx,
           }}
@@ -611,7 +588,8 @@ export default function TransactionsByUserPage() {
           }
           canPreviousPage={paginationAndSearch.page !== "1"}
           canNextPage={
-            data?.paymentParameters.length === Number(paginationAndSearch.items)
+            transactionsData?.transactions.length ===
+            Number(paginationAndSearch.items)
           }
           onPreviousPage={() =>
             handlePaginationAndSearchChange({
@@ -631,7 +609,7 @@ export default function TransactionsByUserPage() {
   );
 }
 
-const columnHelperDetails = createColumnHelper<DetailsTransactionByUser>();
+const columnHelperDetails = createColumnHelper<Transactions>();
 const columnsDetails = [
   columnHelperDetails.accessor("type", {
     id: "type",
@@ -654,8 +632,8 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
     ),
   }),
-  columnHelperDetails.accessor("date", {
-    id: "date",
+  columnHelperDetails.accessor("startDate", {
+    id: "startDate",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.details.date" />
@@ -679,13 +657,15 @@ function DetailsDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
-  const [isOpen, _, close, toggle] = useBooleanHandlers();
-  const detailsData: DetailsTransactionByUser[] = [
+  const [isOpen, _, __, toggle] = useBooleanHandlers();
+  const detailsData: Transactions[] = [
     {
       type: "HOLA",
       description: "PRUEBA",
-      date: "1/11/2024 11:08:05",
-      amount: -50,
+      startDate: "1/11/2024 11:08:05",
+      endDate: "1/11/2024 11:08:05",
+      id: "1/11/2024 11:08:05",
+      amount: "-50",
       state: "Active",
     },
   ];
@@ -698,12 +678,10 @@ function DetailsDialog(props: {
 
   return (
     <Dialog
-      key={props.role?.id ?? "add"}
+      key={props.role?.id ?? "details"}
       isOpen={isOpen}
       contentClassName="max-w-3xl"
-      toggleOpen={() => {
-        toggle();
-      }}
+      toggleOpen={toggle}
       trigger={props.trigger}
       ariaDescribedBy="service-transaction-details"
     >
@@ -716,7 +694,7 @@ function DetailsDialog(props: {
           }
         </h1>
         <div className="flex flex-row items-center justify-between">
-          Session ID: 2583-1234-5678-0000
+          Activity ID: 2583-1234-5678-0000
           <Button className="px-2" variant="secondary">
             <Download strokeWidth={0.75} className="size-6" />
           </Button>

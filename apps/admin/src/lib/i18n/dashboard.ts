@@ -357,6 +357,10 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Type",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
       "Select a state",
+    "dashboard.reports.sections-transactions-by-user.search.state.pending":
+      "Pending",
+    "dashboard.reports.sections-transactions-by-user.search.state.completed":
+      "Completed",
     "dashboard.reports.sections-transactions-by-user.search.state.error":
       "Enter a valid state",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
@@ -768,6 +772,10 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
       "Seleccione un estado",
+    "dashboard.reports.sections-transactions-by-user.search.state.pending":
+      "Pendiente",
+    "dashboard.reports.sections-transactions-by-user.search.state.completed":
+      "Completado",
     "dashboard.reports.sections-transactions-by-user.search.state.error":
       "Ingrese un estado válido",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
