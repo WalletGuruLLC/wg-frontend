@@ -283,7 +283,7 @@ function ResetDialog(props: { id: string; trigger: ReactNode }) {
       });
     },
     onSuccess: () => {
-      toast.success("Reset succesfull");
+      toast.success(values["wallet-users.reset-password.success"]);
       close();
     },
   });
