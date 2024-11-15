@@ -1895,7 +1895,7 @@ export function useResetPasswordIdMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          `/api/v1/reset-password/${input.userId}`,
+          `/api/v1/users/reset-password/${input.userId}`,
         {
           method: "PATCH",
         },
