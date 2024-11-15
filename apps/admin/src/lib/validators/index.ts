@@ -307,3 +307,7 @@ export const walletuserDetailValidator = z.object({
   city: z.string(),
   zipCode: z.string(),
 });
+
+export const resetPasswordIdValidator = z.object({
+  userId: z.string().min(1),
+});
