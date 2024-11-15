@@ -9,7 +9,7 @@ import Dialog from "./dashboard-dialog";
 
 export default function ConfirmDialog(
   props: {
-    Icon: React.ReactNode;
+    Icon?: React.ReactNode;
     title: string;
     description: React.ReactNode;
     actions: React.ReactNode[];
