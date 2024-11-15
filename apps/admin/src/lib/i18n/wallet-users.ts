@@ -67,6 +67,11 @@ export const walletUsersDict = {
     "wallet-users.details.button.lock": "Lock Wallet ",
     "wallet-users.details.button.unlock": "Unlock Wallet ",
     "wallet-users.details.button.transactions": "Transactions ",
+    "wallet-users.reset-password.title": "Reset Password",
+    "wallet-users.reset-password.description":
+      "This action will send a password reset email.",
+    "wallet-users.reset-password.yes": "Send",
+    "wallet-users.reset-password.no": "Cancel",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -136,5 +141,10 @@ export const walletUsersDict = {
     "wallet-users.details.button.lock": "Bloquear Billetera ",
     "wallet-users.details.button.unlock": "Desbloquear Billetera ",
     "wallet-users.details.button.transactions": "Transacciones ",
+    "wallet-users.reset-password.title": "Restablecer contraseña",
+    "wallet-users.reset-password.description":
+      "Se enviará un correo electrónico para restablecer la contraseña.",
+    "wallet-users.reset-password.yes": "Enviar",
+    "wallet-users.reset-password.no": "Cancelar",
   },
 } satisfies I18nDictionary;
