@@ -1,9 +1,11 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { ArrowRightLeft, Asterisk, Lock } from "lucide-react";
 
+import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { Card, CardContent, CardTitle } from "@wg-frontend/ui/card";
 import {
   Form,
@@ -12,11 +14,17 @@ import {
   FormMessage,
   useForm,
 } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
 import { Button } from "~/components/button";
-import { useGetWalletUserQuery } from "~/lib/data-access";
+import {
+  useGetWalletUserQuery,
+  useResetPasswordIdMutation,
+} from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
 import { walletuserDetailValidator } from "~/lib/validators";
+import ConfirmDialog from "../../_components/dashboard-confirm-dialog";
 import { FormItem, FormLabel } from "../../_components/dashboard-form";
 import { Input } from "../../_components/dashboard-input";
 import { BreadcrumbTitle } from "../../_components/dashboard-title";
@@ -223,13 +231,18 @@ export default function UserDetailsPage() {
           </Form>
           <div className="mt-8 flex w-full justify-center space-x-4">
             <div>
-              <Button type="submit">
-                <p className="flex-1 text-base font-light">
-                  {values[`wallet-users.details.button.reset`]}
-                </p>
+              <ResetDialog
+                id="1108202436121329WU"
+                trigger={
+                  <Button type="submit">
+                    <p className="flex-1 text-base font-light">
+                      {values[`wallet-users.details.button.reset`]}
+                    </p>
 
-                <Asterisk strokeWidth={0.75} className="size-6" />
-              </Button>
+                    <Asterisk strokeWidth={0.75} className="size-6" />
+                  </Button>
+                }
+              />
             </div>
             <div>
               <Button type="submit">
@@ -256,5 +269,56 @@ export default function UserDetailsPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function ResetDialog(props: { id: string; trigger: ReactNode }) {
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const { mutate, isPending } = useResetPasswordIdMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Reset succesfull");
+      close();
+    },
+  });
+  return (
+    <ConfirmDialog
+      key={"reset"}
+      isOpen={isOpen}
+      toggleOpen={() => {
+        toggle();
+      }}
+      trigger={props.trigger}
+      actions={[
+        <Button
+          className="w-full"
+          key="yes"
+          onClick={() => mutate({ userId: props.id })}
+          disabled={isPending}
+        >
+          {values["wallet-users.reset-password.yes"]}
+        </Button>,
+        <Button
+          className="w-full"
+          variant="secondary"
+          key="no"
+          onClick={close}
+          disabled={isPending}
+        >
+          {values["wallet-users.reset-password.no"]}
+        </Button>,
+      ]}
+      ariaDescribedBy="switch-active-status-dialog"
+      title={values["wallet-users.reset-password.title"]}
+      description={
+        <span>{values["wallet-users.reset-password.description"]}</span>
+      }
+    />
   );
 }
