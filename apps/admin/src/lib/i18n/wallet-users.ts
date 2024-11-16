@@ -67,6 +67,12 @@ export const walletUsersDict = {
     "wallet-users.details.button.lock": "Lock Wallet ",
     "wallet-users.details.button.unlock": "Unlock Wallet ",
     "wallet-users.details.button.transactions": "Transactions ",
+    "wallet-users.reset-password.title": "Reset Password",
+    "wallet-users.reset-password.description":
+      "This action will send a password reset email.",
+    "wallet-users.reset-password.yes": "Send",
+    "wallet-users.reset-password.no": "Cancel",
+    "wallet-users.reset-password.success": "Password successfully reset.",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -132,9 +138,15 @@ export const walletUsersDict = {
     "wallet-users.details.label.state": "Estado",
     "wallet-users.details.label.city": "Ciudad",
     "wallet-users.details.label.zipcode": "Código Postal",
-    "wallet-users.details.button.reset": "Reiniciar Contraseña ",
+    "wallet-users.details.button.reset": "Restablecer Contraseña ",
     "wallet-users.details.button.lock": "Bloquear Billetera ",
     "wallet-users.details.button.unlock": "Desbloquear Billetera ",
     "wallet-users.details.button.transactions": "Transacciones ",
+    "wallet-users.reset-password.title": "Restablecer contraseña",
+    "wallet-users.reset-password.description":
+      "Se enviará un correo electrónico para restablecer la contraseña.",
+    "wallet-users.reset-password.yes": "Enviar",
+    "wallet-users.reset-password.no": "Cancelar",
+    "wallet-users.reset-password.success": "Contraseña restablecida con éxito.",
   },
 } satisfies I18nDictionary;

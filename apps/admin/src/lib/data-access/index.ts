@@ -24,6 +24,7 @@ import type {
   forgotPasswordEmailStepValidator,
   loginValidator,
   paginationAndSearchValidator,
+  resetPasswordIdValidator,
   resetPasswordValidator,
   sendOtpAuthenticationValidator,
   settingsValidator,
@@ -1877,6 +1878,34 @@ export function useGetWalletUserQuery(
           method: "GET",
         },
       );
+    },
+  });
+}
+
+export function useResetPasswordIdMutation(
+  options: UseMutationOptions<
+    z.infer<typeof resetPasswordIdValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["reset-password-id"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/users/reset-password/${input.userId}`,
+        {
+          method: "PATCH",
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["reset-password-id"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
