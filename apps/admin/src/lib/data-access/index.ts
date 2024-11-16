@@ -32,6 +32,7 @@ import type {
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
+  toggleWalletLockValidator,
   toggleWalletStatusValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
@@ -1861,6 +1862,11 @@ export interface WalletUser {
   country: string;
   city: string;
   zipCode: string;
+  wallet?: {
+    id: string;
+    walletAddress: string;
+    active: boolean;
+  };
 }
 
 export function useGetWalletUserQuery(
@@ -1903,6 +1909,35 @@ export function useResetPasswordIdMutation(
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
         queryKey: ["reset-password-id"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useToogleWalletLockMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleWalletLockValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-wallet-lock"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets/${input.userId}/toggle`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-wallet-user"],
       });
       options.onSuccess?.(...input);
     },
