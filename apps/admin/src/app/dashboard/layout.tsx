@@ -160,7 +160,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               </Link>
             </div>
             <Separator className="ml-4 w-1/2" />
-            <div className="flex-1 pt-8">
+            <div className="flex-1 pt-5">
               <nav className="grid items-start gap-4 px-4">
                 <Link
                   href="/dashboard"
@@ -311,7 +311,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
               }}
             />
           </header>
-          <div className="h-full px-4 pt-8">{props.children}</div>
+          <div className="h-full px-4 pt-5">{props.children}</div>
         </div>
       </div>
     </main>

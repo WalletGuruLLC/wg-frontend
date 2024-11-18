@@ -32,6 +32,11 @@ export const twoFactorAuthenticationValidator = z.object({
   otp: z.string().min(1, "auth.2fa.code.errors.invalid"),
 });
 
+export const sendOtpAuthenticationValidator = z.object({
+  email: z.string().email(),
+  otp: z.string().min(1, "wallet-users.otp.code.errors.invalid"),
+});
+
 export const forgotPasswordEmailStepValidator = z.object({
   email: z.string().email("auth.login.email.errors.invalid"),
 });
@@ -277,4 +282,28 @@ export const transactionsByUserValidator = z.object({
 export const walletusersValidator = z.object({
   state: z.string().min(1),
   wallet: z.string().min(1),
+});
+
+export const walletuserDetailValidator = z.object({
+  id: z.string().min(1),
+  name: z.string(),
+  email: z.string().email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  phone: z.string(),
+  socialSecurityNumber: z.string(),
+  identificationType: z.string(),
+  identificationNumber: z.string(),
+  stateLocation: z.string(),
+  country: z.string(),
+  city: z.string(),
+  zipCode: z.string(),
+});
+
+export const resetPasswordIdValidator = z.object({
+  userId: z.string().min(1),
+});
+
+export const toggleWalletLockValidator = z.object({
+  userId: z.string().min(1),
 });

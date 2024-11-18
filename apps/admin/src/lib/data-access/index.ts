@@ -25,12 +25,15 @@ import type {
   forgotPasswordEmailStepValidator,
   loginValidator,
   paginationAndSearchValidator,
+  resetPasswordIdValidator,
   resetPasswordValidator,
+  sendOtpAuthenticationValidator,
   settingsValidator,
   toggleProviderPaymentParameterStatusValidator,
   toggleProviderStatusValidator,
   toggleRoleStatusValidator,
   toggleUserStatusValidator,
+  toggleWalletLockValidator,
   toggleWalletStatusValidator,
   transactionsByUserValidator,
   twoFactorAuthenticationValidator,
@@ -287,6 +290,43 @@ export function useTwoFactorAuthenticationMutation(
     onSuccess: async (...input) => {
       await cq.invalidateQueries({
         queryKey: ["get-authed-user-info"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useSendOtpAuthenticationMutation(
+  options: UseMutationOptions<
+    z.infer<typeof sendOtpAuthenticationValidator>,
+    {
+      user: {
+        id: string;
+        otp: string;
+        email: string;
+        accessLevel: ApiSimpleAccessLevels;
+      };
+      token: string;
+      refresToken: string;
+    }
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["send-otp"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/verify/otp/mfa",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-verify-user-info"],
       });
       options.onSuccess?.(...input);
     },
@@ -850,6 +890,13 @@ export interface User {
     code: string;
     scale: number;
   };
+  socialSecurityNumber?: string;
+  identificationType?: string;
+  identificationNumber?: string;
+  stateLocation?: string;
+  country?: string;
+  city?: string;
+  zipCode?: string;
 }
 interface UseGetUsersQueryOutput {
   users: User[];
@@ -1894,6 +1941,101 @@ export function useGetSidebarItemsQuery(
           id: MODULES_MAP[m.id],
           description: m.description,
         }));
+    },
+  });
+}
+export interface WalletUser {
+  id: string;
+  name: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  socialSecurityNumber: string;
+  identificationType: string;
+  identificationNumber: string;
+  stateLocation: string;
+  country: string;
+  city: string;
+  zipCode: string;
+  wallet?: {
+    id: string;
+    walletAddress: string;
+    active: boolean;
+  };
+}
+
+export function useGetWalletUserQuery(
+  id: string,
+  options: UseQueryOptions<WalletUser> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-wallet-user", id],
+    queryFn: () => {
+      return customFetch<WalletUser>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL + "/api/v1/users/" + id,
+        {
+          method: "GET",
+        },
+      );
+    },
+  });
+}
+
+export function useResetPasswordIdMutation(
+  options: UseMutationOptions<
+    z.infer<typeof resetPasswordIdValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["reset-password-id"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/users/reset-password/${input.userId}`,
+        {
+          method: "PATCH",
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["reset-password-id"],
+      });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useToogleWalletLockMutation(
+  options: UseMutationOptions<
+    z.infer<typeof toggleWalletLockValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["toggle-wallet-lock"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets/${input.userId}/toggle`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-wallet-user"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
