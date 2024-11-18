@@ -1,9 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ArrowRightLeft, Asterisk, Lock } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Asterisk,
+  Ban,
+  LockKeyhole,
+  LockKeyholeOpen,
+} from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { Card, CardContent, CardTitle } from "@wg-frontend/ui/card";
@@ -20,6 +26,7 @@ import { Button } from "~/components/button";
 import {
   useGetWalletUserQuery,
   useResetPasswordIdMutation,
+  useToogleWalletLockMutation,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useI18n } from "~/lib/i18n";
@@ -33,6 +40,8 @@ export default function UserDetailsPage() {
   const { values } = useI18n();
   const { userId } = useParams<{ userId: string }>();
   const { data: dataUser, isLoading } = useGetWalletUserQuery(userId);
+  const walletId = dataUser?.wallet?.id ?? "";
+  const isWalletActive = dataUser?.wallet?.active ?? true;
   const form = useForm({
     schema: walletuserDetailValidator,
   });
@@ -232,7 +241,7 @@ export default function UserDetailsPage() {
           <div className="mt-8 flex w-full justify-center space-x-4">
             <div>
               <ResetDialog
-                id="1108202436121329WU"
+                id={userId}
                 trigger={
                   <Button type="submit">
                     <p className="flex-1 text-base font-light">
@@ -245,13 +254,7 @@ export default function UserDetailsPage() {
               />
             </div>
             <div>
-              <Button type="submit">
-                <p className="flex-1 text-base font-light">
-                  {values[`wallet-users.details.button.lock`]}
-                </p>
-
-                <Lock strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
-              </Button>
+              <LockDialog id={walletId} lock={isWalletActive} />
             </div>
             <div>
               <Button type="submit">
@@ -318,6 +321,100 @@ function ResetDialog(props: { id: string; trigger: ReactNode }) {
       title={values["wallet-users.reset-password.title"]}
       description={
         <span>{values["wallet-users.reset-password.description"]}</span>
+      }
+    />
+  );
+}
+
+function LockDialog(props: { id: string; lock: boolean }) {
+  const { values } = useI18n();
+  const errors = useErrors();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
+  const [isLocked, setIsLocked] = useState(props.lock);
+  const valuesLock =
+    props.id === "" ? "nowallet" : (`${isLocked ? "lock" : "unlock"}` as const);
+  const { mutate, isPending } = useToogleWalletLockMutation({
+    onSuccess: () => {
+      toast.success(
+        values[`wallet-users.toast.success.${valuesLock}` as const],
+      );
+      setIsLocked(!isLocked);
+      close();
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+  });
+
+  return (
+    <ConfirmDialog
+      key={props.id}
+      isOpen={isOpen}
+      toggleOpen={toggle}
+      trigger={
+        <Button type="submit" disabled={props.id === "" ? true : false}>
+          <p className="flex-1 text-base font-light">
+            {values[`wallet-users.details.button.${valuesLock}`]}
+          </p>
+          {props.id === "" ? (
+            <Ban strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
+          ) : isLocked ? (
+            <LockKeyhole strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
+          ) : (
+            <LockKeyholeOpen strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
+          )}
+        </Button>
+      }
+      actions={[
+        <Button
+          className="w-full"
+          key="yes"
+          onClick={() =>
+            mutate({
+              userId: props.id,
+            })
+          }
+          disabled={isPending}
+        >
+          {
+            values[
+              isPending
+                ? "loading"
+                : (`wallet-users.lock.button-yes.${valuesLock}` as const)
+            ]
+          }
+        </Button>,
+        <Button
+          className="w-full"
+          variant="secondary"
+          key="no"
+          onClick={close}
+          disabled={isPending}
+        >
+          {values[`wallet-users.lock.button-no.${valuesLock}`]}
+        </Button>,
+      ]}
+      ariaDescribedBy="switch-active-status-dialog"
+      Icon={
+        isLocked ? (
+          <LockKeyhole
+            strokeWidth={0.75}
+            className="h-10 w-10"
+            color="#3678B1"
+          />
+        ) : (
+          <LockKeyholeOpen
+            strokeWidth={0.75}
+            className="h-10 w-10"
+            color="#3678B1"
+          />
+        )
+      }
+      title={values[`wallet-users.details.button.${valuesLock}`]}
+      description={
+        <span>{values[`wallet-users.lock.description.${valuesLock}`]}</span>
       }
     />
   );

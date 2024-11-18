@@ -73,6 +73,23 @@ export const walletUsersDict = {
     "wallet-users.reset-password.yes": "Send",
     "wallet-users.reset-password.no": "Cancel",
     "wallet-users.reset-password.success": "Password successfully reset.",
+    "wallet-users.lock.description.lock":
+      "By locking this wallet the user will not be able to access it. Do you want to proceed?",
+    "wallet-users.lock.button-yes.lock": "Yes",
+    "wallet-users.lock.button-no.lock": "No",
+    "wallet-users.lock.description.unlock":
+      "By unlocking this wallet the user will be able to access it. Do you want to proceed?",
+    "wallet-users.lock.button-yes.unlock": "Yes",
+    "wallet-users.lock.button-no.unlock": "No",
+    "wallet-users.toast.success.lock":
+      "The wallet has been locked. The user will not be able to access it until unlocked.",
+    "wallet-users.toast.success.unlock":
+      "The wallet has been unlocked. The user can now access it.",
+    "wallet-users.details.button.nowallet": "No Wallet ",
+    "wallet-users.lock.description.nowallet": "The user doesn't have a wallet",
+    "wallet-users.lock.button-yes.nowallet": "Yes",
+    "wallet-users.lock.button-no.nowallet": "No",
+    "wallet-users.toast.success.nowallet": "No wallet",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -148,5 +165,22 @@ export const walletUsersDict = {
     "wallet-users.reset-password.yes": "Enviar",
     "wallet-users.reset-password.no": "Cancelar",
     "wallet-users.reset-password.success": "Contraseña restablecida con éxito.",
+    "wallet-users.lock.description.lock":
+      "Al bloquear esta billetera, el usuario no podrá acceder a ella. ¿Deseas continuar?",
+    "wallet-users.lock.button-yes.lock": "Si",
+    "wallet-users.lock.button-no.lock": "No",
+    "wallet-users.lock.description.unlock":
+      "Al desbloquear esta billetera, el usuario podrá acceder a ella. ¿Deseas continuar?",
+    "wallet-users.lock.button-yes.unlock": "Si",
+    "wallet-users.lock.button-no.unlock": "No",
+    "wallet-users.toast.success.lock":
+      "La billetera se ha bloqueado. El usuario no podrá acceder a ella hasta que se desbloquee.",
+    "wallet-users.toast.success.unlock":
+      "La billetera se ha desbloqueado. El usuario puede acceder a ella.",
+    "wallet-users.details.button.nowallet": "Sin Billetera ",
+    "wallet-users.lock.description.nowallet": "El usuario no tiene billetera",
+    "wallet-users.lock.button-yes.nowallet": "Si",
+    "wallet-users.lock.button-no.nowallet": "No",
+    "wallet-users.toast.success.nowallet": "Sin Billetera",
   },
 } satisfies I18nDictionary;
