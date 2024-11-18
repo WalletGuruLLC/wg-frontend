@@ -3,7 +3,13 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ArrowRightLeft, Asterisk, Ban, Lock, Unlock } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Asterisk,
+  Ban,
+  LockKeyhole,
+  LockKeyholeOpen,
+} from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { Card, CardContent, CardTitle } from "@wg-frontend/ui/card";
@@ -355,9 +361,9 @@ function LockDialog(props: { id: string; lock: boolean }) {
           {props.id === "" ? (
             <Ban strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
           ) : isLocked ? (
-            <Lock strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
+            <LockKeyhole strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
           ) : (
-            <Unlock strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
+            <LockKeyholeOpen strokeWidth={0.75} className="-mt-1 ml-1 size-5" />
           )}
         </Button>
       }
@@ -393,9 +399,17 @@ function LockDialog(props: { id: string; lock: boolean }) {
       ariaDescribedBy="switch-active-status-dialog"
       Icon={
         isLocked ? (
-          <Lock strokeWidth={0.75} className="h-10 w-10" color="#3678B1" />
+          <LockKeyhole
+            strokeWidth={0.75}
+            className="h-10 w-10"
+            color="#3678B1"
+          />
         ) : (
-          <Unlock strokeWidth={0.75} className="h-10 w-10" color="#3678B1" />
+          <LockKeyholeOpen
+            strokeWidth={0.75}
+            className="h-10 w-10"
+            color="#3678B1"
+          />
         )
       }
       title={values[`wallet-users.details.button.${valuesLock}`]}
