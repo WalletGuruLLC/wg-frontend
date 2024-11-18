@@ -81,8 +81,10 @@ export const walletUsersDict = {
       "By unlocking this wallet the user will be able to access it. Do you want to proceed?",
     "wallet-users.lock.button-yes.unlock": "Yes",
     "wallet-users.lock.button-no.unlock": "No",
-    "wallet-users.toast.success.lock": "Wallet Locked",
-    "wallet-users.toast.success.unlock": "Wallet Unlocked",
+    "wallet-users.toast.success.lock":
+      "The wallet has been locked. The user will not be able to access it until unlocked.",
+    "wallet-users.toast.success.unlock":
+      "The wallet has been unlocked. The user can now access it.",
     "wallet-users.details.button.nowallet": "No Wallet ",
     "wallet-users.lock.description.nowallet": "The user doesn't have a wallet",
     "wallet-users.lock.button-yes.nowallet": "Yes",
@@ -171,8 +173,10 @@ export const walletUsersDict = {
       "Al desbloquear esta billetera, el usuario podrá acceder a ella. ¿Deseas continuar?",
     "wallet-users.lock.button-yes.unlock": "Si",
     "wallet-users.lock.button-no.unlock": "No",
-    "wallet-users.toast.success.lock": "Billetera Bloqueada",
-    "wallet-users.toast.success.unlock": "Billetera Desbloqueada",
+    "wallet-users.toast.success.lock":
+      "La billetera se ha bloqueado. El usuario no podrá acceder a ella hasta que se desbloquee.",
+    "wallet-users.toast.success.unlock":
+      "La billetera se ha desbloqueado. El usuario puede acceder a ella.",
     "wallet-users.details.button.nowallet": "Sin Billetera ",
     "wallet-users.lock.description.nowallet": "El usuario no tiene billetera",
     "wallet-users.lock.button-yes.nowallet": "Si",
