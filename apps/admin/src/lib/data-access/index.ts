@@ -1799,22 +1799,72 @@ export function useEditSettingMutation(
   });
 }
 
-export interface Transactions {
-  id: string;
-  startDate: string;
-  endDate: string;
+interface DBCommonTransaction {
+  createdAt: number;
   description: string;
+  walletAddressId: string;
   state: string;
   type: string;
+  updatedAt: number;
+  receiverUrl: string;
+  receiver: string;
+  metadata: {
+    activityId: string;
+    description: string;
+    type: string;
+    wgUser: string;
+    contentName: string;
+  };
+  id: string;
+  senderUrl: string;
+  senderName: string;
+  receiverName: string;
+}
+
+interface DBAmount {
+  assetScale: number;
+  assetCode: string;
+  value: string;
+  typename: string;
+}
+
+interface DBIncomingTransaction extends DBCommonTransaction {
+  incomingAmount: DBAmount;
+  incomingPaymentId: string;
+  type: "IncomingPayment";
+}
+
+interface DBOutgoingTransaction extends DBCommonTransaction {
+  type: "OutgoingPayment";
+  outgoingPaymentId: string;
+  receiveAmount: DBAmount;
+}
+
+export interface Activity {
+  activityId: string;
+  type: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  amount: string;
+  transactions: Transaction[];
+}
+
+export interface Transaction {
+  transactionId: string;
+  type: string;
+  description: string;
+  date: string;
+  status: string;
   amount: string;
 }
 
 interface UseGetTransactionsByUserQueryOutput {
-  transactions: Transactions[];
+  activities: Activity[];
   currentPage: number;
   total: number;
   totalPages: number;
-  totalPrice: number;
 }
 export function useGetTransactionsByUserQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
@@ -1830,40 +1880,14 @@ export function useGetTransactionsByUserQuery(
           ? delete input[key as keyof typeof input]
           : {},
       );
-      const params = new URLSearchParams(input as Record<string, string>);
+      const params = new URLSearchParams({
+        ...input,
+        items: "9999999999",
+        page: "1",
+      } as unknown as Record<string, string>);
+
       const result = await customFetch<{
-        transactions: {
-          outgoingPaymentId: string;
-          createdAt: number;
-          description: string;
-          walletAddressId: string;
-          state: string;
-          type: string;
-          updatedAt: number;
-          receiverUrl: string;
-          receiver: string;
-          metadata: {
-            type: string;
-            description: string;
-            wgUser: string;
-          };
-          id: string;
-          receiveAmount?: {
-            assetScale: number;
-            assetCode: string;
-            value: string;
-            typename: string;
-          };
-          incomingAmount?: {
-            assetScale: number;
-            assetCode: string;
-            value: string;
-            typename: string;
-          };
-          senderUrl: string;
-          senderName: string;
-          receiverName: string;
-        }[];
+        transactions: (DBIncomingTransaction | DBOutgoingTransaction)[];
         currentPage: number;
         total: number;
         totalPages: number;
@@ -1874,35 +1898,75 @@ export function useGetTransactionsByUserQuery(
           params.toString(),
       );
 
-      return {
-        total: result.total,
-        currentPage: result.currentPage,
-        totalPages: result.totalPages,
-        transactions: result.transactions.map((t) => {
-          const isIncoming = !!t.incomingAmount;
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const amount = isIncoming ? t.incomingAmount! : t.receiveAmount!;
+      // Group by activity id
+      const groupedActivities = result.transactions.reduce((acc, t) => {
+        const activityId = t.metadata.activityId;
 
-          return {
-            id: t.id,
-            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            endDate: format(t.updatedAt, "yyyy-MM-dd HH:mm:ss"),
-            description: t.description,
-            state: t.state,
+        if (!acc.has(activityId)) {
+          const isIncoming = t.type === "IncomingPayment";
+          const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+
+          acc.set(activityId, {
+            activityId,
             type: t.type,
-            amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(Number(amount.value), amount.assetScale)} ${amount.assetCode}`,
-          };
-        }),
-        totalPrice: result.transactions.reduce((acc, t) => {
-          const isIncoming = !!t.incomingAmount;
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const amount = isIncoming ? t.incomingAmount! : t.receiveAmount!;
-          const parsedAmount = convertAmountWithScale(
-            Number(amount.value),
-            amount.assetScale,
-          );
-          return acc + (!isIncoming ? -parsedAmount : parsedAmount);
-        }, 0),
+            description: t.description,
+            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: t.state,
+            amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(
+              Number(amount.value),
+              amount.assetScale,
+            )} ${amount.assetCode}`,
+            transactions: [
+              {
+                transactionId: t.id,
+                type: t.type,
+                description: t.description,
+                date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                status: t.state,
+                amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(
+                  Number(amount.value),
+                  amount.assetScale,
+                )} ${amount.assetCode}`,
+              },
+            ],
+          });
+        } else {
+          const activity = acc.get(activityId);
+
+          if (!activity) return acc;
+
+          const isIncoming = t.type === "IncomingPayment";
+          const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+
+          activity.transactions.push({
+            transactionId: t.id,
+            type: t.type,
+            description: t.description,
+            date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: t.state,
+            amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(
+              Number(amount.value),
+              amount.assetScale,
+            )} ${amount.assetCode}`,
+          });
+
+          acc.set(activityId, activity);
+        }
+
+        return acc;
+      }, new Map<string, Activity>());
+
+      const activities = Array.from(groupedActivities.values());
+
+      return {
+        activities: activities.slice(
+          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
+          +(input.page ?? 1) * +(input.items ?? 10),
+        ),
+        currentPage: +(input.page ?? 1),
+        total: activities.length,
+        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
       };
     },
   });

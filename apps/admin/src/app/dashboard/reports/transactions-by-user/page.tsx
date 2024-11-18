@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from "@wg-frontend/ui/select";
 
-import type { Transactions } from "~/lib/data-access";
+import type { Activity, Transaction } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Input } from "~/app/dashboard/_components/dashboard-input";
 import Table, {
@@ -55,25 +55,13 @@ import Dialog from "../../_components/dashboard-dialog";
 import { FormLabel } from "../../_components/dashboard-form";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
-function Actions({
-  transactionsByUserParameters,
-}: {
-  transactionsByUserParameters: {
-    id: string;
-  };
-}) {
+function Actions({ activity }: { activity: Activity }) {
   const { values } = useI18n();
-  console.log(transactionsByUserParameters);
 
   return (
     <div className="flex flex-row space-x-4">
       <DetailsDialog
-        role={{
-          id: transactionsByUserParameters.id,
-          name: "some name",
-          description: "some description",
-        }} //Se agrega este objeto para pasar el lint mientras se termina la funcionalidad de este reporte
-        //id={transactionsByUserParameters.id}
+        activity={activity}
         trigger={
           <Button
             className="flex h-max flex-row items-center space-x-2"
@@ -93,7 +81,7 @@ function Actions({
   );
 }
 
-const columnHelper = createColumnHelper<Transactions>();
+const columnHelper = createColumnHelper<Activity>();
 const columns = [
   columnHelper.accessor("type", {
     id: "type",
@@ -123,8 +111,8 @@ const columns = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.finish" />
     ),
   }),
-  columnHelper.accessor("state", {
-    id: "state",
+  columnHelper.accessor("status", {
+    id: "status",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
@@ -146,13 +134,7 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.actions" />
     ),
-    cell: (info) => (
-      <Actions
-        transactionsByUserParameters={{
-          id: info.row.original.id,
-        }}
-      />
-    ),
+    cell: (info) => <Actions activity={info.row.original} />,
   }),
 ];
 
@@ -190,7 +172,7 @@ export default function TransactionsByUserPage() {
   });
 
   const table = useReactTable({
-    data: transactionsData?.transactions ?? [],
+    data: transactionsData?.activities ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -571,50 +553,43 @@ export default function TransactionsByUserPage() {
       <div className="flex-1 overflow-auto">
         <Table table={table} />
       </div>
-      <div>
-        <div className="flex">
-          <span className="ml-[75%] text-lg">
-            Total | {transactionsData?.totalPrice}
-          </span>
-        </div>
-        <PaginationFooter
-          count={{
-            total: transactionsData?.total ?? 0,
-            firstRowIdx,
-            lastRowIdx,
-          }}
-          items={paginationAndSearch.items ?? "10"}
-          onItemsChange={(items) =>
-            handlePaginationAndSearchChange({
-              ...paginationAndSearch,
-              items,
-              page: "1",
-            })
-          }
-          canPreviousPage={paginationAndSearch.page !== "1"}
-          canNextPage={
-            transactionsData?.transactions.length ===
-            Number(paginationAndSearch.items)
-          }
-          onPreviousPage={() =>
-            handlePaginationAndSearchChange({
-              ...paginationAndSearch,
-              page: String(Number(paginationAndSearch.page) - 1),
-            })
-          }
-          onNextPage={() =>
-            handlePaginationAndSearchChange({
-              ...paginationAndSearch,
-              page: String(Number(paginationAndSearch.page) + 1),
-            })
-          }
-        />
-      </div>
+      <PaginationFooter
+        count={{
+          total: transactionsData?.total ?? 0,
+          firstRowIdx,
+          lastRowIdx,
+        }}
+        items={paginationAndSearch.items ?? "10"}
+        onItemsChange={(items) =>
+          handlePaginationAndSearchChange({
+            ...paginationAndSearch,
+            items,
+            page: "1",
+          })
+        }
+        canPreviousPage={paginationAndSearch.page !== "1"}
+        canNextPage={
+          transactionsData?.activities.length ===
+          Number(paginationAndSearch.items)
+        }
+        onPreviousPage={() =>
+          handlePaginationAndSearchChange({
+            ...paginationAndSearch,
+            page: String(Number(paginationAndSearch.page) - 1),
+          })
+        }
+        onNextPage={() =>
+          handlePaginationAndSearchChange({
+            ...paginationAndSearch,
+            page: String(Number(paginationAndSearch.page) + 1),
+          })
+        }
+      />
     </div>
   );
 }
 
-const columnHelperDetails = createColumnHelper<Transactions>();
+const columnHelperDetails = createColumnHelper<Transaction>();
 const columnsDetails = [
   columnHelperDetails.accessor("type", {
     id: "type",
@@ -637,15 +612,15 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
     ),
   }),
-  columnHelperDetails.accessor("startDate", {
-    id: "startDate",
+  columnHelperDetails.accessor("date", {
+    id: "date",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.details.date" />
     ),
   }),
-  columnHelperDetails.accessor("state", {
-    id: "state",
+  columnHelperDetails.accessor("status", {
+    id: "status",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
@@ -653,29 +628,12 @@ const columnsDetails = [
   }),
 ];
 
-function DetailsDialog(props: {
-  role?: {
-    id: string;
-    name: string;
-    description: string;
-  };
-  trigger: ReactNode;
-}) {
+function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
-  const detailsData: Transactions[] = [
-    {
-      type: "HOLA",
-      description: "PRUEBA",
-      startDate: "1/11/2024 11:08:05",
-      endDate: "1/11/2024 11:08:05",
-      id: "1/11/2024 11:08:05",
-      amount: "-50",
-      state: "Active",
-    },
-  ];
-  const tableDetails = useReactTable({
-    data: detailsData,
+
+  const table = useReactTable({
+    data: props.activity.transactions,
     columns: columnsDetails,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -683,7 +641,7 @@ function DetailsDialog(props: {
 
   return (
     <Dialog
-      key={props.role?.id ?? "details"}
+      key={props.activity.activityId}
       isOpen={isOpen}
       contentClassName="max-w-3xl"
       toggleOpen={toggle}
@@ -699,13 +657,13 @@ function DetailsDialog(props: {
           }
         </h1>
         <div className="flex flex-row items-center justify-between">
-          Activity ID: 2583-1234-5678-0000
+          Activity ID: {props.activity.activityId}
           <Button className="px-2" variant="secondary">
             <Download strokeWidth={0.75} className="size-6" />
           </Button>
         </div>
         <div className="flex-1 overflow-auto">
-          <Table table={tableDetails} />
+          <Table table={table} />
         </div>
       </div>
     </Dialog>
