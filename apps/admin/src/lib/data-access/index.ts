@@ -1848,7 +1848,6 @@ export function useGetSidebarItemsQuery(
     },
   });
 }
-
 export interface WalletUser {
   id: string;
   name: string;
@@ -1935,12 +1934,6 @@ export function useToogleWalletLockMutation(
           body: JSON.stringify(input),
         },
       );
-    },
-    onSuccess: async (...input) => {
-      await cq.invalidateQueries({
-        queryKey: ["get-wallet-user"],
-      });
-      options.onSuccess?.(...input);
     },
   });
 }
