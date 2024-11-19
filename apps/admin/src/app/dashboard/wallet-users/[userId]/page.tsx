@@ -278,7 +278,7 @@ export default function UserDetailsPage() {
 function ResetDialog(props: { id: string; trigger: ReactNode }) {
   const { values } = useI18n();
   const errors = useErrors();
-  const [isOpen, _, _close, toggle] = useBooleanHandlers();
+  const [isOpen, _, close, toggle] = useBooleanHandlers();
   const { mutate, isPending } = useResetPasswordIdMutation({
     onError: (error) => {
       toast.error(errors[error.message], {
@@ -286,8 +286,8 @@ function ResetDialog(props: { id: string; trigger: ReactNode }) {
       });
     },
     onSuccess: () => {
-      toast.success(values["wallet-users.reset-password.success"]);
       close();
+      toast.success(values["wallet-users.reset-password.success"]);
     },
   });
   return (
