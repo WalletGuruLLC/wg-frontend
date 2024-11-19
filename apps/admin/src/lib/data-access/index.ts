@@ -1,6 +1,7 @@
 "use client";
 
 import type { z } from "zod";
+import { format } from "date-fns";
 
 import type {
   UseMutationOptions,
@@ -34,6 +35,7 @@ import type {
   toggleUserStatusValidator,
   toggleWalletLockValidator,
   toggleWalletStatusValidator,
+  transactionsByUserValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
 } from "../validators";
@@ -1797,23 +1799,216 @@ export function useEditSettingMutation(
   });
 }
 
-export interface ReportsByUser {
-  id: string;
-  type: string;
+interface ApiCommonTransaction {
+  createdAt: number;
   description: string;
-  startdate: string;
-  enddate: string;
-  state: "Active" | "Completed";
-  ammount: number;
-  currency: string;
+  walletAddressId: string;
+  state: string;
+  type: string;
+  updatedAt: number;
+  receiverUrl: string;
+  receiver: string;
+  metadata: {
+    activityId?: string;
+    description: string;
+    type?: string;
+    wgUser?: string;
+    contentName?: string;
+  };
+  id: string;
+  senderUrl: string;
+  senderName: string;
+  receiverName: string;
 }
 
-export interface DetailsTransactionByUser {
+interface ApiAmount {
+  assetScale: number;
+  assetCode: string;
+  value: string;
+  typename: string;
+}
+
+interface ApiIncomingTransaction extends ApiCommonTransaction {
+  incomingAmount: ApiAmount;
+  incomingPaymentId: string;
+  type: "IncomingPayment";
+}
+
+interface ApiOutgoingTransaction extends ApiCommonTransaction {
+  type: "OutgoingPayment";
+  outgoingPaymentId: string;
+  receiveAmount: ApiAmount;
+}
+
+export interface Activity {
+  activityId?: string;
   type: string;
   description: string;
-  amount: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  amount: string;
+  user: string;
+  transactions: Transaction[];
+}
+
+export interface Transaction {
+  transactionId: string;
+  type: string;
+  description: string;
   date: string;
-  state: "Active" | "Completed";
+  status: string;
+  amount: string;
+}
+
+interface UseGetTransactionsByUserQueryOutput {
+  activities: Activity[];
+  currentPage: number;
+  total: number;
+  user: string;
+  totalPages: number;
+}
+export function useGetTransactionsByUserQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof transactionsByUserValidator>,
+  options: UseQueryOptions<UseGetTransactionsByUserQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-transactions-by-user", input],
+    queryFn: async () => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      const params = new URLSearchParams({
+        ...input,
+        items: "9999999999",
+        page: "1",
+      } as unknown as Record<string, string>);
+
+      const result = await customFetch<{
+        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
+        currentPage: number;
+        total: number;
+        totalPages: number;
+      }>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/list-transactions` +
+          "?" +
+          params.toString(),
+      );
+
+      // Group by activity id
+      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
+        const activityId = t.metadata.activityId;
+
+        const isIncoming = t.type === "IncomingPayment";
+        const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+
+        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+          Number(amount.value),
+          amount.assetScale,
+        )} ${amount.assetCode}`;
+
+        if (!activityId) {
+          acc.set(idx.toString(), {
+            activityId: undefined,
+            type: isIncoming ? "Transfer Received" : "Transfer Sent",
+            description: isIncoming ? t.senderName : t.receiverName,
+            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: t.state,
+            amount: amountString,
+            user: isIncoming ? t.receiverName : t.senderName,
+            transactions: [],
+          });
+        } else {
+          const isProvider = t.metadata.type === "PROVIDER";
+          const type = isProvider
+            ? (t.metadata.contentName ?? "Unknown content")
+            : isIncoming
+              ? "Transfer Received"
+              : "Transfer Sent";
+          const description = isProvider
+            ? (t.metadata.contentName ?? "Unknown content")
+            : isIncoming
+              ? t.senderName
+              : t.receiverName;
+
+          if (!acc.has(activityId)) {
+            acc.set(activityId, {
+              activityId,
+              type,
+              description,
+              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+              user: t.metadata.wgUser ?? "",
+              transactions: [
+                {
+                  transactionId: t.id,
+                  type,
+                  description,
+                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                  status: t.state,
+                  amount: amountString,
+                },
+              ],
+            });
+          } else {
+            const activity = acc.get(activityId);
+
+            if (!activity) return acc;
+
+            activity.transactions.push({
+              transactionId: t.id,
+              type,
+              description,
+              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+            });
+
+            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+
+            const accumulatedAmountNumber = Number(
+              activity.amount.split(" ")[0],
+            );
+            const amountNumber = Number(amountString.split(" ")[0]);
+
+            activity.amount = `${
+              accumulatedAmountNumber + amountNumber
+            } ${amount.assetCode}`;
+
+            acc.set(activityId, activity);
+          }
+        }
+
+        return acc;
+      }, new Map<string, Activity>());
+
+      const activities = Array.from(groupedActivities.values());
+
+      return {
+        activities: activities.slice(
+          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
+          +(input.page ?? 1) * +(input.items ?? 10),
+        ),
+        currentPage: +(input.page ?? 1),
+        total: activities.length,
+        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
+        user: activities[0]?.user ?? "No data",
+      };
+    },
+  });
+}
+
+function convertAmountWithScale(amount: number, scale: number) {
+  return amount / Math.pow(10, scale);
 }
 
 export type UseGetSidebarItemsQueryOutput = {
