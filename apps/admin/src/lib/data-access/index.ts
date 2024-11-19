@@ -1902,10 +1902,15 @@ export function useGetTransactionsByUserQuery(
       const groupedActivities = result.transactions.reduce((acc, t) => {
         const activityId = t.metadata.activityId;
 
-        if (!acc.has(activityId)) {
-          const isIncoming = t.type === "IncomingPayment";
-          const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+        const isIncoming = t.type === "IncomingPayment";
+        const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
 
+        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+          Number(amount.value),
+          amount.assetScale,
+        )} ${amount.assetCode}`;
+
+        if (!acc.has(activityId)) {
           acc.set(activityId, {
             activityId,
             type: t.type,
@@ -1913,10 +1918,7 @@ export function useGetTransactionsByUserQuery(
             startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
-            amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(
-              Number(amount.value),
-              amount.assetScale,
-            )} ${amount.assetCode}`,
+            amount: amountString,
             transactions: [
               {
                 transactionId: t.id,
@@ -1924,10 +1926,7 @@ export function useGetTransactionsByUserQuery(
                 description: t.description,
                 date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
                 status: t.state,
-                amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(
-                  Number(amount.value),
-                  amount.assetScale,
-                )} ${amount.assetCode}`,
+                amount: amountString,
               },
             ],
           });
@@ -1936,20 +1935,23 @@ export function useGetTransactionsByUserQuery(
 
           if (!activity) return acc;
 
-          const isIncoming = t.type === "IncomingPayment";
-          const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
-
           activity.transactions.push({
             transactionId: t.id,
             type: t.type,
             description: t.description,
             date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
-            amount: `${isIncoming ? "" : "-"}${convertAmountWithScale(
-              Number(amount.value),
-              amount.assetScale,
-            )} ${amount.assetCode}`,
+            amount: amountString,
           });
+
+          activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+
+          const accumulatedAmountNumber = Number(activity.amount.split(" ")[0]);
+          const amountNumber = Number(amountString.split(" ")[0]);
+
+          activity.amount = `${
+            accumulatedAmountNumber + amountNumber
+          } ${amount.assetCode}`;
 
           acc.set(activityId, activity);
         }
