@@ -1935,11 +1935,5 @@ export function useToogleWalletLockMutation(
         },
       );
     },
-    onSuccess: async (...input) => {
-      await cq.invalidateQueries({
-        queryKey: ["get-wallet-user"],
-      });
-      options.onSuccess?.(...input);
-    },
   });
 }
