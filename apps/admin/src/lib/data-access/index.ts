@@ -1809,11 +1809,11 @@ interface ApiCommonTransaction {
   receiverUrl: string;
   receiver: string;
   metadata: {
-    activityId: string;
+    activityId?: string;
     description: string;
-    type: string;
-    wgUser: string;
-    contentName: string;
+    type?: string;
+    wgUser?: string;
+    contentName?: string;
   };
   id: string;
   senderUrl: string;
@@ -1841,13 +1841,14 @@ interface ApiOutgoingTransaction extends ApiCommonTransaction {
 }
 
 export interface Activity {
-  activityId: string;
+  activityId?: string;
   type: string;
   description: string;
   startDate: string;
   endDate: string;
   status: string;
   amount: string;
+  user: string;
   transactions: Transaction[];
 }
 
@@ -1901,7 +1902,7 @@ export function useGetTransactionsByUserQuery(
       );
 
       // Group by activity id
-      const groupedActivities = result.transactions.reduce((acc, t) => {
+      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
         const activityId = t.metadata.activityId;
 
         const isIncoming = t.type === "IncomingPayment";
@@ -1912,62 +1913,79 @@ export function useGetTransactionsByUserQuery(
           amount.assetScale,
         )} ${amount.assetCode}`;
 
-        const isProvider = t.metadata.type === "PROVIDER";
-        const type = isProvider
-          ? t.metadata.contentName
-          : isIncoming
-            ? "Transfer Received"
-            : "Transfer Sent";
-        const description = isProvider
-          ? t.metadata.contentName
-          : isIncoming
-            ? t.senderName
-            : t.receiverName;
-
-        if (!acc.has(activityId)) {
-          acc.set(activityId, {
-            activityId,
-            type,
-            description,
+        if (!activityId) {
+          acc.set(idx.toString(), {
+            activityId: undefined,
+            type: isIncoming ? "Transfer Received" : "Transfer Sent",
+            description: isIncoming ? t.senderName : t.receiverName,
             startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
             amount: amountString,
-            transactions: [
-              {
-                transactionId: t.id,
-                type,
-                description,
-                date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-                status: t.state,
-                amount: amountString,
-              },
-            ],
+            user: isIncoming ? t.receiverName : t.senderName,
+            transactions: [],
           });
         } else {
-          const activity = acc.get(activityId);
+          const isProvider = t.metadata.type === "PROVIDER";
+          const type = isProvider
+            ? (t.metadata.contentName ?? "Unknown content")
+            : isIncoming
+              ? "Transfer Received"
+              : "Transfer Sent";
+          const description = isProvider
+            ? (t.metadata.contentName ?? "Unknown content")
+            : isIncoming
+              ? t.senderName
+              : t.receiverName;
 
-          if (!activity) return acc;
+          if (!acc.has(activityId)) {
+            acc.set(activityId, {
+              activityId,
+              type,
+              description,
+              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+              user: t.metadata.wgUser ?? "",
+              transactions: [
+                {
+                  transactionId: t.id,
+                  type,
+                  description,
+                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                  status: t.state,
+                  amount: amountString,
+                },
+              ],
+            });
+          } else {
+            const activity = acc.get(activityId);
 
-          activity.transactions.push({
-            transactionId: t.id,
-            type,
-            description,
-            date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            status: t.state,
-            amount: amountString,
-          });
+            if (!activity) return acc;
 
-          activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+            activity.transactions.push({
+              transactionId: t.id,
+              type,
+              description,
+              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+            });
 
-          const accumulatedAmountNumber = Number(activity.amount.split(" ")[0]);
-          const amountNumber = Number(amountString.split(" ")[0]);
+            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
 
-          activity.amount = `${
-            accumulatedAmountNumber + amountNumber
-          } ${amount.assetCode}`;
+            const accumulatedAmountNumber = Number(
+              activity.amount.split(" ")[0],
+            );
+            const amountNumber = Number(amountString.split(" ")[0]);
 
-          acc.set(activityId, activity);
+            activity.amount = `${
+              accumulatedAmountNumber + amountNumber
+            } ${amount.assetCode}`;
+
+            acc.set(activityId, activity);
+          }
         }
 
         return acc;
@@ -1983,7 +2001,7 @@ export function useGetTransactionsByUserQuery(
         currentPage: +(input.page ?? 1),
         total: activities.length,
         totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
-        user: "TODO",
+        user: activities[0]?.user ?? "No data",
       };
     },
   });

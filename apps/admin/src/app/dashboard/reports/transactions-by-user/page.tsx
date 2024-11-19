@@ -53,23 +53,25 @@ function Actions({ activity }: { activity: Activity }) {
 
   return (
     <div className="flex flex-row space-x-4">
-      <DetailsDialog
-        activity={activity}
-        trigger={
-          <Button
-            className="flex h-max flex-row items-center space-x-2"
-            variant="link"
-          >
-            <p className="flex-1 text-lg font-light">
-              {
-                values[
-                  "dashboard.reports.sections.transactions-by-user.header.actions.details"
-                ]
-              }
-            </p>
-          </Button>
-        }
-      />
+      {activity.activityId && (
+        <DetailsDialog
+          activity={activity}
+          trigger={
+            <Button
+              className="flex h-max flex-row items-center space-x-2"
+              variant="link"
+            >
+              <p className="flex-1 text-lg font-light">
+                {
+                  values[
+                    "dashboard.reports.sections.transactions-by-user.header.actions.details"
+                  ]
+                }
+              </p>
+            </Button>
+          }
+        />
+      )}
     </div>
   );
 }
@@ -176,6 +178,8 @@ export default function TransactionsByUserPage() {
       enabled: filters.walletAddress !== "",
     },
   );
+
+  console.log(transactionsData);
 
   const table = useReactTable({
     data: transactionsData?.activities ?? [],
