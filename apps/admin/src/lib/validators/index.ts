@@ -260,8 +260,7 @@ export const transactionsByUserValidator = z.object({
     .min(
       1,
       "dashboard.reports.sections-transactions-by-user.search.wallet-address.error",
-    )
-    .optional(),
+    ),
   startDate: z
     .date({
       required_error:

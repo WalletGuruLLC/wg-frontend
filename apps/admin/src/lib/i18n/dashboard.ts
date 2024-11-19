@@ -375,6 +375,8 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
     "dashboard.reports.sections-transactions-by-user.user.label": "User",
+    "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected":
+      "Enter a valid Wallet Address",
     "dashboard.reports.sections-transactions-by-user.period.label": "Period",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
       "No start date selected",
@@ -787,6 +789,8 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
     "dashboard.reports.sections-transactions-by-user.user.label": "Usuario",
+    "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected":
+      "Ingrese una dirección de billetera válida",
     "dashboard.reports.sections-transactions-by-user.period.label": "Periodo",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
       "No se ha seleccionado una fecha de inicio",

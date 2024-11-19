@@ -1864,6 +1864,7 @@ interface UseGetTransactionsByUserQueryOutput {
   activities: Activity[];
   currentPage: number;
   total: number;
+  user: string;
   totalPages: number;
 }
 export function useGetTransactionsByUserQuery(
@@ -1876,7 +1877,8 @@ export function useGetTransactionsByUserQuery(
     queryKey: ["get-transactions-by-user", input],
     queryFn: async () => {
       Object.keys(input).forEach((key) =>
-        input[key as keyof typeof input] === undefined
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
           ? delete input[key as keyof typeof input]
           : {},
       );
@@ -1981,6 +1983,7 @@ export function useGetTransactionsByUserQuery(
         currentPage: +(input.page ?? 1),
         total: activities.length,
         totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
+        user: "TODO",
       };
     },
   });
