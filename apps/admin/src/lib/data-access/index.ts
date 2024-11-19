@@ -1921,7 +1921,6 @@ export function useToogleWalletLockMutation(
     unknown
   > = {},
 ) {
-  const cq = useQueryClient();
   return useMutation({
     ...options,
     mutationKey: ["toggle-wallet-lock"],

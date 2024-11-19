@@ -362,7 +362,7 @@ export default function WalletUsersPage() {
   });
 
   const table = useReactTable({
-    data: data?.users ?? [],
+    data: walletUsersData,
     columns: columns.filter(
       (c) =>
         c.id !== "active" ||
