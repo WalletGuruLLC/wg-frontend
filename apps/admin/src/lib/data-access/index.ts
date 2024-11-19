@@ -1799,7 +1799,7 @@ export function useEditSettingMutation(
   });
 }
 
-interface DBCommonTransaction {
+interface ApiCommonTransaction {
   createdAt: number;
   description: string;
   walletAddressId: string;
@@ -1821,23 +1821,23 @@ interface DBCommonTransaction {
   receiverName: string;
 }
 
-interface DBAmount {
+interface ApiAmount {
   assetScale: number;
   assetCode: string;
   value: string;
   typename: string;
 }
 
-interface DBIncomingTransaction extends DBCommonTransaction {
-  incomingAmount: DBAmount;
+interface ApiIncomingTransaction extends ApiCommonTransaction {
+  incomingAmount: ApiAmount;
   incomingPaymentId: string;
   type: "IncomingPayment";
 }
 
-interface DBOutgoingTransaction extends DBCommonTransaction {
+interface ApiOutgoingTransaction extends ApiCommonTransaction {
   type: "OutgoingPayment";
   outgoingPaymentId: string;
-  receiveAmount: DBAmount;
+  receiveAmount: ApiAmount;
 }
 
 export interface Activity {
@@ -1887,7 +1887,7 @@ export function useGetTransactionsByUserQuery(
       } as unknown as Record<string, string>);
 
       const result = await customFetch<{
-        transactions: (DBIncomingTransaction | DBOutgoingTransaction)[];
+        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
         currentPage: number;
         total: number;
         totalPages: number;
@@ -1910,11 +1910,23 @@ export function useGetTransactionsByUserQuery(
           amount.assetScale,
         )} ${amount.assetCode}`;
 
+        const isProvider = t.metadata.type === "PROVIDER";
+        const type = isProvider
+          ? t.metadata.contentName
+          : isIncoming
+            ? "Transfer Received"
+            : "Transfer Sent";
+        const description = isProvider
+          ? t.metadata.contentName
+          : isIncoming
+            ? t.senderName
+            : t.receiverName;
+
         if (!acc.has(activityId)) {
           acc.set(activityId, {
             activityId,
-            type: t.type,
-            description: t.description,
+            type,
+            description,
             startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
@@ -1922,8 +1934,8 @@ export function useGetTransactionsByUserQuery(
             transactions: [
               {
                 transactionId: t.id,
-                type: t.type,
-                description: t.description,
+                type,
+                description,
                 date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
                 status: t.state,
                 amount: amountString,
@@ -1937,8 +1949,8 @@ export function useGetTransactionsByUserQuery(
 
           activity.transactions.push({
             transactionId: t.id,
-            type: t.type,
-            description: t.description,
+            type,
+            description,
             date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
             amount: amountString,
