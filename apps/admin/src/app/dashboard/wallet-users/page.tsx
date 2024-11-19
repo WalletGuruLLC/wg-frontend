@@ -28,13 +28,13 @@ import {
 } from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
-import type { User } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
 import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
+  useGetSettingQuery,
   useGetUsersQuery,
   useResendCodeMutation,
   useSendOtpAuthenticationMutation,
@@ -73,6 +73,28 @@ const formatCurrency = (value: number, code: string, scale: number) => {
   return `${formattedValue} ${code}`;
 };
 
+interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  name: string;
+  lastName: string;
+  active: boolean;
+  state: 0 | 1 | 2 | 3 | 4;
+  wallet: {
+    address: string;
+    postedCredits: number;
+    postedDebits: number;
+    pendingCredits: number;
+    pendingDebits: number;
+    active: string;
+  };
+  asset: {
+    code: string;
+    scale: number;
+  };
+}
+
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
@@ -88,8 +110,8 @@ const columns = [
     id: "wallet",
     cell: (info) => {
       const wallet = info.getValue();
-      if (wallet?.walletAddress) {
-        return wallet.walletAddress.replace("https://walletguru.me/", "");
+      if (wallet.address) {
+        return wallet.address.replace("/", "");
       }
       return "-";
     },
@@ -98,16 +120,15 @@ const columns = [
   columnHelper.accessor(
     (row) => {
       const wallet = row.wallet;
-      const balance =
-        (wallet?.postedCredits ?? 0) - (wallet?.postedDebits ?? 0);
+      const balance = wallet.postedCredits - wallet.postedDebits;
       return balance;
     },
     {
       id: "balance",
       cell: (info) => {
         const money = info.getValue();
-        const code = info.row.original.asset?.code ?? "USD";
-        const scale = info.row.original.asset?.scale ?? 2;
+        const code = info.row.original.asset.code;
+        const scale = info.row.original.asset.scale;
         return formatCurrency(money, code, scale);
       },
       header: () => (
@@ -118,15 +139,15 @@ const columns = [
   columnHelper.accessor(
     (row) => {
       const wallet = row.wallet;
-      const reserved = wallet?.pendingDebits ?? 0;
+      const reserved = wallet.pendingDebits;
       return reserved;
     },
     {
       id: "reserved",
       cell: (info) => {
         const money = info.getValue();
-        const code = info.row.original.asset?.code ?? "USD";
-        const scale = info.row.original.asset?.scale ?? 2;
+        const code = info.row.original.asset.code;
+        const scale = info.row.original.asset.scale;
         return formatCurrency(money, code, scale);
       },
       header: () => (
@@ -138,16 +159,15 @@ const columns = [
     (row) => {
       const wallet = row.wallet;
       const available =
-        (wallet?.postedCredits ?? 0) -
-        ((wallet?.pendingDebits ?? 0) + (wallet?.postedDebits ?? 0));
+        wallet.postedCredits - (wallet.pendingDebits + wallet.postedDebits);
       return available;
     },
     {
       id: "available",
       cell: (info) => {
         const money = info.getValue();
-        const code = info.row.original.asset?.code ?? "USD";
-        const scale = info.row.original.asset?.scale ?? 2;
+        const code = info.row.original.asset.code;
+        const scale = info.row.original.asset.scale;
         return formatCurrency(money, code, scale);
       },
       header: () => (
@@ -214,7 +234,7 @@ const columns = [
   columnHelper.accessor(
     (row) => {
       const { values } = useI18n();
-      const walletState = String(row.wallet?.active);
+      const walletState = String(row.wallet.active);
       const walletStateName =
         walletState === "undefined"
           ? values["wallet-users.no-wallet"]
@@ -237,18 +257,6 @@ const columns = [
           id: info.id,
           email: info.email,
           name: info.firstName + " " + info.lastName,
-          /*
-          firstName: info.firstName,
-          lastName: info.lastName,
-          phone: info.phone,
-          socialSecurityNumber: info.socialSecurityNumber ?? "",
-          identificationType: info.identificationType ?? "",
-          identificationNumber: info.identificationNumber ?? "",
-          stateLocation: info.stateLocation ?? "",
-          country: info.country ?? "",
-          city: info.city ?? "",
-          zipCode: info.zipCode ?? "",
-          */
         },
         tooltip: values["wallet-users.tooltip.details"],
       };
@@ -286,6 +294,10 @@ const columns = [
 ];
 
 export default function WalletUsersPage() {
+  const settingKey = "url-wallet";
+  const { data: rootWallet } = useGetSettingQuery({
+    key: settingKey,
+  });
   const loading = useAccessLevelGuard({
     general: {
       module: "users",
@@ -311,9 +323,34 @@ export default function WalletUsersPage() {
   });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
+  const walletUsersData = (data?.users ?? []).map((user) => {
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      name: user.firstName + " " + user.lastName,
+      lastName: user.lastName,
+      active: user.active,
+      state: user.state,
+      wallet: {
+        address:
+          user.wallet?.walletAddress.replace(rootWallet?.value ?? "", "") ??
+          "-",
+        postedCredits: user.wallet?.postedCredits ?? 0,
+        postedDebits: user.wallet?.postedDebits ?? 0,
+        pendingCredits: user.wallet?.pendingCredits ?? 0,
+        pendingDebits: user.wallet?.pendingDebits ?? 0,
+        active: user.wallet?.active ?? "undefined",
+      },
+      asset: {
+        code: user.asset?.code ?? "USD",
+        scale: user.asset?.scale ?? 2,
+      },
+    };
+  });
 
   const table = useReactTable({
-    data: data?.users ?? [],
+    data: walletUsersData,
     columns: columns.filter(
       (c) =>
         c.id !== "active" ||
