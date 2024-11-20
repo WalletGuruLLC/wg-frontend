@@ -907,7 +907,9 @@ interface UseGetUsersQueryOutput {
 export function useGetUsersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
+    state?: string;
     serviceProviderId?: string;
+    wallet?: string;
   },
   options: UseQueryOptions<UseGetUsersQueryOutput> = {},
 ) {
