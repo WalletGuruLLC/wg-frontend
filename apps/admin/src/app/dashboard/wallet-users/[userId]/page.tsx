@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   ArrowRightLeft,
@@ -24,6 +25,7 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import { Button } from "~/components/button";
 import {
+  useGetSettingQuery,
   useGetWalletUserQuery,
   useResetPasswordIdMutation,
   useToogleWalletLockMutation,
@@ -37,11 +39,18 @@ import { Input } from "../../_components/dashboard-input";
 import { BreadcrumbTitle } from "../../_components/dashboard-title";
 
 export default function UserDetailsPage() {
+  const settingKey = "url-wallet";
+  const { data: rootWallet } = useGetSettingQuery({
+    key: settingKey,
+  });
   const { values } = useI18n();
   const { userId } = useParams<{ userId: string }>();
   const { data: dataUser, isLoading } = useGetWalletUserQuery(userId);
   const walletId = dataUser?.wallet?.id ?? "";
   const isWalletActive = dataUser?.wallet?.active ?? true;
+  const walletAddress = dataUser?.wallet?.walletAddress
+    .replace(rootWallet?.value ?? "", "")
+    .replace(/^\/+/, "");
   const form = useForm({
     schema: walletuserDetailValidator,
   });
@@ -257,16 +266,21 @@ export default function UserDetailsPage() {
               <LockDialog id={walletId} lock={isWalletActive} />
             </div>
             <div>
-              <Button type="submit">
-                <p className="flex-1 text-base font-light">
-                  {values[`wallet-users.details.button.transactions`]}
-                </p>
+              <Link
+                key={"transactions"}
+                href={`/dashboard/reports/transactions-by-user?walletAddress=${walletAddress}`}
+              >
+                <Button type="submit">
+                  <p className="flex-1 text-base font-light">
+                    {values[`wallet-users.details.button.transactions`]}
+                  </p>
 
-                <ArrowRightLeft
-                  strokeWidth={0.75}
-                  className="-mt-1 ml-1 size-5"
-                />
-              </Button>
+                  <ArrowRightLeft
+                    strokeWidth={0.75}
+                    className="-mt-1 ml-1 size-5"
+                  />
+                </Button>
+              </Link>
             </div>
           </div>
         </CardContent>
