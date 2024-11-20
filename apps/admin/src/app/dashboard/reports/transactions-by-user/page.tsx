@@ -39,7 +39,9 @@ import Table, {
 import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
+  useGetAuthedUserAccessLevelsQuery,
   useGetDashboardUsersTitleQuery,
+  useGetProvidersQuery,
   useGetTransactionsByUserQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -179,7 +181,24 @@ export default function TransactionsByUserPage() {
     },
   );
 
-  console.log(transactionsData);
+  const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
+  const { data: providersData } = useGetProvidersQuery(
+    {
+      items: "9999999",
+      type: "PLATFORM",
+    },
+    {
+      enabled: !isLoadingAccessLevels,
+    },
+  );
+
+  console.log(
+    "providersData",
+    providersData?.providers.filter((p) =>
+      accessLevelsData?.providers[p.id]?.reports.includes("view"),
+    ),
+  );
 
   const table = useReactTable({
     data: transactionsData?.activities ?? [],
@@ -487,12 +506,22 @@ export default function TransactionsByUserPage() {
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Rodrigo Provider 1">
-                  Rodrigo Provider 1
-                </SelectItem>
-                <SelectItem value="Rodrigo Provider 2">
-                  Rodrigo Provider 2
-                </SelectItem>
+                {providersData?.providers
+                  .filter((p) =>
+                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                  )
+                  .map((provider) => (
+                    <SelectItem key={provider.id} value={provider.id}>
+                      {provider.name}
+                    </SelectItem>
+                  ))}
+                {providersData?.providers.filter((p) =>
+                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                ).length === 0 && (
+                  <SelectItem value="no" disabled>
+                    No providers available
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
