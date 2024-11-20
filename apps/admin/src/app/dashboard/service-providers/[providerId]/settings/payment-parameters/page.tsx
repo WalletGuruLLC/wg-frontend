@@ -383,56 +383,6 @@ function AddOrEditDialog(props: {
   });
 
   const { data: timeInvervals } = useGetTimeIntervalsQuery(undefined);
-  /*
-  const { mutate, isPending } = useAddOrEditProviderPaymentParameterMutation({
-    onError: (error) => {
-      toast.error(errors[error.message], {
-        description: "Error code: " + error.message,
-      });
-    },
-    onSuccess: () => {
-      toast.success(values[`${valuesPrefix}.toast.success` as const]);
-      close();
-      form.reset();
-    },
-  });
-*/
-  /*
-  const isEdit = !!props.paymentParameter;
-  const { mutate, isPending } = isEdit
-    ? useEditProviderPaymentParameterMutation({
-        onError: (error) => {
-          toast.error(errors[error.message], {
-            description: "Error code: " + error.message,
-          });
-        },
-        onSuccess: () => {
-          toast.success(
-            values[
-              "service-providers.settings.payment-parameters.edit-dialog.toast.success"
-            ],
-          );
-          close();
-          form.reset();
-        },
-      })
-    : useAddProviderPaymentParameterMutation({
-        onError: (error) => {
-          toast.error(errors[error.message], {
-            description: "Error code: " + error.message,
-          });
-        },
-        onSuccess: () => {
-          toast.success(
-            values[
-              "service-providers.settings.payment-parameters.add-dialog.toast.success"
-            ],
-          );
-          close();
-          form.reset();
-        },
-      });
-      */
   const addMutation = useAddProviderPaymentParameterMutation({
     onError: (error) => {
       toast.error(errors[error.message], {
