@@ -90,6 +90,9 @@ export const walletUsersDict = {
     "wallet-users.lock.button-yes.nowallet": "Yes",
     "wallet-users.lock.button-no.nowallet": "No",
     "wallet-users.toast.success.nowallet": "No wallet",
+    "wallet-users.toast.error.filtering": "Error during filter process.",
+    "wallet-users.list.button.filter": "Filter",
+    "wallet-users.list.button.reset": "Delete Filter",
   },
   es: {
     "wallet-users.title": "Administración Billetera habientes",
@@ -182,5 +185,8 @@ export const walletUsersDict = {
     "wallet-users.lock.button-yes.nowallet": "Si",
     "wallet-users.lock.button-no.nowallet": "No",
     "wallet-users.toast.success.nowallet": "Sin Billetera",
+    "wallet-users.toast.error.filtering": "Error realizando el filtro.",
+    "wallet-users.list.button.filter": "Filtrar",
+    "wallet-users.list.button.reset": "Borrar filtro",
   },
 } satisfies I18nDictionary;

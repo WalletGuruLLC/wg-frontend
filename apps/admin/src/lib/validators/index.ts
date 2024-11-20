@@ -276,8 +276,8 @@ export const transactionsByUserValidator = z.object({
 });
 
 export const walletusersValidator = z.object({
-  state: z.string().min(1),
-  wallet: z.string().min(1),
+  state: z.string().optional(),
+  wallet: z.string().optional(),
 });
 
 export const walletuserDetailValidator = z.object({
