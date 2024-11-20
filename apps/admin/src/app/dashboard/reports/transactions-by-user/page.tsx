@@ -193,13 +193,6 @@ export default function TransactionsByUserPage() {
     },
   );
 
-  console.log(
-    "providersData",
-    providersData?.providers.filter((p) =>
-      accessLevelsData?.providers[p.id]?.reports.includes("view"),
-    ),
-  );
-
   const table = useReactTable({
     data: transactionsData?.activities ?? [],
     columns,
