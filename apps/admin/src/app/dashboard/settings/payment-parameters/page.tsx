@@ -52,7 +52,8 @@ import { Button } from "~/components/button";
 import { FormMessage } from "~/components/form";
 import { SelectTrigger } from "~/components/select";
 import {
-  useAddOrEditProviderPaymentParameterMutation,
+  useAddProviderPaymentParameterMutation,
+  useEditProviderPaymentParameterMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetProviderPaymentParametersQuery,
@@ -72,7 +73,7 @@ function Actions({
     id: string;
     name: string;
     cost: string;
-    interval: string;
+    timeIntervalId: string;
     frequency: string;
   };
 }) {
@@ -125,8 +126,8 @@ const columns = [
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.frequency" />
     ),
   }),
-  columnHelper.accessor("interval", {
-    id: "interval",
+  columnHelper.accessor("timeIntervalId", {
+    id: "timeIntervalId",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.interval" />
@@ -157,7 +158,7 @@ const columns = [
           id: info.row.original.id,
           name: info.row.original.name,
           cost: String(info.row.original.cost),
-          interval: info.row.original.interval,
+          timeIntervalId: info.row.original.timeIntervalId,
           frequency: String(info.row.original.frequency),
         }}
       />
@@ -342,7 +343,7 @@ function AddOrEditDialog(props: {
     id: string;
     name: string;
     cost: string;
-    interval: string;
+    timeIntervalId: string;
     frequency: string;
   };
   serviceProviderId: string;
@@ -357,7 +358,7 @@ function AddOrEditDialog(props: {
     defaultValues: {
       name: props.paymentParameter?.name ?? "",
       cost: props.paymentParameter?.cost ?? "",
-      timeIntervalId: props.paymentParameter?.interval ?? "",
+      timeIntervalId: props.paymentParameter?.timeIntervalId ?? "",
       frequency: props.paymentParameter?.frequency ?? "",
       serviceProviderId: props.serviceProviderId,
       paymentParameterId: props.paymentParameter?.id,
@@ -365,18 +366,43 @@ function AddOrEditDialog(props: {
   });
 
   const { data: timeInvervals } = useGetTimeIntervalsQuery(undefined);
-  const { mutate, isPending } = useAddOrEditProviderPaymentParameterMutation({
+  const addMutation = useAddProviderPaymentParameterMutation({
     onError: (error) => {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,
       });
     },
     onSuccess: () => {
-      toast.success(values[`${valuesPrefix}.toast.success` as const]);
+      toast.success(
+        values[
+          "service-providers.settings.payment-parameters.add-dialog.toast.success"
+        ],
+      );
       close();
       form.reset();
     },
   });
+
+  const editMutation = useEditProviderPaymentParameterMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(
+        values[
+          "service-providers.settings.payment-parameters.edit-dialog.toast.success"
+        ],
+      );
+      close();
+      form.reset();
+    },
+  });
+
+  const isEdit = !!props.paymentParameter;
+  const mutate = isEdit ? editMutation.mutate : addMutation.mutate;
+  const isPending = isEdit ? editMutation.isPending : addMutation.isPending;
 
   const valuesPrefix =
     `service-providers.settings.payment-parameters.${props.paymentParameter ? "edit" : "add"}-dialog` as const;
@@ -387,7 +413,7 @@ function AddOrEditDialog(props: {
       form.reset({
         name: props.paymentParameter.name,
         cost: props.paymentParameter.cost,
-        timeIntervalId: props.paymentParameter.interval,
+        timeIntervalId: props.paymentParameter.timeIntervalId,
         frequency: props.paymentParameter.frequency,
         serviceProviderId: props.serviceProviderId,
         paymentParameterId: props.paymentParameter.id,

@@ -1499,7 +1499,7 @@ export interface ProviderPaymentParameter {
   name: string;
   active: boolean;
   frequency: number;
-  interval: string;
+  timeIntervalId: string;
   cost: number;
   asset: string;
 }
@@ -1561,7 +1561,7 @@ export function useToggleProviderPaymentParameterStatusMutation(
   });
 }
 
-export function useAddOrEditProviderPaymentParameterMutation(
+export function useAddProviderPaymentParameterMutation(
   options: UseMutationOptions<
     z.infer<typeof addOrEditProviderPaymentParameterValidator>,
     unknown
@@ -2128,6 +2128,39 @@ export function useToogleWalletLockMutation(
           body: JSON.stringify(input),
         },
       );
+    },
+  });
+}
+
+export function useEditProviderPaymentParameterMutation(
+  options: UseMutationOptions<
+    z.infer<typeof addOrEditProviderPaymentParameterValidator>,
+    unknown
+  > = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["edit-provider-payment-parameter"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          `/api/v1/payments/payment-parameters/${input.paymentParameterId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            ...input,
+            cost: Number(input.cost),
+            frequency: Number(input.frequency),
+          }),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-provider-payment-parameters"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
