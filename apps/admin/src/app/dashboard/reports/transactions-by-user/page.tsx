@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { CalendarIcon, Download } from "lucide-react";
+import { CalendarIcon, Download, Loader2 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
@@ -25,6 +25,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@wg-frontend/ui/select";
+import { toast } from "@wg-frontend/ui/toast";
 
 import type { Activity, Transaction } from "~/lib/data-access";
 import type {
@@ -39,9 +40,13 @@ import Table, {
 import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
+  useDownloadTransactionsByUserMutation,
+  useGetAuthedUserAccessLevelsQuery,
   useGetDashboardUsersTitleQuery,
+  useGetProvidersQuery,
   useGetTransactionsByUserQuery,
 } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { Calendar } from "../../_components/dashboard-calendar";
@@ -140,6 +145,7 @@ export default function TransactionsByUserPage() {
     },
   });
   const { values } = useI18n();
+  const errors = useErrors();
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -179,7 +185,32 @@ export default function TransactionsByUserPage() {
     },
   );
 
-  console.log(transactionsData);
+  const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
+  const { data: providersData } = useGetProvidersQuery(
+    {
+      items: "9999999",
+      type: "PLATFORM",
+    },
+    {
+      enabled: !isLoadingAccessLevels,
+    },
+  );
+  const { mutate: downloadTransactions, isPending: downloading } =
+    useDownloadTransactionsByUserMutation({
+      onSuccess: () => {
+        toast.success(
+          values[
+            "dashboard.reports.sections-transactions-by-user.download.success"
+          ],
+        );
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    });
 
   const table = useReactTable({
     data: transactionsData?.activities ?? [],
@@ -487,12 +518,22 @@ export default function TransactionsByUserPage() {
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Rodrigo Provider 1">
-                  Rodrigo Provider 1
-                </SelectItem>
-                <SelectItem value="Rodrigo Provider 2">
-                  Rodrigo Provider 2
-                </SelectItem>
+                {providersData?.providers
+                  .filter((p) =>
+                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                  )
+                  .map((provider) => (
+                    <SelectItem key={provider.id} value={provider.id}>
+                      {provider.name}
+                    </SelectItem>
+                  ))}
+                {providersData?.providers.filter((p) =>
+                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                ).length === 0 && (
+                  <SelectItem value="no" disabled>
+                    No providers available
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -540,8 +581,22 @@ export default function TransactionsByUserPage() {
                   ]}
             </p>
           </div>
-          <Button className="px-2" variant="secondary">
-            <Download strokeWidth={0.75} className="size-6" />
+          <Button
+            className="px-2"
+            variant="secondary"
+            disabled={downloading}
+            onClick={() => {
+              downloadTransactions({
+                ...paginationAndSearch,
+                ...filters,
+              });
+            }}
+          >
+            {downloading ? (
+              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
+            ) : (
+              <Download strokeWidth={0.75} className="size-6" />
+            )}
           </Button>
         </div>
       </div>

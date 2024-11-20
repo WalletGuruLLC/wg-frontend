@@ -382,6 +382,8 @@ export const dashboardDict = {
       "No start date selected",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No end date selected",
+    "dashboard.reports.sections-transactions-by-user.download.success":
+      "The report has been downloaded successfully.",
     "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
     "dashboard.wallet-users.inactive-dialog.description":
       "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
@@ -767,5 +769,7 @@ export const dashboardDict = {
       "No se ha seleccionado una fecha de inicio",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No se ha seleccionado una fecha de fin",
+    "dashboard.reports.sections-transactions-by-user.download.success":
+      "El reporte ha sido descargado exitosamente.",
   },
 } satisfies I18nDictionary;

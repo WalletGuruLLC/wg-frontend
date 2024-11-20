@@ -2009,6 +2009,37 @@ export function useGetTransactionsByUserQuery(
   });
 }
 
+export function useDownloadTransactionsByUserMutation(
+  options: UseMutationOptions<
+    z.infer<typeof paginationAndSearchValidator> &
+      z.infer<typeof transactionsByUserValidator>,
+    unknown
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["download-transactions-by-user"],
+    mutationFn: (input) => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      const params = new URLSearchParams(
+        input as unknown as Record<string, string>,
+      );
+
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/download-transactions-user` +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
 function convertAmountWithScale(amount: number, scale: number) {
   return amount / Math.pow(10, scale);
 }
