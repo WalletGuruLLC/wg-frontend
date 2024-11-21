@@ -1941,7 +1941,7 @@ export function useGetTransactionsByUserQuery(
         } else {
           const isProvider = t.metadata.type === "PROVIDER";
           const type = isProvider
-            ? (t.metadata.contentName ?? "Unknown content")
+            ? "Service"
             : isIncoming
               ? "Transfer Received"
               : "Transfer Sent";

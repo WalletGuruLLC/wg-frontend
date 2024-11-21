@@ -420,7 +420,9 @@ export default function TransactionsByProviderPage() {
               <SelectContent>
                 {providersData?.providers
                   .filter((p) =>
-                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                    accessLevelsData?.providers[
+                      p.id
+                    ]?.transactionsByProvider.includes("view"),
                   )
                   .map((provider) => (
                     <SelectItem key={provider.id} value={provider.id}>
@@ -428,7 +430,9 @@ export default function TransactionsByProviderPage() {
                     </SelectItem>
                   ))}
                 {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                  accessLevelsData?.providers[
+                    p.id
+                  ]?.transactionsByProvider.includes("view"),
                 ).length === 0 && (
                   <SelectItem value="no" disabled>
                     No providers available
@@ -602,7 +606,7 @@ function DetailsDialog(props: {
             <Download strokeWidth={0.75} className="size-6" />
           </Button>
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="h-[300px] flex-1 overflow-auto">
           <Table table={table} />
         </div>
       </div>
