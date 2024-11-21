@@ -177,15 +177,10 @@ export default function TransactionsByUserPage() {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByUserQuery(
-    {
-      ...paginationAndSearch,
-      ...filters,
-    },
-    {
-      enabled: filters.walletAddress !== "",
-    },
-  );
+  } = useGetTransactionsByUserQuery({
+    ...paginationAndSearch,
+    ...filters,
+  });
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
