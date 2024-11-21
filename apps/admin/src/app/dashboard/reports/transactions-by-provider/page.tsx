@@ -188,15 +188,10 @@ export default function TransactionsByProviderPage() {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByProviderQuery(
-    {
-      ...paginationAndSearch,
-      ...filters,
-    },
-    {
-      enabled: filters.providerIds !== "",
-    },
-  );
+  } = useGetTransactionsByProviderQuery({
+    ...paginationAndSearch,
+    ...filters,
+  });
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
