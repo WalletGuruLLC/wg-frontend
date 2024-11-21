@@ -420,7 +420,9 @@ export default function TransactionsByProviderPage() {
               <SelectContent>
                 {providersData?.providers
                   .filter((p) =>
-                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                    accessLevelsData?.providers[
+                      p.id
+                    ]?.transactionsByProvider.includes("view"),
                   )
                   .map((provider) => (
                     <SelectItem key={provider.id} value={provider.id}>
@@ -428,7 +430,9 @@ export default function TransactionsByProviderPage() {
                     </SelectItem>
                   ))}
                 {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                  accessLevelsData?.providers[
+                    p.id
+                  ]?.transactionsByProvider.includes("view"),
                 ).length === 0 && (
                   <SelectItem value="no" disabled>
                     No providers available
@@ -570,7 +574,24 @@ function DetailsDialog(props: {
   trigger: ReactNode;
 }) {
   const { values } = useI18n();
+  const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
+
+  const { mutate: downloadTransactions, isPending: downloading } =
+    useDownloadTransactionsByProviderMutation({
+      onSuccess: () => {
+        toast.success(
+          values[
+            "dashboard.reports.sections-transactions-by-user.download.success"
+          ],
+        );
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    });
 
   const table = useReactTable({
     data: props.activity.transactions,
@@ -598,11 +619,19 @@ function DetailsDialog(props: {
         </h1>
         <div className="flex flex-row items-center justify-between">
           Session ID: {props.activity.activityId}
-          <Button className="px-2" variant="secondary">
-            <Download strokeWidth={0.75} className="size-6" />
+          <Button
+            className="px-2"
+            variant="secondary"
+            onClick={() => downloadTransactions({})}
+          >
+            {downloading ? (
+              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
+            ) : (
+              <Download strokeWidth={0.75} className="size-6" />
+            )}
           </Button>
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="h-[300px] flex-1 overflow-auto">
           <Table table={table} />
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -42,6 +43,7 @@ import { SelectTrigger } from "~/components/select";
 import {
   useDownloadTransactionsByUserMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetProvidersQuery,
   useGetTransactionsByUserQuery,
@@ -520,7 +522,9 @@ export default function TransactionsByUserPage() {
               <SelectContent>
                 {providersData?.providers
                   .filter((p) =>
-                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                    accessLevelsData?.providers[
+                      p.id
+                    ]?.transactionsByUser.includes("view"),
                   )
                   .map((provider) => (
                     <SelectItem key={provider.id} value={provider.id}>
@@ -528,7 +532,9 @@ export default function TransactionsByUserPage() {
                     </SelectItem>
                   ))}
                 {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                  accessLevelsData?.providers[
+                    p.id
+                  ]?.transactionsByUser.includes("view"),
                 ).length === 0 && (
                   <SelectItem value="no" disabled>
                     No providers available
@@ -655,13 +661,6 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.description" />
     ),
   }),
-  columnHelperDetails.accessor("amount", {
-    id: "amount",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
-    ),
-  }),
   columnHelperDetails.accessor("date", {
     id: "date",
     cell: (info) => info.getValue(),
@@ -676,11 +675,36 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
     ),
   }),
+  columnHelperDetails.accessor("amount", {
+    id: "amount",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
+    ),
+  }),
 ];
 
 function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
+  const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
+
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  const { mutate: downloadTransactions, isPending: downloading } =
+    useDownloadTransactionsByUserMutation({
+      onSuccess: () => {
+        toast.success(
+          values[
+            "dashboard.reports.sections-transactions-by-user.download.success"
+          ],
+        );
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    });
 
   const table = useReactTable({
     data: props.activity.transactions,
@@ -693,26 +717,44 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
     <Dialog
       key={props.activity.activityId}
       isOpen={isOpen}
-      contentClassName="max-w-3xl max-h-3xl"
+      contentClassName="max-w-3xl overflow-hidden"
       toggleOpen={toggle}
       trigger={props.trigger}
       ariaDescribedBy="service-transaction-details"
     >
       <div className="space-y-7">
-        <h1 className="text-2xl font-light">
-          {
-            values[
-              "dashboard.reports.sections.transactions-by-user.details.header"
-            ]
-          }
-        </h1>
+        <h1 className="text-2xl font-light">{props.activity.description}</h1>
         <div className="flex flex-row items-center justify-between">
           Activity ID: {props.activity.activityId}
-          <Button className="px-2" variant="secondary">
-            <Download strokeWidth={0.75} className="size-6" />
+          <Link
+            passHref
+            href={
+              userData?.type === "PLATFORM"
+                ? `/dashboard/dispute/${props.activity.activityId}`
+                : `/dashboard/refund/${props.activity.activityId}`
+            }
+          >
+            <Button className="px-2">
+              {userData?.type === "PLATFORM" ? "Dispute" : "Refund"}
+            </Button>
+          </Link>
+          <Button
+            className="px-2"
+            variant="secondary"
+            onClick={() =>
+              downloadTransactions({
+                walletAddress: "",
+              })
+            }
+          >
+            {downloading ? (
+              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
+            ) : (
+              <Download strokeWidth={0.75} className="size-6" />
+            )}
           </Button>
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="h-[300px] flex-1 overflow-auto">
           <Table table={table} />
         </div>
       </div>
