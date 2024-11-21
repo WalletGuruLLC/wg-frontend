@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -42,6 +43,7 @@ import { SelectTrigger } from "~/components/select";
 import {
   useDownloadTransactionsByUserMutation,
   useGetAuthedUserAccessLevelsQuery,
+  useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetProvidersQuery,
   useGetTransactionsByUserQuery,
@@ -55,12 +57,14 @@ import { SimpleTitle } from "../../_components/dashboard-title";
 
 function Actions({ activity }: { activity: Activity }) {
   const { values } = useI18n();
+  const userData = useGetAuthedUserInfoQuery(undefined);
 
   return (
     <div className="flex flex-row space-x-4">
       {activity.activityId && (
         <DetailsDialog
           activity={activity}
+          typeUser={userData.data?.type ?? "PROVIDER"}
           trigger={
             <Button
               className="flex h-max flex-row items-center space-x-2"
@@ -678,7 +682,11 @@ const columnsDetails = [
   }),
 ];
 
-function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
+function DetailsDialog(props: {
+  activity: Activity;
+  typeUser: string;
+  trigger: ReactNode;
+}) {
   const { values } = useI18n();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
@@ -708,6 +716,19 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
         </h1>
         <div className="flex flex-row items-center justify-between">
           Activity ID: {props.activity.activityId}
+          {props.typeUser === "PLATFORM" ? (
+            <Link href={"/dashboard/dispute/" + props.activity.activityId}>
+              <Button className="self-end">
+                <p className="flex-1 text-sm font-light">Dispute</p>
+              </Button>
+            </Link>
+          ) : (
+            <Link href={"/dashboard/refund/" + props.activity.activityId}>
+              <Button className="self-end">
+                <p className="flex-1 text-sm font-light">Refund</p>
+              </Button>
+            </Link>
+          )}
           <Button className="px-2" variant="secondary">
             <Download strokeWidth={0.75} className="size-6" />
           </Button>
