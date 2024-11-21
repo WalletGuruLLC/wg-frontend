@@ -278,6 +278,22 @@ export const transactionsByUserValidator = z.object({
   state: z.string().min(1).optional(),
 });
 
+export const transactionsByProviderValidator = z.object({
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  providerIds: z.string().min(1).optional(),
+});
+
 export const walletusersValidator = z.object({
   state: z.string().optional(),
   wallet: z.string().optional(),
