@@ -398,6 +398,41 @@ export const dashboardDict = {
     "dashboard.wallet-users.activate-dialog.secondary-button": "No",
     "dashboard.wallet-users.activate-dialog.toast.success":
       "The user has been activated successfully.",
+    "dashboard.reports.sections.transactions-by-provider.header.actions.details":
+      "Details",
+    "dashboard.reports.sections.transactions-by-provider.header.user": "User",
+    "dashboard.reports.sections.transactions-by-provider.header.provider":
+      "Provider",
+    "dashboard.reports.sections.transactions-by-provider.header.gross-sale":
+      "Gross Sale",
+    "dashboard.reports.sections.transactions-by-provider.header.net-sale":
+      "Net Sale",
+    "dashboard.reports.sections.transactions-by-provider.header.fee": "Fee",
+    "dashboard.reports.sections.transactions-by-provider.header.start":
+      "Start Date",
+    "dashboard.reports.sections.transactions-by-provider.header.finish":
+      "End Date",
+    "dashboard.reports.sections.transactions-by-provider.header.actions":
+      "Actions",
+    "dashboard.reports.sections-transactions-by-provider.download.success":
+      "The report has been downloaded successfully.",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.label":
+      "Provider",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.placeholder":
+      "Select a provider",
+    "dashboard.reports.sections.transactions-by-provider.search-button":
+      "Search",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.label":
+      "End Date",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.label":
+      "Start Date",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections.transactions-by-provider.details.header":
+      "Detail Transactions by provider",
+    "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -771,5 +806,41 @@ export const dashboardDict = {
       "No se ha seleccionado una fecha de fin",
     "dashboard.reports.sections-transactions-by-user.download.success":
       "El reporte ha sido descargado exitosamente.",
+    "dashboard.reports.sections.transactions-by-provider.header.actions.details":
+      "Detalles",
+    "dashboard.reports.sections.transactions-by-provider.header.user":
+      "Usuario",
+    "dashboard.reports.sections.transactions-by-provider.header.provider":
+      "Proveedor",
+    "dashboard.reports.sections.transactions-by-provider.header.gross-sale":
+      "Venta Bruta",
+    "dashboard.reports.sections.transactions-by-provider.header.net-sale":
+      "Venta Neta",
+    "dashboard.reports.sections.transactions-by-provider.header.fee": "Tarifa",
+    "dashboard.reports.sections.transactions-by-provider.header.start":
+      "Fecha de Inicio",
+    "dashboard.reports.sections.transactions-by-provider.header.finish":
+      "Fecha de Fin",
+    "dashboard.reports.sections.transactions-by-provider.header.actions":
+      "Acciones",
+    "dashboard.reports.sections-transactions-by-provider.download.success":
+      "El reporte ha sido descargado exitosamente.",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.label":
+      "Proveedor",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.placeholder":
+      "Seleccione un proveedor",
+    "dashboard.reports.sections.transactions-by-provider.search-button":
+      "Buscar",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.label":
+      "Fecha de Fin",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.label":
+      "Fecha de Inicio",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections.transactions-by-provider.details.header":
+      "Detalles de las transacciones por proveedor",
+    "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
   },
 } satisfies I18nDictionary;

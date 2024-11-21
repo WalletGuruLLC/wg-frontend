@@ -35,6 +35,7 @@ import type {
   toggleUserStatusValidator,
   toggleWalletLockValidator,
   toggleWalletStatusValidator,
+  transactionsByProviderValidator,
   transactionsByUserValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
@@ -2033,6 +2034,201 @@ export function useDownloadTransactionsByUserMutation(
       return customFetch(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
           `/api/v1/wallets-rafiki/download-transactions-user` +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export interface ActivityProvider {
+  user: string;
+  activityId?: string;
+  provider: string;
+  grossSale: string;
+  netSale: string;
+  fee: string;
+  startDate: string;
+  endDate: string;
+  transactions: TransactionProvider[];
+}
+export interface TransactionProvider {
+  transactionId: string;
+  user: string;
+  provider: string;
+  date: string;
+  fee: string;
+  grossSale: string;
+  netSale: string;
+}
+interface UseGetTransactionsByProviderQueryOutput {
+  activities: ActivityProvider[];
+  currentPage: number;
+  total: number;
+  totalPages: number;
+}
+export function useGetTransactionsByProviderQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof transactionsByProviderValidator>,
+  options: UseQueryOptions<UseGetTransactionsByProviderQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-transactions-by-provider", input],
+    queryFn: async () => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      const params = new URLSearchParams({
+        ...input,
+        items: "9999999999",
+        page: "1",
+      } as unknown as Record<string, string>);
+
+      const result = await customFetch<{
+        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
+        currentPage: number;
+        total: number;
+        totalPages: number;
+      }>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/list-transactions` +
+          "?" +
+          params.toString(),
+      );
+
+      // Group by activity id
+      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
+        const activityId = t.metadata.activityId;
+
+        const isIncoming = t.type === "IncomingPayment";
+        const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+
+        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+          Number(amount.value),
+          amount.assetScale,
+        )} ${amount.assetCode}`;
+
+        if (!activityId) {
+          acc.set(idx.toString(), {
+            activityId: undefined,
+            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            grossSale: amountString,
+            netSale: amountString,
+            provider: isIncoming ? t.senderName : t.receiverName,
+            fee: "0",
+            user:
+              (t.metadata.wgUser ?? isIncoming) ? t.receiverName : t.senderName,
+            transactions: [],
+          });
+        } else {
+          if (!acc.has(activityId)) {
+            acc.set(activityId, {
+              activityId,
+              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              grossSale: amountString,
+              netSale: amountString,
+              provider: isIncoming ? t.senderName : t.receiverName,
+              fee: "0",
+              user:
+                (t.metadata.wgUser ?? isIncoming)
+                  ? t.receiverName
+                  : t.senderName,
+              transactions: [
+                {
+                  transactionId: t.id,
+                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                  grossSale: amountString,
+                  netSale: amountString,
+                  provider: isIncoming ? t.senderName : t.receiverName,
+                  fee: "0",
+                  user:
+                    (t.metadata.wgUser ?? isIncoming)
+                      ? t.receiverName
+                      : t.senderName,
+                },
+              ],
+            });
+          } else {
+            const activity = acc.get(activityId);
+
+            if (!activity) return acc;
+
+            activity.transactions.push({
+              transactionId: t.id,
+              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              grossSale: amountString,
+              netSale: amountString,
+              provider: isIncoming ? t.senderName : t.receiverName,
+              fee: "0",
+              user:
+                (t.metadata.wgUser ?? isIncoming)
+                  ? t.receiverName
+                  : t.senderName,
+            });
+
+            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+
+            const accumulatedAmountNumber = Number(
+              activity.grossSale.split(" ")[0],
+            );
+            const amountNumber = Number(amountString.split(" ")[0]);
+
+            activity.grossSale = `${
+              accumulatedAmountNumber + amountNumber
+            } ${amount.assetCode}`;
+
+            acc.set(activityId, activity);
+          }
+        }
+
+        return acc;
+      }, new Map<string, ActivityProvider>());
+
+      const activities = Array.from(groupedActivities.values());
+
+      return {
+        activities: activities.slice(
+          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
+          +(input.page ?? 1) * +(input.items ?? 10),
+        ),
+        currentPage: +(input.page ?? 1),
+        total: activities.length,
+        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
+      };
+    },
+  });
+}
+
+export function useDownloadTransactionsByProviderMutation(
+  options: UseMutationOptions<
+    z.infer<typeof paginationAndSearchValidator> &
+      z.infer<typeof transactionsByProviderValidator>,
+    unknown
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["download-transactions-by-provider"],
+    mutationFn: (input) => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      const params = new URLSearchParams(
+        input as unknown as Record<string, string>,
+      );
+
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/download-transactions-provider` +
           "?" +
           params.toString(),
       );
