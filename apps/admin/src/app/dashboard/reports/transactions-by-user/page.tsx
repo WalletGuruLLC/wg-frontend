@@ -57,14 +57,12 @@ import { SimpleTitle } from "../../_components/dashboard-title";
 
 function Actions({ activity }: { activity: Activity }) {
   const { values } = useI18n();
-  const userData = useGetAuthedUserInfoQuery(undefined);
 
   return (
     <div className="flex flex-row space-x-4">
       {activity.activityId && (
         <DetailsDialog
           activity={activity}
-          typeUser={userData.data?.type ?? "PROVIDER"}
           trigger={
             <Button
               className="flex h-max flex-row items-center space-x-2"
@@ -686,11 +684,7 @@ const columnsDetails = [
   }),
 ];
 
-function DetailsDialog(props: {
-  activity: Activity;
-  typeUser: string;
-  trigger: ReactNode;
-}) {
+function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
   const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
@@ -741,23 +735,13 @@ function DetailsDialog(props: {
             }
           >
             <Button className="px-2">
-              {userData?.type === "PLATFORM" ? "Dispute" : "Refund"}
+              {userData?.type === "PLATFORM"
+                ? values["dashboard.dispute.button.details"]
+                : values["dashboard.refund.button.details"]}
             </Button>
           </Link>
-          <Button
-            className="px-2"
-            variant="secondary"
-            onClick={() =>
-              downloadTransactions({
-                walletAddress: "",
-              })
-            }
-          >
-            {downloading ? (
-              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
-            ) : (
-              <Download strokeWidth={0.75} className="size-6" />
-            )}
+          <Button className="px-2" variant="secondary">
+            <Download strokeWidth={0.75} className="size-6" />
           </Button>
         </div>
         <div className="h-[300px] flex-1 overflow-auto">
