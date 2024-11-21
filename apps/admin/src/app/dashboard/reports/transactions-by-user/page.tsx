@@ -520,7 +520,9 @@ export default function TransactionsByUserPage() {
               <SelectContent>
                 {providersData?.providers
                   .filter((p) =>
-                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                    accessLevelsData?.providers[
+                      p.id
+                    ]?.transactionsByUser.includes("view"),
                   )
                   .map((provider) => (
                     <SelectItem key={provider.id} value={provider.id}>
@@ -528,7 +530,9 @@ export default function TransactionsByUserPage() {
                     </SelectItem>
                   ))}
                 {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
+                  accessLevelsData?.providers[
+                    p.id
+                  ]?.transactionsByUser.includes("view"),
                 ).length === 0 && (
                   <SelectItem value="no" disabled>
                     No providers available
@@ -693,7 +697,7 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
     <Dialog
       key={props.activity.activityId}
       isOpen={isOpen}
-      contentClassName="max-w-3xl max-h-3xl"
+      contentClassName="max-w-3xl overflow-hidden"
       toggleOpen={toggle}
       trigger={props.trigger}
       ariaDescribedBy="service-transaction-details"
@@ -712,7 +716,7 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
             <Download strokeWidth={0.75} className="size-6" />
           </Button>
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="h-[300px] flex-1 overflow-auto">
           <Table table={table} />
         </div>
       </div>
