@@ -730,23 +730,13 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
             }
           >
             <Button className="px-2">
-              {userData?.type === "PLATFORM" ? "Dispute" : "Refund"}
+              {userData?.type === "PLATFORM"
+                ? values["dashboard.dispute.button.details"]
+                : values["dashboard.refund.button.details"]}
             </Button>
           </Link>
-          <Button
-            className="px-2"
-            variant="secondary"
-            onClick={() =>
-              downloadTransactions({
-                walletAddress: "",
-              })
-            }
-          >
-            {downloading ? (
-              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
-            ) : (
-              <Download strokeWidth={0.75} className="size-6" />
-            )}
+          <Button className="px-2" variant="secondary">
+            <Download strokeWidth={0.75} className="size-6" />
           </Button>
         </div>
         <div className="h-[300px] flex-1 overflow-auto">
