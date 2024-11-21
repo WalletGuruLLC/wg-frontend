@@ -661,13 +661,6 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.description" />
     ),
   }),
-  columnHelperDetails.accessor("amount", {
-    id: "amount",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
-    ),
-  }),
   columnHelperDetails.accessor("date", {
     id: "date",
     cell: (info) => info.getValue(),
@@ -682,10 +675,18 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
     ),
   }),
+  columnHelperDetails.accessor("amount", {
+    id: "amount",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
+    ),
+  }),
 ];
 
 function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
+  const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const table = useReactTable({
@@ -705,13 +706,7 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
       ariaDescribedBy="service-transaction-details"
     >
       <div className="space-y-7">
-        <h1 className="text-2xl font-light">
-          {
-            values[
-              "dashboard.reports.sections.transactions-by-user.details.header"
-            ]
-          }
-        </h1>
+        <h1 className="text-2xl font-light">{props.activity.description}</h1>
         <div className="flex flex-row items-center justify-between">
           Activity ID: {props.activity.activityId}
           <Link
