@@ -433,6 +433,8 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.header":
       "Detail Transactions by provider",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
+    "dashboard.dispute.button.details": "Dispute",
+    "dashboard.refund.button.details": "Refund",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -842,5 +844,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.header":
       "Detalles de las transacciones por proveedor",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
+    "dashboard.dispute.button.details": "Disputa",
+    "dashboard.refund.button.details": "Reembolso",
   },
 } satisfies I18nDictionary;
