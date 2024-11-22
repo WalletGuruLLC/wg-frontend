@@ -311,6 +311,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.refunds": "Refunds",
     "dashboard.reports.sections.clear-payments": "Clear Payments",
     "dashboard.reports.sections.reservedFunds": "Reserved Funds",
+    "dashboard.reports.sections.paymentSummary": "Clear Payments",
     "dashboard.wallet-users.title": "Management wallet users",
     "dashboard.wallet-users.table.header.name": "Name",
     "dashboard.wallet-users.table.header.wallet": "Wallet",
@@ -552,6 +553,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.disputes": "Disputas",
     "dashboard.roles.role.modules.refunds": "Reembolsos",
     "dashboard.roles.role.modules.fees": "Costos",
+    "dashboard.roles.role.modules.paymentSummary": "Limpiar Pagos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -871,6 +873,5 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
-    "dashboard.roles.role.modules.paymentSummary": "Pagos recibidos",
   },
 } satisfies I18nDictionary;
