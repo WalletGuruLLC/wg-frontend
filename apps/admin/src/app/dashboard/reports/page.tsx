@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRightLeft, Calendar, DollarSign, User } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Calendar,
+  DollarSign,
+  FileText,
+  Landmark,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
 import {
   useGetAuthedUserAccessLevelsQuery,
@@ -30,18 +38,18 @@ export default function ReportsPage() {
 
   if (userData.data?.type === "PROVIDER") {
     return (
-      <div className="flex h-[83vh] flex-col space-y-10 pb-4">
+      <div className="flex w-full flex-wrap">
         <SimpleTitle
           title={`${title ?? ""} ${values["dashboard.reports.title"]}`}
           showLoadingIndicator={isLoadingTitle}
         />
-        <div className="flex w-full flex-wrap">
+        <div className="grid h-full w-full grid-cols-4 gap-4">
           {accessLevelData?.general.transactionsByUser.includes("view") && (
             <Link
               href={`/dashboard/reports/transactions-by-user`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
-              <User size={32} strokeWidth={0.75} color="#3678B1" />
+              <Users size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
                 {values["dashboard.reports.sections.transactions-by-user"]}
               </span>
@@ -50,11 +58,55 @@ export default function ReportsPage() {
           {accessLevelData?.general.transactionsByProvider.includes("view") && (
             <Link
               href={`/dashboard/reports/transactions-by-provider`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <Calendar size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
                 {values["dashboard.reports.sections.transactions-by-provider"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.fees.includes("view") && (
+            <Link
+              href={`/dashboard/reports/fee`}
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
+            >
+              <DollarSign size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.fee"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.clearPayments.includes("view") && (
+            <Link
+              href={`/dashboard/reports/clear-payments`}
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
+            >
+              <ArrowRightLeft size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.clear-payments"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.refunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/refunds`}
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
+            >
+              <FileText size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.refunds"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.reservedFunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/reserved-funds`}
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
+            >
+              <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.reservedFunds"]}
               </span>
             </Link>
           )}
@@ -63,18 +115,18 @@ export default function ReportsPage() {
     );
   } else
     return (
-      <div className="flex h-[83vh] flex-col space-y-10 pb-4">
+      <div className="flex w-full flex-wrap">
         <SimpleTitle
           title={`${title ?? ""} ${values["dashboard.reports.title"]}`}
           showLoadingIndicator={isLoadingTitle}
         />
-        <div className="flex w-full flex-wrap">
+        <div className="grid h-full w-full grid-cols-4 gap-4">
           {accessLevelData?.general.transactionsByUser.includes("view") && (
             <Link
               href={`/dashboard/reports/transactions-by-user`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
-              <User size={32} strokeWidth={0.75} color="#3678B1" />
+              <Users size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
                 {values["dashboard.reports.sections.transactions-by-user"]}
               </span>
@@ -83,7 +135,7 @@ export default function ReportsPage() {
           {accessLevelData?.general.transactionsByProvider.includes("view") && (
             <Link
               href={`/dashboard/reports/transactions-by-provider`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <Calendar size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
@@ -94,7 +146,7 @@ export default function ReportsPage() {
           {accessLevelData?.general.revenue.includes("view") && (
             <Link
               href={`/dashboard/reports/revenue`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <DollarSign size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
@@ -102,14 +154,36 @@ export default function ReportsPage() {
               </span>
             </Link>
           )}
-          {accessLevelData?.general.clearPayments.includes("view") && (
+          {accessLevelData?.general.paymentSummary.includes("view") && (
             <Link
               href={`/dashboard/reports/clear-payments`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
-              <ArrowRightLeft size={32} strokeWidth={0.75} color="#3678B1" />
+              <Landmark size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
                 {values["dashboard.reports.sections.clear-payments"]}
+              </span>
+            </Link>
+          )}{" "}
+          {accessLevelData?.general.disputes.includes("view") && (
+            <Link
+              href={`/dashboard/reports/disputes`}
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
+            >
+              <FileText size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.disputes"]}
+              </span>
+            </Link>
+          )}{" "}
+          {accessLevelData?.general.reservedFunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/reserved-funds`}
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
+            >
+              <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.reservedFunds"]}
               </span>
             </Link>
           )}

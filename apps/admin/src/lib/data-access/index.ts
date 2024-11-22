@@ -107,6 +107,11 @@ const MODULES_MAP = {
   CPWG: "clearPayments",
   PY38: "payments",
   WU47: "walletUsers",
+  RF86: "reservedFunds",
+  RFSP: "refunds",
+  DWG2: "disputes",
+  FEE8: "fees",
+  PS52: "paymentSummary",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -187,6 +192,11 @@ export function useGetAuthedUserAccessLevelsQuery(
                 clearPayments: [],
                 walletUsers: [],
                 payments: [],
+                disputes: [],
+                refunds: [],
+                reservedFunds: [],
+                paymentSummary: [],
+                fees: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
                   numberToAccessLevels(numericAccessLevel),
