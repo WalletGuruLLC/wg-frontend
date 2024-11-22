@@ -543,7 +543,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.transactionsByProvider":
       "Transacciones por Proveedor",
     "dashboard.roles.role.modules.revenue": "Ingresos",
-    "dashboard.roles.role.modules.clearPayments": "Realizar Pago",
+    "dashboard.roles.role.modules.clearPayments": "Pagos",
     "dashboard.roles.role.modules.reservedFunds": "Fondos Reservados",
     "dashboard.roles.role.modules.disputes": "Disputas",
     "dashboard.roles.role.modules.refunds": "Reembolsos",
@@ -763,7 +763,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.fee": "Costos",
     "dashboard.reports.sections.disputes": "Disputas",
     "dashboard.reports.sections.refunds": "Reembolsos",
-    "dashboard.reports.sections.clear-payments": "Realizar Pago",
+    "dashboard.reports.sections.clear-payments": "Pagos",
     "dashboard.reports.sections.reservedFunds": "Fondos Reservados",
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
