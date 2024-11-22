@@ -102,6 +102,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.refunds": "Refunds",
     "dashboard.roles.role.modules.reservedFunds": "Reserved Funds",
     "dashboard.roles.role.modules.fees": "Fees",
+    "dashboard.roles.role.modules.paymentSummary": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -862,5 +863,6 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
+    "dashboard.roles.role.modules.paymentSummary": "Pagos recibidos",
   },
 } satisfies I18nDictionary;
