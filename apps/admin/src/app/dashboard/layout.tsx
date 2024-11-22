@@ -18,6 +18,7 @@ import {
   User,
   Users,
   Wallet,
+  HeartPulse,
 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
@@ -101,6 +102,12 @@ const NAV = [
     moduleId: "roles" satisfies ModuleId,
   },
   {
+    Icon: HeartPulse,
+    i18nTitleKey: "dashboard.layout.nav.health",
+    path: "/dashboard/health-check",
+    moduleId: "healthCheck" satisfies ModuleId,
+  },
+  {
     Icon: Settings,
     i18nTitleKey: "dashboard.layout.nav.settings",
     path: "/dashboard/settings",
@@ -111,7 +118,7 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.reports",
     path: "/dashboard/reports",
     moduleId: "users" satisfies ModuleId,
-  },
+  }
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
