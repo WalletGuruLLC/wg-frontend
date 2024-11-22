@@ -676,6 +676,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.refunds": "Reembolsos",
     "dashboard.roles.role.modules.fees": "Costos",
     "dashboard.roles.role.modules.paymentSummary": "Pagos Recibidos",
+    "dashboard.reports.sections.paymentSummary": "Pagos Recibidos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
