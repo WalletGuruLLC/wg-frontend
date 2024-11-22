@@ -257,6 +257,18 @@ const columns = [
           id: info.id,
           email: info.email,
           name: info.firstName + " " + info.lastName,
+          /*
+          firstName: info.firstName,
+          lastName: info.lastName,
+          phone: info.phone,
+          socialSecurityNumber: info.socialSecurityNumber ?? "",
+          identificationType: info.identificationType ?? "",
+          identificationNumber: info.identificationNumber ?? "",
+          stateLocation: info.stateLocation ?? "",
+          country: info.country ?? "",
+          city: info.city ?? "",
+          zipCode: info.zipCode ?? "",
+          */
         },
         tooltip: values["wallet-users.tooltip.details"],
       };

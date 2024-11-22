@@ -270,6 +270,11 @@ export const serviceProvidersDict = {
       "Transactions by Provider",
     "service-providers.roles.role.modules.revenue": "Revenue",
     "service-providers.roles.role.modules.clearPayments": "Clear Payments",
+    "service-providers.roles.role.modules.disputes": "Disputes",
+    "service-providers.roles.role.modules.refunds": "Refunds",
+    "service-providers.roles.role.modules.fees": "Fees",
+    "service-providers.roles.role.modules.reservedFunds": "Reserved Funds",
+    "service-providers.roles.role.modules.paymentSummary": "Clear Payments",
     "service-providers.roles.role.success-toast": "Role Access Levels Updated",
     "service-providers.settings.title": "Settings",
     "service-providers.settings.sections.payment-parameters":
@@ -691,6 +696,11 @@ export const serviceProvidersDict = {
       "Transacciones por Proveedor",
     "service-providers.roles.role.modules.revenue": "Ingresos",
     "service-providers.roles.role.modules.clearPayments": "Limpiar Pagos",
+    "service-providers.roles.role.modules.disputes": "Disputas",
+    "service-providers.roles.role.modules.refunds": "Reembolsos",
+    "service-providers.roles.role.modules.fees": "Costos",
+    "service-providers.roles.role.modules.reservedFunds": "Fondos Reservados",
+    "service-providers.roles.role.modules.paymentSummary": "Limpiar Pagos",
     "service-providers.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "service-providers.settings.title": "Configuraciones",

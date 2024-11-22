@@ -98,6 +98,11 @@ export const dashboardDict = {
       "Transactions by Provider",
     "dashboard.roles.role.modules.revenue": "Revenue",
     "dashboard.roles.role.modules.clearPayments": "Clear Payments",
+    "dashboard.roles.role.modules.disputes": "Disputes",
+    "dashboard.roles.role.modules.refunds": "Refunds",
+    "dashboard.roles.role.modules.reservedFunds": "Reserved Funds",
+    "dashboard.roles.role.modules.fees": "Fees",
+    "dashboard.roles.role.modules.paymentSummary": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -295,10 +300,40 @@ export const dashboardDict = {
     "dashboard.reports.title": "Reports",
     "dashboard.reports.sections.transactions-by-user": "Transactions by User",
     "dashboard.reports.sections.transactions-by-provider":
-      "Transactions by Provider",
+      "Transactions by Period",
     "dashboard.reports.sections.revenue": "Revenue",
+    "dashboard.reports.sections.fee": "Fees",
+    "dashboard.reports.sections.disputes": "Disputes",
+    "dashboard.reports.sections.refunds": "Refunds",
     "dashboard.reports.sections.clear-payments": "Clear Payments",
-
+    "dashboard.reports.sections.reservedFunds": "Reserved Funds",
+    "dashboard.reports.sections.paymentSummary": "Clear Payments",
+    "dashboard.wallet-users.title": "Management wallet users",
+    "dashboard.wallet-users.table.header.name": "Name",
+    "dashboard.wallet-users.table.header.wallet": "Wallet",
+    "dashboard.wallet-users.table.header.balance": "Balance",
+    "dashboard.wallet-users.table.header.reserved": "Reserved",
+    "dashboard.wallet-users.table.header.available": "Available",
+    "dashboard.wallet-users.table.header.time": "Time Review",
+    "dashboard.wallet-users.table.header.state": "Status",
+    "dashboard.wallet-users.tooltip.reset": "Reset Password",
+    "dashboard.wallet-users.tooltip.details": "User Detail",
+    "dashboard.wallet-users.tooltip.transactions": "View transactions",
+    "dashboard.wallet-users.tooltip.validated": "KYC Validated",
+    "dashboard.wallet-users.tooltip.invalid": "KYC no validated",
+    "dashboard.wallet-users.state": "Unknown status",
+    "dashboard.wallet-users.state0": "Account created",
+    "dashboard.wallet-users.state1": "Email verified",
+    "dashboard.wallet-users.state2": "KYC verified",
+    "dashboard.wallet-users.state3": "Profile completed",
+    "dashboard.wallet-users.state4": "Wallet created",
+    "dashboard.wallet-users.state5": "KYC No verified",
+    "dashboard.wallet-users.locked-wallet": "Locked Wallet",
+    "dashboard.wallet-users.active-wallet": "Active Wallet",
+    "dashboard.wallet-users.no-wallet": "No wallet",
+    "dashboard.wallet-users.select-state": "Select status",
+    "dashboard.wallet-users.select-wallet": "Select wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by name",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -335,6 +370,10 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Type",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
       "Select a state",
+    "dashboard.reports.sections-transactions-by-user.search.state.pending":
+      "Pending",
+    "dashboard.reports.sections-transactions-by-user.search.state.completed":
+      "Completed",
     "dashboard.reports.sections-transactions-by-user.search.state.error":
       "Enter a valid state",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
@@ -346,11 +385,66 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
     "dashboard.reports.sections-transactions-by-user.user.label": "User",
+    "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected":
+      "No Wallet Address selected",
     "dashboard.reports.sections-transactions-by-user.period.label": "Period",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
       "No start date selected",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No end date selected",
+    "dashboard.reports.sections-transactions-by-user.download.success":
+      "The report has been downloaded successfully.",
+    "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
+    "dashboard.wallet-users.inactive-dialog.description":
+      "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.inactive-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
+    "dashboard.wallet-users.inactive-dialog.toast.success":
+      "The user has been deactivated successfully.",
+    "dashboard.wallet-users.activate-dialog.title": "Activate User",
+    "dashboard.wallet-users.activate-dialog.description":
+      "By activating this user, you are granting the user access to specific system privileges.\n Do you want to proceed?",
+    "dashboard.wallet-users.activate-dialog.primary-button": "Yes",
+    "dashboard.wallet-users.activate-dialog.secondary-button": "No",
+    "dashboard.wallet-users.activate-dialog.toast.success":
+      "The user has been activated successfully.",
+    "dashboard.reports.sections.transactions-by-provider.header.actions.details":
+      "Details",
+    "dashboard.reports.sections.transactions-by-provider.header.user": "User",
+    "dashboard.reports.sections.transactions-by-provider.header.provider":
+      "Provider",
+    "dashboard.reports.sections.transactions-by-provider.header.gross-sale":
+      "Gross Sale",
+    "dashboard.reports.sections.transactions-by-provider.header.net-sale":
+      "Net Sale",
+    "dashboard.reports.sections.transactions-by-provider.header.fee": "Fee",
+    "dashboard.reports.sections.transactions-by-provider.header.start":
+      "Start Date",
+    "dashboard.reports.sections.transactions-by-provider.header.finish":
+      "End Date",
+    "dashboard.reports.sections.transactions-by-provider.header.actions":
+      "Actions",
+    "dashboard.reports.sections-transactions-by-provider.download.success":
+      "The report has been downloaded successfully.",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.label":
+      "Provider",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.placeholder":
+      "Select a provider",
+    "dashboard.reports.sections.transactions-by-provider.search-button":
+      "Search",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.label":
+      "End Date",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.label":
+      "Start Date",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections.transactions-by-provider.details.header":
+      "Detail Transactions by provider",
+    "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
+    "dashboard.dispute.button.details": "Dispute",
+    "dashboard.refund.button.details": "Refund",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -449,7 +543,13 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.transactionsByProvider":
       "Transacciones por Proveedor",
     "dashboard.roles.role.modules.revenue": "Ingresos",
-    "dashboard.roles.role.modules.clearPayments": "Limpiar Pagos",
+    "dashboard.roles.role.modules.clearPayments": "Pagos",
+    "dashboard.roles.role.modules.reservedFunds": "Fondos Reservados",
+    "dashboard.roles.role.modules.disputes": "Disputas",
+    "dashboard.roles.role.modules.refunds": "Reembolsos",
+    "dashboard.roles.role.modules.fees": "Costos",
+    "dashboard.roles.role.modules.paymentSummary": "Pagos Recibidos",
+    "dashboard.reports.sections.paymentSummary": "Pagos Recibidos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -659,9 +759,13 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user":
       "Transacciones por Usuario",
     "dashboard.reports.sections.transactions-by-provider":
-      "Transacciones por Proveedor",
+      "Transacciones por Periodo",
     "dashboard.reports.sections.revenue": "Ganancia",
-    "dashboard.reports.sections.clear-payments": "Limpiar pagos",
+    "dashboard.reports.sections.fee": "Costos",
+    "dashboard.reports.sections.disputes": "Disputas",
+    "dashboard.reports.sections.refunds": "Reembolsos",
+    "dashboard.reports.sections.clear-payments": "Pagos",
+    "dashboard.reports.sections.reservedFunds": "Fondos Reservados",
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
@@ -700,6 +804,10 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
       "Seleccione un estado",
+    "dashboard.reports.sections-transactions-by-user.search.state.pending":
+      "Pendiente",
+    "dashboard.reports.sections-transactions-by-user.search.state.completed":
+      "Completado",
     "dashboard.reports.sections-transactions-by-user.search.state.error":
       "Ingrese un estado válido",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
@@ -711,10 +819,52 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
     "dashboard.reports.sections-transactions-by-user.user.label": "Usuario",
+    "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected":
+      "No se ha seleccionado una dirección de billetera",
     "dashboard.reports.sections-transactions-by-user.period.label": "Periodo",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
       "No se ha seleccionado una fecha de inicio",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
       "No se ha seleccionado una fecha de fin",
+    "dashboard.reports.sections-transactions-by-user.download.success":
+      "El reporte ha sido descargado exitosamente.",
+    "dashboard.reports.sections.transactions-by-provider.header.actions.details":
+      "Detalles",
+    "dashboard.reports.sections.transactions-by-provider.header.user":
+      "Usuario",
+    "dashboard.reports.sections.transactions-by-provider.header.provider":
+      "Proveedor",
+    "dashboard.reports.sections.transactions-by-provider.header.gross-sale":
+      "Venta Bruta",
+    "dashboard.reports.sections.transactions-by-provider.header.net-sale":
+      "Venta Neta",
+    "dashboard.reports.sections.transactions-by-provider.header.fee": "Tarifa",
+    "dashboard.reports.sections.transactions-by-provider.header.start":
+      "Fecha de Inicio",
+    "dashboard.reports.sections.transactions-by-provider.header.finish":
+      "Fecha de Fin",
+    "dashboard.reports.sections.transactions-by-provider.header.actions":
+      "Acciones",
+    "dashboard.reports.sections-transactions-by-provider.download.success":
+      "El reporte ha sido descargado exitosamente.",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.label":
+      "Proveedor",
+    "dashboard.reports.sections-transactions-by-provider.search.provider.placeholder":
+      "Seleccione un proveedor",
+    "dashboard.reports.sections.transactions-by-provider.search-button":
+      "Buscar",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.label":
+      "Fecha de Fin",
+    "dashboard.reports.sections-transactions-by-provider.search.end-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.label":
+      "Fecha de Inicio",
+    "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
+      "yyyy/mm/dd",
+    "dashboard.reports.sections.transactions-by-provider.details.header":
+      "Detalles de las transacciones por proveedor",
+    "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
+    "dashboard.dispute.button.details": "Disputa",
+    "dashboard.refund.button.details": "Reembolso",
   },
 } satisfies I18nDictionary;

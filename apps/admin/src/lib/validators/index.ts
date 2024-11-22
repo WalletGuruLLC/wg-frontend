@@ -255,24 +255,43 @@ export const settingsValidator = z.object({
 });
 
 export const transactionsByUserValidator = z.object({
-  id: z.string().min(1),
   walletAddress: z
     .string()
     .min(
       1,
       "dashboard.reports.sections-transactions-by-user.search.wallet-address.error",
     ),
-  startDate: z.date({
-    required_error:
-      "dashboard.reports.sections-transactions-by-user.search.period.error",
-  }),
-  endDate: z.date({
-    required_error:
-      "dashboard.reports.sections-transactions-by-user.search.period.error",
-  }),
-  type: z.string().min(1),
-  provider: z.string().min(1),
-  state: z.string().min(1),
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  type: z.string().min(1).optional(),
+  providerIds: z.string().min(1).optional(),
+  state: z.string().min(1).optional(),
+});
+
+export const transactionsByProviderValidator = z.object({
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  providerIds: z.string().min(1).optional(),
 });
 
 export const walletusersValidator = z.object({
