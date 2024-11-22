@@ -313,13 +313,18 @@ export default function WalletUsersPage() {
     items: searchParams.get("items") ?? "10",
     search: searchParams.get("search") ?? "",
   };
-
+  const defaultValues = { state: "", wallet: "" };
+  const [filters, setFilters] = useState(defaultValues);
+  const [tempFilters, setTempFilters] = useState(defaultValues);
+  const [filtered, setFiltered] = useState(false);
   const { data: dataUser, isLoading: userIsLoading } =
     useGetAuthedUserInfoQuery(undefined);
 
   const { data, isLoading } = useGetUsersQuery({
     ...paginationAndSearch,
     type: !userIsLoading && dataUser ? "WALLET" : "WALLET",
+    state: filters.state,
+    wallet: filters.wallet,
   });
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -420,7 +425,11 @@ export default function WalletUsersPage() {
         </div>
         <div className="relative -top-4 w-1/2">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
               <div className="flex w-full flex-row flex-wrap space-x-2">
                 <FormField
                   control={form.control}
@@ -431,7 +440,14 @@ export default function WalletUsersPage() {
                         {values["wallet-users.table.header.wallet"]}
                       </FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        value={tempFilters.wallet}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setTempFilters((prev) => ({
+                            ...prev,
+                            wallet: value,
+                          }));
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>
@@ -446,13 +462,13 @@ export default function WalletUsersPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value={"0"}>
+                          <SelectItem value={"unlock"}>
                             {values["wallet-users.active-wallet"]}
                           </SelectItem>
-                          <SelectItem value={"1"}>
+                          <SelectItem value={"lock"}>
                             {values["wallet-users.locked-wallet"]}
                           </SelectItem>
-                          <SelectItem value={"2"}>
+                          <SelectItem value={"noWallet"}>
                             {values["wallet-users.no-wallet"]}
                           </SelectItem>
                         </SelectContent>
@@ -470,7 +486,11 @@ export default function WalletUsersPage() {
                         {values["wallet-users.table.header.state"]}
                       </FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        value={tempFilters.state}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setTempFilters((prev) => ({ ...prev, state: value }));
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>
@@ -511,9 +531,43 @@ export default function WalletUsersPage() {
                   )}
                 />
                 <div className="flex-1">
-                  <Button className="h-max self-end">
-                    <p className="flex-1 text-lg font-light">Filter</p>
-                  </Button>
+                  {filtered ? (
+                    <Button
+                      className="mt-7 h-max self-end"
+                      onClick={() => {
+                        setFilters(defaultValues);
+                        setTempFilters(defaultValues);
+                        form.reset(defaultValues);
+                        setFiltered(false);
+                      }}
+                    >
+                      <p className="flex-1 text-sm font-light">
+                        {values["wallet-users.list.button.reset"]}
+                      </p>
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-7 h-max self-end"
+                      onClick={() => {
+                        form
+                          .handleSubmit(() => {
+                            setFilters(tempFilters);
+                          })()
+                          .then(() => {
+                            setFiltered(true);
+                          })
+                          .catch(() => {
+                            toast.error(
+                              values["wallet-users.toast.error.filtering"],
+                            );
+                          });
+                      }}
+                    >
+                      <p className="flex-1 text-sm font-light">
+                        {values["wallet-users.list.button.filter"]}
+                      </p>
+                    </Button>
+                  )}
                 </div>
               </div>
             </form>
