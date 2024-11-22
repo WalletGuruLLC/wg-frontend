@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRightLeft, Calendar, DollarSign, User } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Calendar,
+  DollarSign,
+  FileText,
+  TrendingUp,
+  User,
+} from "lucide-react";
 
 import {
   useGetAuthedUserAccessLevelsQuery,
@@ -58,6 +65,50 @@ export default function ReportsPage() {
               </span>
             </Link>
           )}
+          {accessLevelData?.general.fees.includes("view") && (
+            <Link
+              href={`/dashboard/reports/fee`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <DollarSign size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.fee"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.clearPayments.includes("view") && (
+            <Link
+              href={`/dashboard/reports/clear-payments`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <ArrowRightLeft size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.clear-payments"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.refunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/refunds`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <FileText size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.refunds"]}
+              </span>
+            </Link>
+          )}
+          {accessLevelData?.general.reservedFunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/reserved-funds`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.reservedFunds"]}
+              </span>
+            </Link>
+          )}
         </div>
       </div>
     );
@@ -110,6 +161,28 @@ export default function ReportsPage() {
               <ArrowRightLeft size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
                 {values["dashboard.reports.sections.clear-payments"]}
+              </span>
+            </Link>
+          )}{" "}
+          {accessLevelData?.general.disputes.includes("view") && (
+            <Link
+              href={`/dashboard/reports/disputes`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <FileText size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.disputes"]}
+              </span>
+            </Link>
+          )}{" "}
+          {accessLevelData?.general.reservedFunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/reserved-funds`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.reservedFunds"]}
               </span>
             </Link>
           )}
