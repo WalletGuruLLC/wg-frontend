@@ -543,12 +543,12 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.transactionsByProvider":
       "Transacciones por Proveedor",
     "dashboard.roles.role.modules.revenue": "Ingresos",
-    "dashboard.roles.role.modules.clearPayments": "Limpiar Pagos",
+    "dashboard.roles.role.modules.clearPayments": "Pagos Recibidos",
     "dashboard.roles.role.modules.reservedFunds": "Fondos Reservados",
     "dashboard.roles.role.modules.disputes": "Disputas",
     "dashboard.roles.role.modules.refunds": "Reembolsos",
     "dashboard.roles.role.modules.fees": "Costos",
-    "dashboard.roles.role.modules.paymentSummary": "Limpiar Pagos",
+    "dashboard.roles.role.modules.paymentSummary": "Pagos Recibidos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -763,7 +763,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.fee": "Costos",
     "dashboard.reports.sections.disputes": "Disputas",
     "dashboard.reports.sections.refunds": "Reembolsos",
-    "dashboard.reports.sections.clear-payments": "Limpiar pagos",
+    "dashboard.reports.sections.clear-payments": "Pagos Recibidos",
     "dashboard.reports.sections.reservedFunds": "Fondos Reservados",
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
@@ -865,6 +865,6 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
-    "dashboard.reports.sections.paymentSummary": "Clear Payments",
+    "dashboard.reports.sections.paymentSummary": "Pagos Recibidos",
   },
 } satisfies I18nDictionary;
