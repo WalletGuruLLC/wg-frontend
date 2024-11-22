@@ -47,3 +47,5 @@ dist/
 
 # turbo
 .turbo
+
+.idea/
