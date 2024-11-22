@@ -38,12 +38,12 @@ export default function ReportsPage() {
 
   if (userData.data?.type === "PROVIDER") {
     return (
-      <div className="flex h-[83vh] flex-col space-y-10 pb-4">
+      <div className="flex w-full flex-wrap">
         <SimpleTitle
           title={`${title ?? ""} ${values["dashboard.reports.title"]}`}
           showLoadingIndicator={isLoadingTitle}
         />
-        <div className="flex w-full flex-wrap">
+        <div className="grid h-full w-full grid-cols-4 gap-4">
           {accessLevelData?.general.transactionsByUser.includes("view") && (
             <Link
               href={`/dashboard/reports/transactions-by-user`}
@@ -154,7 +154,7 @@ export default function ReportsPage() {
               </span>
             </Link>
           )}
-          {accessLevelData?.general.clearPayments.includes("view") && (
+          {accessLevelData?.general.paymentSummary.includes("view") && (
             <Link
               href={`/dashboard/reports/clear-payments`}
               className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
