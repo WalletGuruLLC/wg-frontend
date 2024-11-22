@@ -163,6 +163,28 @@ export default function ReportsPage() {
                 {values["dashboard.reports.sections.clear-payments"]}
               </span>
             </Link>
+          )}{" "}
+          {accessLevelData?.general.disputes.includes("view") && (
+            <Link
+              href={`/dashboard/reports/disputes`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <FileText size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.disputes"]}
+              </span>
+            </Link>
+          )}{" "}
+          {accessLevelData?.general.reservedFunds.includes("view") && (
+            <Link
+              href={`/dashboard/reports/reserved-funds`}
+              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+            >
+              <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
+              <span className="text-2xl">
+                {values["dashboard.reports.sections.reservedFunds"]}
+              </span>
+            </Link>
           )}
           {accessLevelData?.general.disputes.includes("view") && (
             <Link
