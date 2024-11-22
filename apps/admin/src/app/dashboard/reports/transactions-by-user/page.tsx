@@ -685,21 +685,20 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-  const { mutate: downloadTransactions, isPending: downloading } =
-    useDownloadTransactionsByUserMutation({
-      onSuccess: () => {
-        toast.success(
-          values[
-            "dashboard.reports.sections-transactions-by-user.download.success"
-          ],
-        );
-      },
-      onError: (error) => {
-        toast.error(errors[error.message], {
-          description: "Error code: " + error.message,
-        });
-      },
-    });
+  useDownloadTransactionsByUserMutation({
+    onSuccess: () => {
+      toast.success(
+        values[
+          "dashboard.reports.sections-transactions-by-user.download.success"
+        ],
+      );
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+  });
 
   const table = useReactTable({
     data: props.activity.transactions,
