@@ -177,15 +177,10 @@ export default function TransactionsByUserPage() {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByUserQuery(
-    {
-      ...paginationAndSearch,
-      ...filters,
-    },
-    {
-      enabled: filters.walletAddress !== "",
-    },
-  );
+  } = useGetTransactionsByUserQuery({
+    ...paginationAndSearch,
+    ...filters,
+  });
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -690,21 +685,20 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-  const { mutate: downloadTransactions, isPending: downloading } =
-    useDownloadTransactionsByUserMutation({
-      onSuccess: () => {
-        toast.success(
-          values[
-            "dashboard.reports.sections-transactions-by-user.download.success"
-          ],
-        );
-      },
-      onError: (error) => {
-        toast.error(errors[error.message], {
-          description: "Error code: " + error.message,
-        });
-      },
-    });
+  useDownloadTransactionsByUserMutation({
+    onSuccess: () => {
+      toast.success(
+        values[
+          "dashboard.reports.sections-transactions-by-user.download.success"
+        ],
+      );
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+  });
 
   const table = useReactTable({
     data: props.activity.transactions,
