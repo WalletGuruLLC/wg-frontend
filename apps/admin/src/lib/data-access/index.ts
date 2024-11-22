@@ -112,6 +112,7 @@ const MODULES_MAP = {
   DWG2: "disputes",
   FEE8: "fees",
   PS52: "paymentSummary",
+  HC01: "healthCheck",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -197,6 +198,7 @@ export function useGetAuthedUserAccessLevelsQuery(
                 reservedFunds: [],
                 paymentSummary: [],
                 fees: [],
+                healthCheck: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
                   numberToAccessLevels(numericAccessLevel),
@@ -1157,6 +1159,53 @@ export function useGetWalletsQuery(
           "/api/v1/wallets?" +
           params.toString(),
       );
+    },
+  });
+}
+
+export interface HealthCheck {
+  id: string;
+  name: string;
+  status: string;
+}
+interface UseGetHealthCheckQueryOutput {
+  healthCheck: HealthCheck[];
+  total: number;
+}
+export function useGetHealthCheckQuery(
+  input: z.infer<typeof paginationAndSearchValidator>,
+  options: UseQueryOptions<UseGetHealthCheckQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-health-check", input],
+    queryFn: () => {
+      // const params = new URLSearchParams(input as Record<string, string>);
+      // return customFetch<UseGetHealthCheckQueryOutput>(
+      //   env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+      //   "/api/v1/wallets?" +
+      //   params.toString(),
+      // );
+      return {
+        healthCheck: [
+          {
+            id: "1",
+            name: "Wallet",
+            status: "HEALTHY",
+          },
+          {
+            id: "1",
+            name: "Notifiaction 2",
+            status: "HEALTHY",
+          },
+          {
+            id: "1",
+            name: "Auth",
+            status: "DOWN",
+          }
+        ],
+        total: 0,
+      }
     },
   });
 }
