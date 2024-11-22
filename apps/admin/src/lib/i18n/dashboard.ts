@@ -98,6 +98,11 @@ export const dashboardDict = {
       "Transactions by Provider",
     "dashboard.roles.role.modules.revenue": "Revenue",
     "dashboard.roles.role.modules.clearPayments": "Clear Payments",
+    "dashboard.roles.role.modules.disputes": "Disputes",
+    "dashboard.roles.role.modules.refunds": "Refunds",
+    "dashboard.roles.role.modules.reservedFunds": "Reserved Funds",
+    "dashboard.roles.role.modules.fees": "Fees",
+    "dashboard.roles.role.modules.paymentSummary": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
@@ -295,9 +300,13 @@ export const dashboardDict = {
     "dashboard.reports.title": "Reports",
     "dashboard.reports.sections.transactions-by-user": "Transactions by User",
     "dashboard.reports.sections.transactions-by-provider":
-      "Transactions by Provider",
+      "Transactions by Period",
     "dashboard.reports.sections.revenue": "Revenue",
+    "dashboard.reports.sections.fee": "Fees",
+    "dashboard.reports.sections.disputes": "Disputes",
+    "dashboard.reports.sections.refunds": "Refunds",
     "dashboard.reports.sections.clear-payments": "Clear Payments",
+    "dashboard.reports.sections.reservedFunds": "Reserved Funds",
     "dashboard.wallet-users.title": "Management wallet users",
     "dashboard.wallet-users.table.header.name": "Name",
     "dashboard.wallet-users.table.header.wallet": "Wallet",
@@ -433,6 +442,8 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.header":
       "Detail Transactions by provider",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
+    "dashboard.dispute.button.details": "Dispute",
+    "dashboard.refund.button.details": "Refund",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -532,6 +543,10 @@ export const dashboardDict = {
       "Transacciones por Proveedor",
     "dashboard.roles.role.modules.revenue": "Ingresos",
     "dashboard.roles.role.modules.clearPayments": "Limpiar Pagos",
+    "dashboard.roles.role.modules.reservedFunds": "Fondos Reservados",
+    "dashboard.roles.role.modules.disputes": "Disputas",
+    "dashboard.roles.role.modules.refunds": "Reembolsos",
+    "dashboard.roles.role.modules.fees": "Costos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -741,9 +756,13 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user":
       "Transacciones por Usuario",
     "dashboard.reports.sections.transactions-by-provider":
-      "Transacciones por Proveedor",
+      "Transacciones por Periodo",
     "dashboard.reports.sections.revenue": "Ganancia",
+    "dashboard.reports.sections.fee": "Costos",
+    "dashboard.reports.sections.disputes": "Disputas",
+    "dashboard.reports.sections.refunds": "Reembolsos",
     "dashboard.reports.sections.clear-payments": "Limpiar pagos",
+    "dashboard.reports.sections.reservedFunds": "Fondos Reservados",
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
@@ -842,5 +861,8 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.header":
       "Detalles de las transacciones por proveedor",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
+    "dashboard.dispute.button.details": "Disputa",
+    "dashboard.refund.button.details": "Reembolso",
+    "dashboard.roles.role.modules.paymentSummary": "Pagos recibidos",
   },
 } satisfies I18nDictionary;
