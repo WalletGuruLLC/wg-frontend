@@ -874,5 +874,6 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
+    "dashboard.reports.sections.paymentSummary": "Clear Payments",
   },
 } satisfies I18nDictionary;
