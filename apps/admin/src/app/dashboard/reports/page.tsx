@@ -159,6 +159,7 @@ export default function ReportsPage() {
               className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
+              <Landmark size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
                 {values["dashboard.reports.sections.clear-payments"]}
               </span>
@@ -167,7 +168,7 @@ export default function ReportsPage() {
           {accessLevelData?.general.disputes.includes("view") && (
             <Link
               href={`/dashboard/reports/disputes`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <FileText size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
@@ -178,7 +179,7 @@ export default function ReportsPage() {
           {accessLevelData?.general.reservedFunds.includes("view") && (
             <Link
               href={`/dashboard/reports/reserved-funds`}
-              className="m-3 flex h-[200px] min-w-60 flex-1 flex-col items-center justify-center space-y-3 rounded-2xl bg-[#F5F5F5] text-center"
+              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
               <span className="text-2xl">
