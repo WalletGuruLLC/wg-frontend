@@ -299,7 +299,7 @@ export const dashboardDict = {
     "dashboard.reports.title": "Reports",
     "dashboard.reports.sections.transactions-by-user": "Transactions by User",
     "dashboard.reports.sections.transactions-by-provider":
-      "Transactions by Provider",
+      "Transactions by Period",
     "dashboard.reports.sections.revenue": "Revenue",
     "dashboard.reports.sections.fee": "Fees",
     "dashboard.reports.sections.disputes": "Disputes",
@@ -755,7 +755,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user":
       "Transacciones por Usuario",
     "dashboard.reports.sections.transactions-by-provider":
-      "Transacciones por Proveedor",
+      "Transacciones por Periodo",
     "dashboard.reports.sections.revenue": "Ganancia",
     "dashboard.reports.sections.fee": "Costos",
     "dashboard.reports.sections.disputes": "Disputas",
