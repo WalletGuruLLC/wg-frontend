@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Activity,
   HandCoins,
+  HeartPulse,
   Home,
   Loader,
   Loader2,
@@ -18,7 +19,6 @@ import {
   User,
   Users,
   Wallet,
-  HeartPulse,
 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
@@ -118,7 +118,7 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.reports",
     path: "/dashboard/reports",
     moduleId: "users" satisfies ModuleId,
-  }
+  },
 ] as const;
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
