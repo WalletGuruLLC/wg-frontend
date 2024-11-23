@@ -58,26 +58,31 @@ const columns = [
 			<ColumnHeader i18nKey="dashboard.health.service" />
 		),
 	}),
-	columnHelper.accessor('status', {
-		id: 'status',
-		cell: (info) => (
-			info.getValue() === 'HEALTHY' ? (
-				<div className="pr-4 bg-green-500 p-2 flex items-center justify-center h-10 text-white rounded-lg max-w-40 text-sm ">
-					<CircleCheck className="text-black-500 pr-1" /> {info.getValue()}
+	columnHelper.accessor('beats', {
+		id: 'beats',
+		cell: (info) => {
+			const roles = info.getValue();
+			const isUnhealthy = roles.splice(-10).some((role) => !role.status);
+			return isUnhealthy ? (
+				<div
+					className="pr-4 bg-red-500 p-2 flex items-center justify-center h-10 text-white rounded-lg max-w-40 text-sm">
+					<TriangleAlert className="text-text-black-500 pr-1" /> Unhealthy
 				</div>
-			) : (
-				<div className="pr-4 bg-red-500 p-2 flex items-center justify-center h-10 text-white rounded-lg max-w-40 text-sm">
-					<TriangleAlert className="text-text-black-500 pr-1" /> {info.getValue()}
+				): (
+				<div
+					className="pr-4 bg-green-500 p-2 flex items-center justify-center h-10 text-white rounded-lg max-w-40 text-sm">
+					<TriangleAlert className="text-text-black-500 pr-1" /> Healthy
 				</div>
-			)
-		),
+			);
+		},
+
 		header: () => (
 			<ColumnHeader i18nKey="dashboard.health.status" />
 		),
 	}),
 ];
 
-export default function WalletManagementPage() {
+export default function HealthCheckPage() {
 	const loading = useAccessLevelGuard({
 		general: {
 			module: 'healthCheck',
@@ -95,11 +100,9 @@ export default function WalletManagementPage() {
 	};
 
 	const { data, isLoading } = useGetHealthCheckQuery(paginationAndSearch);
-	const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
-		useGetAuthedUserAccessLevelsQuery(undefined);
 
 	const table = useReactTable({
-		data: data?.healthCheck ?? [],
+		data: data?.monitors ?? [],
 		columns: columns,
 		getCoreRowModel: getCoreRowModel(),
 		manualPagination: true,
@@ -131,45 +134,44 @@ export default function WalletManagementPage() {
 		1;
 	const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
 
-	if (loading || isLoadingAccessLevels) return null;
-
+	// @ts-ignore
 	return (
 		<div className="flex h-[83vh] flex-col space-y-10 pb-4">
 			<SimpleTitle
 				title={values['dashboard.health.title']}
 				showLoadingIndicator={isLoading}
 			/>
-			<div className="flex flex-row items-center space-x-6">
-				<div className="relative flex-1">
-					<Input
-						placeholder={
-							values['dashboard.wallet-management.search.placeholder']
-						}
-						className="rounded-full border border-black"
-						name="search"
-						onChange={(e) =>
-							handlePaginationAndSearchChange({
-								...paginationAndSearch,
-								search: e.target.value,
-								page: '1',
-							})
-						}
-						defaultValue={paginationAndSearch.search}
-					/>
-					<Search
-						className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
-						strokeWidth={0.75}
-					/>
-				</div>
+			{/*<div className="flex flex-row items-center space-x-6">*/}
+			{/*	<div className="relative flex-1">*/}
+			{/*		<Input*/}
+			{/*			placeholder={*/}
+			{/*				values['dashboard.wallet-management.search.placeholder']*/}
+			{/*			}*/}
+			{/*			className="rounded-full border border-black"*/}
+			{/*			name="search"*/}
+			{/*			onChange={(e) =>*/}
+			{/*				handlePaginationAndSearchChange({*/}
+			{/*					...paginationAndSearch,*/}
+			{/*					search: e.target.value,*/}
+			{/*					page: '1',*/}
+			{/*				})*/}
+			{/*			}*/}
+			{/*			defaultValue={paginationAndSearch.search}*/}
+			{/*		/>*/}
+			{/*		<Search*/}
+			{/*			className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"*/}
+			{/*			strokeWidth={0.75}*/}
+			{/*		/>*/}
+			{/*	</div>*/}
 
-			</div>
+			{/*</div>*/}
 			<div className="flex-1 overflow-auto">
 				<Table table={table} />
 			</div>
 			<div>
 				<PaginationFooter
 					count={{
-						total: data?.total ?? 0,
+						total: data?.monitors?.length ?? 0,
 						firstRowIdx,
 						lastRowIdx,
 					}}
@@ -183,7 +185,7 @@ export default function WalletManagementPage() {
 					}
 					canPreviousPage={paginationAndSearch.page !== '1'}
 					canNextPage={
-						data?.healthCheck.length === Number(paginationAndSearch.items)
+						(data?.monitors?.length ?? 0) === Number(paginationAndSearch.items)
 					}
 					onPreviousPage={() =>
 						handlePaginationAndSearchChange({
@@ -203,162 +205,4 @@ export default function WalletManagementPage() {
 	);
 }
 
-function AddOrEditDialog(props: {
-	wallet?: {
-		id: string;
-		name: string;
-		walletType: string;
-		walletAddress: string;
-	};
-	trigger: ReactNode;
-}) {
-	const { values } = useI18n();
-	const errors = useErrors();
-	const [isOpen, _, close, toggle] = useBooleanHandlers();
 
-	const form = useForm({
-		schema: addOrEditWalletValidator,
-		defaultValues: {
-			name: props.wallet?.name ?? '',
-			walletType: props.wallet?.walletType ?? '',
-			walletAddress: props.wallet?.walletAddress ?? '',
-			walletId: props.wallet?.id,
-		},
-	});
-
-	const { mutate, isPending } = useAddOrEditWalletMutation({
-		onError: (error) => {
-			toast.error(errors[error.message], {
-				description: 'Error code: ' + error.message,
-			});
-		},
-		onSuccess: () => {
-			toast.success(values[`${valuesPrefix}.toast.success` as const]);
-			close();
-			form.reset();
-		},
-	});
-
-	const valuesPrefix =
-		`dashboard.wallet-management.${props.wallet ? 'edit' : 'add'}-dialog` as const;
-
-	// This useEffect is used to reset the form when the role prop changes because the form is not unmounted when dialog closes
-	useEffect(() => {
-		if (props.wallet) {
-			form.reset({
-				name: props.wallet.name,
-				walletType: props.wallet.walletType,
-				walletAddress: props.wallet.walletAddress,
-				walletId: props.wallet.id,
-			});
-		}
-	}, [props.wallet, form]);
-
-	return (
-		<Dialog
-			key={props.wallet?.id ?? 'add'}
-			isOpen={isOpen}
-			toggleOpen={() => {
-				form.reset();
-				toggle();
-			}}
-			trigger={props.trigger}
-			ariaDescribedBy="add-or-edit-dialog"
-		>
-			<div className="space-y-9">
-				<h1 className="text-3xl font-light">
-					{values[`${valuesPrefix}.title`]}
-				</h1>
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit((data) => mutate(data))}
-						className="space-y-9"
-					>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{values[`${valuesPrefix}.name.label`]}</FormLabel>
-									<FormControl>
-										<Input
-											placeholder={values[`${valuesPrefix}.name.placeholder`]}
-											required
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="walletType"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{values[`${valuesPrefix}.type.label`]}</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<FormControl>
-											<SelectTrigger
-												className={cn(
-													'rounded-none border-transparent border-b-black',
-													!field.value && 'text-[#A1A1A1]',
-												)}
-											>
-												<SelectValue
-													placeholder={
-														values[`${valuesPrefix}.type.placeholder`]
-													}
-												/>
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="White Label">White Label</SelectItem>
-											<SelectItem value="Third Party">Third Party</SelectItem>
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="walletAddress"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>
-										{values[`${valuesPrefix}.address.label`]}
-									</FormLabel>
-									<FormControl>
-										<Input
-											placeholder={
-												values[`${valuesPrefix}.address.placeholder`]
-											}
-											required
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<DialogFooter className="pt-9">
-							<Button className="w-full" type="submit" disabled={isPending}>
-								{
-									values[
-										isPending
-											? 'loading'
-											: (`${valuesPrefix}.primary-button` as const)
-										]
-								}
-							</Button>
-						</DialogFooter>
-					</form>
-				</Form>
-			</div>
-		</Dialog>
-	);
-}
