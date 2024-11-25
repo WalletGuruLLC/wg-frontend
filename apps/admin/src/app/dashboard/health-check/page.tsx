@@ -68,7 +68,7 @@ const columns = [
         </div>
       ) : (
         <div className="flex h-10 max-w-40 items-center justify-center rounded-lg bg-green-500 p-2 pr-4 text-sm text-white">
-          <TriangleAlert className="text-text-black-500 pr-1" /> Healthy
+          <CircleCheck className="text-text-black-500 pr-1" /> Healthy
         </div>
       );
     },
