@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Activity,
   HandCoins,
+  HeartPulse,
   Home,
   Loader,
   Loader2,
@@ -99,6 +100,12 @@ const NAV = [
     i18nTitleKey: "dashboard.layout.nav.roles",
     path: "/dashboard/roles",
     moduleId: "roles" satisfies ModuleId,
+  },
+  {
+    Icon: HeartPulse,
+    i18nTitleKey: "dashboard.layout.nav.health",
+    path: "/dashboard/health-check",
+    moduleId: "healthCheck" satisfies ModuleId,
   },
   {
     Icon: Settings,

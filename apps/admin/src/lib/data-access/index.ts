@@ -67,6 +67,7 @@ interface UseGetAuthedUserInfoQueryOutput {
   lastName: string;
   accessLevel: ApiSimpleAccessLevels;
 }
+
 export function useGetAuthedUserInfoQuery(
   _: undefined,
   options: UseQueryOptions<UseGetAuthedUserInfoQueryOutput> = {},
@@ -112,6 +113,7 @@ const MODULES_MAP = {
   DWG2: "disputes",
   FEE8: "fees",
   PS52: "paymentSummary",
+  HC01: "healthCheck",
 } as const;
 type ModuleDatabaseId = keyof typeof MODULES_MAP;
 export type ModuleId = (typeof MODULES_MAP)[ModuleDatabaseId];
@@ -131,6 +133,7 @@ export type AccessLevel = (typeof ACCESS_LEVELS_BINARY_ORDERED)[0 | 1 | 2 | 3];
 type ModuleAccessLevels = {
   [key in ModuleId]: AccessLevel[];
 };
+
 // Same endpoint as useGetAuthedUserInfoQuery. We have it as different hooks to treat cache separately
 export function useGetAuthedUserAccessLevelsQuery(
   _: undefined,
@@ -197,6 +200,7 @@ export function useGetAuthedUserAccessLevelsQuery(
                 reservedFunds: [],
                 paymentSummary: [],
                 fees: [],
+                healthCheck: [],
                 ...acc[serviceProviderId],
                 [MODULES_MAP[moduleDatabaseId]]:
                   numberToAccessLevels(numericAccessLevel),
@@ -216,11 +220,13 @@ export function useGetAuthedUserAccessLevelsQuery(
     },
   });
 }
+
 function numberToAccessLevels(numericAccessLevel: number) {
   return ACCESS_LEVELS_BINARY_ORDERED.filter(
     (_, i) => (numericAccessLevel & (1 << i)) !== 0,
   );
 }
+
 export function accessLevelsToNumber(accessLevels: AccessLevel[]) {
   return accessLevels.reduce(
     (acc, v) => acc | (1 << ACCESS_LEVELS_BINARY_ORDERED.indexOf(v)),
@@ -560,6 +566,7 @@ export function useUpdateUserPhoneNumberMutation(
     },
   });
 }
+
 export interface Role {
   createDate: string;
   updateDate: string;
@@ -570,10 +577,12 @@ export interface Role {
   active: boolean;
   name: string;
 }
+
 interface UseGetRolesQueryOutput {
   roles: Role[];
   total: number;
 }
+
 export function useGetRolesQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     providerId?: string;
@@ -657,6 +666,7 @@ export type UseGetRoleAccessLevelsQueryOutput = {
   accessLevels: AccessLevel[];
   description: string;
 }[];
+
 export function useGetRoleAccessLevelsQuery(
   input: {
     roleId: string;
@@ -710,6 +720,7 @@ interface UseGetRoleQueryOutput {
   ProviderId: string;
   Name: string;
 }
+
 export function useGetRoleQuery(
   input: {
     roleId: string;
@@ -774,6 +785,7 @@ export type UseGetRoleProvidersAccessLevelsQueryOutput = {
   totalPages: number;
   currentPage: number;
 }[];
+
 export function useGetRoleProvidersAccessLevelsQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     roleId: string;
@@ -868,6 +880,7 @@ export function useSaveRoleProviderModuleAccessLevelMutation(
     },
   });
 }
+
 export interface User {
   mfaEnabled: boolean;
   roleId: string;
@@ -909,12 +922,14 @@ export interface User {
   city?: string;
   zipCode?: string;
 }
+
 interface UseGetUsersQueryOutput {
   users: User[];
   total: number;
   totalPages: number;
   currentPage: number;
 }
+
 export function useGetUsersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
@@ -999,6 +1014,7 @@ export function useGetProviderKeysQuery(
     },
   });
 }
+
 export function useToggleContactInformationMutation(
   options: UseMutationOptions<
     {
@@ -1116,6 +1132,7 @@ type UseGetCountryCodesQueryOutput = {
   code: string;
   dial_code: string;
 }[];
+
 export function useGetCountryCodesQuery(
   _: undefined,
   options: UseQueryOptions<UseGetCountryCodesQueryOutput> = {},
@@ -1139,10 +1156,12 @@ export interface Wallet {
   walletAddress: string;
   active: boolean;
 }
+
 interface UseGetWalletsQueryOutput {
   wallet: Wallet[];
   total: number;
 }
+
 export function useGetWalletsQuery(
   input: z.infer<typeof paginationAndSearchValidator>,
   options: UseQueryOptions<UseGetWalletsQueryOutput> = {},
@@ -1155,6 +1174,53 @@ export function useGetWalletsQuery(
       return customFetch<UseGetWalletsQueryOutput>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
           "/api/v1/wallets?" +
+          params.toString(),
+      );
+    },
+  });
+}
+
+export interface Beats {
+  id: string;
+  msg: string;
+  time: string;
+  important: boolean;
+  status: boolean;
+  monitor_id: number;
+  ping: number;
+  duration: number;
+  down_count: number;
+}
+
+export interface HealthCheck {
+  id: string;
+  name: string;
+  beats: Beats[];
+}
+
+export interface HealthCheckMonitors {
+  monitors: HealthCheck[];
+}
+
+interface UseGetHealthCheckQueryOutput {
+  statusCode: number;
+  customCode: string;
+  data: HealthCheckMonitors;
+  monitors?: HealthCheck[];
+}
+
+export function useGetHealthCheckQuery(
+  input: z.infer<typeof paginationAndSearchValidator>,
+  options: UseQueryOptions<UseGetHealthCheckQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-health-check", input],
+    queryFn: () => {
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseGetHealthCheckQueryOutput>(
+        env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
+          "/api/v1/health-check/uptime?" +
           params.toString(),
       );
     },
@@ -1243,6 +1309,7 @@ interface UseGetProvidersQueryOutput {
   totalPages: number;
   currentPage: number;
 }
+
 export function useGetProvidersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     type: "PLATFORM" | "WALLET" | "PROVIDER";
@@ -1257,6 +1324,7 @@ export function useGetProvidersQuery(
     },
   });
 }
+
 async function fetchProviders(
   input: Parameters<typeof useGetProvidersQuery>["0"],
 ) {
@@ -1337,6 +1405,7 @@ type UseGetCountriesQueryOutput = {
   log: number;
   lat: number;
 }[];
+
 export function useGetCountriesQuery(
   _: undefined,
   options: UseQueryOptions<UseGetCountriesQueryOutput> = {},
@@ -1361,6 +1430,7 @@ type UseGetStatesQueryOutput = {
     name: string;
   };
 }[];
+
 export function useGetStatesQuery(
   input: { country: string },
   options: UseQueryOptions<UseGetStatesQueryOutput> = {},
@@ -1404,6 +1474,7 @@ interface UseGetRafikiAssetsQueryOutput {
     id: string;
   }[];
 }
+
 export function useGetRafikiAssetsQuery(
   _: undefined,
   options: UseQueryOptions<UseGetRafikiAssetsQueryOutput> = {},
@@ -1428,6 +1499,7 @@ interface UseGetSettingQueryOutput {
   createDate: string;
   updateDate: string;
 }
+
 export function useGetSettingQuery(
   input: {
     key: string;
@@ -1516,12 +1588,14 @@ export interface ProviderPaymentParameter {
   cost: number;
   asset: string;
 }
+
 interface UseGetProviderPaymentParametersQueryOutput {
   paymentParameters: ProviderPaymentParameter[];
   total: number;
   currentPage: number;
   totalPages: number;
 }
+
 export function useGetProviderPaymentParametersQuery(
   input: z.infer<typeof paginationAndSearchValidator> & {
     serviceProviderId: string;
@@ -1612,6 +1686,7 @@ type UseGetTimeIntervalsQueryOutput = {
   seconds: number;
   name: string;
 }[];
+
 export function useGetTimeIntervalsQuery(
   _: undefined,
   options: UseQueryOptions<UseGetTimeIntervalsQueryOutput> = {},
@@ -1881,6 +1956,7 @@ interface UseGetTransactionsByUserQueryOutput {
   user: string;
   totalPages: number;
 }
+
 export function useGetTransactionsByUserQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
     z.infer<typeof transactionsByUserValidator>,
@@ -1941,7 +2017,7 @@ export function useGetTransactionsByUserQuery(
         } else {
           const isProvider = t.metadata.type === "PROVIDER";
           const type = isProvider
-            ? (t.metadata.contentName ?? "Unknown content")
+            ? "Service"
             : isIncoming
               ? "Transfer Received"
               : "Transfer Sent";
@@ -2062,6 +2138,7 @@ export interface ActivityProvider {
   endDate: string;
   transactions: TransactionProvider[];
 }
+
 export interface TransactionProvider {
   transactionId: string;
   user: string;
@@ -2071,12 +2148,14 @@ export interface TransactionProvider {
   grossSale: string;
   netSale: string;
 }
+
 interface UseGetTransactionsByProviderQueryOutput {
   activities: ActivityProvider[];
   currentPage: number;
   total: number;
   totalPages: number;
 }
+
 export function useGetTransactionsByProviderQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
     z.infer<typeof transactionsByProviderValidator>,
@@ -2254,6 +2333,7 @@ export type UseGetSidebarItemsQueryOutput = {
   id: ModuleId;
   description: string;
 }[];
+
 export function useGetSidebarItemsQuery(
   _: undefined,
   options: UseQueryOptions<UseGetSidebarItemsQueryOutput> = {},
@@ -2282,6 +2362,7 @@ export function useGetSidebarItemsQuery(
     },
   });
 }
+
 export interface WalletUser {
   id: string;
   name: string;
