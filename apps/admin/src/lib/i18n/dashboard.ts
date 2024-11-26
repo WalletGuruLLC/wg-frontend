@@ -104,7 +104,6 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.reservedFunds": "Reserved Funds",
     "dashboard.roles.role.modules.fees": "Fees",
     "dashboard.roles.role.modules.paymentSummary": "Clear Payments",
-    "dashboard.roles.role.modules.paymentSummary": "Clear Payments",
     "dashboard.roles.role.success-toast": "Role Access Levels Updated",
     "dashboard.roles.role.module.search.placeholder": "Search",
     "dashboard.roles.role.module.table.providers.header": "Providers",
