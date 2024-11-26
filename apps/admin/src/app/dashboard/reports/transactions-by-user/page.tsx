@@ -681,7 +681,7 @@ const columnsDetails = [
 
 function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
-  const errors = useErrors();
+  //const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
@@ -724,8 +724,8 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
             passHref
             href={
               userData?.type === "PLATFORM"
-                ? `/dashboard/dispute/${props.activity.activityId}`
-                : `/dashboard/refund/${props.activity.activityId}`
+                ? `/dashboard/dispute/add/${props.activity.activityId}`
+                : `/dashboard/refund/add/${props.activity.activityId}`
             }
           >
             <Button className="px-2">
