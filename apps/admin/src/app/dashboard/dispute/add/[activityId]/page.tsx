@@ -21,9 +21,11 @@ import {
   SimpleTitle,
 } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
+import { useI18n } from "~/lib/i18n";
 import { disputeValidator } from "~/lib/validators";
 
 export default function AddDisputePage() {
+  const { values } = useI18n();
   const { activityId } = useParams<{ activityId: string }>();
   const form = useForm({
     schema: disputeValidator,
@@ -42,8 +44,13 @@ export default function AddDisputePage() {
           },
         ]}
       />
-      <SimpleTitle title="Dispute" showLoadingIndicator={false} />
-      <p className="mt-6">Activity Id: {activityId}</p>
+      <SimpleTitle
+        title={values["dispute-title"]}
+        showLoadingIndicator={false}
+      />
+      <p className="mt-6">
+        {values["dispute-activity-label"] + " " + activityId}
+      </p>
       <Form {...form}>
         <form className="w-1/2 space-y-4">
           <div className="flex w-full flex-col">
@@ -52,9 +59,16 @@ export default function AddDisputePage() {
               name="amount"
               render={({ field }) => (
                 <FormItem className="mt-6 w-full pr-8">
-                  <FormLabel className="mb-0">Amount:</FormLabel>
+                  <FormLabel className="mb-0">
+                    {values["dispute-add-amount-label"]}
+                  </FormLabel>
                   <FormControl className="-mt-5">
-                    <Input className="mt-0" required {...field} />
+                    <Input
+                      className="mt-0"
+                      placeholder={values["dispute-add-amount-placeholder"]}
+                      required
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -66,7 +80,9 @@ export default function AddDisputePage() {
               name="description"
               render={({ field }) => (
                 <FormItem className="mt-2 w-full pr-8">
-                  <FormLabel className="mb-0">Description:</FormLabel>
+                  <FormLabel className="mb-0">
+                    {values["dispute-add-description-label"]}
+                  </FormLabel>
                   <FormControl className="-mt-5">
                     <Textarea className="mt-0" required {...field} />
                   </FormControl>
@@ -78,7 +94,7 @@ export default function AddDisputePage() {
               className="ml-auto mr-8 mt-5 w-auto p-2 pl-4 pr-4"
               type="submit"
             >
-              Save
+              {values["dispute-add-button"]}
             </Button>
           </div>
         </form>
