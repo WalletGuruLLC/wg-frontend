@@ -724,8 +724,8 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
             passHref
             href={
               userData?.type === "PLATFORM"
-                ? `/dashboard/dispute/${props.activity.activityId}`
-                : `/dashboard/refund/${props.activity.activityId}`
+                ? `/dashboard/dispute/add/${props.activity.activityId}`
+                : `/dashboard/refund/add/${props.activity.activityId}`
             }
           >
             <Button className="px-2">
