@@ -698,7 +698,7 @@ const columnsDetails = [
 
 function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
-  const errors = useErrors();
+  //const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
