@@ -774,7 +774,6 @@ export const dashboardDict = {
     "dashboard.reports.sections.refunds": "Reembolsos",
     "dashboard.reports.sections.clear-payments": "Pagos",
     "dashboard.reports.sections.reservedFunds": "Fondos Reservados",
-    "dashboard.reports.sections.reservedFunds": "Fondos Reservados",
     "dashboard.reports.sections.transactions-by-user.header.type": "Tipo",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Descripcion",
