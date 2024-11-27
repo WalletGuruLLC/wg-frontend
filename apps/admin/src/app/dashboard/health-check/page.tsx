@@ -1,48 +1,19 @@
 "use client";
 
-import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { CircleCheck, PlusCircle, Search, TriangleAlert } from "lucide-react";
+import { CircleCheck, TriangleAlert } from "lucide-react";
 
-import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
-import { cn } from "@wg-frontend/ui";
-import { DialogFooter } from "@wg-frontend/ui/dialog";
-import { Form, FormControl, FormField, useForm } from "@wg-frontend/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@wg-frontend/ui/select";
-import { toast } from "@wg-frontend/ui/toast";
-
+import type { HealthCheck } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
-import { Button } from "~/components/button";
-import { FormMessage } from "~/components/form";
-import { SelectTrigger } from "~/components/select";
-import {
-  HealthCheck,
-  useAddOrEditWalletMutation,
-  useGetAuthedUserAccessLevelsQuery,
-  useGetHealthCheckQuery,
-  Wallet,
-} from "~/lib/data-access";
-import { useErrors } from "~/lib/data-access/errors";
+import { useGetHealthCheckQuery } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { addOrEditWalletValidator } from "~/lib/validators";
-import ConfirmDialog from "../_components/dashboard-confirm-dialog";
-import Dialog from "../_components/dashboard-dialog";
-import { FormItem, FormLabel } from "../_components/dashboard-form";
-import { Input } from "../_components/dashboard-input";
-import { Switch } from "../_components/dashboard-switch";
 import Table, {
   ColumnHeader,
   PaginationFooter,
@@ -78,7 +49,7 @@ const columns = [
 ];
 
 export default function HealthCheckPage() {
-  const loading = useAccessLevelGuard({
+  const _loading = useAccessLevelGuard({
     general: {
       module: "healthCheck",
     },
@@ -129,37 +100,13 @@ export default function HealthCheckPage() {
     1;
   const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
 
-  // @ts-ignore
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
         title={values["dashboard.health.title"]}
         showLoadingIndicator={isLoading}
       />
-      {/*<div className="flex flex-row items-center space-x-6">*/}
-      {/*	<div className="relative flex-1">*/}
-      {/*		<Input*/}
-      {/*			placeholder={*/}
-      {/*				values['dashboard.wallet-management.search.placeholder']*/}
-      {/*			}*/}
-      {/*			className="rounded-full border border-black"*/}
-      {/*			name="search"*/}
-      {/*			onChange={(e) =>*/}
-      {/*				handlePaginationAndSearchChange({*/}
-      {/*					...paginationAndSearch,*/}
-      {/*					search: e.target.value,*/}
-      {/*					page: '1',*/}
-      {/*				})*/}
-      {/*			}*/}
-      {/*			defaultValue={paginationAndSearch.search}*/}
-      {/*		/>*/}
-      {/*		<Search*/}
-      {/*			className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"*/}
-      {/*			strokeWidth={0.75}*/}
-      {/*		/>*/}
-      {/*	</div>*/}
 
-      {/*</div>*/}
       <div className="flex-1 overflow-auto">
         <Table table={table} />
       </div>
