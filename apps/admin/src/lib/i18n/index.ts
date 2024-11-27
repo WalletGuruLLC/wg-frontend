@@ -5,6 +5,7 @@ import createI18nHandlers from "@wg-frontend/i18n";
 
 import { authDict } from "./auth";
 import { dashboardDict } from "./dashboard";
+import { reportsDict } from "./reports";
 import { serviceProvidersDict } from "./service-providers";
 import { walletUsersDict } from "./wallet-users";
 
@@ -15,6 +16,7 @@ const dict = {
     ...dashboardDict.en,
     ...serviceProvidersDict.en,
     ...walletUsersDict.en,
+    ...reportsDict.en,
   },
   es: {
     loading: "Cargando...",
@@ -22,6 +24,7 @@ const dict = {
     ...dashboardDict.es,
     ...serviceProvidersDict.es,
     ...walletUsersDict.es,
+    ...reportsDict.es,
   },
 } satisfies I18nDictionary;
 

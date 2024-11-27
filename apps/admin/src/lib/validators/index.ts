@@ -322,3 +322,9 @@ export const resetPasswordIdValidator = z.object({
 export const toggleWalletLockValidator = z.object({
   userId: z.string().min(1),
 });
+
+export const disputeValidator = z.object({
+  activityId: z.string().min(1),
+  amount: z.number(),
+  description: z.string().optional(),
+});
