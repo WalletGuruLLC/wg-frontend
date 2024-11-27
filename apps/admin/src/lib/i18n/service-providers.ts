@@ -417,6 +417,7 @@ export const serviceProvidersDict = {
     "service-providers.settings.key.dialog.secretKey.label": "Secret Key: ",
     "service-providers.settings.key.dialog.publicKey.label": "Public Key: ",
     "service-providers.settings.key.dialog.no-key": "No key available",
+    "service-providers.roles.role.modules.healthCheck": "Health Check",
   },
   es: {
     "service-providers.title": "Proveedores de servicios",
@@ -844,5 +845,6 @@ export const serviceProvidersDict = {
     "service-providers.settings.key.dialog.secretKey.label": "Llave secreta: ",
     "service-providers.settings.key.dialog.publicKey.label": "Llave pública: ",
     "service-providers.settings.key.dialog.no-key": "No existe llave",
+    "service-providers.roles.role.modules.healthCheck": "Chequeo de Salud",
   },
 } satisfies I18nDictionary;

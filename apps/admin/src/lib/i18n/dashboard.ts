@@ -449,6 +449,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
     "dashboard.dispute.button.details": "Dispute",
     "dashboard.refund.button.details": "Refund",
+    "dashboard.roles.role.modules.healthCheck": "Health Check",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -874,5 +875,6 @@ export const dashboardDict = {
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
     "dashboard.reports.sections.paymentSummary": "Pagos Recibidos",
+    "dashboard.roles.role.modules.healthCheck": "Chequeo Salud",
   },
 } satisfies I18nDictionary;
