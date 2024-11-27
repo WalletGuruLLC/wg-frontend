@@ -444,7 +444,7 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
       "yyyy/mm/dd",
     "dashboard.reports.sections.transactions-by-provider.details.header":
-      "Detail Transactions by provider",
+      "Detail Transactions by period",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
     "dashboard.dispute.button.details": "Dispute",
     "dashboard.refund.button.details": "Refund",
@@ -867,7 +867,7 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
       "yyyy/mm/dd",
     "dashboard.reports.sections.transactions-by-provider.details.header":
-      "Detalles de las transacciones por proveedor",
+      "Detalles de las transacciones por periodo",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
