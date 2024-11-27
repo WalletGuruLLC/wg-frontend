@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -184,6 +185,7 @@ export default function TransactionsByUserPage() {
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
       items: "9999999",
@@ -254,6 +256,15 @@ export default function TransactionsByUserPage() {
       scroll: false,
     });
   }
+
+  useEffect(() => {
+    if (userData?.type === "PROVIDER")
+      handleFiltersChange({
+        ...filters,
+        providerIds: userData.serviceProviderId,
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, userData]);
 
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
@@ -498,6 +509,7 @@ export default function TransactionsByUserPage() {
                   providerIds: value,
                 })
               }
+              disabled={userData?.type === "PROVIDER"}
               defaultValue={filters.providerIds}
             >
               <SelectTrigger
