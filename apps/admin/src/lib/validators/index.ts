@@ -278,6 +278,30 @@ export const transactionsByUserValidator = z.object({
   state: z.string().min(1).optional(),
 });
 
+export const reservedFundsByUserValidator = z.object({
+  walletAddress: z
+    .string()
+    .min(
+      1,
+      "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.error",
+    ),
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-reserved-funds-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-reserved-funds-by-user.search.period.error",
+    })
+    .optional(),
+  type: z.string().min(1).optional(),
+  providerIds: z.string().min(1).optional(),
+  state: z.string().min(1).optional(),
+});
+
 export const transactionsByProviderValidator = z.object({
   startDate: z
     .date({
