@@ -1972,6 +1972,13 @@ export function useGetTransactionsByUserQuery(
           ? delete input[key as keyof typeof input]
           : {},
       );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
         items: "9999999999",
@@ -2113,6 +2120,13 @@ export function useDownloadTransactionsByUserMutation(
           ? delete input[key as keyof typeof input]
           : {},
       );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams(
         input as unknown as Record<string, string>,
       );
@@ -2171,11 +2185,20 @@ export function useGetTransactionsByProviderQuery(
           ? delete input[key as keyof typeof input]
           : {},
       );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
         items: "9999999999",
         page: "1",
       } as unknown as Record<string, string>);
+
+      console.log("params", params.toString());
 
       const result = await customFetch<{
         transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
@@ -2311,6 +2334,13 @@ export function useDownloadTransactionsByProviderMutation(
           ? delete input[key as keyof typeof input]
           : {},
       );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams(
         input as unknown as Record<string, string>,
       );
