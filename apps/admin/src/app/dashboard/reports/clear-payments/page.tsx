@@ -1,15 +1,15 @@
 "use client";
 
+import type { ReactNode } from "react";
+import type { z } from "zod";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Download } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { ReactNode } from "react";
-import type { z } from "zod";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
@@ -21,26 +21,26 @@ import {
   SelectValue,
 } from "@wg-frontend/ui/select";
 
+import type { Activity, Transaction } from "~/lib/data-access";
+import type {
+  paginationAndSearchValidator,
+  transactionsByUserValidator,
+} from "~/lib/validators";
 import Table, {
   ColumnHeader,
   PaginationFooter,
 } from "~/app/dashboard/_components/dashboard-table";
 import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
-import type { Activity, Transaction } from "~/lib/data-access";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetProvidersQuery,
-  useGetTransactionsByUserQuery
+  useGetTransactionsByUserQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import type {
-  paginationAndSearchValidator,
-  transactionsByUserValidator,
-} from "~/lib/validators";
 import Dialog from "../../_components/dashboard-dialog";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
@@ -60,7 +60,7 @@ function Actions({ activity }: { activity: Activity }) {
               <p className="flex-1 text-lg font-light">
                 {
                   values[
-                  "dashboard.reports.sections.clear-payments.header.actions.details"
+                    "dashboard.reports.sections.clear-payments.header.actions.details"
                   ]
                 }
               </p>
@@ -259,7 +259,7 @@ export default function TransactionsByUserPage() {
             <Label className="font-normal">
               {
                 values[
-                "dashboard.reports.sections-clear-payments.search.type.label"
+                  "dashboard.reports.sections-clear-payments.search.type.label"
                 ]
               }
             </Label>
@@ -281,7 +281,7 @@ export default function TransactionsByUserPage() {
                 <SelectValue
                   placeholder={
                     values[
-                    `dashboard.reports.sections-reserved-funds-by-user.search.type.placeholder`
+                      `dashboard.reports.sections-reserved-funds-by-user.search.type.placeholder`
                     ]
                   }
                 />
@@ -297,7 +297,7 @@ export default function TransactionsByUserPage() {
             <Label className="font-normal">
               {
                 values[
-                "dashboard.reports.sections-clear-payments.search.state.label"
+                  "dashboard.reports.sections-clear-payments.search.state.label"
                 ]
               }
             </Label>
@@ -319,7 +319,7 @@ export default function TransactionsByUserPage() {
                 <SelectValue
                   placeholder={
                     values[
-                    `dashboard.reports.sections-clear-payments.search.state.placeholder`
+                      `dashboard.reports.sections-clear-payments.search.state.placeholder`
                     ]
                   }
                 />
@@ -328,14 +328,14 @@ export default function TransactionsByUserPage() {
                 <SelectItem value="PENDING">
                   {
                     values[
-                    "dashboard.reports.sections-clear-payments.search.state.pending"
+                      "dashboard.reports.sections-clear-payments.search.state.pending"
                     ]
                   }
                 </SelectItem>
                 <SelectItem value="COMPLETED">
                   {
                     values[
-                    "dashboard.reports.sections-clear-payments.search.state.completed"
+                      "dashboard.reports.sections-clear-payments.search.state.completed"
                     ]
                   }
                 </SelectItem>
@@ -347,7 +347,7 @@ export default function TransactionsByUserPage() {
             <Label className="font-normal">
               {
                 values[
-                "dashboard.reports.sections-clear-payments.search.provider.label"
+                  "dashboard.reports.sections-clear-payments.search.provider.label"
                 ]
               }
             </Label>
@@ -369,7 +369,7 @@ export default function TransactionsByUserPage() {
                 <SelectValue
                   placeholder={
                     values[
-                    `dashboard.reports.sections-clear-payments.search.provider.placeholder`
+                      `dashboard.reports.sections-clear-payments.search.provider.placeholder`
                     ]
                   }
                 />
@@ -387,10 +387,10 @@ export default function TransactionsByUserPage() {
                 {providersData?.providers.filter((p) =>
                   accessLevelsData?.providers[p.id]?.reports.includes("view"),
                 ).length === 0 && (
-                    <SelectItem value="no" disabled>
-                      No providers available
-                    </SelectItem>
-                  )}
+                  <SelectItem value="no" disabled>
+                    No providers available
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -398,7 +398,7 @@ export default function TransactionsByUserPage() {
             <p className="flex-1 text-lg font-light">
               {
                 values[
-                "dashboard.reports.sections.clear-payments.search-button"
+                  "dashboard.reports.sections.clear-payments.search-button"
                 ]
               }
             </p>
@@ -505,11 +505,7 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
     >
       <div className="space-y-7">
         <h1 className="text-2xl font-light">
-          {
-            values[
-            "dashboard.reports.sections.clear-payments.details.header"
-            ]
-          }
+          {values["dashboard.reports.sections.clear-payments.details.header"]}
         </h1>
         <div className="flex flex-row items-center justify-between">
           Activity ID: {props.activity.activityId}

@@ -455,16 +455,19 @@ export const dashboardDict = {
       "Description",
     "dashboard.reports.sections.reserved-funds-by-user.header.start":
       "Start Date",
-    "dashboard.reports.sections.reserved-funds-by-user.header.finish": "End Date",
+    "dashboard.reports.sections.reserved-funds-by-user.header.finish":
+      "End Date",
     "dashboard.reports.sections.reserved-funds-by-user.header.state": "Status",
-    "dashboard.reports.sections.reserved-funds-by-user.header.actions": "Actions",
+    "dashboard.reports.sections.reserved-funds-by-user.header.actions":
+      "Actions",
     "dashboard.reports.sections.reserved-funds-by-user.header.actions.details":
       "Details",
     "dashboard.reports.sections.reserved-funds-by-user.details.header":
       "Details Transaction Service",
     "dashboard.reports.sections.reserved-funds-by-user.details.date": "Date",
     "dashboard.reports.sections.reserved-funds-by-user.search-button": "Search",
-    "dashboard.reports.sections.reserved-funds-by-user.header.ammount": "Amount",
+    "dashboard.reports.sections.reserved-funds-by-user.header.ammount":
+      "Amount",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.placeholder":
       "Enter the wallet address",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.error":
@@ -483,7 +486,8 @@ export const dashboardDict = {
       "Select a type",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.error":
       "Enter a valid type",
-    "dashboard.reports.sections-reserved-funds-by-user.search.type.label": "Type",
+    "dashboard.reports.sections-reserved-funds-by-user.search.type.label":
+      "Type",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.placeholder":
       "Select a state",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.pending":
@@ -510,11 +514,10 @@ export const dashboardDict = {
       "No end date selected",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "The report has been downloaded successfully.",
-      "dashboard.reports.sections.clear-payments.header.type": "Type",
+    "dashboard.reports.sections.clear-payments.header.type": "Type",
     "dashboard.reports.sections.clear-payments.header.description":
       "Description",
-    "dashboard.reports.sections.clear-payments.header.start":
-      "Start Date",
+    "dashboard.reports.sections.clear-payments.header.start": "Start Date",
     "dashboard.reports.sections.clear-payments.header.finish": "End Date",
     "dashboard.reports.sections.clear-payments.header.state": "Status",
     "dashboard.reports.sections.clear-payments.header.actions": "Actions",
@@ -546,14 +549,12 @@ export const dashboardDict = {
     "dashboard.reports.sections-clear-payments.search.type.label": "Type",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
       "Select a state",
-    "dashboard.reports.sections-clear-payments.search.state.pending":
-      "Pending",
+    "dashboard.reports.sections-clear-payments.search.state.pending": "Pending",
     "dashboard.reports.sections-clear-payments.search.state.completed":
       "Completed",
     "dashboard.reports.sections-clear-payments.search.state.error":
       "Enter a valid state",
-    "dashboard.reports.sections-clear-payments.search.state.label":
-      "Status",
+    "dashboard.reports.sections-clear-payments.search.state.label": "Status",
     "dashboard.reports.sections-clear-payments.search.provider.placeholder":
       "Select a provider",
     "dashboard.reports.sections-clear-payments.search.provider.error":
@@ -1031,7 +1032,8 @@ export const dashboardDict = {
       "Seleccione un tipo",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.error":
       "Ingrese un tipo válido",
-    "dashboard.reports.sections-reserved-funds-by-user.search.type.label": "Tipo",
+    "dashboard.reports.sections-reserved-funds-by-user.search.type.label":
+      "Tipo",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.placeholder":
       "Seleccione un estado",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.pending":
@@ -1058,16 +1060,13 @@ export const dashboardDict = {
       "No se ha seleccionado una fecha de fin",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "El reporte ha sido descargado exitosamente.",
-      "dashboard.reports.sections.clear-payments.header.type": "Tipo",
+    "dashboard.reports.sections.clear-payments.header.type": "Tipo",
     "dashboard.reports.sections.clear-payments.header.description":
       "Descripcion",
-    "dashboard.reports.sections.clear-payments.header.start":
-      "Fecha de Inicio",
-    "dashboard.reports.sections.clear-payments.header.finish":
-      "Fecha de Fin",
+    "dashboard.reports.sections.clear-payments.header.start": "Fecha de Inicio",
+    "dashboard.reports.sections.clear-payments.header.finish": "Fecha de Fin",
     "dashboard.reports.sections.clear-payments.header.state": "Estado",
-    "dashboard.reports.sections.clear-payments.header.actions":
-      "Acciones",
+    "dashboard.reports.sections.clear-payments.header.actions": "Acciones",
     "dashboard.reports.sections.clear-payments.header.actions.details":
       "Detalles",
     "dashboard.reports.sections.clear-payments.details.header":
@@ -1102,8 +1101,7 @@ export const dashboardDict = {
       "Completado",
     "dashboard.reports.sections-clear-payments.search.state.error":
       "Ingrese un estado válido",
-    "dashboard.reports.sections-clear-payments.search.state.label":
-      "Estado",
+    "dashboard.reports.sections-clear-payments.search.state.label": "Estado",
     "dashboard.reports.sections-clear-payments.search.provider.placeholder":
       "Seleccione un proveedor",
     "dashboard.reports.sections-clear-payments.search.provider.error":

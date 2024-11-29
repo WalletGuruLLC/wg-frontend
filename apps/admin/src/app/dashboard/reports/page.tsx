@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Calendar,
   DollarSign,
@@ -8,7 +9,6 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import Link from "next/link";
 
 import {
   useGetAuthedUserAccessLevelsQuery,
