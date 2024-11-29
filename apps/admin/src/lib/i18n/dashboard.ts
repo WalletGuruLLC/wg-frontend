@@ -510,6 +510,66 @@ export const dashboardDict = {
       "No end date selected",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "The report has been downloaded successfully.",
+      "dashboard.reports.sections.clear-payments.header.type": "Type",
+    "dashboard.reports.sections.clear-payments.header.description":
+      "Description",
+    "dashboard.reports.sections.clear-payments.header.start":
+      "Start Date",
+    "dashboard.reports.sections.clear-payments.header.finish": "End Date",
+    "dashboard.reports.sections.clear-payments.header.state": "Status",
+    "dashboard.reports.sections.clear-payments.header.actions": "Actions",
+    "dashboard.reports.sections.clear-payments.header.actions.details":
+      "Details",
+    "dashboard.reports.sections.clear-payments.details.header":
+      "Details Transaction Service",
+    "dashboard.reports.sections.clear-payments.details.date": "Date",
+    "dashboard.reports.sections.clear-payments.search-button": "Search",
+    "dashboard.reports.sections.clear-payments.header.ammount": "Amount",
+    "dashboard.reports.sections-clear-payments.search.wallet-address.placeholder":
+      "Enter the wallet address",
+    "dashboard.reports.sections-clear-payments.search.wallet-address.error":
+      "Enter a valid wallet address",
+    "dashboard.reports.sections-clear-payments.search.wallet-address.label":
+      "Wallet Address",
+    "dashboard.reports.sections-clear-payments.search.period.placeholder":
+      "Select a range of time",
+    "dashboard.reports.sections-clear-payments.search.period.error":
+      "Enter a valid period",
+    "dashboard.reports.sections-clear-payments.search.start-date.label":
+      "Start Date",
+    "dashboard.reports.sections-clear-payments.search.end-date.label":
+      "End Date",
+    "dashboard.reports.sections-clear-paymentsr.search.type.placeholder":
+      "Select a type",
+    "dashboard.reports.sections-clear-payments.search.type.error":
+      "Enter a valid type",
+    "dashboard.reports.sections-clear-payments.search.type.label": "Type",
+    "dashboard.reports.sections-clear-payments.search.state.placeholder":
+      "Select a state",
+    "dashboard.reports.sections-clear-payments.search.state.pending":
+      "Pending",
+    "dashboard.reports.sections-clear-payments.search.state.completed":
+      "Completed",
+    "dashboard.reports.sections-clear-payments.search.state.error":
+      "Enter a valid state",
+    "dashboard.reports.sections-clear-payments.search.state.label":
+      "Status",
+    "dashboard.reports.sections-clear-payments.search.provider.placeholder":
+      "Select a provider",
+    "dashboard.reports.sections-clear-payments.search.provider.error":
+      "Enter a valid provider",
+    "dashboard.reports.sections-clear-payments.search.provider.label":
+      "Provider",
+    "dashboard.reports.sections-clear-payments.user.label": "User",
+    "dashboard.reports.sections-clear-payments.period.no-wallet-selected":
+      "No Wallet Address selected",
+    "dashboard.reports.sections-clear-payments.period.label": "Period",
+    "dashboard.reports.sections-clear-payments.period.no-start-selected":
+      "No start date selected",
+    "dashboard.reports.sections-clear-payments.period.no-end-selected":
+      "No end date selected",
+    "dashboard.reports.sections-clear-payments.download.success":
+      "The report has been downloaded successfully.",
   },
   es: {
     "dashboard.home.title": "Bienvenido",
@@ -997,6 +1057,68 @@ export const dashboardDict = {
     "dashboard.reports.sections-reserved-funds-by-user.period.no-end-selected":
       "No se ha seleccionado una fecha de fin",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
+      "El reporte ha sido descargado exitosamente.",
+      "dashboard.reports.sections.clear-payments.header.type": "Tipo",
+    "dashboard.reports.sections.clear-payments.header.description":
+      "Descripcion",
+    "dashboard.reports.sections.clear-payments.header.start":
+      "Fecha de Inicio",
+    "dashboard.reports.sections.clear-payments.header.finish":
+      "Fecha de Fin",
+    "dashboard.reports.sections.clear-payments.header.state": "Estado",
+    "dashboard.reports.sections.clear-payments.header.actions":
+      "Acciones",
+    "dashboard.reports.sections.clear-payments.header.actions.details":
+      "Detalles",
+    "dashboard.reports.sections.clear-payments.details.header":
+      "Detalles del servicio de transacciones",
+    "dashboard.reports.sections.clear-payments.details.date": "Fecha",
+    "dashboard.reports.sections.clear-payments.search-button": "Buscar",
+    "dashboard.reports.sections.clear-payments.header.ammount": "Monto",
+    "dashboard.reports.sections-clear-payments.search.wallet-address.placeholder":
+      "Ingrese la dirección de la billetera",
+    "dashboard.reports.sections-clear-payments.search.wallet-address.label":
+      "Dirección de billetera",
+    "dashboard.reports.sections-clear-payments.search.wallet-address.error":
+      "Ingrese una dirección de billetera válida",
+    "dashboard.reports.sections-clear-payments.search.period.placeholder":
+      "Seleccione un rango de tiempo",
+    "dashboard.reports.sections-clear-payments.search.period.error":
+      "Ingrese un periodo válido",
+    "dashboard.reports.sections-clear-payments.search.start-date.label":
+      "Fecha de inicio",
+    "dashboard.reports.sections-clear-payments.search.end-date.label":
+      "Fecha de fin",
+    "dashboard.reports.sections-clear-payments.search.type.placeholder":
+      "Seleccione un tipo",
+    "dashboard.reports.sections-clear-payments.search.type.error":
+      "Ingrese un tipo válido",
+    "dashboard.reports.sections-clear-payments.search.type.label": "Tipo",
+    "dashboard.reports.sections-clear-payments.search.state.placeholder":
+      "Seleccione un estado",
+    "dashboard.reports.sections-clear-payments.search.state.pending":
+      "Pendiente",
+    "dashboard.reports.sections-clear-payments.search.state.completed":
+      "Completado",
+    "dashboard.reports.sections-clear-payments.search.state.error":
+      "Ingrese un estado válido",
+    "dashboard.reports.sections-clear-payments.search.state.label":
+      "Estado",
+    "dashboard.reports.sections-clear-payments.search.provider.placeholder":
+      "Seleccione un proveedor",
+    "dashboard.reports.sections-clear-payments.search.provider.error":
+      "Ingrese un provider válido",
+    "dashboard.reports.sections-clear-payments.search.provider.label":
+      "Proveedor",
+    "dashboard.reports.sections-clear-payments.user.label": "Usuario",
+    "dashboard.reports.sections-clear-payments.period.no-wallet-selected":
+      "No se ha seleccionado una dirección de billetera",
+    "dashboard.reports.sections-clear-payments.period.label": "Periodo",
+    "dashboard.reports.sections-clear-payments.period.no-start-selected":
+      "No se ha seleccionado una fecha de inicio",
+    "dashboard.reports.sections-clear-payments.period.no-end-selected":
+      "No se ha seleccionado una fecha de fin",
+    "dashboard.reports.sections-clear-payments.download.success":
       "El reporte ha sido descargado exitosamente.",
   },
 } satisfies I18nDictionary;
