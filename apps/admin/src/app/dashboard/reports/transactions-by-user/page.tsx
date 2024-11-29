@@ -271,6 +271,7 @@ export default function TransactionsByUserPage() {
     Number(paginationAndSearch.items) +
     1;
   const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
 
   if (loading) return null;
 
@@ -493,6 +494,10 @@ export default function TransactionsByUserPage() {
               </SelectContent>
             </Select>
           </div>
+          {
+            /* Provider */
+            userData?.type === 'PLATFORM' && (
+
 
           <div className="min-w-60 flex-1 space-y-0">
             <Label className="font-normal">
@@ -550,6 +555,8 @@ export default function TransactionsByUserPage() {
               </SelectContent>
             </Select>
           </div>
+            )}
+
           <Button className="h-max self-end" onClick={() => refetch()}>
             <p className="flex-1 text-lg font-light">
               {
