@@ -271,7 +271,6 @@ export default function TransactionsByUserPage() {
     Number(paginationAndSearch.items) +
     1;
   const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
-  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
 
   if (loading) return null;
 
@@ -514,7 +513,6 @@ export default function TransactionsByUserPage() {
                   providerIds: value,
                 })
               }
-              disabled={userData?.type === "PROVIDER"}
               defaultValue={filters.providerIds}
             >
               <SelectTrigger
