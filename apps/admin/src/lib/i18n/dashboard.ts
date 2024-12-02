@@ -13,6 +13,7 @@ export const dashboardDict = {
     "dashboard.layout.nav.settings": "Settings",
     "dashboard.layout.nav.reports": "Reports",
     "dashboard.layout.nav.health": "Health Check",
+    "dashboard.layout.nav.health": "Health Check",
     "dashboard.layout.nav.wallet-users": "Wallet Users",
     "dashboard.layout.logout": "Logout",
     "dashboard.layout.profile-dialog.option.my-info": "My Info",
