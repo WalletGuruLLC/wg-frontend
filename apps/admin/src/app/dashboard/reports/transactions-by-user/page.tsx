@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -184,6 +185,7 @@ export default function TransactionsByUserPage() {
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
+  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
       items: "9999999",
@@ -254,6 +256,15 @@ export default function TransactionsByUserPage() {
       scroll: false,
     });
   }
+
+  useEffect(() => {
+    if (userData?.type === "PROVIDER")
+      handleFiltersChange({
+        ...filters,
+        providerIds: userData.serviceProviderId,
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, userData]);
 
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
@@ -482,62 +493,67 @@ export default function TransactionsByUserPage() {
               </SelectContent>
             </Select>
           </div>
-
-          <div className="min-w-60 flex-1 space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.provider.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  providerIds: value,
-                })
-              }
-              defaultValue={filters.providerIds}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.providerIds && "text-gray-400",
-                )}
-              >
-                <SelectValue
-                  placeholder={
+          {
+            /* Provider */
+            userData?.type === "PLATFORM" && (
+              <div className="min-w-60 flex-1 space-y-0">
+                <Label className="font-normal">
+                  {
                     values[
-                      `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
+                      "dashboard.reports.sections-transactions-by-user.search.provider.label"
                     ]
                   }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {providersData?.providers
-                  .filter((p) =>
-                    accessLevelsData?.providers[
-                      p.id
-                    ]?.transactionsByUser.includes("view"),
-                  )
-                  .map((provider) => (
-                    <SelectItem key={provider.id} value={provider.id}>
-                      {provider.name}
-                    </SelectItem>
-                  ))}
-                {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[
-                    p.id
-                  ]?.transactionsByUser.includes("view"),
-                ).length === 0 && (
-                  <SelectItem value="no" disabled>
-                    No providers available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
+                </Label>
+                <Select
+                  onValueChange={(value) =>
+                    handleFiltersChange({
+                      ...filters,
+                      providerIds: value,
+                    })
+                  }
+                  defaultValue={filters.providerIds}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "rounded-lg border border-black",
+                      !filters.providerIds && "text-gray-400",
+                    )}
+                  >
+                    <SelectValue
+                      placeholder={
+                        values[
+                          `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
+                        ]
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {providersData?.providers
+                      .filter((p) =>
+                        accessLevelsData?.providers[
+                          p.id
+                        ]?.transactionsByUser.includes("view"),
+                      )
+                      .map((provider) => (
+                        <SelectItem key={provider.id} value={provider.id}>
+                          {provider.name}
+                        </SelectItem>
+                      ))}
+                    {providersData?.providers.filter((p) =>
+                      accessLevelsData?.providers[
+                        p.id
+                      ]?.transactionsByUser.includes("view"),
+                    ).length === 0 && (
+                      <SelectItem value="no" disabled>
+                        No providers available
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            )
+          }
+
           <Button className="h-max self-end" onClick={() => refetch()}>
             <p className="flex-1 text-lg font-light">
               {
@@ -677,13 +693,36 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
     ),
   }),
+  columnHelperDetails.accessor("amount", {
+    id: "amount",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
+    ),
+  }),
 ];
 
 function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const { values } = useI18n();
-  //const errors = useErrors();
+  const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
+
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  useDownloadTransactionsByUserMutation({
+    onSuccess: () => {
+      toast.success(
+        values[
+          "dashboard.reports.sections-transactions-by-user.download.success"
+        ],
+      );
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+  });
+
   const table = useReactTable({
     data: props.activity.transactions,
     columns: columnsDetails,
