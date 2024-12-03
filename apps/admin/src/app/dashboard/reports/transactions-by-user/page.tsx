@@ -330,9 +330,9 @@ export default function TransactionsByUserPage() {
                   )}
                 >
                   {filters.startDate ? (
-                    format(filters.startDate, "yyyy/MM/dd")
+                    format(filters.startDate, "yyyy-MM-dd")
                   ) : (
-                    <span>yyyy/mm/dd</span>
+                    <span>yyyy-mm-dd</span>
                   )}
                   <CalendarIcon
                     className="absolute right-2 size-5"
@@ -379,9 +379,9 @@ export default function TransactionsByUserPage() {
                   )}
                 >
                   {filters.endDate ? (
-                    format(filters.endDate, "yyyy/MM/dd")
+                    format(filters.endDate, "yyyy-MM-dd")
                   ) : (
-                    <span>yyyy/mm/dd</span>
+                    <span>yyyy-mm-dd</span>
                   )}
                   <CalendarIcon
                     className="absolute right-2 size-5"
