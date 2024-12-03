@@ -501,31 +501,55 @@ export default function TransactionsByUserPage() {
                   {
                     values[
                       "dashboard.reports.sections-transactions-by-user.search.provider.label"
-                    ]
+                      ]
                   }
                 </Label>
-                <SelectContent>
-                  {providersData?.providers
-                    .filter((p) =>
+                <Select
+                  onValueChange={(value) =>
+                    handleFiltersChange({
+                      ...filters,
+                      providerIds: value,
+                    })
+                  }
+                  defaultValue={filters.providerIds}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "rounded-lg border border-black",
+                      !filters.providerIds && "text-gray-400",
+                    )}
+                  >
+                    <SelectValue
+                      placeholder={
+                        values[
+                          `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
+                          ]
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {providersData?.providers
+                      .filter((p) =>
+                        accessLevelsData?.providers[
+                          p.id
+                          ]?.transactionsByUser.includes("view"),
+                      )
+                      .map((provider) => (
+                        <SelectItem key={provider.id} value={provider.id}>
+                          {provider.name}
+                        </SelectItem>
+                      ))}
+                    {providersData?.providers.filter((p) =>
                       accessLevelsData?.providers[
                         p.id
-                      ]?.transactionsByUser.includes("view"),
-                    )
-                    .map((provider) => (
-                      <SelectItem key={provider.id} value={provider.id}>
-                        {provider.name}
+                        ]?.transactionsByUser.includes("view"),
+                    ).length === 0 && (
+                      <SelectItem value="no" disabled>
+                        No providers available
                       </SelectItem>
-                    ))}
-                  {providersData?.providers.filter((p) =>
-                    accessLevelsData?.providers[
-                      p.id
-                    ]?.transactionsByUser.includes("view"),
-                  ).length === 0 && (
-                    <SelectItem value="no" disabled>
-                      No providers available
-                    </SelectItem>
-                  )}
-                </SelectContent>
+                    )}
+                  </SelectContent>
+                </Select>
               </div>
             )
           }
