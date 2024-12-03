@@ -50,13 +50,16 @@ cp .env.example .env
 pnpm dev
 ```
 
-> **Note:** If you want to run a specific app, you can use `pnpm -F <app> dev` where `<app>` is the name of the app you want to run.
+> **Note:** If you want to run a specific app, you can use `pnpm -F <app> dev` where `<app>` is the name of the app you
+> want to run.
 
 ## Deployment
 
-The default deployment is done using Docker. You can use the already configured Dockerfiles in each app to build and run the app on any platform that supports Docker. Replace <app> for the name of the app you want to deploy.
+The default deployment is done using Docker. You can use the already configured Dockerfiles in each app to build and run
+the app on any platform that supports Docker. Replace <app> for the name of the app you want to deploy.
 
-> **Important**: Some apps validate the environment variables at runtime AND at build time, so make sure to provide the required environment variables when running the Docker image AND when building the image.
+> **Important**: Some apps validate the environment variables at runtime AND at build time, so make sure to provide the
+> required environment variables when running the Docker image AND when building the image.
 
 ```bash
 # Build the Docker image
@@ -71,13 +74,13 @@ docker run -p 3000:3000 --env-file ./.env <app>
 ### Other technologies
 
 1. Eslint
-   - The project uses a shared eslint configuration located in the `tooling/eslint` directory.
-   - The configuration is basically the default eslint config with some additional rules specific to react.
-   - The configuration is shared across all packages and apps.
+    - The project uses a shared eslint configuration located in the `tooling/eslint` directory.
+    - The configuration is basically the default eslint config with some additional rules specific to react.
+    - The configuration is shared across all packages and apps.
 2. Prettier
-   - The project uses a shared prettier configuration located in the `tooling/prettier` directory.
-   - The configuration is basically the default prettier config with some additional rules specific to tailwind.
-   - The configuration is shared across all packages and apps.
+    - The project uses a shared prettier configuration located in the `tooling/prettier` directory.
+    - The configuration is basically the default prettier config with some additional rules specific to tailwind.
+    - The configuration is shared across all packages and apps.
 
 ## Envs for pipeline
 
