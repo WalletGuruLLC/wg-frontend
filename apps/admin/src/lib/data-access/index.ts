@@ -2212,9 +2212,9 @@ export function useGetTransactionsByProviderQuery(
           params.toString(),
       );
 
-			// Group by activity id
-			const groupedActivities = result.transactions.reduce((acc, t, idx) => {
-				const activityId = t.metadata.activityId;
+      // Group by activity id
+      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
+        const activityId = t.metadata.activityId;
 
         const isIncoming = t.type === "IncomingPayment";
         const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
