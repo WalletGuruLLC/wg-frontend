@@ -191,7 +191,7 @@ export default function TransactionsByUserPage() {
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "9999999",
+      items: "99",
       type: "PLATFORM",
     },
     {

@@ -171,6 +171,7 @@ export default function TransactionsByUserPage() {
     type: searchParams.get("type") ?? "",
     providerIds: searchParams.get("providerIds") ?? "",
     state: searchParams.get("state") ?? "",
+    userType: "USER",
   };
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
@@ -188,7 +189,7 @@ export default function TransactionsByUserPage() {
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "9999999",
+      items: "99",
       type: "PLATFORM",
     },
     {
