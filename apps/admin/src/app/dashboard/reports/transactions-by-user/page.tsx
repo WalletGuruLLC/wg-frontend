@@ -501,7 +501,7 @@ export default function TransactionsByUserPage() {
                   {
                     values[
                       "dashboard.reports.sections-transactions-by-user.search.provider.label"
-                      ]
+                    ]
                   }
                 </Label>
                 <Select
@@ -523,7 +523,7 @@ export default function TransactionsByUserPage() {
                       placeholder={
                         values[
                           `dashboard.reports.sections-transactions-by-user.search.provider.placeholder`
-                          ]
+                        ]
                       }
                     />
                   </SelectTrigger>
@@ -532,7 +532,7 @@ export default function TransactionsByUserPage() {
                       .filter((p) =>
                         accessLevelsData?.providers[
                           p.id
-                          ]?.transactionsByUser.includes("view"),
+                        ]?.transactionsByUser.includes("view"),
                       )
                       .map((provider) => (
                         <SelectItem key={provider.id} value={provider.id}>
@@ -542,7 +542,7 @@ export default function TransactionsByUserPage() {
                     {providersData?.providers.filter((p) =>
                       accessLevelsData?.providers[
                         p.id
-                        ]?.transactionsByUser.includes("view"),
+                      ]?.transactionsByUser.includes("view"),
                     ).length === 0 && (
                       <SelectItem value="no" disabled>
                         No providers available
