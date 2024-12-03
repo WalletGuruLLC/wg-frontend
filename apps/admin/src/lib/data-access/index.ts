@@ -1981,7 +1981,7 @@ export function useGetTransactionsByUserQuery(
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
-        items: "9999999999",
+        items: "99",
         page: "1",
       } as unknown as Record<string, string>);
 
@@ -2194,7 +2194,7 @@ export function useGetTransactionsByProviderQuery(
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
-        items: "9999999999",
+        items: "99",
         page: "1",
       } as unknown as Record<string, string>);
 

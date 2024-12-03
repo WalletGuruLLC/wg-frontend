@@ -276,6 +276,7 @@ export const transactionsByUserValidator = z.object({
   type: z.string().min(1).optional(),
   providerIds: z.string().min(1).optional(),
   state: z.string().min(1).optional(),
+  userType: z.string().min(1).optional(),
 });
 
 export const reservedFundsByUserValidator = z.object({
