@@ -187,28 +187,6 @@ export default function ReportsPage() {
               </span>
             </Link>
           )}
-          {accessLevelData?.general.disputes.includes("view") && (
-            <Link
-              href={`/dashboard/reports/disputes`}
-              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
-            >
-              <FileText size={32} strokeWidth={0.75} color="#3678B1" />
-              <span className="text-2xl">
-                {values["dashboard.reports.sections.disputes"]}
-              </span>
-            </Link>
-          )}{" "}
-          {accessLevelData?.general.reservedFunds.includes("view") && (
-            <Link
-              href={`/dashboard/reports/reserved-funds`}
-              className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
-            >
-              <TrendingUp size={32} strokeWidth={0.75} color="#3678B1" />
-              <span className="text-2xl">
-                {values["dashboard.reports.sections.reservedFunds"]}
-              </span>
-            </Link>
-          )}
         </div>
       </div>
     );

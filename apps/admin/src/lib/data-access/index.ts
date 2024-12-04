@@ -21,6 +21,7 @@ import type {
   addOrEditUserValidator,
   addOrEditWalletValidator,
   changePasswordValidator,
+  clearPaymentsValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -1940,6 +1941,30 @@ export interface Activity {
   transactions: Transaction[];
 }
 
+interface UseClearPaymentQueryOutput {
+  clearPayments: ClearPayment[];
+  currentPage: number;
+  total: number;
+  user: string;
+  totalPages: number;
+}
+
+export interface ClearPayment {
+  id: string;
+  month?: string;
+  value: number;
+  fees: number;
+  startDate: string;
+  endDate: string;
+  state: boolean;
+  serviceProviderId: string;
+  observations: string;
+  referenceNumber: string;
+  transactionIds: [string];
+  createDate: string;
+  updateDate: string;
+}
+
 export interface Transaction {
   transactionId: string;
   type: string;
@@ -1955,6 +1980,38 @@ interface UseGetTransactionsByUserQueryOutput {
   total: number;
   user: string;
   totalPages: number;
+}
+
+export function useGetClearPaymentsQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof clearPaymentsValidator>,
+  options: UseQueryOptions<UseClearPaymentQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-clear-payments"],
+    queryFn: () => {
+      if (input.month === "ALL") {
+        input.month = "";
+      }
+      if (input.status === "ALL") {
+        input.status = "";
+      }
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      const params = new URLSearchParams(input as Record<string, string>);
+      return customFetch<UseClearPaymentQueryOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/clear-payments/list/payments` +
+          "?" +
+          params.toString(),
+      );
+    },
+  });
 }
 
 export function useGetTransactionsByUserQuery(
