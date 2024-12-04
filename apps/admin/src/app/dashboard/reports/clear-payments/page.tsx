@@ -1,17 +1,13 @@
 "use client";
 
-import type { ReactNode } from "react";
 import type { z } from "zod";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Download } from "lucide-react";
 
-import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { Label } from "@wg-frontend/ui/label";
 import {
@@ -21,10 +17,10 @@ import {
   SelectValue,
 } from "@wg-frontend/ui/select";
 
-import type { Activity, Transaction } from "~/lib/data-access";
+import type { ClearPayment } from "~/lib/data-access";
 import type {
+  clearPaymentsValidator,
   paginationAndSearchValidator,
-  transactionsByUserValidator,
 } from "~/lib/validators";
 import Table, {
   ColumnHeader,
@@ -34,102 +30,126 @@ import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
   useGetAuthedUserAccessLevelsQuery,
-  useGetAuthedUserInfoQuery,
+  useGetClearPaymentsQuery,
   useGetDashboardUsersTitleQuery,
+  useGetProviderQuery,
   useGetProvidersQuery,
-  useGetTransactionsByUserQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import Dialog from "../../_components/dashboard-dialog";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
-function Actions({ activity }: { activity: Activity }) {
-  const { values } = useI18n();
+// function Actions({ clear }: { clear: ClearPayment }) {
+//   const { values } = useI18n();
+//
+//   return (
+//     <div className="flex flex-row space-x-4">
+//       {clear.id && (
+//         <DetailsDialog
+//           activity={clear}
+//           trigger={
+//             <Button
+//               className="flex h-max flex-row items-center space-x-2"
+//               variant="link"
+//             >
+//               <p className="flex-1 text-lg font-light">
+//                 {
+//                   values[
+//                     "dashboard.reports.sections.clear-payments.header.actions.details"
+//                   ]
+//                 }
+//               </p>
+//             </Button>
+//           }
+//         />
+//       )}
+//     </div>
+//   );
+// }
 
-  return (
-    <div className="flex flex-row space-x-4">
-      {activity.activityId && (
-        <DetailsDialog
-          activity={activity}
-          trigger={
-            <Button
-              className="flex h-max flex-row items-center space-x-2"
-              variant="link"
-            >
-              <p className="flex-1 text-lg font-light">
-                {
-                  values[
-                    "dashboard.reports.sections.clear-payments.header.actions.details"
-                  ]
-                }
-              </p>
-            </Button>
-          }
-        />
-      )}
-    </div>
-  );
-}
+const formatCurrency = (value: number, code: string, scale = 6) => {
+  const formattedValue = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: scale,
+    maximumFractionDigits: scale,
+  }).format(value / Math.pow(10, scale));
+  return `${formattedValue} ${code}`;
+};
 
-const columnHelper = createColumnHelper<Activity>();
+const getDataProvider = (providerId: string) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { data, isLoading: isLoadingProviderData } = useGetProviderQuery({
+    providerId,
+  });
+  return { data, isLoadingProviderData };
+};
+
+const columnHelper = createColumnHelper<ClearPayment>();
 const columns = [
-  columnHelper.accessor("type", {
-    id: "type",
+  columnHelper.accessor("month", {
+    id: "month",
     cell: (info) => info.getValue(),
     header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.type" />
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.month" />
     ),
   }),
-  columnHelper.accessor("description", {
-    id: "description",
-    cell: (info) => info.getValue() || "-",
+  columnHelper.accessor("serviceProviderId", {
+    id: "provider",
+    cell: (info) => {
+      const { data, isLoadingProviderData } = getDataProvider(info.getValue());
+      return isLoadingProviderData ? "Loading..." : data?.name;
+    },
     header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.description" />
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.provider" />
     ),
   }),
-  columnHelper.accessor("startDate", {
-    id: "startDate",
-    cell: (info) => info.getValue(),
+  columnHelper.accessor("value", {
+    id: "value",
+    cell: (info) => {
+      return `$ ${formatCurrency(info.getValue(), "USD")}`;
+    },
     header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.start" />
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.transactions" />
     ),
   }),
-  columnHelper.accessor("endDate", {
-    id: "endDate",
-    cell: (info) => info.getValue(),
+  columnHelper.accessor("fees", {
+    id: "fees",
+    cell: (info) => {
+      return `$ ${formatCurrency(info.getValue(), "USD")}`;
+    },
     header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.finish" />
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.fees" />
     ),
   }),
-  columnHelper.accessor("status", {
-    id: "status",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.state" />
-    ),
-  }),
-  columnHelper.accessor("amount", {
-    id: "amount",
-    cell: (info) => (
-      <span className={info.getValue().startsWith("-") ? "text-[#FF0000]" : ""}>
-        {info.getValue()}
-      </span>
-    ),
+  columnHelper.accessor("value", {
+    id: "value",
+    cell: (info) => {
+      return `$ ${formatCurrency(info.getValue() - info.row.original.fees, "USD")}`;
+    },
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.ammount" />
     ),
   }),
-  columnHelper.display({
-    id: "actions",
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.actions" />
+  columnHelper.accessor("state", {
+    id: "state",
+    cell: (info) => (
+      <span className={info.getValue() ? "text-[#FF0000]" : ""}>
+        {info.getValue() ? "Cleared" : "Clear payment"}
+      </span>
     ),
-    cell: (info) => <Actions activity={info.row.original} />,
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.status" />
+    ),
+  }),
+  columnHelper.display({
+    id: "details",
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.actions.details" />
+    ),
+    // cell: (info) => <Actions clear={info.row.original} />,
   }),
 ];
 
-export default function TransactionsByUserPage() {
+export default function ClearPaymentPage() {
   const loading = useAccessLevelGuard({
     general: {
       module: "transactionsByUser",
@@ -147,33 +167,21 @@ export default function TransactionsByUserPage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const filters: z.infer<typeof transactionsByUserValidator> = {
-    walletAddress: searchParams.get("walletAddress") ?? "",
-    startDate: searchParams.get("startDate")
-      ? new Date(Number(searchParams.get("startDate")))
-      : undefined,
-    endDate: searchParams.get("endDate")
-      ? new Date(Number(searchParams.get("endDate")))
-      : undefined,
-    type: searchParams.get("type") ?? "",
-    providerIds: searchParams.get("providerIds") ?? "",
-    state: searchParams.get("state") ?? "",
+  const filters: z.infer<typeof clearPaymentsValidator> = {
+    month: searchParams.get("month") ?? "",
+    providerId: searchParams.get("providerId") ?? "",
+    status: searchParams.get("status") ?? "",
   };
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
-    data: transactionsData,
+    data: clearData,
     isLoading,
     refetch,
-  } = useGetTransactionsByUserQuery(
-    {
-      ...paginationAndSearch,
-      ...filters,
-    },
-    {
-      enabled: filters.walletAddress !== "",
-    },
-  );
+  } = useGetClearPaymentsQuery({
+    ...paginationAndSearch,
+    ...filters,
+  });
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -188,7 +196,7 @@ export default function TransactionsByUserPage() {
   );
 
   const table = useReactTable({
-    data: transactionsData?.activities ?? [],
+    data: clearData?.clearPayments ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -215,15 +223,13 @@ export default function TransactionsByUserPage() {
   }
 
   function handleFiltersChange(
-    newFilters: Partial<z.infer<typeof transactionsByUserValidator>>,
+    newFilters: Partial<z.infer<typeof clearPaymentsValidator>>,
   ) {
     const params = new URLSearchParams(searchParams);
     for (const key in newFilters) {
       const val = newFilters[key as keyof typeof newFilters];
       if (val) {
-        if (val instanceof Date) {
-          params.set(key, `${val.getTime()}`);
-        } else params.set(key, val);
+        params.set(key, val);
       } else {
         params.delete(key);
       }
@@ -259,7 +265,7 @@ export default function TransactionsByUserPage() {
             <Label className="font-normal">
               {
                 values[
-                  "dashboard.reports.sections-clear-payments.search.type.label"
+                  "dashboard.reports.sections-clear-payments.search.month.label"
                 ]
               }
             </Label>
@@ -267,28 +273,100 @@ export default function TransactionsByUserPage() {
               onValueChange={(value) =>
                 handleFiltersChange({
                   ...filters,
-                  type: value,
+                  month: value,
                 })
               }
-              defaultValue={filters.type}
+              defaultValue={filters.month}
             >
               <SelectTrigger
                 className={cn(
                   "rounded-lg border border-black",
-                  !filters.type && "text-gray-400",
+                  !filters.month && "text-gray-400",
                 )}
               >
                 <SelectValue
                   placeholder={
                     values[
-                      `dashboard.reports.sections-reserved-funds-by-user.search.type.placeholder`
+                      `dashboard.reports.sections-clear-payments.search.month.label`
                     ]
                   }
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="IncomingPayment">Incoming</SelectItem>
-                <SelectItem value="OutgoingPayment">Outgoing</SelectItem>
+                <SelectItem value="ALL">
+                  {
+                    values[
+                      "dashboard.reports.sections-clear-payments.search.state.all"
+                    ]
+                  }
+                </SelectItem>
+                <SelectItem value="1">January</SelectItem>
+                <SelectItem value="2">February</SelectItem>
+                <SelectItem value="3">March</SelectItem>
+                <SelectItem value="4">April</SelectItem>
+                <SelectItem value="5">May</SelectItem>
+                <SelectItem value="6">June</SelectItem>
+                <SelectItem value="7">July</SelectItem>
+                <SelectItem value="8">August</SelectItem>
+                <SelectItem value="9">September</SelectItem>
+                <SelectItem value="10">October</SelectItem>
+                <SelectItem value="11">November</SelectItem>
+                <SelectItem value="12">December</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="min-w-60 flex-1 space-y-0">
+            <Label className="font-normal">
+              {
+                values[
+                  "dashboard.reports.sections-clear-payments.search.provider.label"
+                ]
+              }
+            </Label>
+            <Select
+              onValueChange={(value) =>
+                handleFiltersChange({
+                  ...filters,
+                  providerId: value,
+                })
+              }
+              defaultValue={filters.providerId}
+            >
+              <SelectTrigger
+                className={cn(
+                  "rounded-lg border border-black",
+                  !filters.providerId && "text-gray-400",
+                )}
+              >
+                <SelectValue
+                  placeholder={
+                    values[
+                      `dashboard.reports.sections-clear-payments.search.provider.placeholder`
+                    ]
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {providersData?.providers
+                  .filter((p) =>
+                    accessLevelsData?.providers[p.id]?.clearPayments.includes(
+                      "view",
+                    ),
+                  )
+                  .map((provider) => (
+                    <SelectItem key={provider.id} value={provider.id}>
+                      {provider.name}
+                    </SelectItem>
+                  ))}
+                {providersData?.providers.filter((p) =>
+                  accessLevelsData?.providers[p.id]?.clearPayments.includes(
+                    "view",
+                  ),
+                ).length === 0 && (
+                  <SelectItem value="no" disabled>
+                    No providers available
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -305,15 +383,15 @@ export default function TransactionsByUserPage() {
               onValueChange={(value) =>
                 handleFiltersChange({
                   ...filters,
-                  state: value,
+                  status: value,
                 })
               }
-              defaultValue={filters.state}
+              defaultValue={filters.status}
             >
               <SelectTrigger
                 className={cn(
                   "rounded-lg border border-black",
-                  !filters.state && "text-[#A1A1A1]",
+                  !filters.status && "text-[#A1A1A1]",
                 )}
               >
                 <SelectValue
@@ -325,14 +403,21 @@ export default function TransactionsByUserPage() {
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PENDING">
+                <SelectItem value="ALL">
+                  {
+                    values[
+                      "dashboard.reports.sections-clear-payments.search.state.all"
+                    ]
+                  }
+                </SelectItem>
+                <SelectItem value="false">
                   {
                     values[
                       "dashboard.reports.sections-clear-payments.search.state.pending"
                     ]
                   }
                 </SelectItem>
-                <SelectItem value="COMPLETED">
+                <SelectItem value="true">
                   {
                     values[
                       "dashboard.reports.sections-clear-payments.search.state.completed"
@@ -343,57 +428,6 @@ export default function TransactionsByUserPage() {
             </Select>
           </div>
 
-          <div className="min-w-60 flex-1 space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-clear-payments.search.provider.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  providerIds: value,
-                })
-              }
-              defaultValue={filters.providerIds}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.providerIds && "text-gray-400",
-                )}
-              >
-                <SelectValue
-                  placeholder={
-                    values[
-                      `dashboard.reports.sections-clear-payments.search.provider.placeholder`
-                    ]
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {providersData?.providers
-                  .filter((p) =>
-                    accessLevelsData?.providers[p.id]?.reports.includes("view"),
-                  )
-                  .map((provider) => (
-                    <SelectItem key={provider.id} value={provider.id}>
-                      {provider.name}
-                    </SelectItem>
-                  ))}
-                {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[p.id]?.reports.includes("view"),
-                ).length === 0 && (
-                  <SelectItem value="no" disabled>
-                    No providers available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
           <Button className="h-max self-end" onClick={() => refetch()}>
             <p className="flex-1 text-lg font-light">
               {
@@ -410,7 +444,7 @@ export default function TransactionsByUserPage() {
       </div>
       <PaginationFooter
         count={{
-          total: transactionsData?.total ?? 0,
+          total: clearData?.total ?? 0,
           firstRowIdx,
           lastRowIdx,
         }}
@@ -424,8 +458,7 @@ export default function TransactionsByUserPage() {
         }
         canPreviousPage={paginationAndSearch.page !== "1"}
         canNextPage={
-          transactionsData?.activities.length ===
-          Number(paginationAndSearch.items)
+          clearData?.clearPayments.length === Number(paginationAndSearch.items)
         }
         onPreviousPage={() =>
           handlePaginationAndSearchChange({
@@ -443,94 +476,94 @@ export default function TransactionsByUserPage() {
     </div>
   );
 }
+//
+// const columnHelperDetails = createColumnHelper<ClearPayment>();
+// const columnsDetails = [
+//   columnHelperDetails.accessor("month", {
+//     id: "month",
+//     cell: (info) => info.getValue(),
+//     header: () => (
+//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.month" />
+//     ),
+//   }),
+//   columnHelperDetails.accessor("serviceProviderId", {
+//     id: "provider",
+//     cell: (info) => info.getValue(),
+//     header: () => (
+//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.provider" />
+//     ),
+//   }),
+//   columnHelperDetails.accessor("value", {
+//     id: "amount",
+//     cell: (info) => info.getValue(),
+//     header: () => (
+//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.ammount" />
+//     ),
+//   }),
+//   columnHelperDetails.accessor("fees", {
+//     id: "date",
+//     cell: (info) => info.getValue(),
+//     header: () => (
+//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.details.date" />
+//     ),
+//   }),
+//   columnHelperDetails.accessor("state", {
+//     id: "status",
+//     cell: (info) => info.getValue(),
+//     header: () => (
+//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.actions.details" />
+//     ),
+//   }),
+// ];
 
-const columnHelperDetails = createColumnHelper<Transaction>();
-const columnsDetails = [
-  columnHelperDetails.accessor("type", {
-    id: "type",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.type" />
-    ),
-  }),
-  columnHelperDetails.accessor("description", {
-    id: "description",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.description" />
-    ),
-  }),
-  columnHelperDetails.accessor("amount", {
-    id: "amount",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.ammount" />
-    ),
-  }),
-  columnHelperDetails.accessor("date", {
-    id: "date",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.details.date" />
-    ),
-  }),
-  columnHelperDetails.accessor("status", {
-    id: "status",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.state" />
-    ),
-  }),
-];
-
-function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
-  const { values } = useI18n();
-  const [isOpen, _, __, toggle] = useBooleanHandlers();
-  const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-  const table = useReactTable({
-    data: props.activity.transactions,
-    columns: columnsDetails,
-    getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
-  });
-
-  return (
-    <Dialog
-      key={props.activity.activityId}
-      isOpen={isOpen}
-      contentClassName="max-w-3xl max-h-3xl"
-      toggleOpen={toggle}
-      trigger={props.trigger}
-      ariaDescribedBy="service-transaction-details"
-    >
-      <div className="space-y-7">
-        <h1 className="text-2xl font-light">
-          {values["dashboard.reports.sections.clear-payments.details.header"]}
-        </h1>
-        <div className="flex flex-row items-center justify-between">
-          Activity ID: {props.activity.activityId}
-          <Link
-            passHref
-            href={
-              userData?.type === "PLATFORM"
-                ? `/dashboard/dispute/${props.activity.activityId}`
-                : `/dashboard/refund/${props.activity.activityId}`
-            }
-          >
-            <Button className="px-2">
-              {userData?.type === "PLATFORM"
-                ? values["dashboard.dispute.button.details"]
-                : values["dashboard.refund.button.details"]}
-            </Button>
-          </Link>
-          <Button className="px-2" variant="secondary">
-            <Download strokeWidth={0.75} className="size-6" />
-          </Button>
-        </div>
-        <div className="flex-1 overflow-auto">
-          <Table table={table} />
-        </div>
-      </div>
-    </Dialog>
-  );
-}
+// function DetailsDialog(props: { activity: ClearPayment; trigger: ReactNode }) {
+//   const { values } = useI18n();
+//   const [isOpen, _, __, toggle] = useBooleanHandlers();
+//   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+//   const table = useReactTable({
+//     data: props.activity,
+//     columns: columnsDetails,
+//     getCoreRowModel: getCoreRowModel(),
+//     manualPagination: true,
+//   });
+//
+//   return (
+//     <Dialog
+//       key={props.activity.id}
+//       isOpen={isOpen}
+//       contentClassName="max-w-3xl max-h-3xl"
+//       toggleOpen={toggle}
+//       trigger={props.trigger}
+//       ariaDescribedBy="service-transaction-details"
+//     >
+//       <div className="space-y-7">
+//         <h1 className="text-2xl font-light">
+//           {values["dashboard.reports.sections.clear-payments.details.header"]}
+//         </h1>
+//         <div className="flex flex-row items-center justify-between">
+//           ClearPayment ID: {props.activity.id}
+//           <Link
+//             passHref
+//             href={
+//               userData?.type === "PLATFORM"
+//                 ? `/dashboard/dispute/${props.activity.id}`
+//                 : `/dashboard/refund/${props.activity.id}`
+//             }
+//           >
+//             <Button className="px-2">
+//               {userData?.type === "PLATFORM"
+//                 ? values["dashboard.dispute.button.details"]
+//                 : values["dashboard.refund.button.details"]}
+//             </Button>
+//           </Link>
+//           <Button className="px-2" variant="secondary">
+//             <Download strokeWidth={0.75} className="size-6" />
+//           </Button>
+//         </div>
+//         <div className="flex-1 overflow-auto">
+//           <Table table={table} />
+//         </div>
+//       </div>
+//     </Dialog>
+//   );
+// }
