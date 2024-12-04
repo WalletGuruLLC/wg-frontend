@@ -676,6 +676,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.refunds": "Reembolsos",
     "dashboard.roles.role.modules.fees": "Costos",
     "dashboard.roles.role.modules.paymentSummary": "Pagos Recibidos",
+    "dashboard.reports.sections.paymentSummary": "Pagos Recibidos",
     "dashboard.roles.role.success-toast":
       "Niveles de Acceso del Rol Actualizados",
     "dashboard.roles.role.module.search.placeholder": "Buscar",
@@ -995,7 +996,6 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
     "dashboard.dispute.button.details": "Disputa",
     "dashboard.refund.button.details": "Reembolso",
-    "dashboard.reports.sections.paymentSummary": "Pagos Recibidos",
     "dashboard.roles.role.modules.healthCheck": "Chequeo Salud",
     "dashboard.reports.sections.reserved-funds-by-user.header.type": "Tipo",
     "dashboard.reports.sections.reserved-funds-by-user.header.description":

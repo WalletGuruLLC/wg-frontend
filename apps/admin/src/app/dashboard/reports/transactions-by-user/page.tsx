@@ -171,6 +171,7 @@ export default function TransactionsByUserPage() {
     type: searchParams.get("type") ?? "",
     providerIds: searchParams.get("providerIds") ?? "",
     state: searchParams.get("state") ?? "",
+    userType: "USER",
   };
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
@@ -188,7 +189,7 @@ export default function TransactionsByUserPage() {
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "9999999",
+      items: "99",
       type: "PLATFORM",
     },
     {
@@ -329,9 +330,9 @@ export default function TransactionsByUserPage() {
                   )}
                 >
                   {filters.startDate ? (
-                    format(filters.startDate, "yyyy/MM/dd")
+                    format(filters.startDate, "yyyy-MM-dd")
                   ) : (
-                    <span>yyyy/mm/dd</span>
+                    <span>yyyy-mm-dd</span>
                   )}
                   <CalendarIcon
                     className="absolute right-2 size-5"
@@ -378,9 +379,9 @@ export default function TransactionsByUserPage() {
                   )}
                 >
                   {filters.endDate ? (
-                    format(filters.endDate, "yyyy/MM/dd")
+                    format(filters.endDate, "yyyy-MM-dd")
                   ) : (
-                    <span>yyyy/mm/dd</span>
+                    <span>yyyy-mm-dd</span>
                   )}
                   <CalendarIcon
                     className="absolute right-2 size-5"
@@ -553,7 +554,6 @@ export default function TransactionsByUserPage() {
               </div>
             )
           }
-
           <Button className="h-max self-end" onClick={() => refetch()}>
             <p className="flex-1 text-lg font-light">
               {
