@@ -4,6 +4,7 @@ import type { I18nDictionary } from "@wg-frontend/i18n";
 
 export const dashboardDict = {
   en: {
+    "0": "No month selected",
     "1": "January",
     "2": "February",
     "3": "March",
@@ -526,6 +527,10 @@ export const dashboardDict = {
       "No end date selected",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "The report has been downloaded successfully.",
+    "dashboard.reports.sections.clear-payments.header.date": "Date",
+    "dashboard.reports.sections.clear-payments.header.description": "Description",
+    "dashboard.reports.sections.clear-payments.header.type": "Type",
+    "dashboard.reports.sections.clear-payments.header.user": "User",
     "dashboard.reports.sections.clear-payments.header.month": "Month",
     "dashboard.reports.sections.clear-payments.header.provider": "Provider",
     "dashboard.reports.sections.clear-payments.header.transactions":
@@ -588,6 +593,7 @@ export const dashboardDict = {
       "The report has been downloaded successfully.",
   },
   es: {
+    "0": "Mes no seleccionado",
     "1": "Enero",
     "2": "Febrero",
     "3": "Marzo",
@@ -1087,6 +1093,10 @@ export const dashboardDict = {
       "No se ha seleccionado una fecha de fin",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "El reporte ha sido descargado exitosamente.",
+    "dashboard.reports.sections.clear-payments.header.date": "Fecha",
+    "dashboard.reports.sections.clear-payments.header.description": "Descripción",
+    "dashboard.reports.sections.clear-payments.header.type": "Tipo",
+    "dashboard.reports.sections.clear-payments.header.user": "Usuario",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
     "dashboard.reports.sections.clear-payments.header.provider": "Proveedor",
     "dashboard.reports.sections.clear-payments.header.transactions":
