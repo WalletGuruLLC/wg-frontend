@@ -1952,6 +1952,7 @@ interface UseClearPaymentQueryOutput {
 export interface ClearPayment {
   id: string;
   month?: string;
+  year?: string;
   value: number;
   fees: number;
   startDate: string;
@@ -1993,6 +1994,9 @@ export function useGetClearPaymentsQuery(
     queryFn: () => {
       if (input.month === "ALL") {
         input.month = "";
+      }
+      if (input.year === "ALL") {
+        input.year = "";
       }
       if (input.status === "ALL") {
         input.status = "";

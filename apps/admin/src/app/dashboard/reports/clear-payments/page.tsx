@@ -84,10 +84,27 @@ const getDataProvider = (providerId: string) => {
 };
 
 const columnHelper = createColumnHelper<ClearPayment>();
+
+function getTranslation(s: string) {
+  const { values } = useI18n();
+  // @ts-ignore
+  return values[s];
+}
+
 const columns = [
+  columnHelper.accessor("year", {
+    id: "year",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections-clear-payments.search.year.label" />
+    ),
+  }),
   columnHelper.accessor("month", {
     id: "month",
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return getTranslation(`${info.getValue()}`);
+    },
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.month" />
     ),
@@ -169,6 +186,7 @@ export default function ClearPaymentPage() {
 
   const filters: z.infer<typeof clearPaymentsValidator> = {
     month: searchParams.get("month") ?? "",
+    year: searchParams.get("year") ?? "",
     providerId: searchParams.get("providerId") ?? "",
     status: searchParams.get("status") ?? "",
   };
@@ -312,6 +330,50 @@ export default function ClearPaymentPage() {
                 <SelectItem value="10">October</SelectItem>
                 <SelectItem value="11">November</SelectItem>
                 <SelectItem value="12">December</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-0">
+            <Label className="font-normal">
+              {
+                values[
+                  "dashboard.reports.sections-clear-payments.search.year.label"
+                ]
+              }
+            </Label>
+            <Select
+              onValueChange={(value) =>
+                handleFiltersChange({
+                  ...filters,
+                  year: value,
+                })
+              }
+              defaultValue={filters.year}
+            >
+              <SelectTrigger
+                className={cn(
+                  "rounded-lg border border-black",
+                  !filters.year && "text-gray-400",
+                )}
+              >
+                <SelectValue
+                  placeholder={
+                    values[
+                      `dashboard.reports.sections-clear-payments.search.year.label`
+                    ]
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">
+                  {
+                    values[
+                      "dashboard.reports.sections-clear-payments.search.state.all"
+                    ]
+                  }
+                </SelectItem>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2025">2025</SelectItem>
               </SelectContent>
             </Select>
           </div>

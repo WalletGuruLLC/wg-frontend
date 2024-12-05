@@ -4,6 +4,18 @@ import type { I18nDictionary } from "@wg-frontend/i18n";
 
 export const dashboardDict = {
   en: {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December",
     "dashboard.home.title": "Welcome",
     "dashboard.layout.nav.home": "Home",
     "dashboard.layout.nav.wallet-management": "Wallet Management",
@@ -547,6 +559,7 @@ export const dashboardDict = {
     "dashboard.reports.sections-clear-payments.search.month.error":
       "Enter a valid month",
     "dashboard.reports.sections-clear-payments.search.month.label": "Month",
+    "dashboard.reports.sections-clear-payments.search.year.label": "Year",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
       "Select a state",
     "dashboard.reports.sections-clear-payments.search.state.all": "All",
@@ -575,6 +588,18 @@ export const dashboardDict = {
       "The report has been downloaded successfully.",
   },
   es: {
+    "1": "Enero",
+    "2": "Febrero",
+    "3": "Marzo",
+    "4": "Abril",
+    "5": "Mayo",
+    "6": "Junio",
+    "7": "Julio",
+    "8": "Agosto",
+    "9": "Septiembre",
+    "10": "Octubre",
+    "11": "Noviembre",
+    "12": "Diciembre",
     "dashboard.home.title": "Bienvenido",
     "dashboard.layout.nav.home": "Inicio",
     "dashboard.layout.nav.wallet-management": "Billeteras",
@@ -1095,6 +1120,7 @@ export const dashboardDict = {
     "dashboard.reports.sections-clear-payments.search.month.error":
       "Ingrese un mes válido",
     "dashboard.reports.sections-clear-payments.search.month.label": "Mes",
+    "dashboard.reports.sections-clear-payments.search.year.label": "Año",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
       "Seleccione un estado",
     "dashboard.reports.sections-clear-payments.search.state.all": "Todos",
