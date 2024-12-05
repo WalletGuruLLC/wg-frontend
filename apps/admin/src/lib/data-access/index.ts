@@ -1952,6 +1952,7 @@ interface UseClearPaymentQueryOutput {
 export interface ClearPayment {
   id: string;
   month?: string;
+  year?: string;
   value: number;
   fees: number;
   startDate: string;

@@ -78,10 +78,17 @@ function getTranslation(s: string) {
 }
 
 const columns = [
+  columnHelper.accessor("year", {
+    id: "year",
+    cell: (info) => info.getValue(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections-clear-payments.search.year.label" />
+    ),
+  }),
   columnHelper.accessor("month", {
     id: "month",
-    // cell: (info) => info.getValue(),
     cell: (info) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return getTranslation(`${info.getValue()}`);
     },
     header: () => (
