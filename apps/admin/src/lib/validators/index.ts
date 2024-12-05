@@ -279,6 +279,13 @@ export const transactionsByUserValidator = z.object({
   userType: z.string().min(1).optional(),
 });
 
+export const clearPaymentsValidator = z.object({
+  year: z.string().optional(),
+  month: z.string().optional(),
+  providerId: z.string().min(1).optional(),
+  status: z.string().min(1).optional(),
+});
+
 export const reservedFundsByUserValidator = z.object({
   walletAddress: z
     .string()

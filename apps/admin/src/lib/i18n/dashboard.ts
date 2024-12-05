@@ -4,6 +4,18 @@ import type { I18nDictionary } from "@wg-frontend/i18n";
 
 export const dashboardDict = {
   en: {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December",
     "dashboard.home.title": "Welcome",
     "dashboard.layout.nav.home": "Home",
     "dashboard.layout.nav.wallet-management": "Wallet Management",
@@ -514,13 +526,13 @@ export const dashboardDict = {
       "No end date selected",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "The report has been downloaded successfully.",
-    "dashboard.reports.sections.clear-payments.header.type": "Type",
-    "dashboard.reports.sections.clear-payments.header.description":
-      "Description",
-    "dashboard.reports.sections.clear-payments.header.start": "Start Date",
-    "dashboard.reports.sections.clear-payments.header.finish": "End Date",
-    "dashboard.reports.sections.clear-payments.header.state": "Status",
-    "dashboard.reports.sections.clear-payments.header.actions": "Actions",
+    "dashboard.reports.sections.clear-payments.header.month": "Month",
+    "dashboard.reports.sections.clear-payments.header.provider": "Provider",
+    "dashboard.reports.sections.clear-payments.header.transactions":
+      "Transactions",
+    "dashboard.reports.sections.clear-payments.header.fees": "Fees",
+    "dashboard.reports.sections.clear-payments.header.amount": "Amount",
+    "dashboard.reports.sections.clear-payments.header.status": "Status",
     "dashboard.reports.sections.clear-payments.header.actions.details":
       "Details",
     "dashboard.reports.sections.clear-payments.details.header":
@@ -542,16 +554,19 @@ export const dashboardDict = {
       "Start Date",
     "dashboard.reports.sections-clear-payments.search.end-date.label":
       "End Date",
-    "dashboard.reports.sections-clear-paymentsr.search.type.placeholder":
-      "Select a type",
-    "dashboard.reports.sections-clear-payments.search.type.error":
-      "Enter a valid type",
-    "dashboard.reports.sections-clear-payments.search.type.label": "Type",
+    "dashboard.reports.sections-clear-paymentsr.search.month.placeholder":
+      "Select a month",
+    "dashboard.reports.sections-clear-payments.search.month.error":
+      "Enter a valid month",
+    "dashboard.reports.sections-clear-payments.search.month.label": "Month",
+    "dashboard.reports.sections-clear-payments.search.year.label": "Year",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
       "Select a state",
-    "dashboard.reports.sections-clear-payments.search.state.pending": "Pending",
+    "dashboard.reports.sections-clear-payments.search.state.all": "All",
+    "dashboard.reports.sections-clear-payments.search.state.pending":
+      "Clear payment",
     "dashboard.reports.sections-clear-payments.search.state.completed":
-      "Completed",
+      "Cleared",
     "dashboard.reports.sections-clear-payments.search.state.error":
       "Enter a valid state",
     "dashboard.reports.sections-clear-payments.search.state.label": "Status",
@@ -573,6 +588,18 @@ export const dashboardDict = {
       "The report has been downloaded successfully.",
   },
   es: {
+    "1": "Enero",
+    "2": "Febrero",
+    "3": "Marzo",
+    "4": "Abril",
+    "5": "Mayo",
+    "6": "Junio",
+    "7": "Julio",
+    "8": "Agosto",
+    "9": "Septiembre",
+    "10": "Octubre",
+    "11": "Noviembre",
+    "12": "Diciembre",
     "dashboard.home.title": "Bienvenido",
     "dashboard.layout.nav.home": "Inicio",
     "dashboard.layout.nav.wallet-management": "Billeteras",
@@ -1060,13 +1087,13 @@ export const dashboardDict = {
       "No se ha seleccionado una fecha de fin",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "El reporte ha sido descargado exitosamente.",
-    "dashboard.reports.sections.clear-payments.header.type": "Tipo",
-    "dashboard.reports.sections.clear-payments.header.description":
-      "Descripcion",
-    "dashboard.reports.sections.clear-payments.header.start": "Fecha de Inicio",
-    "dashboard.reports.sections.clear-payments.header.finish": "Fecha de Fin",
-    "dashboard.reports.sections.clear-payments.header.state": "Estado",
-    "dashboard.reports.sections.clear-payments.header.actions": "Acciones",
+    "dashboard.reports.sections.clear-payments.header.month": "Mes",
+    "dashboard.reports.sections.clear-payments.header.provider": "Proveedor",
+    "dashboard.reports.sections.clear-payments.header.transactions":
+      "Transacciones",
+    "dashboard.reports.sections.clear-payments.header.fees": "Comisiones",
+    "dashboard.reports.sections.clear-payments.header.amount": "Monto",
+    "dashboard.reports.sections.clear-payments.header.status": "Estado",
     "dashboard.reports.sections.clear-payments.header.actions.details":
       "Detalles",
     "dashboard.reports.sections.clear-payments.details.header":
@@ -1088,13 +1115,15 @@ export const dashboardDict = {
       "Fecha de inicio",
     "dashboard.reports.sections-clear-payments.search.end-date.label":
       "Fecha de fin",
-    "dashboard.reports.sections-clear-payments.search.type.placeholder":
-      "Seleccione un tipo",
-    "dashboard.reports.sections-clear-payments.search.type.error":
-      "Ingrese un tipo válido",
-    "dashboard.reports.sections-clear-payments.search.type.label": "Tipo",
+    "dashboard.reports.sections-clear-payments.search.month.placeholder":
+      "Seleccione un mes",
+    "dashboard.reports.sections-clear-payments.search.month.error":
+      "Ingrese un mes válido",
+    "dashboard.reports.sections-clear-payments.search.month.label": "Mes",
+    "dashboard.reports.sections-clear-payments.search.year.label": "Año",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
       "Seleccione un estado",
+    "dashboard.reports.sections-clear-payments.search.state.all": "Todos",
     "dashboard.reports.sections-clear-payments.search.state.pending":
       "Pendiente",
     "dashboard.reports.sections-clear-payments.search.state.completed":
