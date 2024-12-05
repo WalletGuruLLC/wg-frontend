@@ -39,7 +39,6 @@ import {
   useDownloadTransactionsByUserMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
-  useGetDashboardUsersTitleQuery,
   useGetProvidersQuery,
   useGetTransactionsByUserQuery,
 } from "~/lib/data-access";
@@ -155,19 +154,14 @@ export default function RevenuePage() {
 
   const filters: z.infer<typeof transactionsByUserValidator> = {
     walletAddress: searchParams.get("walletAddress") ?? "",
-    startDate: searchParams.get("startDate")
-      ? new Date(Number(searchParams.get("startDate")))
-      : undefined,
-    endDate: searchParams.get("endDate")
-      ? new Date(Number(searchParams.get("endDate")))
-      : undefined,
+    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(),
     type: searchParams.get("type") ?? "",
     providerIds: searchParams.get("providerIds") ?? "",
     state: searchParams.get("state") ?? "",
     userType: "USER",
   };
 
-  const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
     data: transactionsData,
     isLoading,
@@ -345,18 +339,6 @@ export default function RevenuePage() {
         </div>
         <div className="flex flex-row justify-between">
           <div>
-            <p>
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.user.label"
-                ]
-              }
-              :{" "}
-              {transactionsData?.user ??
-                values[
-                  "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected"
-                ]}
-            </p>
             <p>
               {
                 values[
