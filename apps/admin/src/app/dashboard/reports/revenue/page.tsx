@@ -11,16 +11,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { CalendarIcon, Download, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { Label } from "@wg-frontend/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@wg-frontend/ui/popover";
 import {
   Select,
   SelectContent,
@@ -34,7 +29,6 @@ import type {
   paginationAndSearchValidator,
   transactionsByUserValidator,
 } from "~/lib/validators";
-import { Input } from "~/app/dashboard/_components/dashboard-input";
 import Table, {
   ColumnHeader,
   PaginationFooter,
@@ -52,7 +46,6 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { Calendar } from "../../_components/dashboard-calendar";
 import Dialog from "../../_components/dashboard-dialog";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
@@ -280,213 +273,6 @@ export default function RevenuePage() {
       <SimpleTitle title={"Revenue"} showLoadingIndicator={isLoading} />
       <div className="space-y-4">
         <div className="flex flex-row flex-wrap gap-4">
-          <div className="min-w-60 flex-1 space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.wallet-address.label"
-                ]
-              }
-            </Label>
-            <Input
-              placeholder={
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder"
-                ]
-              }
-              defaultValue={filters.walletAddress}
-              onChange={(e) =>
-                handleFiltersChange({
-                  ...filters,
-                  walletAddress: e.target.value,
-                })
-              }
-              className="rounded-lg border border-black"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-1 self-end">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.start-date.label"
-                ]
-              }
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
-                    !filters.startDate && "text-[#A1A1A1]",
-                  )}
-                >
-                  {filters.startDate ? (
-                    format(filters.startDate, "yyyy-MM-dd")
-                  ) : (
-                    <span>yyyy-mm-dd</span>
-                  )}
-                  <CalendarIcon
-                    className="absolute right-2 size-5"
-                    strokeWidth={0.95}
-                  />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={filters.startDate}
-                  onSelect={(date) =>
-                    handleFiltersChange({
-                      ...filters,
-                      startDate: date,
-                    })
-                  }
-                  disabled={[
-                    {
-                      after: filters.endDate ? filters.endDate : new Date(),
-                    },
-                  ]}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className="flex flex-col space-y-1 self-end">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.end-date.label"
-                ]
-              }
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
-
-                    !filters.endDate && "text-[#A1A1A1]",
-                  )}
-                >
-                  {filters.endDate ? (
-                    format(filters.endDate, "yyyy-MM-dd")
-                  ) : (
-                    <span>yyyy-mm-dd</span>
-                  )}
-                  <CalendarIcon
-                    className="absolute right-2 size-5"
-                    strokeWidth={0.95}
-                  />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={filters.endDate}
-                  onSelect={(date) =>
-                    handleFiltersChange({
-                      ...filters,
-                      endDate: date,
-                    })
-                  }
-                  disabled={
-                    filters.startDate ? [{ before: filters.startDate }] : []
-                  }
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className="space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.type.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  type: value,
-                })
-              }
-              defaultValue={filters.type}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.type && "text-gray-400",
-                )}
-              >
-                <SelectValue
-                  placeholder={
-                    values[
-                      `dashboard.reports.sections-transactions-by-user.search.type.placeholder`
-                    ]
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="IncomingPayment">Incoming</SelectItem>
-                <SelectItem value="OutgoingPayment">Outgoing</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.state.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  state: value,
-                })
-              }
-              defaultValue={filters.state}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.state && "text-[#A1A1A1]",
-                )}
-              >
-                <SelectValue
-                  placeholder={
-                    values[
-                      `dashboard.reports.sections-transactions-by-user.search.state.placeholder`
-                    ]
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PENDING">
-                  {
-                    values[
-                      "dashboard.reports.sections-transactions-by-user.search.state.pending"
-                    ]
-                  }
-                </SelectItem>
-                <SelectItem value="COMPLETED">
-                  {
-                    values[
-                      "dashboard.reports.sections-transactions-by-user.search.state.completed"
-                    ]
-                  }
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           {
             /* Provider */
             userData?.type === "PLATFORM" && (
