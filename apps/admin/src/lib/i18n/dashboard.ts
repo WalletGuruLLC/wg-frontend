@@ -528,7 +528,8 @@ export const dashboardDict = {
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "The report has been downloaded successfully.",
     "dashboard.reports.sections.clear-payments.header.date": "Date",
-    "dashboard.reports.sections.clear-payments.header.description": "Description",
+    "dashboard.reports.sections.clear-payments.header.description":
+      "Description",
     "dashboard.reports.sections.clear-payments.header.type": "Type",
     "dashboard.reports.sections.clear-payments.header.user": "User",
     "dashboard.reports.sections.clear-payments.header.month": "Month",
@@ -1094,7 +1095,8 @@ export const dashboardDict = {
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
       "El reporte ha sido descargado exitosamente.",
     "dashboard.reports.sections.clear-payments.header.date": "Fecha",
-    "dashboard.reports.sections.clear-payments.header.description": "Descripción",
+    "dashboard.reports.sections.clear-payments.header.description":
+      "Descripción",
     "dashboard.reports.sections.clear-payments.header.type": "Tipo",
     "dashboard.reports.sections.clear-payments.header.user": "Usuario",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
