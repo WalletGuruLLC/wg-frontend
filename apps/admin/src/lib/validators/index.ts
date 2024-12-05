@@ -360,3 +360,23 @@ export const disputeValidator = z.object({
   amount: z.number(),
   description: z.string().optional(),
 });
+
+export const revenueValidator = z.object({
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  type: z.string().min(1).optional(),
+  providerIds: z.string().min(1).optional(),
+  state: z.string().min(1).optional(),
+  userType: z.string().min(1).optional(),
+  isRevenue: z.boolean(),
+});

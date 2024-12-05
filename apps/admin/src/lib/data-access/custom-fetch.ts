@@ -1,6 +1,6 @@
 import { navigate } from "../actions";
 
-const TIMEOUT_MILLISECONDS = 10000;
+const TIMEOUT_MILLISECONDS = 30000;
 
 /**
  * customFetch is a wrapper around the native fetch function that adds the Authorization header to the request.

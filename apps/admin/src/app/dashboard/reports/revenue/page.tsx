@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Download, Loader2 } from "lucide-react";
+import { Download } from "lucide-react";
 
 import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
@@ -27,6 +27,7 @@ import { toast } from "@wg-frontend/ui/toast";
 import type { Activity, Transaction } from "~/lib/data-access";
 import type {
   paginationAndSearchValidator,
+  revenueValidator,
   transactionsByUserValidator,
 } from "~/lib/validators";
 import Table, {
@@ -40,7 +41,7 @@ import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetProvidersQuery,
-  useGetTransactionsByUserQuery,
+  useGetRevenueQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -152,21 +153,19 @@ export default function RevenuePage() {
     search: searchParams.get("search") ?? "",
   };
 
-  const filters: z.infer<typeof transactionsByUserValidator> = {
-    walletAddress: searchParams.get("walletAddress") ?? "",
+  const filters: z.infer<typeof revenueValidator> = {
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(),
-    type: searchParams.get("type") ?? "",
+    type: "OutgoingPayment",
     providerIds: searchParams.get("providerIds") ?? "",
-    state: searchParams.get("state") ?? "",
-    userType: "USER",
+    isRevenue: true,
   };
 
   const {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByUserQuery({
+  } = useGetRevenueQuery({
     ...paginationAndSearch,
     ...filters,
   });
@@ -183,21 +182,22 @@ export default function RevenuePage() {
       enabled: !isLoadingAccessLevels,
     },
   );
-  const { mutate: downloadTransactions, isPending: downloading } =
-    useDownloadTransactionsByUserMutation({
-      onSuccess: () => {
-        toast.success(
-          values[
-            "dashboard.reports.sections-transactions-by-user.download.success"
-          ],
-        );
-      },
-      onError: (error) => {
-        toast.error(errors[error.message], {
-          description: "Error code: " + error.message,
-        });
-      },
-    });
+  const downloading = false;
+  //const { mutate: downloadTransactions, isPending: downloading } =
+  useDownloadTransactionsByUserMutation({
+    onSuccess: () => {
+      toast.success(
+        values[
+          "dashboard.reports.sections-transactions-by-user.download.success"
+        ],
+      );
+    },
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+  });
 
   const table = useReactTable({
     data: transactionsData?.activities ?? [],
@@ -363,18 +363,18 @@ export default function RevenuePage() {
             className="px-2"
             variant="secondary"
             disabled={downloading}
-            onClick={() => {
+            /*onClick={() => {
               downloadTransactions({
                 ...paginationAndSearch,
                 ...filters,
               });
-            }}
+            }}*/
           >
-            {downloading ? (
+            {/* downloading ? (
               <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
             ) : (
               <Download strokeWidth={0.75} className="size-6" />
-            )}
+            )*/}
           </Button>
         </div>
       </div>

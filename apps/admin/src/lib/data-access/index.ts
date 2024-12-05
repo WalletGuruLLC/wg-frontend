@@ -28,6 +28,7 @@ import type {
   paginationAndSearchValidator,
   resetPasswordIdValidator,
   resetPasswordValidator,
+  revenueValidator,
   sendOtpAuthenticationValidator,
   settingsValidator,
   toggleProviderPaymentParameterStatusValidator,
@@ -2572,6 +2573,152 @@ export function useEditProviderPaymentParameterMutation(
         queryKey: ["get-provider-payment-parameters"],
       });
       options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useGetRevenueQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof revenueValidator>,
+  options: UseQueryOptions<UseGetTransactionsByUserQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-transactions-by-user", input],
+    queryFn: async () => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
+      const params = new URLSearchParams({
+        ...input,
+        items: "99",
+        page: "1",
+      } as unknown as Record<string, string>);
+
+      const result = await customFetch<{
+        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
+        currentPage: number;
+        total: number;
+        totalPages: number;
+      }>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/list-transactions` +
+          "?" +
+          params.toString(),
+      );
+
+      // Group by activity id
+      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
+        const activityId = t.metadata.activityId;
+
+        const isIncoming = t.type === "IncomingPayment";
+        const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+
+        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+          Number(amount.value),
+          amount.assetScale,
+        )} ${amount.assetCode}`;
+
+        if (!activityId) {
+          acc.set(idx.toString(), {
+            activityId: undefined,
+            type: isIncoming ? "Transfer Received" : "Transfer Sent",
+            description: isIncoming ? t.senderName : t.receiverName,
+            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: t.state,
+            amount: amountString,
+            user: isIncoming ? t.receiverName : t.senderName,
+            transactions: [],
+          });
+        } else {
+          const isProvider = t.metadata.type === "PROVIDER";
+          const type = isProvider
+            ? "Service"
+            : isIncoming
+              ? "Transfer Received"
+              : "Transfer Sent";
+          const description = isProvider
+            ? (t.metadata.contentName ?? "Unknown content")
+            : isIncoming
+              ? t.senderName
+              : t.receiverName;
+
+          if (!acc.has(activityId)) {
+            acc.set(activityId, {
+              activityId,
+              type,
+              description,
+              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+              user: t.metadata.wgUser ?? "",
+              transactions: [
+                {
+                  transactionId: t.id,
+                  type,
+                  description,
+                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                  status: t.state,
+                  amount: amountString,
+                },
+              ],
+            });
+          } else {
+            const activity = acc.get(activityId);
+
+            if (!activity) return acc;
+
+            activity.transactions.push({
+              transactionId: t.id,
+              type,
+              description,
+              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+            });
+
+            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+
+            const accumulatedAmountNumber = Number(
+              activity.amount.split(" ")[0],
+            );
+            const amountNumber = Number(amountString.split(" ")[0]);
+
+            activity.amount = `${
+              accumulatedAmountNumber + amountNumber
+            } ${amount.assetCode}`;
+
+            acc.set(activityId, activity);
+          }
+        }
+
+        return acc;
+      }, new Map<string, Activity>());
+
+      const activities = Array.from(groupedActivities.values());
+
+      return {
+        activities: activities.slice(
+          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
+          +(input.page ?? 1) * +(input.items ?? 10),
+        ),
+        currentPage: +(input.page ?? 1),
+        total: activities.length,
+        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
+        user: activities[0]?.user ?? "No data",
+      };
     },
   });
 }
