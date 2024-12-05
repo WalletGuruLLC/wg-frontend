@@ -2577,14 +2577,58 @@ export function useEditProviderPaymentParameterMutation(
   });
 }
 
+interface ApiRevenueTransaction {
+  createdAt: number;
+  description: string;
+  walletAddressId: string;
+  state: string;
+  type: string;
+  updatedAt: number;
+  receiverUrl: string;
+  receiver: string;
+  metadata: {
+    activityId?: string;
+    description: string;
+    type?: string;
+    wgUser?: string;
+    contentName?: string;
+  };
+  id: string;
+  senderUrl: string;
+  senderName: string;
+  receiverName: string;
+}
+
+interface RevenueTransaction extends ApiRevenueTransaction {
+  type: "OutgoingPayment";
+  outgoingPaymentId: string;
+  receiveAmount: ApiAmount;
+}
+export interface Revenue {
+  activityId?: string;
+  type: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  amount: string;
+  transactions: Transaction[];
+}
+interface UseGetRevenueQueryOutput {
+  activities: Revenue[];
+  currentPage: number;
+  total: number;
+  totalPages: number;
+}
+
 export function useGetRevenueQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
     z.infer<typeof revenueValidator>,
-  options: UseQueryOptions<UseGetTransactionsByUserQueryOutput> = {},
+  options: UseQueryOptions<UseGetRevenueQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
-    queryKey: ["get-transactions-by-user", input],
+    queryKey: ["get-revenue", input],
     queryFn: async () => {
       Object.keys(input).forEach((key) =>
         input[key as keyof typeof input] === undefined ||
@@ -2606,7 +2650,7 @@ export function useGetRevenueQuery(
       } as unknown as Record<string, string>);
 
       const result = await customFetch<{
-        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
+        transactions: RevenueTransaction[];
         currentPage: number;
         total: number;
         totalPages: number;
@@ -2616,15 +2660,16 @@ export function useGetRevenueQuery(
           "?" +
           params.toString(),
       );
-
       // Group by activity id
       const groupedActivities = result.transactions.reduce((acc, t, idx) => {
-        const activityId = t.metadata.activityId;
+        const activityId = t.senderName;
 
-        const isIncoming = t.type === "IncomingPayment";
-        const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+        // const isIncoming = t.type === "IncomingPayment";
+        // const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+        const amount = t.receiveAmount;
 
-        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+        //  const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+        const amountString = `${""}${convertAmountWithScale(
           Number(amount.value),
           amount.assetScale,
         )} ${amount.assetCode}`;
@@ -2632,27 +2677,21 @@ export function useGetRevenueQuery(
         if (!activityId) {
           acc.set(idx.toString(), {
             activityId: undefined,
-            type: isIncoming ? "Transfer Received" : "Transfer Sent",
-            description: isIncoming ? t.senderName : t.receiverName,
+            type: "Revenue",
+            description: t.senderName,
             startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
             amount: amountString,
-            user: isIncoming ? t.receiverName : t.senderName,
+            user: t.senderName,
             transactions: [],
           });
         } else {
           const isProvider = t.metadata.type === "PROVIDER";
-          const type = isProvider
-            ? "Service"
-            : isIncoming
-              ? "Transfer Received"
-              : "Transfer Sent";
+          const type = isProvider ? "Service" : "Revenue";
           const description = isProvider
             ? (t.metadata.contentName ?? "Unknown content")
-            : isIncoming
-              ? t.senderName
-              : t.receiverName;
+            : t.senderName;
 
           if (!acc.has(activityId)) {
             acc.set(activityId, {
@@ -2703,12 +2742,18 @@ export function useGetRevenueQuery(
             acc.set(activityId, activity);
           }
         }
-
         return acc;
       }, new Map<string, Activity>());
 
       const activities = Array.from(groupedActivities.values());
-
+      console.log(activities);
+      return {
+        activities: activities,
+        currentPage: +(input.page ?? 1),
+        total: activities.length,
+        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
+      };
+      /*
       return {
         activities: activities.slice(
           (+(input.page ?? 1) - 1) * +(input.items ?? 10),
@@ -2718,7 +2763,7 @@ export function useGetRevenueQuery(
         total: activities.length,
         totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
         user: activities[0]?.user ?? "No data",
-      };
+      }; */
     },
   });
 }

@@ -24,7 +24,7 @@ import {
 } from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
-import type { Activity, Transaction } from "~/lib/data-access";
+import type { Revenue, Transaction } from "~/lib/data-access";
 import type {
   paginationAndSearchValidator,
   revenueValidator,
@@ -49,7 +49,7 @@ import { useI18n } from "~/lib/i18n";
 import Dialog from "../../_components/dashboard-dialog";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
-function Actions({ activity }: { activity: Activity }) {
+function Actions({ activity }: { activity: Revenue }) {
   const { values } = useI18n();
 
   return (
@@ -77,42 +77,22 @@ function Actions({ activity }: { activity: Activity }) {
   );
 }
 
-const columnHelper = createColumnHelper<Activity>();
+const columnHelper = createColumnHelper<Revenue>();
 const columns = [
-  columnHelper.accessor("type", {
-    id: "type",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.type" />
-    ),
-  }),
   columnHelper.accessor("description", {
     id: "description",
     cell: (info) => info.getValue() || "-",
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.description" />
-    ),
+    header: () => <ColumnHeader i18nKey="revenue-table-provider" />,
   }),
   columnHelper.accessor("startDate", {
     id: "startDate",
     cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.start" />
-    ),
+    header: () => <ColumnHeader i18nKey="revenue-table-start" />,
   }),
   columnHelper.accessor("endDate", {
     id: "endDate",
     cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.finish" />
-    ),
-  }),
-  columnHelper.accessor("status", {
-    id: "status",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
-    ),
+    header: () => <ColumnHeader i18nKey="revenue-table-end" />,
   }),
   columnHelper.accessor("amount", {
     id: "amount",
@@ -121,9 +101,7 @@ const columns = [
         {info.getValue()}
       </span>
     ),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
-    ),
+    header: () => <ColumnHeader i18nKey="revenue-table-amount" />,
   }),
   columnHelper.display({
     id: "actions",
@@ -162,14 +140,14 @@ export default function RevenuePage() {
   };
 
   const {
-    data: transactionsData,
+    data: transactions,
     isLoading,
     refetch,
   } = useGetRevenueQuery({
     ...paginationAndSearch,
     ...filters,
   });
-
+  console.log("trans", transactions);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
@@ -198,9 +176,9 @@ export default function RevenuePage() {
       });
     },
   });
-
+  console.log("act", transactions?.activities);
   const table = useReactTable({
-    data: transactionsData?.activities ?? [],
+    data: transactions?.activities ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -264,7 +242,10 @@ export default function RevenuePage() {
 
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
-      <SimpleTitle title={"Revenue"} showLoadingIndicator={isLoading} />
+      <SimpleTitle
+        title={values["revenue-title"]}
+        showLoadingIndicator={isLoading}
+      />
       <div className="space-y-4">
         <div className="flex flex-row flex-wrap gap-4">
           {
@@ -383,7 +364,7 @@ export default function RevenuePage() {
       </div>
       <PaginationFooter
         count={{
-          total: transactionsData?.total ?? 0,
+          total: transactions?.total ?? 0,
           firstRowIdx,
           lastRowIdx,
         }}
@@ -397,8 +378,7 @@ export default function RevenuePage() {
         }
         canPreviousPage={paginationAndSearch.page !== "1"}
         canNextPage={
-          transactionsData?.activities.length ===
-          Number(paginationAndSearch.items)
+          transactions?.activities.length === Number(paginationAndSearch.items)
         }
         onPreviousPage={() =>
           handlePaginationAndSearchChange({
@@ -463,7 +443,7 @@ const columnsDetails = [
   }),
 ];
 
-function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
+function DetailsDialog(props: { activity: Revenue; trigger: ReactNode }) {
   const { values } = useI18n();
   const errors = useErrors();
   const [isOpen, _, __, toggle] = useBooleanHandlers();
