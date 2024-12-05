@@ -1994,6 +1994,9 @@ export function useGetClearPaymentsQuery(
       if (input.month === "ALL") {
         input.month = "";
       }
+      if (input.year === "ALL") {
+        input.year = "";
+      }
       if (input.status === "ALL") {
         input.status = "";
       }

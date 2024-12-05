@@ -1,43 +1,28 @@
 "use client";
 
-import type { z } from "zod";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import type { z } from 'zod';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { createColumnHelper, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 
-import { cn } from "@wg-frontend/ui";
-import { Label } from "@wg-frontend/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@wg-frontend/ui/select";
+import { cn } from '@wg-frontend/ui';
+import { Label } from '@wg-frontend/ui/label';
+import { Select, SelectContent, SelectItem, SelectValue } from '@wg-frontend/ui/select';
 
-import type { ClearPayment } from "~/lib/data-access";
-import type {
-  clearPaymentsValidator,
-  paginationAndSearchValidator,
-} from "~/lib/validators";
-import Table, {
-  ColumnHeader,
-  PaginationFooter,
-} from "~/app/dashboard/_components/dashboard-table";
-import { Button } from "~/components/button";
-import { SelectTrigger } from "~/components/select";
+import type { ClearPayment } from '~/lib/data-access';
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetClearPaymentsQuery,
   useGetDashboardUsersTitleQuery,
   useGetProviderQuery,
   useGetProvidersQuery,
-} from "~/lib/data-access";
-import { useAccessLevelGuard } from "~/lib/hooks";
-import { useI18n } from "~/lib/i18n";
-import { SimpleTitle } from "../../_components/dashboard-title";
+} from '~/lib/data-access';
+import type { clearPaymentsValidator, paginationAndSearchValidator } from '~/lib/validators';
+import Table, { ColumnHeader, PaginationFooter } from '~/app/dashboard/_components/dashboard-table';
+import { Button } from '~/components/button';
+import { SelectTrigger } from '~/components/select';
+import { useAccessLevelGuard } from '~/lib/hooks';
+import { useI18n } from '~/lib/i18n';
+import { SimpleTitle } from '../../_components/dashboard-title';
 
 // function Actions({ clear }: { clear: ClearPayment }) {
 //   const { values } = useI18n();
@@ -84,10 +69,21 @@ const getDataProvider = (providerId: string) => {
 };
 
 const columnHelper = createColumnHelper<ClearPayment>();
+
+
+function getTranslation(s: string) {
+  const { values } = useI18n();
+  // @ts-ignore
+  return values[s];
+}
+
 const columns = [
   columnHelper.accessor("month", {
     id: "month",
-    cell: (info) => info.getValue(),
+    // cell: (info) => info.getValue(),
+    cell: (info) => {
+      return getTranslation(`${info.getValue()}`);
+    },
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.month" />
     ),
@@ -169,16 +165,13 @@ export default function ClearPaymentPage() {
 
   const filters: z.infer<typeof clearPaymentsValidator> = {
     month: searchParams.get("month") ?? "",
+    year: searchParams.get("year") ?? "",
     providerId: searchParams.get("providerId") ?? "",
     status: searchParams.get("status") ?? "",
   };
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
-  const {
-    data: clearData,
-    isLoading,
-    refetch,
-  } = useGetClearPaymentsQuery({
+  const { data: clearData, isLoading, refetch, } = useGetClearPaymentsQuery({
     ...paginationAndSearch,
     ...filters,
   });
@@ -254,9 +247,9 @@ export default function ClearPaymentPage() {
           <div className="flex flex-col space-y-1 self-end">
             <SimpleTitle
               title={
-                (title ?? "") +
-                " " +
-                values["dashboard.reports.sections.clear-payments"]
+                (title ?? '') +
+                ' ' +
+                values['dashboard.reports.sections.clear-payments']
               }
               showLoadingIndicator={isLoading}
             />
@@ -265,8 +258,8 @@ export default function ClearPaymentPage() {
             <Label className="font-normal">
               {
                 values[
-                  "dashboard.reports.sections-clear-payments.search.month.label"
-                ]
+                  'dashboard.reports.sections-clear-payments.search.month.label'
+                  ]
               }
             </Label>
             <Select
@@ -280,15 +273,15 @@ export default function ClearPaymentPage() {
             >
               <SelectTrigger
                 className={cn(
-                  "rounded-lg border border-black",
-                  !filters.month && "text-gray-400",
+                  'rounded-lg border border-black',
+                  !filters.month && 'text-gray-400',
                 )}
               >
                 <SelectValue
                   placeholder={
                     values[
                       `dashboard.reports.sections-clear-payments.search.month.label`
-                    ]
+                      ]
                   }
                 />
               </SelectTrigger>
@@ -296,8 +289,8 @@ export default function ClearPaymentPage() {
                 <SelectItem value="ALL">
                   {
                     values[
-                      "dashboard.reports.sections-clear-payments.search.state.all"
-                    ]
+                      'dashboard.reports.sections-clear-payments.search.state.all'
+                      ]
                   }
                 </SelectItem>
                 <SelectItem value="1">January</SelectItem>
@@ -315,12 +308,56 @@ export default function ClearPaymentPage() {
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-0">
+            <Label className="font-normal">
+              {
+                values[
+                  'dashboard.reports.sections-clear-payments.search.year.label'
+                  ]
+              }
+            </Label>
+            <Select
+              onValueChange={(value) =>
+                handleFiltersChange({
+                  ...filters,
+                  year: value,
+                })
+              }
+              defaultValue={filters.year}
+            >
+              <SelectTrigger
+                className={cn(
+                  'rounded-lg border border-black',
+                  !filters.year && 'text-gray-400',
+                )}
+              >
+                <SelectValue
+                  placeholder={
+                    values[
+                      `dashboard.reports.sections-clear-payments.search.year.label`
+                      ]
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">
+                  {
+                    values[
+                      'dashboard.reports.sections-clear-payments.search.state.all'
+                      ]
+                  }
+                </SelectItem>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2025">2025</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="min-w-60 flex-1 space-y-0">
             <Label className="font-normal">
               {
                 values[
-                  "dashboard.reports.sections-clear-payments.search.provider.label"
-                ]
+                  'dashboard.reports.sections-clear-payments.search.provider.label'
+                  ]
               }
             </Label>
             <Select
@@ -334,15 +371,15 @@ export default function ClearPaymentPage() {
             >
               <SelectTrigger
                 className={cn(
-                  "rounded-lg border border-black",
-                  !filters.providerId && "text-gray-400",
+                  'rounded-lg border border-black',
+                  !filters.providerId && 'text-gray-400',
                 )}
               >
                 <SelectValue
                   placeholder={
                     values[
                       `dashboard.reports.sections-clear-payments.search.provider.placeholder`
-                    ]
+                      ]
                   }
                 />
               </SelectTrigger>
@@ -350,7 +387,7 @@ export default function ClearPaymentPage() {
                 {providersData?.providers
                   .filter((p) =>
                     accessLevelsData?.providers[p.id]?.clearPayments.includes(
-                      "view",
+                      'view',
                     ),
                   )
                   .map((provider) => (
@@ -360,7 +397,7 @@ export default function ClearPaymentPage() {
                   ))}
                 {providersData?.providers.filter((p) =>
                   accessLevelsData?.providers[p.id]?.clearPayments.includes(
-                    "view",
+                    'view',
                   ),
                 ).length === 0 && (
                   <SelectItem value="no" disabled>
@@ -375,8 +412,8 @@ export default function ClearPaymentPage() {
             <Label className="font-normal">
               {
                 values[
-                  "dashboard.reports.sections-clear-payments.search.state.label"
-                ]
+                  'dashboard.reports.sections-clear-payments.search.state.label'
+                  ]
               }
             </Label>
             <Select
@@ -390,15 +427,15 @@ export default function ClearPaymentPage() {
             >
               <SelectTrigger
                 className={cn(
-                  "rounded-lg border border-black",
-                  !filters.status && "text-[#A1A1A1]",
+                  'rounded-lg border border-black',
+                  !filters.status && 'text-[#A1A1A1]',
                 )}
               >
                 <SelectValue
                   placeholder={
                     values[
                       `dashboard.reports.sections-clear-payments.search.state.placeholder`
-                    ]
+                      ]
                   }
                 />
               </SelectTrigger>
@@ -406,22 +443,22 @@ export default function ClearPaymentPage() {
                 <SelectItem value="ALL">
                   {
                     values[
-                      "dashboard.reports.sections-clear-payments.search.state.all"
-                    ]
+                      'dashboard.reports.sections-clear-payments.search.state.all'
+                      ]
                   }
                 </SelectItem>
                 <SelectItem value="false">
                   {
                     values[
-                      "dashboard.reports.sections-clear-payments.search.state.pending"
-                    ]
+                      'dashboard.reports.sections-clear-payments.search.state.pending'
+                      ]
                   }
                 </SelectItem>
                 <SelectItem value="true">
                   {
                     values[
-                      "dashboard.reports.sections-clear-payments.search.state.completed"
-                    ]
+                      'dashboard.reports.sections-clear-payments.search.state.completed'
+                      ]
                   }
                 </SelectItem>
               </SelectContent>
@@ -432,8 +469,8 @@ export default function ClearPaymentPage() {
             <p className="flex-1 text-lg font-light">
               {
                 values[
-                  "dashboard.reports.sections.clear-payments.search-button"
-                ]
+                  'dashboard.reports.sections.clear-payments.search-button'
+                  ]
               }
             </p>
           </Button>
@@ -448,15 +485,15 @@ export default function ClearPaymentPage() {
           firstRowIdx,
           lastRowIdx,
         }}
-        items={paginationAndSearch.items ?? "10"}
+        items={paginationAndSearch.items ?? '10'}
         onItemsChange={(items) =>
           handlePaginationAndSearchChange({
             ...paginationAndSearch,
             items,
-            page: "1",
+            page: '1',
           })
         }
-        canPreviousPage={paginationAndSearch.page !== "1"}
+        canPreviousPage={paginationAndSearch.page !== '1'}
         canNextPage={
           clearData?.clearPayments.length === Number(paginationAndSearch.items)
         }
