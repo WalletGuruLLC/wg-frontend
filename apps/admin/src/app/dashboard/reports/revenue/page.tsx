@@ -110,15 +110,6 @@ export default function RevenuePage() {
     ...paginationAndSearch,
     ...filters,
   });
-  useEffect(() => {
-    if (!isLoading && transactions) {
-      console.log("Datos cargados", transactions);
-    }
-  }, [isLoading, transactions]); // Se ejecuta cada vez que isLoading o transactions cambian
-
-  if (isLoading) {
-    console.log("Cargando...");
-  }
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
