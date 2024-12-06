@@ -1,19 +1,20 @@
 "use client";
 
-import type { ReactNode } from "react";
+//import type { ReactNode } from "react";
 import type { z } from "zod";
 import { useEffect } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+//import Link from "next/link";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Download } from "lucide-react";
 
-import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
+//import { Download } from "lucide-react";
+
+//import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { Label } from "@wg-frontend/ui/label";
 import {
@@ -24,7 +25,7 @@ import {
 } from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
-import type { Revenue, Transaction } from "~/lib/data-access";
+import type { Revenue } from "~/lib/data-access";
 import type {
   paginationAndSearchValidator,
   revenueValidator,
@@ -46,9 +47,10 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import Dialog from "../../_components/dashboard-dialog";
+// import Dialog from "../../_components/dashboard-dialog";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
+/*
 function Actions({ activity }: { activity: Revenue }) {
   const { values } = useI18n();
 
@@ -76,12 +78,12 @@ function Actions({ activity }: { activity: Revenue }) {
     </div>
   );
 }
-
+*/
 const columnHelper = createColumnHelper<Revenue>();
 const columns = [
-  columnHelper.accessor("description", {
-    id: "description",
-    cell: (info) => info.getValue() || "-",
+  columnHelper.accessor("provider", {
+    id: "provider",
+    cell: (info) => info.getValue() ?? "-",
     header: () => <ColumnHeader i18nKey="revenue-table-provider" />,
   }),
   columnHelper.accessor("startDate", {
@@ -103,6 +105,7 @@ const columns = [
     ),
     header: () => <ColumnHeader i18nKey="revenue-table-amount" />,
   }),
+  /*
   columnHelper.display({
     id: "actions",
     header: () => (
@@ -110,6 +113,7 @@ const columns = [
     ),
     cell: (info) => <Actions activity={info.row.original} />,
   }),
+  */
 ];
 
 export default function RevenuePage() {
@@ -176,9 +180,8 @@ export default function RevenuePage() {
       });
     },
   });
-  console.log("act", transactions?.activities);
   const table = useReactTable({
-    data: transactions?.activities ?? [],
+    data: transactions?.revenues ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -378,7 +381,7 @@ export default function RevenuePage() {
         }
         canPreviousPage={paginationAndSearch.page !== "1"}
         canNextPage={
-          transactions?.activities.length === Number(paginationAndSearch.items)
+          transactions?.revenues.length === Number(paginationAndSearch.items)
         }
         onPreviousPage={() =>
           handlePaginationAndSearchChange({
@@ -396,8 +399,9 @@ export default function RevenuePage() {
     </div>
   );
 }
-
+/*
 const columnHelperDetails = createColumnHelper<Transaction>();
+
 const columnsDetails = [
   columnHelperDetails.accessor("type", {
     id: "type",
@@ -442,7 +446,8 @@ const columnsDetails = [
     ),
   }),
 ];
-
+*/
+/*
 function DetailsDialog(props: { activity: Revenue; trigger: ReactNode }) {
   const { values } = useI18n();
   const errors = useErrors();
@@ -509,3 +514,4 @@ function DetailsDialog(props: { activity: Revenue; trigger: ReactNode }) {
     </Dialog>
   );
 }
+*/

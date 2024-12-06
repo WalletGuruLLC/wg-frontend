@@ -2605,17 +2605,14 @@ interface RevenueTransaction extends ApiRevenueTransaction {
   receiveAmount: ApiAmount;
 }
 export interface Revenue {
-  activityId?: string;
-  type: string;
-  description: string;
+  provider?: string;
   startDate: string;
   endDate: string;
-  status: string;
   amount: string;
   transactions: Transaction[];
 }
 interface UseGetRevenueQueryOutput {
-  activities: Revenue[];
+  revenues: Revenue[];
   currentPage: number;
   total: number;
   totalPages: number;
@@ -2660,110 +2657,77 @@ export function useGetRevenueQuery(
           "?" +
           params.toString(),
       );
-      // Group by activity id
-      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
-        const activityId = t.senderName;
-
-        // const isIncoming = t.type === "IncomingPayment";
-        // const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
+      // Group by provider
+      const groupedRevenues = result.transactions.reduce((acc, t) => {
+        const provider = t.senderName;
         const amount = t.receiveAmount;
-
-        //  const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
         const amountString = `${""}${convertAmountWithScale(
           Number(amount.value),
           amount.assetScale,
         )} ${amount.assetCode}`;
 
-        if (!activityId) {
-          acc.set(idx.toString(), {
-            activityId: undefined,
-            type: "Revenue",
-            description: t.senderName,
+        const type = "Revenue";
+        const description = t.senderName;
+
+        if (!acc.has(provider)) {
+          acc.set(provider, {
+            provider,
             startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            status: t.state,
             amount: amountString,
-            user: t.senderName,
-            transactions: [],
+            transactions: [
+              {
+                transactionId: t.id,
+                type,
+                description,
+                date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                status: t.state,
+                amount: amountString,
+              },
+            ],
           });
         } else {
-          const isProvider = t.metadata.type === "PROVIDER";
-          const type = isProvider ? "Service" : "Revenue";
-          const description = isProvider
-            ? (t.metadata.contentName ?? "Unknown content")
-            : t.senderName;
+          const providerId = acc.get(provider);
 
-          if (!acc.has(activityId)) {
-            acc.set(activityId, {
-              activityId,
-              type,
-              description,
-              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              status: t.state,
-              amount: amountString,
-              user: t.metadata.wgUser ?? "",
-              transactions: [
-                {
-                  transactionId: t.id,
-                  type,
-                  description,
-                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-                  status: t.state,
-                  amount: amountString,
-                },
-              ],
-            });
-          } else {
-            const activity = acc.get(activityId);
+          if (!providerId) return acc;
 
-            if (!activity) return acc;
+          providerId.transactions.push({
+            transactionId: t.id,
+            type,
+            description,
+            date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: t.state,
+            amount: amountString,
+          });
 
-            activity.transactions.push({
-              transactionId: t.id,
-              type,
-              description,
-              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              status: t.state,
-              amount: amountString,
-            });
+          providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
 
-            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+          const accumulatedAmountNumber = Number(
+            providerId.amount.split(" ")[0],
+          );
+          const amountNumber = Number(amountString.split(" ")[0]);
 
-            const accumulatedAmountNumber = Number(
-              activity.amount.split(" ")[0],
-            );
-            const amountNumber = Number(amountString.split(" ")[0]);
+          providerId.amount = `${
+            accumulatedAmountNumber + amountNumber
+          } ${amount.assetCode}`;
 
-            activity.amount = `${
-              accumulatedAmountNumber + amountNumber
-            } ${amount.assetCode}`;
-
-            acc.set(activityId, activity);
-          }
+          acc.set(provider, providerId);
         }
         return acc;
-      }, new Map<string, Activity>());
+      }, new Map<string, Revenue>());
 
-      const activities = Array.from(groupedActivities.values());
-      console.log(activities);
-      return {
-        activities: activities,
-        currentPage: +(input.page ?? 1),
-        total: activities.length,
-        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
-      };
-      /*
-      return {
-        activities: activities.slice(
+      const revenues = Array.from(groupedRevenues.values());
+      const revenue = {
+        revenues: revenues.slice(
           (+(input.page ?? 1) - 1) * +(input.items ?? 10),
           +(input.page ?? 1) * +(input.items ?? 10),
         ),
         currentPage: +(input.page ?? 1),
-        total: activities.length,
-        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
-        user: activities[0]?.user ?? "No data",
-      }; */
+        total: revenues.length,
+        totalPages: Math.ceil(revenues.length / +(input.items ?? 10)),
+      };
+      console.log("revenue", revenue);
+      return revenue;
     },
   });
 }
