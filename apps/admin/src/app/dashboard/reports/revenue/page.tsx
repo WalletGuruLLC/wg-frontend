@@ -51,13 +51,13 @@ const columns = [
     cell: (info) => info.getValue() ?? "-",
     header: () => <ColumnHeader i18nKey="revenue-table-provider" />,
   }),
-  columnHelper.accessor("startDate", {
-    id: "startDate",
+  columnHelper.accessor("endDate", {
+    id: "endDate",
     cell: (info) => info.getValue(),
     header: () => <ColumnHeader i18nKey="revenue-table-start" />,
   }),
-  columnHelper.accessor("endDate", {
-    id: "endDate",
+  columnHelper.accessor("startDate", {
+    id: "startDate",
     cell: (info) => info.getValue(),
     header: () => <ColumnHeader i18nKey="revenue-table-end" />,
   }),

@@ -2734,7 +2734,6 @@ export function useGetRevenueQuery(
           return acc;
         }, new Map<string, Revenue>());
         const revenues = Array.from(groupedRevenues.values());
-        console.log("array", revenues);
         return {
           revenues: revenues.slice(
             (+(input.page ?? 1) - 1) * +(input.items ?? 10),
@@ -2746,7 +2745,7 @@ export function useGetRevenueQuery(
         };
       } catch (error) {
         console.error("Error fetching revenues:", error);
-        throw error; // Importante para que react-query gestione el error
+        throw error;
       }
     },
   });
