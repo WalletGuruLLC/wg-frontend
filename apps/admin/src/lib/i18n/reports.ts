@@ -21,6 +21,11 @@ export const reportsDict = {
     "revenue-table-amount": "Revenue",
     "revenue-table-start": "Start Date",
     "revenue-table-end": "End Date",
+    "fees-title": "Fees",
+    "fees-table-provider": "Provider",
+    "fees-table-amount": "Fee",
+    "fees-table-start": "Start Date",
+    "fees-table-end": "End Date",
   },
   es: {
     "dispute-title": "Disputa",
@@ -40,5 +45,10 @@ export const reportsDict = {
     "revenue-table-amount": "Monto",
     "revenue-table-start": "Fecha Inicio",
     "revenue-table-end": "Fecha Fin",
+    "fees-title": "Pagos",
+    "fees-table-provider": "Proveedor",
+    "fees-table-amount": "Costo",
+    "fees-table-start": "Fecha Inicio",
+    "fees-table-end": "Fecha Fin",
   },
 } satisfies I18nDictionary;
