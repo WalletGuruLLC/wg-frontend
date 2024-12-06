@@ -2576,7 +2576,7 @@ export function useEditProviderPaymentParameterMutation(
     },
   });
 }
-
+/*
 interface ApiRevenueTransaction {
   createdAt: number;
   description: string;
@@ -2598,18 +2598,38 @@ interface ApiRevenueTransaction {
   senderName: string;
   receiverName: string;
 }
-
+  */
+/*
 interface RevenueTransaction extends ApiRevenueTransaction {
   type: "OutgoingPayment";
   outgoingPaymentId: string;
   receiveAmount: ApiAmount;
 }
+  */
+interface RevenueTransaction {
+  id: string;
+  senderName: string;
+  createdAt: Date;
+  state: string;
+  receiveAmount: {
+    assetScale: number;
+    assetCode: string;
+    value: string;
+  };
+}
+
 export interface Revenue {
   provider?: string;
   startDate: string;
   endDate: string;
   amount: string;
-  transactions: Transaction[];
+  transactions: {
+    transactionId: string;
+    description: string;
+    date: string;
+    status: string;
+    amount: string;
+  }[];
 }
 interface UseGetRevenueQueryOutput {
   revenues: Revenue[];
@@ -2617,6 +2637,13 @@ interface UseGetRevenueQueryOutput {
   total: number;
   totalPages: number;
 }
+const formatCurrency = (value: number, code: string, scale: number) => {
+  const formattedValue = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: scale,
+    maximumFractionDigits: scale,
+  }).format(value / Math.pow(10, scale));
+  return `${formattedValue} ${code}`;
+};
 
 export function useGetRevenueQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
@@ -2627,12 +2654,6 @@ export function useGetRevenueQuery(
     ...options,
     queryKey: ["get-revenue", input],
     queryFn: async () => {
-      Object.keys(input).forEach((key) =>
-        input[key as keyof typeof input] === undefined ||
-        input[key as keyof typeof input] === ""
-          ? delete input[key as keyof typeof input]
-          : {},
-      );
       if (input.startDate)
         input.startDate = format(
           input.startDate,
@@ -2658,15 +2679,15 @@ export function useGetRevenueQuery(
           params.toString(),
       );
       // Group by provider
+      let accumulatedAmountNumber = 0;
       const groupedRevenues = result.transactions.reduce((acc, t) => {
         const provider = t.senderName;
         const amount = t.receiveAmount;
-        const amountString = `${""}${convertAmountWithScale(
+        const amountString = formatCurrency(
           Number(amount.value),
+          amount.assetCode,
           amount.assetScale,
-        )} ${amount.assetCode}`;
-
-        const type = "Revenue";
+        );
         const description = t.senderName;
 
         if (!acc.has(provider)) {
@@ -2678,7 +2699,6 @@ export function useGetRevenueQuery(
             transactions: [
               {
                 transactionId: t.id,
-                type,
                 description,
                 date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
                 status: t.state,
@@ -2693,7 +2713,6 @@ export function useGetRevenueQuery(
 
           providerId.transactions.push({
             transactionId: t.id,
-            type,
             description,
             date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             status: t.state,
@@ -2701,23 +2720,20 @@ export function useGetRevenueQuery(
           });
 
           providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
-
-          const accumulatedAmountNumber = Number(
-            providerId.amount.split(" ")[0],
+          accumulatedAmountNumber += Number(amount.value);
+          providerId.amount = formatCurrency(
+            accumulatedAmountNumber,
+            t.receiveAmount.assetCode,
+            t.receiveAmount.assetScale,
           );
-          const amountNumber = Number(amountString.split(" ")[0]);
-
-          providerId.amount = `${
-            accumulatedAmountNumber + amountNumber
-          } ${amount.assetCode}`;
 
           acc.set(provider, providerId);
         }
         return acc;
       }, new Map<string, Revenue>());
-
       const revenues = Array.from(groupedRevenues.values());
-      const revenue = {
+      console.log("array", revenues);
+      return {
         revenues: revenues.slice(
           (+(input.page ?? 1) - 1) * +(input.items ?? 10),
           +(input.page ?? 1) * +(input.items ?? 10),
@@ -2726,8 +2742,6 @@ export function useGetRevenueQuery(
         total: revenues.length,
         totalPages: Math.ceil(revenues.length / +(input.items ?? 10)),
       };
-      console.log("revenue", revenue);
-      return revenue;
     },
   });
 }
