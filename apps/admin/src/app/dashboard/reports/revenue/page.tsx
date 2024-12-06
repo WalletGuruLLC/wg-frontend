@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
@@ -12,13 +12,17 @@ import { format } from "date-fns";
 
 import { cn } from "@wg-frontend/ui";
 import { Label } from "@wg-frontend/ui/label";
-import { Select, SelectValue } from "@wg-frontend/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@wg-frontend/ui/select";
 import { toast } from "@wg-frontend/ui/toast";
 
 import type { Revenue } from "~/lib/data-access";
 import type {
   paginationAndSearchValidator,
-  revenueValidator,
   transactionsByUserValidator,
 } from "~/lib/validators";
 import Table, {
@@ -29,8 +33,10 @@ import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
   useDownloadTransactionsByUserMutation,
+  useGetAuthedUserAccessLevelsQuery,
   // useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
+  useGetProvidersQuery,
   useGetRevenueQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
@@ -78,13 +84,24 @@ export default function RevenuePage() {
     items: searchParams.get("items") ?? "10",
     search: searchParams.get("search") ?? "",
   };
-  const filters: z.infer<typeof revenueValidator> = {
-    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    endDate: new Date(),
-    type: "OutgoingPayment",
-    providerIds: searchParams.get("providerIds") ?? "",
-    isRevenue: true,
-  };
+  const providerId = searchParams.get("providerIds") ?? "";
+
+  const startDate = useMemo(
+    () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    [],
+  );
+  const endDate = useMemo(() => new Date(), []);
+
+  const filters = useMemo(
+    () => ({
+      startDate,
+      endDate,
+      type: "OutgoingPayment",
+      providerIds: providerId,
+      isRevenue: true,
+    }),
+    [startDate, endDate, providerId],
+  );
   const {
     data: transactions,
     isLoading,
@@ -102,23 +119,22 @@ export default function RevenuePage() {
   if (isLoading) {
     console.log("Cargando...");
   }
-  /*
+
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
-    */
+
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-  /*
+
   const { data: providersData } = useGetProvidersQuery(
     {
       items: "99",
       type: "PLATFORM",
     },
     {
-      //enabled: !isLoadingAccessLevels,
-      enabled: !isLoading,
+      enabled: !isLoadingAccessLevels,
     },
   );
-  */
+
   const downloading = false;
   useDownloadTransactionsByUserMutation({
     onSuccess: () => {
@@ -134,9 +150,6 @@ export default function RevenuePage() {
       });
     },
   });
-  if (!isLoading) {
-    console.log("Revenue data changed:", transactions?.revenues);
-  }
   const table = useReactTable({
     data: transactions?.revenues ?? [],
     columns,
@@ -181,7 +194,10 @@ export default function RevenuePage() {
     });
   }
   useEffect(() => {
-    if (userData?.type === "PROVIDER")
+    if (
+      userData?.type === "PROVIDER" &&
+      userData.serviceProviderId !== filters.providerIds
+    )
       handleFiltersChange({
         ...filters,
         providerIds: userData.serviceProviderId,
@@ -236,7 +252,6 @@ export default function RevenuePage() {
                       }
                     />
                   </SelectTrigger>
-                  {/*
                   <SelectContent>
                     {providersData?.providers
                       .filter((p) =>
@@ -259,7 +274,6 @@ export default function RevenuePage() {
                       </SelectItem>
                     )}
                   </SelectContent>
-                  */}
                 </Select>
               </div>
             )
@@ -283,17 +297,9 @@ export default function RevenuePage() {
                 ]
               }
               :{" "}
-              {filters.startDate
-                ? format(filters.startDate, "MMMM do, yyyy")
-                : values[
-                    "dashboard.reports.sections-transactions-by-user.period.no-start-selected"
-                  ]}{" "}
-              -{" "}
-              {filters.endDate
-                ? format(filters.endDate, "MMMM do, yyyy")
-                : values[
-                    "dashboard.reports.sections-transactions-by-user.period.no-end-selected"
-                  ]}
+              {format(filters.startDate, "MMMM do, yyyy") +
+                " - " +
+                format(filters.endDate, "MMMM do, yyyy")}
             </p>
           </div>
           <Button

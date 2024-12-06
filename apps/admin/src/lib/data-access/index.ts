@@ -2602,36 +2602,6 @@ export function useEditProviderPaymentParameterMutation(
     },
   });
 }
-/*
-interface ApiRevenueTransaction {
-  createdAt: number;
-  description: string;
-  walletAddressId: string;
-  state: string;
-  type: string;
-  updatedAt: number;
-  receiverUrl: string;
-  receiver: string;
-  metadata: {
-    activityId?: string;
-    description: string;
-    type?: string;
-    wgUser?: string;
-    contentName?: string;
-  };
-  id: string;
-  senderUrl: string;
-  senderName: string;
-  receiverName: string;
-}
-  */
-/*
-interface RevenueTransaction extends ApiRevenueTransaction {
-  type: "OutgoingPayment";
-  outgoingPaymentId: string;
-  receiveAmount: ApiAmount;
-}
-  */
 interface RevenueTransaction {
   id: string;
   senderName: string;
@@ -2680,94 +2650,104 @@ export function useGetRevenueQuery(
     ...options,
     queryKey: ["get-revenue", input],
     queryFn: async () => {
-      if (input.startDate)
-        input.startDate = format(
-          input.startDate,
-          "MM/dd/yyyy",
-        ) as unknown as Date;
-      if (input.endDate)
-        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
-      const params = new URLSearchParams({
-        ...input,
-        items: "99",
-        page: "1",
-      } as unknown as Record<string, string>);
-
-      const result = await customFetch<{
-        transactions: RevenueTransaction[];
-        currentPage: number;
-        total: number;
-        totalPages: number;
-      }>(
-        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
-          `/api/v1/wallets-rafiki/list-transactions` +
-          "?" +
-          params.toString(),
-      );
-      // Group by provider
-      let accumulatedAmountNumber = 0;
-      const groupedRevenues = result.transactions.reduce((acc, t) => {
-        const provider = t.senderName;
-        const amount = t.receiveAmount;
-        const amountString = formatCurrency(
-          Number(amount.value),
-          amount.assetCode,
-          amount.assetScale,
-        );
-        const description = t.senderName;
-
-        if (!acc.has(provider)) {
-          acc.set(provider, {
-            provider,
-            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            amount: amountString,
-            transactions: [
-              {
-                transactionId: t.id,
-                description,
-                date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-                status: t.state,
-                amount: amountString,
-              },
-            ],
-          });
-        } else {
-          const providerId = acc.get(provider);
-
-          if (!providerId) return acc;
-
-          providerId.transactions.push({
-            transactionId: t.id,
-            description,
-            date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            status: t.state,
-            amount: amountString,
-          });
-
-          providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
-          accumulatedAmountNumber += Number(amount.value);
-          providerId.amount = formatCurrency(
-            accumulatedAmountNumber,
-            t.receiveAmount.assetCode,
-            t.receiveAmount.assetScale,
-          );
-
-          acc.set(provider, providerId);
+      try {
+        if (input.startDate) {
+          const formattedStart = format(
+            input.startDate,
+            "MM/dd/yyyy",
+          ) as unknown as Date;
+          input.startDate = formattedStart;
         }
-        return acc;
-      }, new Map<string, Revenue>());
-      const revenues = Array.from(groupedRevenues.values());
-      console.log("array", revenues);
-      return {
-        revenues: revenues.slice(
-          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
-          +(input.page ?? 1) * +(input.items ?? 10),
-        ),
-        currentPage: +(input.page ?? 1),
-        total: revenues.length,
-        totalPages: Math.ceil(revenues.length / +(input.items ?? 10)),
-      };
+
+        if (input.endDate)
+          input.endDate = format(
+            input.endDate,
+            "MM/dd/yyyy",
+          ) as unknown as Date;
+        const params = new URLSearchParams({
+          ...input,
+          items: "99",
+          page: "1",
+        } as unknown as Record<string, string>);
+
+        const result = await customFetch<{
+          transactions: RevenueTransaction[];
+          currentPage: number;
+          total: number;
+          totalPages: number;
+        }>(
+          env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+            `/api/v1/wallets-rafiki/list-transactions` +
+            "?" +
+            params.toString(),
+        );
+        let accumulatedAmountNumber = 0;
+        const groupedRevenues = result.transactions.reduce((acc, t) => {
+          const provider = t.senderName;
+          const amount = t.receiveAmount;
+          const amountString = formatCurrency(
+            Number(amount.value),
+            amount.assetCode,
+            amount.assetScale,
+          );
+          const description = t.senderName;
+
+          if (!acc.has(provider)) {
+            acc.set(provider, {
+              provider,
+              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              amount: amountString,
+              transactions: [
+                {
+                  transactionId: t.id,
+                  description,
+                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                  status: t.state,
+                  amount: amountString,
+                },
+              ],
+            });
+          } else {
+            const providerId = acc.get(provider);
+
+            if (!providerId) return acc;
+
+            providerId.transactions.push({
+              transactionId: t.id,
+              description,
+              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+              status: t.state,
+              amount: amountString,
+            });
+
+            providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+            accumulatedAmountNumber += Number(amount.value);
+            providerId.amount = formatCurrency(
+              accumulatedAmountNumber,
+              t.receiveAmount.assetCode,
+              t.receiveAmount.assetScale,
+            );
+
+            acc.set(provider, providerId);
+          }
+          return acc;
+        }, new Map<string, Revenue>());
+        const revenues = Array.from(groupedRevenues.values());
+        console.log("array", revenues);
+        return {
+          revenues: revenues.slice(
+            (+(input.page ?? 1) - 1) * +(input.items ?? 10),
+            +(input.page ?? 1) * +(input.items ?? 10),
+          ),
+          currentPage: +(input.page ?? 1),
+          total: revenues.length,
+          totalPages: Math.ceil(revenues.length / +(input.items ?? 10)),
+        };
+      } catch (error) {
+        console.error("Error fetching revenues:", error);
+        throw error; // Importante para que react-query gestione el error
+      }
     },
   });
 }
