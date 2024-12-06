@@ -16,6 +16,11 @@ export const reportsDict = {
     "refund-add-amount-placeholder": "Enter the amount",
     "refund-add-description-label": "Description",
     "refund-add-button": "Save",
+    "revenue-title": "Revenue",
+    "revenue-table-provider": "Provider",
+    "revenue-table-amount": "Revenue",
+    "revenue-table-start": "Start Date",
+    "revenue-table-end": "End Date",
   },
   es: {
     "dispute-title": "Disputa",
@@ -30,5 +35,10 @@ export const reportsDict = {
     "refund-add-amount-placeholder": "Ingrese el monto",
     "refund-add-description-label": "Descripción",
     "refund-add-button": "Guardar",
+    "revenue-title": "Ganancias",
+    "revenue-table-provider": "Proveedor",
+    "revenue-table-amount": "Monto",
+    "revenue-table-start": "Fecha Inicio",
+    "revenue-table-end": "Fecha Fin",
   },
 } satisfies I18nDictionary;
