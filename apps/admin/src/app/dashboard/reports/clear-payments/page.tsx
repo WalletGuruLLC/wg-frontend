@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { z } from "zod";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -7,7 +8,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Download } from "lucide-react";
 
+import { useBooleanHandlers } from "@wg-frontend/hooks/use-boolean-handlers";
 import { cn } from "@wg-frontend/ui";
 import { Label } from "@wg-frontend/ui/label";
 import {
@@ -17,11 +20,16 @@ import {
   SelectValue,
 } from "@wg-frontend/ui/select";
 
-import type { ClearPayment } from "~/lib/data-access";
+import type {
+  ApiIncomingTransaction,
+  ApiOutgoingTransaction,
+  ClearPayment,
+} from "~/lib/data-access";
 import type {
   clearPaymentsValidator,
   paginationAndSearchValidator,
 } from "~/lib/validators";
+import Dialog from "~/app/dashboard/_components/dashboard-dialog";
 import Table, {
   ColumnHeader,
   PaginationFooter,
@@ -34,38 +42,39 @@ import {
   useGetDashboardUsersTitleQuery,
   useGetProviderQuery,
   useGetProvidersQuery,
+  useGetTransactionsListQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { SimpleTitle } from "../../_components/dashboard-title";
 
-// function Actions({ clear }: { clear: ClearPayment }) {
-//   const { values } = useI18n();
-//
-//   return (
-//     <div className="flex flex-row space-x-4">
-//       {clear.id && (
-//         <DetailsDialog
-//           activity={clear}
-//           trigger={
-//             <Button
-//               className="flex h-max flex-row items-center space-x-2"
-//               variant="link"
-//             >
-//               <p className="flex-1 text-lg font-light">
-//                 {
-//                   values[
-//                     "dashboard.reports.sections.clear-payments.header.actions.details"
-//                   ]
-//                 }
-//               </p>
-//             </Button>
-//           }
-//         />
-//       )}
-//     </div>
-//   );
-// }
+function Actions({ clear }: { clear: ClearPayment }) {
+  const { values } = useI18n();
+
+  return (
+    <div className="flex flex-row space-x-4">
+      {clear.id && (
+        <DetailsDialog
+          activity={clear}
+          trigger={
+            <Button
+              className="flex h-max flex-row items-center space-x-2"
+              variant="link"
+            >
+              <p className="flex-1 text-lg font-light">
+                {
+                  values[
+                    "dashboard.reports.sections.clear-payments.header.actions.details"
+                  ]
+                }
+              </p>
+            </Button>
+          }
+        />
+      )}
+    </div>
+  );
+}
 
 const formatCurrency = (value: number, code: string, scale = 6) => {
   const formattedValue = new Intl.NumberFormat("en-US", {
@@ -86,9 +95,9 @@ const getDataProvider = (providerId: string) => {
 const columnHelper = createColumnHelper<ClearPayment>();
 
 function getTranslation(s: string) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { values } = useI18n();
-  // @ts-ignore
-  return values[s];
+  return values[s as keyof typeof values];
 }
 
 const columns = [
@@ -102,8 +111,7 @@ const columns = [
   columnHelper.accessor("month", {
     id: "month",
     cell: (info) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return getTranslation(`${info.getValue()}`);
+      return getTranslation(info.getValue() ?? "0");
     },
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.month" />
@@ -162,7 +170,7 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.actions.details" />
     ),
-    // cell: (info) => <Actions clear={info.row.original} />,
+    cell: (info) => <Actions clear={info.row.original} />,
   }),
 ];
 
@@ -538,94 +546,120 @@ export default function ClearPaymentPage() {
     </div>
   );
 }
-//
-// const columnHelperDetails = createColumnHelper<ClearPayment>();
-// const columnsDetails = [
-//   columnHelperDetails.accessor("month", {
-//     id: "month",
-//     cell: (info) => info.getValue(),
-//     header: () => (
-//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.month" />
-//     ),
-//   }),
-//   columnHelperDetails.accessor("serviceProviderId", {
-//     id: "provider",
-//     cell: (info) => info.getValue(),
-//     header: () => (
-//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.provider" />
-//     ),
-//   }),
-//   columnHelperDetails.accessor("value", {
-//     id: "amount",
-//     cell: (info) => info.getValue(),
-//     header: () => (
-//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.ammount" />
-//     ),
-//   }),
-//   columnHelperDetails.accessor("fees", {
-//     id: "date",
-//     cell: (info) => info.getValue(),
-//     header: () => (
-//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.details.date" />
-//     ),
-//   }),
-//   columnHelperDetails.accessor("state", {
-//     id: "status",
-//     cell: (info) => info.getValue(),
-//     header: () => (
-//       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.actions.details" />
-//     ),
-//   }),
-// ];
 
-// function DetailsDialog(props: { activity: ClearPayment; trigger: ReactNode }) {
-//   const { values } = useI18n();
-//   const [isOpen, _, __, toggle] = useBooleanHandlers();
-//   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-//   const table = useReactTable({
-//     data: props.activity,
-//     columns: columnsDetails,
-//     getCoreRowModel: getCoreRowModel(),
-//     manualPagination: true,
-//   });
-//
-//   return (
-//     <Dialog
-//       key={props.activity.id}
-//       isOpen={isOpen}
-//       contentClassName="max-w-3xl max-h-3xl"
-//       toggleOpen={toggle}
-//       trigger={props.trigger}
-//       ariaDescribedBy="service-transaction-details"
-//     >
-//       <div className="space-y-7">
-//         <h1 className="text-2xl font-light">
-//           {values["dashboard.reports.sections.clear-payments.details.header"]}
-//         </h1>
-//         <div className="flex flex-row items-center justify-between">
-//           ClearPayment ID: {props.activity.id}
-//           <Link
-//             passHref
-//             href={
-//               userData?.type === "PLATFORM"
-//                 ? `/dashboard/dispute/${props.activity.id}`
-//                 : `/dashboard/refund/${props.activity.id}`
-//             }
-//           >
-//             <Button className="px-2">
-//               {userData?.type === "PLATFORM"
-//                 ? values["dashboard.dispute.button.details"]
-//                 : values["dashboard.refund.button.details"]}
-//             </Button>
-//           </Link>
-//           <Button className="px-2" variant="secondary">
-//             <Download strokeWidth={0.75} className="size-6" />
-//           </Button>
-//         </div>
-//         <div className="flex-1 overflow-auto">
-//           <Table table={table} />
-//         </div>
-//       </div>
-//     </Dialog>
-//   );
-// }
+const columnHelperDetails = createColumnHelper<
+  ApiIncomingTransaction | ApiOutgoingTransaction
+>();
+const columnsDetails = [
+  columnHelperDetails.accessor("senderUrl", {
+    id: "senderUrl",
+    cell: (info) => info.getValue().split("/")[3],
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.user" />
+    ),
+  }),
+  columnHelperDetails.accessor("senderName", {
+    id: "provider",
+    cell: () => "Pay per minute",
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.type" />
+    ),
+  }),
+  columnHelperDetails.accessor("receiverUrl", {
+    id: "receiverUrl",
+    cell: (info) => info.getValue().split("/")[3],
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.description" />
+    ),
+  }),
+  columnHelperDetails.accessor("createdAt", {
+    id: "date",
+    cell: (info) => new Date(info.getValue()).toISOString(),
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.date" />
+    ),
+  }),
+  columnHelperDetails.accessor("receiveAmount.value", {
+    id: "value",
+    cell: (info) => {
+      return `$ ${formatCurrency(parseInt(info.getValue()), "USD")}`;
+    },
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.provider" />
+    ),
+  }),
+  columnHelperDetails.accessor("fee", {
+    id: "fee",
+    cell: (info) => {
+      return `$ ${formatCurrency(info.getValue(), "USD")}`;
+    },
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.fees" />
+    ),
+  }),
+  columnHelperDetails.accessor("receiveAmount.value", {
+    id: "receiveAmount",
+    cell: (info) => {
+      return `$ ${formatCurrency(parseInt(info.getValue()) - info.row.original.fee, "USD")}`;
+    },
+    header: () => (
+      <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.ammount" />
+    ),
+  }),
+];
+
+function DetailsDialog(props: { activity: ClearPayment; trigger: ReactNode }) {
+  const { values } = useI18n();
+  const [isOpen, _, __, toggle] = useBooleanHandlers();
+
+  const { data: transaccionData } = useGetTransactionsListQuery({
+    transacctionIds: props.activity.transactionIds,
+  });
+
+  const table = useReactTable({
+    data: transaccionData ?? [],
+    columns: columnsDetails,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+  });
+  const { data, isLoadingProviderData } = getDataProvider(
+    props.activity.serviceProviderId,
+  );
+  const month = props.activity.month?.toString() ?? "0";
+  const monthText = values[`${month as keyof typeof values}`];
+  return (
+    <Dialog
+      key={props.activity.id}
+      isOpen={isOpen}
+      contentClassName="max-w-5xl max-h-[50rem] "
+      toggleOpen={toggle}
+      trigger={props.trigger}
+      ariaDescribedBy="service-transaction-details"
+    >
+      <div className="space-y-7">
+        <h1 className="text-2xl font-light">
+          {values["dashboard.reports.sections.clear-payments.details.header"]}
+        </h1>
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-col">
+            <div className="text-lg font-light">
+              Provider: {isLoadingProviderData ? "Loading..." : data?.name}
+            </div>
+            <div className="text-lg font-light">
+              {values["dashboard.reports.sections.clear-payments.header.month"]}
+              : {monthText}
+            </div>
+          </div>
+          <Button className="px-2" variant="secondary">
+            <Download strokeWidth={0.75} className="size-6" />
+          </Button>
+        </div>
+        <div className="flex-1">
+          <div className="max-h-[400px] flex-1 overflow-auto">
+            <Table table={table} />
+          </div>
+        </div>
+      </div>
+    </Dialog>
+  );
+}

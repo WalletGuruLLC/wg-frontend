@@ -22,6 +22,7 @@ import type {
   addOrEditWalletValidator,
   changePasswordValidator,
   clearPaymentsValidator,
+  detailTransactionValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -1909,6 +1910,7 @@ interface ApiCommonTransaction {
   senderUrl: string;
   senderName: string;
   receiverName: string;
+  fee: number;
 }
 
 interface ApiAmount {
@@ -1918,13 +1920,13 @@ interface ApiAmount {
   typename: string;
 }
 
-interface ApiIncomingTransaction extends ApiCommonTransaction {
+export interface ApiIncomingTransaction extends ApiCommonTransaction {
   incomingAmount: ApiAmount;
   incomingPaymentId: string;
   type: "IncomingPayment";
 }
 
-interface ApiOutgoingTransaction extends ApiCommonTransaction {
+export interface ApiOutgoingTransaction extends ApiCommonTransaction {
   type: "OutgoingPayment";
   outgoingPaymentId: string;
   receiveAmount: ApiAmount;
@@ -2165,6 +2167,32 @@ export function useGetTransactionsByUserQuery(
   });
 }
 
+export function useGetTransactionsListQuery(
+  input: z.infer<typeof detailTransactionValidator>,
+  options = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["get-detail-transaction-list", input],
+    queryFn: async () => {
+      const transactions = input.transacctionIds.map((id) => [
+        "transacctionIds",
+        id,
+      ]);
+      const params = new URLSearchParams(transactions);
+      const result = await customFetch<
+        (ApiIncomingTransaction | ApiOutgoingTransaction)[]
+      >(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/transaction` +
+          "?" +
+          params.toString(),
+      );
+      return result;
+    },
+  });
+}
+
 export function useDownloadTransactionsByUserMutation(
   options: UseMutationOptions<
     z.infer<typeof paginationAndSearchValidator> &
@@ -2259,8 +2287,6 @@ export function useGetTransactionsByProviderQuery(
         items: "99",
         page: "1",
       } as unknown as Record<string, string>);
-
-      console.log("params", params.toString());
 
       const result = await customFetch<{
         transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
