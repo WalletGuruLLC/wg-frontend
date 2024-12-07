@@ -23,6 +23,7 @@ import type {
   changePasswordValidator,
   clearPaymentsValidator,
   detailTransactionValidator,
+  disputeValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
   loginValidator,
@@ -2747,6 +2748,31 @@ export function useGetRevenueQuery(
         console.error("Error fetching revenues:", error);
         throw error;
       }
+    },
+  });
+}
+
+export function useAddRefundMutation(
+  options: UseMutationOptions<z.infer<typeof disputeValidator>, unknown> = {},
+) {
+  const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-refund"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL + "/api/v1/wallets/refunds",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: async (...input) => {
+      await cq.invalidateQueries({
+        queryKey: ["get-revenue"],
+      });
+      options.onSuccess?.(...input);
     },
   });
 }
