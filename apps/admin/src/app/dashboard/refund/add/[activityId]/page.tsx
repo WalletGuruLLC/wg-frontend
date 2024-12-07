@@ -9,6 +9,7 @@ import {
   FormMessage,
   useForm,
 } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
 import {
   FormItem,
@@ -21,18 +22,48 @@ import {
   SimpleTitle,
 } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
+import {
+  useAddRefundMutation,
+  useGetAuthedUserInfoQuery,
+} from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
+import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { disputeValidator } from "~/lib/validators";
 
 export default function AddRefundPage() {
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "refunds",
+    },
+  });
   const { values } = useI18n();
+  const errors = useErrors();
   const { activityId } = useParams<{ activityId: string }>();
+  const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
   const form = useForm({
     schema: disputeValidator,
     defaultValues: {
       activityId: activityId,
+      amount: "",
+      description: "",
+      serviceProviderId:
+        dataUser?.type === "PROVIDER" ? dataUser.serviceProviderId : "",
     },
   });
+  const { mutate, isPending } = useAddRefundMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(values[`refund.toast.success`]);
+      close();
+      form.reset();
+    },
+  });
+  if (loading) return null;
   return (
     <div className="-mt-2">
       <BreadcrumbTitle
@@ -52,7 +83,10 @@ export default function AddRefundPage() {
         {values["refund-activity-label"] + " " + activityId}
       </p>
       <Form {...form}>
-        <form className="w-1/2 space-y-4">
+        <form
+          onSubmit={form.handleSubmit((data) => mutate(data))}
+          className="w-1/2 space-y-4"
+        >
           <div className="flex w-full flex-col">
             <FormField
               control={form.control}
@@ -65,6 +99,7 @@ export default function AddRefundPage() {
                   <FormControl className="-mt-5">
                     <Input
                       className="mt-0"
+                      type="number"
                       placeholder={values["refund-add-amount-placeholder"]}
                       required
                       {...field}
@@ -93,8 +128,9 @@ export default function AddRefundPage() {
             <Button
               className="ml-auto mr-8 mt-5 w-auto p-2 pl-4 pr-4"
               type="submit"
+              disabled={isPending}
             >
-              {values["refund-add-button"]}
+              {values[isPending ? "loading" : "refund-add-button"]}
             </Button>
           </div>
         </form>
