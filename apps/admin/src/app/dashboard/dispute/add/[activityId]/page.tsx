@@ -24,10 +24,16 @@ import {
 import { Button } from "~/components/button";
 import { useAddRefundMutation } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
+import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { disputeValidator } from "~/lib/validators";
 
 export default function AddDisputePage() {
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "refunds",
+    },
+  });
   const { values } = useI18n();
   const errors = useErrors();
   const { activityId } = useParams<{ activityId: string }>();
@@ -35,7 +41,7 @@ export default function AddDisputePage() {
     schema: disputeValidator,
     defaultValues: {
       activityId: activityId,
-      amount: 0,
+      amount: "",
       description: "",
     },
   });
@@ -51,6 +57,7 @@ export default function AddDisputePage() {
       form.reset();
     },
   });
+  if (loading) return null;
   return (
     <div className="-mt-2">
       <BreadcrumbTitle
