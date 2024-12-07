@@ -26,6 +26,7 @@ export const reportsDict = {
     "fees-table-amount": "Fee",
     "fees-table-start": "Start Date",
     "fees-table-end": "End Date",
+    "dispute.toast.success": "Dispute created successfull",
   },
   es: {
     "dispute-title": "Disputa",
@@ -50,5 +51,6 @@ export const reportsDict = {
     "fees-table-amount": "Costo",
     "fees-table-start": "Fecha Inicio",
     "fees-table-end": "Fecha Fin",
+    "dispute.toast.success": "Disputa creada satisfactoriamente",
   },
 } satisfies I18nDictionary;

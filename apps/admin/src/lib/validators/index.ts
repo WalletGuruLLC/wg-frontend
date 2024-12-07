@@ -361,7 +361,7 @@ export const toggleWalletLockValidator = z.object({
 
 export const disputeValidator = z.object({
   activityId: z.string().min(1),
-  amount: z.number(),
+  amount: z.number().min(0),
   description: z.string().optional(),
 });
 
