@@ -23,15 +23,15 @@ import {
 } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
 import {
-  useAddRefundMutation,
-  useGetClearPaymentByIdQuery
+  useAddClearPaymentMutation,
+    useGetClearPaymentByIdQuery
 } from '~/lib/data-access';
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { clearPaymentValidator} from '~/lib/validators';
 
-export default function AddRefundPage() {
+export default function AddClearPage() {
   const loading = useAccessLevelGuard({
     general: {
       module: "clearPayments",
@@ -70,7 +70,7 @@ export default function AddRefundPage() {
 
 
 
-  const { mutate, isPending } = useAddRefundMutation({
+  const { mutate, isPending } = useAddClearPaymentMutation({
     onError: (error) => {
       toast.error(errors[error.message], {
         description: "Error code: " + error.message,
@@ -122,7 +122,7 @@ export default function AddRefundPage() {
           <div className="flex w-full flex-col">
             <FormField
               control={form.control}
-              name="amount"
+              name="reference"
               render={({ field }) => (
                 <FormItem className="mt-6 w-full pr-8">
                   <FormLabel className="mb-0">
@@ -144,7 +144,7 @@ export default function AddRefundPage() {
             <br />
             <FormField
               control={form.control}
-              name="description"
+              name="notes"
               render={({ field }) => (
                 <FormItem className="mt-2 w-full pr-8">
                   <FormLabel className="mb-0">

@@ -21,7 +21,7 @@ import type {
   addOrEditUserValidator,
   addOrEditWalletValidator,
   changePasswordValidator,
-  clearPaymentsValidator,
+  clearPaymentsValidator, clearPaymentValidator,
   detailTransactionValidator,
   disputeValidator,
   forgotPasswordCodeStepValidator,
@@ -42,8 +42,8 @@ import type {
   transactionsByProviderValidator,
   transactionsByUserValidator,
   twoFactorAuthenticationValidator,
-  updateUserPhoneNumberValidator,
-} from "../validators";
+  updateUserPhoneNumberValidator
+} from '../validators';
 import { env } from "~/env";
 import customFetch from "./custom-fetch";
 
@@ -2804,3 +2804,30 @@ export function useAddRefundMutation(
     },
   });
 }
+
+
+export function useAddClearPaymentMutation(
+  options: UseMutationOptions<z.infer<typeof clearPaymentValidator>, unknown> = {},
+) {
+  // const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-clear-payment"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL + "/api/v1/clear-payments/confirm",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    // onSuccess: async (...input) => {
+    //   await cq.invalidateQueries({
+    //     queryKey: ["get-revenue"],
+    //   });
+    //   options.onSuccess?.(...input);
+    // },
+  });
+}
+
