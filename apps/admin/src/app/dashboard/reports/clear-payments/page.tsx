@@ -47,6 +47,7 @@ import {
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { SimpleTitle } from "../../_components/dashboard-title";
+import { navigate } from '~/lib/actions';
 
 function Actions({ clear }: { clear: ClearPayment }) {
   const { values } = useI18n();
@@ -76,8 +77,19 @@ function Actions({ clear }: { clear: ClearPayment }) {
   );
 }
 
+
+function GoToClear({ clear }: { clear: ClearPayment }) {
+  // const { values } = useI18n();
+
+  return (
+    <span onClick={() => navigate(`/dashboard/reports/clear-payments/add/${clear.id}`)} className='text-[#3678b1]'>
+        Clear payment
+      </span>
+  );
+}
+
 const formatCurrency = (value: number, code: string, scale = 6) => {
-  const formattedValue = new Intl.NumberFormat("en-US", {
+  const formattedValue = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: scale,
     maximumFractionDigits: scale,
   }).format(value / Math.pow(10, scale));
@@ -156,14 +168,18 @@ const columns = [
   }),
   columnHelper.accessor("state", {
     id: "state",
-    cell: (info) => (
-      <span className={info.getValue() ? "text-[#FF0000]" : ""}>
-        {info.getValue() ? "Cleared" : "Clear payment"}
-      </span>
-    ),
+    cell: (info) => {
+      if (!info.getValue()) {
+        return <GoToClear clear={info.row.original} />;
+      }else {
+        return <span>
+        Cleared
+      </span>;
+      }
+    },
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.clear-payments.header.status" />
-    ),
+    )
   }),
   columnHelper.display({
     id: "details",

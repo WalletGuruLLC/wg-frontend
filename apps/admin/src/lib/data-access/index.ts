@@ -1953,6 +1953,13 @@ interface UseClearPaymentQueryOutput {
   totalPages: number;
 }
 
+
+interface UseClearPaymentDetailOutput {
+  statusCode: number;
+  customCode: string;
+  providerRevenues: ClearPayment;
+}
+
 export interface ClearPayment {
   id: string;
   month?: string;
@@ -2019,6 +2026,27 @@ export function useGetClearPaymentsQuery(
           params.toString(),
       );
     },
+  });
+}
+
+export function useGetClearPaymentByIdQuery(
+   clearPaymentId: string ,
+  options: UseQueryOptions<UseClearPaymentDetailOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["clear-payment-by-id", clearPaymentId],
+    queryFn: async () => {
+      const result = await customFetch<UseClearPaymentDetailOutput>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+        `/api/v1/clear-payments/${clearPaymentId}`,
+        {
+          method: "GET",
+        },
+      );
+      console.log(result)
+      return result
+    }
   });
 }
 
