@@ -86,7 +86,7 @@ export default function FeePage() {
       endDate,
       type: "OutgoingPayment",
       providerIds: providerId,
-      isRevenue: true,
+      isRevenue: "true",
     }),
     [startDate, endDate, providerId],
   );
