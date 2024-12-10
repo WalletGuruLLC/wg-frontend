@@ -366,15 +366,14 @@ export const disputeValidator = z.object({
   serviceProviderId: z.string().optional(),
 });
 
-
 export const clearPaymentValidator = z.object({
   month: z.string().min(1),
   transaction: z.string().min(0),
   fees: z.string().optional(),
   amount: z.string().optional(),
-  reference: z.string().optional(),
-  notes: z.string().optional(),
-  id: z.string().optional(),
+  referenceNumber: z.string().optional(),
+  observations: z.string().optional(),
+  clearPaymentId: z.string().optional(),
 });
 
 export const revenueValidator = z.object({

@@ -532,7 +532,13 @@ export const dashboardDict = {
       "Description",
     "dashboard.reports.sections.clear-payments.header.type": "Type",
     "dashboard.reports.sections.clear-payments.header.user": "User",
-    "dashboard.reports.sections.clear-payments.header.month": "Month",
+    "dashboard.reports.sections.clear-payments.header.month": "Mes",
+    "dashboard.reports.sections.clear-payments.header.reference":
+      "Reference number",
+    "dashboard.reports.sections.clear-payments.header.notes": "Notes",
+    "dashboard.reports.sections.clear-payments.header.observation":
+      "Observation",
+
     "dashboard.reports.sections.clear-payments.header.provider": "Provider",
     "dashboard.reports.sections.clear-payments.header.transactions":
       "Transactions",
@@ -1100,6 +1106,10 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.type": "Tipo",
     "dashboard.reports.sections.clear-payments.header.user": "Usuario",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
+    "dashboard.reports.sections.clear-payments.header.reference":
+      "Número de referencia",
+    "dashboard.reports.sections.clear-payments.header.observation":
+      "Observación",
     "dashboard.reports.sections.clear-payments.header.provider": "Proveedor",
     "dashboard.reports.sections.clear-payments.header.transactions":
       "Transacciones",

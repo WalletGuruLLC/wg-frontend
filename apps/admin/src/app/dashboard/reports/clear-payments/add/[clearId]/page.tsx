@@ -22,18 +22,19 @@ import {
   SimpleTitle,
 } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
+import { navigate } from "~/lib/actions";
 import {
   useAddClearPaymentMutation,
-    useGetClearPaymentByIdQuery
-} from '~/lib/data-access';
+  useGetClearPaymentByIdQuery,
+} from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
-import { clearPaymentValidator} from '~/lib/validators';
+import { clearPaymentValidator } from "~/lib/validators";
 
 export default function AddClearPage() {
   const { clearId } = useParams<{ clearId: string }>();
-  const { data: dataClearPayment } =  useGetClearPaymentByIdQuery(clearId);
+  const { data: dataClearPayment } = useGetClearPaymentByIdQuery(clearId);
   const loading = useAccessLevelGuard({
     general: {
       module: "clearPayments",
@@ -43,30 +44,25 @@ export default function AddClearPage() {
   const errors = useErrors();
 
   const formatCurrency = (value: number, code: string, scale = 6) => {
-    const formattedValue = new Intl.NumberFormat('en-US', {
+    const formattedValue = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: scale,
       maximumFractionDigits: scale,
     }).format(value / Math.pow(10, scale));
     return `${formattedValue} ${code}`;
   };
 
-
-
-
   const form = useForm({
     schema: clearPaymentValidator,
     defaultValues: {
-      id: clearId,
-      month: values[(dataClearPayment?.month ?? "0") as keyof typeof values ],
+      clearPaymentId: clearId,
+      month: values[(dataClearPayment?.month ?? "0") as keyof typeof values],
       transaction: `$ ${formatCurrency(dataClearPayment?.value ?? 0, "USD")}`,
       fees: `$ ${formatCurrency(dataClearPayment?.fees ?? 0, "USD")}`,
       amount: `$ ${formatCurrency((dataClearPayment?.value ?? 0) - (dataClearPayment?.fees ?? 0), "USD")}`,
-      reference: "",
-      notes: "",
+      referenceNumber: "",
+      observations: "",
     },
   });
-
-
 
   const { mutate, isPending } = useAddClearPaymentMutation({
     onError: (error) => {
@@ -74,10 +70,11 @@ export default function AddClearPage() {
         description: "Error code: " + error.message,
       });
     },
-    onSuccess: () => {
-      toast.success(values[`refund.toast.success`]);
+    onSuccess: async () => {
+      toast.success(values[`clear.toast.success`]);
       close();
       form.reset();
+      await navigate("/dashboard/reports/clear-payments/");
     },
   });
   if (loading) return null;
@@ -92,24 +89,27 @@ export default function AddClearPage() {
           },
         ]}
       />
-      <SimpleTitle
-        title={values["clear-title"]}
-        showLoadingIndicator={false}
-      />
+      <SimpleTitle title={values["clear-title"]} showLoadingIndicator={false} />
+      <p className="mt-6">{values["clear-label"] + " " + clearId}</p>
       <p className="mt-6">
-        {values["clear-label"] + " " + clearId}
+        {values["clear-month"] +
+          " " +
+          values[(dataClearPayment?.month ?? "0") as keyof typeof values]}
       </p>
       <p className="mt-6">
-        {values["clear-month"] + " " + values[(dataClearPayment?.month ?? "0") as keyof typeof values]}
+        {values["clear-transactions"] +
+          " " +
+          `$ ${formatCurrency(dataClearPayment?.value ?? 0, "USD")}`}
       </p>
       <p className="mt-6">
-        {values["clear-transactions"] + " " + `$ ${formatCurrency(dataClearPayment?.value ?? 0, "USD")}`}
+        {values["clear-fees"] +
+          " " +
+          `$ ${formatCurrency(dataClearPayment?.fees ?? 0, "USD")}`}
       </p>
       <p className="mt-6">
-        {values["clear-fees"] + " " + `$ ${formatCurrency(dataClearPayment?.fees ?? 0, "USD")}`}
-      </p>
-      <p className="mt-6">
-        {values["clear-amount"] + " " + `$ ${formatCurrency((dataClearPayment?.value ?? 0) - (dataClearPayment?.fees ?? 0), "USD")}`}
+        {values["clear-amount"] +
+          " " +
+          `$ ${formatCurrency((dataClearPayment?.value ?? 0) - (dataClearPayment?.fees ?? 0), "USD")}`}
       </p>
 
       <Form {...form}>
@@ -120,7 +120,7 @@ export default function AddClearPage() {
           <div className="flex w-full flex-col">
             <FormField
               control={form.control}
-              name="reference"
+              name="referenceNumber"
               render={({ field }) => (
                 <FormItem className="mt-6 w-full pr-8">
                   <FormLabel className="mb-0">
@@ -142,7 +142,7 @@ export default function AddClearPage() {
             <br />
             <FormField
               control={form.control}
-              name="notes"
+              name="observations"
               render={({ field }) => (
                 <FormItem className="mt-2 w-full pr-8">
                   <FormLabel className="mb-0">
