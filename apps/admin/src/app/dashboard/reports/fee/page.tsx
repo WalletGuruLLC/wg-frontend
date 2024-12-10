@@ -25,7 +25,7 @@ import { Button } from "~/components/button";
 import {
   useDownloadTransactionsByUserMutation,
   useGetAuthedUserInfoQuery,
-  useGetRevenueQuery,
+  useGetFeeQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -87,10 +87,11 @@ export default function FeePage() {
       type: "OutgoingPayment",
       providerIds: providerId,
       isRevenue: "true",
+      report: "revenue",
     }),
     [startDate, endDate, providerId],
   );
-  const { data: transactions, isLoading } = useGetRevenueQuery({
+  const { data: transactions, isLoading } = useGetFeeQuery({
     ...paginationAndSearch,
     ...filters,
   });
