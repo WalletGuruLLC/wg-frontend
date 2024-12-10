@@ -200,7 +200,7 @@ export const dashboardDict = {
     "dashboard.users.table.items-label": "Items per page:",
     "dashboard.users.table.items-count-separator": " of ",
     "dashboard.health.title": "Health Check",
-    "dashboard.health.service": "Servicio",
+    "dashboard.health.service": "Service",
     "dashboard.health.status": "Status",
     "dashboard.wallet-management.title": "Registered Wallets",
     "dashboard.wallet-management.search.placeholder": "Search",
@@ -532,7 +532,13 @@ export const dashboardDict = {
       "Description",
     "dashboard.reports.sections.clear-payments.header.type": "Type",
     "dashboard.reports.sections.clear-payments.header.user": "User",
-    "dashboard.reports.sections.clear-payments.header.month": "Month",
+    "dashboard.reports.sections.clear-payments.header.month": "Mes",
+    "dashboard.reports.sections.clear-payments.header.reference":
+      "Reference number",
+    "dashboard.reports.sections.clear-payments.header.notes": "Notes",
+    "dashboard.reports.sections.clear-payments.header.observation":
+      "Observation",
+
     "dashboard.reports.sections.clear-payments.header.provider": "Provider",
     "dashboard.reports.sections.clear-payments.header.transactions":
       "Transactions",
@@ -795,7 +801,7 @@ export const dashboardDict = {
     "dashboard.users.table.items-label": "Elementos por página:",
     "dashboard.users.table.items-count-separator": " de ",
     "dashboard.health.title": "Health Check",
-    "dashboard.health.service": "Service",
+    "dashboard.health.service": "Servicio",
     "dashboard.health.status": "Estado",
     "dashboard.wallet-management.title": "Billeteras Registradas",
     "dashboard.wallet-management.search.placeholder": "Buscar",
@@ -1100,6 +1106,10 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.type": "Tipo",
     "dashboard.reports.sections.clear-payments.header.user": "Usuario",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
+    "dashboard.reports.sections.clear-payments.header.reference":
+      "Número de referencia",
+    "dashboard.reports.sections.clear-payments.header.observation":
+      "Observación",
     "dashboard.reports.sections.clear-payments.header.provider": "Proveedor",
     "dashboard.reports.sections.clear-payments.header.transactions":
       "Transacciones",
