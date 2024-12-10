@@ -2,9 +2,10 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+//import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -151,16 +152,18 @@ export default function TransactionsByUserPage() {
   const errors = useErrors();
 
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
+  // const pathname = usePathname();
+  // const router = useRouter();
 
-  const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
+  const initialPaginationAndSearch: z.infer<
+    typeof paginationAndSearchValidator
+  > = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",
     search: searchParams.get("search") ?? "",
   };
 
-  const filters: z.infer<typeof transactionsByUserValidator> = {
+  const initialFilters: z.infer<typeof transactionsByUserValidator> = {
     walletAddress: searchParams.get("walletAddress") ?? "",
     startDate: searchParams.get("startDate")
       ? new Date(Number(searchParams.get("startDate")))
@@ -174,16 +177,25 @@ export default function TransactionsByUserPage() {
     isRevenue: "false",
     //userType: "USER",
   };
-
+  const [paginationAndSearch, setPaginationAndSearch] = useState(
+    initialPaginationAndSearch,
+  );
+  const [filters, setFilters] = useState(initialFilters);
+  const [doFetch, setDoFetch] = useState(false);
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByUserQuery({
-    ...paginationAndSearch,
-    ...filters,
-  });
+  } = useGetTransactionsByUserQuery(
+    {
+      ...paginationAndSearch,
+      ...filters,
+    },
+    {
+      enabled: false,
+    },
+  );
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -219,7 +231,7 @@ export default function TransactionsByUserPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-
+  /*
   function handlePaginationAndSearchChange(
     newPaginationAndSearch: Partial<
       z.infer<typeof paginationAndSearchValidator>
@@ -239,6 +251,8 @@ export default function TransactionsByUserPage() {
       scroll: false,
     });
   }
+    */
+  /*
 
   function handleFiltersChange(
     newFilters: Partial<z.infer<typeof transactionsByUserValidator>>,
@@ -258,17 +272,17 @@ export default function TransactionsByUserPage() {
       scroll: false,
     });
   }
+    */
 
   useEffect(() => {
     if (
       userData?.type === "PROVIDER" &&
       userData.serviceProviderId !== filters.providerIds
     )
-      handleFiltersChange({
-        ...filters,
+      setFilters((prev) => ({
+        ...prev,
         providerIds: userData.serviceProviderId,
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      }));
   }, [filters, userData]);
 
   const firstRowIdx =
@@ -309,6 +323,12 @@ export default function TransactionsByUserPage() {
               defaultValue={filters.walletAddress}
               required={true}
               className="rounded-lg border border-black"
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  walletAddress: e.target.value,
+                }))
+              }
             />
           </div>
 
@@ -345,10 +365,10 @@ export default function TransactionsByUserPage() {
                   mode="single"
                   selected={filters.startDate}
                   onSelect={(date) =>
-                    handleFiltersChange({
-                      ...filters,
-                      startDate: date,
-                    })
+                    setFilters((prev) => ({
+                      ...prev,
+                      startDate: date ?? undefined,
+                    }))
                   }
                   disabled={[
                     {
@@ -394,10 +414,10 @@ export default function TransactionsByUserPage() {
                   mode="single"
                   selected={filters.endDate}
                   onSelect={(date) =>
-                    handleFiltersChange({
-                      ...filters,
-                      endDate: date,
-                    })
+                    setFilters((prev) => ({
+                      ...prev,
+                      endDate: date ?? undefined,
+                    }))
                   }
                   disabled={
                     filters.startDate ? [{ before: filters.startDate }] : []
@@ -417,10 +437,7 @@ export default function TransactionsByUserPage() {
             </Label>
             <Select
               onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  type: value,
-                })
+                setFilters((prev) => ({ ...prev, type: value }))
               }
               defaultValue={filters.type}
             >
@@ -444,57 +461,7 @@ export default function TransactionsByUserPage() {
               </SelectContent>
             </Select>
           </div>
-          {/*
-          <div className="space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.state.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  state: value,
-                })
-              }
-              defaultValue={filters.state}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.state && "text-[#A1A1A1]",
-                )}
-              >
-                <SelectValue
-                  placeholder={
-                    values[
-                      `dashboard.reports.sections-transactions-by-user.search.state.placeholder`
-                    ]
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PENDING">
-                  {
-                    values[
-                      "dashboard.reports.sections-transactions-by-user.search.state.pending"
-                    ]
-                  }
-                </SelectItem>
-                <SelectItem value="COMPLETED">
-                  {
-                    values[
-                      "dashboard.reports.sections-transactions-by-user.search.state.completed"
-                    ]
-                  }
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          */}
+
           {
             /* Provider */
             userData?.type === "PLATFORM" && (
@@ -508,10 +475,7 @@ export default function TransactionsByUserPage() {
                 </Label>
                 <Select
                   onValueChange={(value) =>
-                    handleFiltersChange({
-                      ...filters,
-                      providerIds: value,
-                    })
+                    setFilters((prev) => ({ ...prev, providerIds: value }))
                   }
                   defaultValue={filters.providerIds}
                 >
@@ -555,7 +519,13 @@ export default function TransactionsByUserPage() {
               </div>
             )
           }
-          <Button className="h-max self-end" onClick={() => refetch()}>
+          <Button
+            className="h-max self-end"
+            onClick={async () => {
+              setDoFetch(true);
+              await refetch();
+            }}
+          >
             <p className="flex-1 text-lg font-light">
               {
                 values[
@@ -619,40 +589,38 @@ export default function TransactionsByUserPage() {
         </div>
       </div>
       <div className="flex-1 overflow-auto">
-        <Table table={table} />
+        {doFetch && <Table table={table} />}
       </div>
-      <PaginationFooter
-        count={{
-          total: transactionsData?.total ?? 0,
-          firstRowIdx,
-          lastRowIdx,
-        }}
-        items={paginationAndSearch.items ?? "10"}
-        onItemsChange={(items) =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            items,
-            page: "1",
-          })
-        }
-        canPreviousPage={paginationAndSearch.page !== "1"}
-        canNextPage={
-          transactionsData?.activities.length ===
-          Number(paginationAndSearch.items)
-        }
-        onPreviousPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) - 1),
-          })
-        }
-        onNextPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) + 1),
-          })
-        }
-      />
+      {doFetch && (
+        <PaginationFooter
+          count={{
+            total: transactionsData?.total ?? 0,
+            firstRowIdx,
+            lastRowIdx,
+          }}
+          items={paginationAndSearch.items ?? "10"}
+          onItemsChange={(items) =>
+            setPaginationAndSearch((prev) => ({ ...prev, items, page: "1" }))
+          }
+          canPreviousPage={paginationAndSearch.page !== "1"}
+          canNextPage={
+            transactionsData?.activities.length ===
+            Number(paginationAndSearch.items)
+          }
+          onPreviousPage={() =>
+            setPaginationAndSearch((prev) => ({
+              ...prev,
+              page: String(Number(prev.page) - 1),
+            }))
+          }
+          onNextPage={() =>
+            setPaginationAndSearch((prev) => ({
+              ...prev,
+              page: String(Number(prev.page) + 1),
+            }))
+          }
+        />
+      )}
     </div>
   );
 }
