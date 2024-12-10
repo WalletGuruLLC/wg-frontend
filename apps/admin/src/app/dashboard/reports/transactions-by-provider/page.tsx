@@ -183,6 +183,8 @@ export default function TransactionsByProviderPage() {
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
     providerIds: searchParams.get("providerIds") ?? "",
+    state: "COMPLETED",
+    isRevenue: "false",
   };
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
@@ -316,9 +318,9 @@ export default function TransactionsByProviderPage() {
                   )}
                 >
                   {filters.startDate ? (
-                    format(filters.startDate, "yyyy/MM/dd")
+                    format(filters.startDate, "yyyy-MM-dd")
                   ) : (
-                    <span>yyyy/mm/dd</span>
+                    <span>yyyy-mm-dd</span>
                   )}
                   <CalendarIcon
                     className="absolute right-2 size-5"
@@ -365,9 +367,9 @@ export default function TransactionsByProviderPage() {
                   )}
                 >
                   {filters.endDate ? (
-                    format(filters.endDate, "yyyy/MM/dd")
+                    format(filters.endDate, "yyyy-MM-dd")
                   ) : (
-                    <span>yyyy/mm/dd</span>
+                    <span>yyyy-mm-dd</span>
                   )}
                   <CalendarIcon
                     className="absolute right-2 size-5"

@@ -260,7 +260,10 @@ export default function TransactionsByUserPage() {
   }
 
   useEffect(() => {
-    if (userData?.type === "PROVIDER")
+    if (
+      userData?.type === "PROVIDER" &&
+      userData.serviceProviderId !== filters.providerIds
+    )
       handleFiltersChange({
         ...filters,
         providerIds: userData.serviceProviderId,
@@ -295,6 +298,7 @@ export default function TransactionsByUserPage() {
                   "dashboard.reports.sections-transactions-by-user.search.wallet-address.label"
                 ]
               }
+              <span className="text-[#3C93BE]">*</span>
             </Label>
             <Input
               placeholder={
@@ -303,12 +307,7 @@ export default function TransactionsByUserPage() {
                 ]
               }
               defaultValue={filters.walletAddress}
-              onChange={(e) =>
-                handleFiltersChange({
-                  ...filters,
-                  walletAddress: e.target.value,
-                })
-              }
+              required={true}
               className="rounded-lg border border-black"
             />
           </div>

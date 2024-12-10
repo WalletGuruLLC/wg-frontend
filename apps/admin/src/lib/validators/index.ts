@@ -329,6 +329,8 @@ export const transactionsByProviderValidator = z.object({
     })
     .optional(),
   providerIds: z.string().min(1).optional(),
+  state: z.string().min(1).optional(),
+  isRevenue: z.string().optional(),
 });
 
 export const walletusersValidator = z.object({
