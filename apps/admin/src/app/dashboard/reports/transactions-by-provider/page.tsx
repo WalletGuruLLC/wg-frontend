@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -31,7 +31,6 @@ import { toast } from "@wg-frontend/ui/toast";
 import type { ActivityProvider, TransactionProvider } from "~/lib/data-access";
 import type {
   paginationAndSearchValidator,
-  transactionsByProviderValidator,
   transactionsByUserValidator,
 } from "~/lib/validators";
 import Table, {
@@ -166,36 +165,47 @@ export default function TransactionsByProviderPage() {
   const errors = useErrors();
 
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
+  const initialPaginationAndSearch: z.infer<
+    typeof paginationAndSearchValidator
+  > = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",
     search: searchParams.get("search") ?? "",
   };
 
-  const filters: z.infer<typeof transactionsByProviderValidator> = {
+  const initialFilters: z.infer<typeof transactionsByUserValidator> = {
+    walletAddress: searchParams.get("walletAddress") ?? "",
     startDate: searchParams.get("startDate")
       ? new Date(Number(searchParams.get("startDate")))
       : undefined,
     endDate: searchParams.get("endDate")
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
+    type: searchParams.get("type") ?? "",
     providerIds: searchParams.get("providerIds") ?? "",
     state: "COMPLETED",
     isRevenue: "false",
   };
+  const [paginationAndSearch, setPaginationAndSearch] = useState(
+    initialPaginationAndSearch,
+  );
+  const [filters, setFilters] = useState(initialFilters);
+  const [doFetch, setDoFetch] = useState(false);
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByProviderQuery({
-    ...paginationAndSearch,
-    ...filters,
-  });
+  } = useGetTransactionsByProviderQuery(
+    {
+      ...paginationAndSearch,
+      ...filters,
+    },
+    {
+      enabled: false,
+    },
+  );
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -211,12 +221,17 @@ export default function TransactionsByProviderPage() {
   );
   const { mutate: downloadTransactions, isPending: downloading } =
     useDownloadTransactionsByProviderMutation({
-      onSuccess: () => {
-        toast.success(
-          values[
-            "dashboard.reports.sections-transactions-by-provider.download.success"
-          ],
-        );
+      onSuccess: (data) => {
+        const csvData = data as string;
+        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "transactions.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       },
       onError: (error) => {
         toast.error(errors[error.message], {
