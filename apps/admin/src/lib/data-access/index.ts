@@ -2608,7 +2608,12 @@ interface RevenueTransaction {
   senderName: string;
   createdAt: Date;
   state: string;
-  receiveAmount: {
+  receiveAmount?: {
+    assetScale: number;
+    assetCode: string;
+    value: string;
+  };
+  incomingAmount?: {
     assetScale: number;
     assetCode: string;
     value: string;
@@ -2685,11 +2690,12 @@ export function useGetRevenueQuery(
         let accumulatedAmountNumber = 0;
         const groupedRevenues = result.transactions.reduce((acc, t) => {
           const provider = t.senderName;
-          const amount = t.receiveAmount;
+          const amount = t.incomingAmount;
+
           const amountString = formatCurrency(
-            Number(amount.value),
-            amount.assetCode,
-            amount.assetScale,
+            Number(amount?.value ?? 0),
+            amount?.assetCode ?? "",
+            amount?.assetScale ?? 0,
           );
           const description = t.senderName;
 
@@ -2723,11 +2729,11 @@ export function useGetRevenueQuery(
             });
 
             providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
-            accumulatedAmountNumber += Number(amount.value);
+            accumulatedAmountNumber += Number(amount?.value ?? 0);
             providerId.amount = formatCurrency(
               accumulatedAmountNumber,
-              t.receiveAmount.assetCode,
-              t.receiveAmount.assetScale,
+              t.incomingAmount?.assetCode ?? "",
+              t.incomingAmount?.assetScale ?? 0,
             );
 
             acc.set(provider, providerId);

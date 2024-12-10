@@ -185,6 +185,7 @@ export default function TransactionsByProviderPage() {
     providerIds: searchParams.get("providerIds") ?? "",
     state: "COMPLETED",
     isRevenue: "false",
+    report: "period",
   };
   const [paginationAndSearch, setPaginationAndSearch] = useState(
     initialPaginationAndSearch,

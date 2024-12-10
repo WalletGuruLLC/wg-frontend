@@ -96,9 +96,10 @@ export default function RevenuePage() {
     () => ({
       startDate,
       endDate,
-      type: "OutgoingPayment",
+      type: "IncomingPayment",
       providerIds: providerId,
       isRevenue: "true",
+      report: "revenue",
     }),
     [startDate, endDate, providerId],
   );
