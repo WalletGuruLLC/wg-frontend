@@ -9,6 +9,7 @@ import {
   FormMessage,
   useForm,
 } from "@wg-frontend/ui/form";
+import { toast } from "@wg-frontend/ui/toast";
 
 import {
   FormItem,
@@ -21,18 +22,42 @@ import {
   SimpleTitle,
 } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
+import { useAddRefundMutation } from "~/lib/data-access";
+import { useErrors } from "~/lib/data-access/errors";
+import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { disputeValidator } from "~/lib/validators";
 
 export default function AddDisputePage() {
+  const loading = useAccessLevelGuard({
+    general: {
+      module: "refunds",
+    },
+  });
   const { values } = useI18n();
+  const errors = useErrors();
   const { activityId } = useParams<{ activityId: string }>();
   const form = useForm({
     schema: disputeValidator,
     defaultValues: {
       activityId: activityId,
+      amount: "",
+      description: "",
     },
   });
+  const { mutate, isPending } = useAddRefundMutation({
+    onError: (error) => {
+      toast.error(errors[error.message], {
+        description: "Error code: " + error.message,
+      });
+    },
+    onSuccess: () => {
+      toast.success(values[`dispute.toast.success`]);
+      close();
+      form.reset();
+    },
+  });
+  if (loading) return null;
   return (
     <div className="-mt-2">
       <BreadcrumbTitle
@@ -52,7 +77,10 @@ export default function AddDisputePage() {
         {values["dispute-activity-label"] + " " + activityId}
       </p>
       <Form {...form}>
-        <form className="w-1/2 space-y-4">
+        <form
+          onSubmit={form.handleSubmit((data) => mutate(data))}
+          className="w-1/2 space-y-4"
+        >
           <div className="flex w-full flex-col">
             <FormField
               control={form.control}
@@ -65,6 +93,7 @@ export default function AddDisputePage() {
                   <FormControl className="-mt-5">
                     <Input
                       className="mt-0"
+                      type="number"
                       placeholder={values["dispute-add-amount-placeholder"]}
                       required
                       {...field}
@@ -93,8 +122,9 @@ export default function AddDisputePage() {
             <Button
               className="ml-auto mr-8 mt-5 w-auto p-2 pl-4 pr-4"
               type="submit"
+              disabled={isPending}
             >
-              {values["dispute-add-button"]}
+              {values[isPending ? "loading" : "dispute-add-button"]}
             </Button>
           </div>
         </form>

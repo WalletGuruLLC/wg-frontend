@@ -277,6 +277,7 @@ export const transactionsByUserValidator = z.object({
   providerIds: z.string().min(1).optional(),
   state: z.string().min(1).optional(),
   userType: z.string().min(1).optional(),
+  isRevenue: z.string().optional(),
 });
 
 export const clearPaymentsValidator = z.object({
@@ -284,6 +285,10 @@ export const clearPaymentsValidator = z.object({
   month: z.string().optional(),
   providerId: z.string().min(1).optional(),
   status: z.string().min(1).optional(),
+});
+
+export const detailTransactionValidator = z.object({
+  transacctionIds: z.array(z.string()).min(1),
 });
 
 export const reservedFundsByUserValidator = z.object({
@@ -324,6 +329,8 @@ export const transactionsByProviderValidator = z.object({
     })
     .optional(),
   providerIds: z.string().min(1).optional(),
+  state: z.string().min(1).optional(),
+  isRevenue: z.string().optional(),
 });
 
 export const walletusersValidator = z.object({
@@ -357,6 +364,25 @@ export const toggleWalletLockValidator = z.object({
 
 export const disputeValidator = z.object({
   activityId: z.string().min(1),
-  amount: z.number(),
+  amount: z.string().min(0),
   description: z.string().optional(),
+  serviceProviderId: z.string().optional(),
+});
+
+export const revenueValidator = z.object({
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  type: z.string().min(1).optional(),
+  providerIds: z.string().min(1).optional(),
+  isRevenue: z.string(),
 });
