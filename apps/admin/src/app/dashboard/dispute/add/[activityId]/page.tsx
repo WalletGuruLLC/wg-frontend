@@ -57,6 +57,7 @@ export default function AddDisputePage() {
       toast.success(values[`dispute.toast.success`]);
       close();
       form.reset();
+      router.replace("/dashboard");
     },
   });
   return (isLoadingAccessLevels ||

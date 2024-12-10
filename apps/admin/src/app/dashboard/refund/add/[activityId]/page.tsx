@@ -59,6 +59,7 @@ export default function AddRefundPage() {
       toast.success(values[`refund.toast.success`]);
       close();
       form.reset();
+      router.replace("/dashboard");
     },
   });
   return (isLoadingAccessLevels ||
