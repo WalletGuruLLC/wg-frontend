@@ -22,6 +22,7 @@ import type {
   addOrEditWalletValidator,
   changePasswordValidator,
   clearPaymentsValidator,
+  clearPaymentValidator,
   detailTransactionValidator,
   disputeValidator,
   forgotPasswordCodeStepValidator,
@@ -1953,6 +1954,12 @@ interface UseClearPaymentQueryOutput {
   totalPages: number;
 }
 
+// interface UseClearPaymentDetailOutput {
+//   statusCode: number;
+//   customCode: string;
+//   providerRevenues: ClearPayment;
+// }
+
 export interface ClearPayment {
   id: string;
   month?: string;
@@ -2018,6 +2025,27 @@ export function useGetClearPaymentsQuery(
           "?" +
           params.toString(),
       );
+    },
+  });
+}
+
+export function useGetClearPaymentByIdQuery(
+  clearPaymentId: string,
+  options: UseQueryOptions<ClearPayment> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["clear-payment-by-id", clearPaymentId],
+    queryFn: async () => {
+      const result = await customFetch<ClearPayment>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/clear-payments/${clearPaymentId}`,
+        {
+          method: "GET",
+        },
+      );
+      console.log(result);
+      return result;
     },
   });
 }
@@ -2778,6 +2806,35 @@ export function useAddRefundMutation(
       await cq.invalidateQueries({
         queryKey: ["get-revenue"],
       });
+      options.onSuccess?.(...input);
+    },
+  });
+}
+
+export function useAddClearPaymentMutation(
+  options: UseMutationOptions<
+    z.infer<typeof clearPaymentValidator>,
+    unknown
+  > = {},
+) {
+  // const cq = useQueryClient();
+  return useMutation({
+    ...options,
+    mutationKey: ["add-clear-payment"],
+    mutationFn: (input) => {
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          "/api/v1/clear-payments/confirm",
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+    },
+    onSuccess: (...input) => {
+      // await cq.invalidateQueries({
+      //   queryKey: ["clear-payment-by-id", input[0].clearPaymentId],
+      // });
       options.onSuccess?.(...input);
     },
   });
