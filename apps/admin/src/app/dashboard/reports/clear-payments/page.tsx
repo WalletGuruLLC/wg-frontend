@@ -41,7 +41,6 @@ import { navigate } from "~/lib/actions";
 import {
   useGetAuthedUserAccessLevelsQuery,
   useGetClearPaymentsQuery,
-  useGetDashboardUsersTitleQuery,
   useGetProviderQuery,
   useGetProvidersQuery,
   useGetTransactionsListQuery,
@@ -218,7 +217,7 @@ export default function ClearPaymentPage() {
     status: searchParams.get("status") ?? "",
   };
 
-  const { data: title } = useGetDashboardUsersTitleQuery(undefined);
+  //const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
     data: clearData,
     isLoading,
@@ -298,11 +297,7 @@ export default function ClearPaymentPage() {
         <div className="flex flex-row flex-wrap gap-4">
           <div className="flex flex-col space-y-1 self-end">
             <SimpleTitle
-              title={
-                (title ?? "") +
-                " " +
-                values["dashboard.reports.sections.clear-payments"]
-              }
+              title={" " + values["dashboard.reports.sections.clear-payments"]}
               showLoadingIndicator={isLoading}
             />
           </div>

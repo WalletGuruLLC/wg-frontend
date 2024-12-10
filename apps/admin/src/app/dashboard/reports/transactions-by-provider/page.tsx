@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import type { z } from "zod";
-import { useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -32,7 +32,6 @@ import type { ActivityProvider, TransactionProvider } from "~/lib/data-access";
 import type {
   paginationAndSearchValidator,
   transactionsByProviderValidator,
-  transactionsByUserValidator,
 } from "~/lib/validators";
 import Table, {
   ColumnHeader,
@@ -166,16 +165,16 @@ export default function TransactionsByProviderPage() {
   const errors = useErrors();
 
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
 
-  const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
+  const initialPaginationAndSearch: z.infer<
+    typeof paginationAndSearchValidator
+  > = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",
     search: searchParams.get("search") ?? "",
   };
 
-  const filters: z.infer<typeof transactionsByProviderValidator> = {
+  const initialFilters: z.infer<typeof transactionsByProviderValidator> = {
     startDate: searchParams.get("startDate")
       ? new Date(Number(searchParams.get("startDate")))
       : undefined,
@@ -186,17 +185,30 @@ export default function TransactionsByProviderPage() {
     state: "COMPLETED",
     isRevenue: "false",
     report: "period",
+    percent: 2,
+    commission: 0,
+    base: 0,
   };
+  const [paginationAndSearch, setPaginationAndSearch] = useState(
+    initialPaginationAndSearch,
+  );
+  const [filters, setFilters] = useState(initialFilters);
+  const [doFetch, setDoFetch] = useState(false);
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByProviderQuery({
-    ...paginationAndSearch,
-    ...filters,
-  });
+  } = useGetTransactionsByProviderQuery(
+    {
+      ...paginationAndSearch,
+      ...filters,
+    },
+    {
+      enabled: false,
+    },
+  );
 
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
@@ -212,12 +224,17 @@ export default function TransactionsByProviderPage() {
   );
   const { mutate: downloadTransactions, isPending: downloading } =
     useDownloadTransactionsByProviderMutation({
-      onSuccess: () => {
-        toast.success(
-          values[
-            "dashboard.reports.sections-transactions-by-provider.download.success"
-          ],
-        );
+      onSuccess: (data) => {
+        const csvData = data as string;
+        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "transactions.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       },
       onError: (error) => {
         toast.error(errors[error.message], {
@@ -232,53 +249,15 @@ export default function TransactionsByProviderPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-
-  function handlePaginationAndSearchChange(
-    newPaginationAndSearch: Partial<
-      z.infer<typeof paginationAndSearchValidator>
-    >,
-  ) {
-    const params = new URLSearchParams(searchParams);
-    for (const key in newPaginationAndSearch) {
-      const val =
-        newPaginationAndSearch[key as keyof typeof newPaginationAndSearch];
-      if (val) {
-        params.set(key, val);
-      } else {
-        params.delete(key);
-      }
-    }
-    router.replace(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
-  }
-
-  function handleFiltersChange(
-    newFilters: Partial<z.infer<typeof transactionsByUserValidator>>,
-  ) {
-    const params = new URLSearchParams(searchParams);
-    for (const key in newFilters) {
-      const val = newFilters[key as keyof typeof newFilters];
-      if (val) {
-        if (val instanceof Date) {
-          params.set(key, `${val.getTime()}`);
-        } else params.set(key, val);
-      } else {
-        params.delete(key);
-      }
-    }
-    router.replace(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
-  }
-
   useEffect(() => {
-    if (userData?.type === "PROVIDER")
-      handleFiltersChange({
-        ...filters,
+    if (
+      userData?.type === "PROVIDER" &&
+      userData.serviceProviderId !== filters.providerIds
+    )
+      setFilters((prev) => ({
+        ...prev,
         providerIds: userData.serviceProviderId,
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      }));
   }, [filters, userData]);
 
   const firstRowIdx =
@@ -334,10 +313,10 @@ export default function TransactionsByProviderPage() {
                   mode="single"
                   selected={filters.startDate}
                   onSelect={(date) =>
-                    handleFiltersChange({
-                      ...filters,
-                      startDate: date,
-                    })
+                    setFilters((prev) => ({
+                      ...prev,
+                      startDate: date ?? undefined,
+                    }))
                   }
                   disabled={[
                     {
@@ -383,10 +362,10 @@ export default function TransactionsByProviderPage() {
                   mode="single"
                   selected={filters.endDate}
                   onSelect={(date) =>
-                    handleFiltersChange({
-                      ...filters,
-                      endDate: date,
-                    })
+                    setFilters((prev) => ({
+                      ...prev,
+                      endDate: date ?? undefined,
+                    }))
                   }
                   disabled={
                     filters.startDate ? [{ before: filters.startDate }] : []
@@ -396,63 +375,70 @@ export default function TransactionsByProviderPage() {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="min-w-60 flex-1 space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-provider.search.provider.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                handleFiltersChange({
-                  ...filters,
-                  providerIds: value,
-                })
-              }
-              disabled={userData?.type === "PROVIDER"}
-              defaultValue={filters.providerIds}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.providerIds && "text-gray-400",
-                )}
-              >
-                <SelectValue
-                  placeholder={
+          {
+            /* Provider */
+            userData?.type === "PLATFORM" && (
+              <div className="min-w-60 flex-1 space-y-0">
+                <Label className="font-normal">
+                  {
                     values[
-                      `dashboard.reports.sections-transactions-by-provider.search.provider.placeholder`
+                      "dashboard.reports.sections-transactions-by-provider.search.provider.label"
                     ]
                   }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {providersData?.providers
-                  .filter((p) =>
-                    accessLevelsData?.providers[
-                      p.id
-                    ]?.transactionsByProvider.includes("view"),
-                  )
-                  .map((provider) => (
-                    <SelectItem key={provider.id} value={provider.id}>
-                      {provider.name}
-                    </SelectItem>
-                  ))}
-                {providersData?.providers.filter((p) =>
-                  accessLevelsData?.providers[
-                    p.id
-                  ]?.transactionsByProvider.includes("view"),
-                ).length === 0 && (
-                  <SelectItem value="no" disabled>
-                    No providers available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          <Button className="h-max self-end" onClick={() => refetch()}>
+                </Label>
+                <Select
+                  onValueChange={(value) =>
+                    setFilters((prev) => ({ ...prev, providerIds: value }))
+                  }
+                  defaultValue={filters.providerIds}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "rounded-lg border border-black",
+                      !filters.providerIds && "text-gray-400",
+                    )}
+                  >
+                    <SelectValue
+                      placeholder={
+                        values[
+                          `dashboard.reports.sections-transactions-by-provider.search.provider.placeholder`
+                        ]
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {providersData?.providers
+                      .filter((p) =>
+                        accessLevelsData?.providers[
+                          p.id
+                        ]?.transactionsByProvider.includes("view"),
+                      )
+                      .map((provider) => (
+                        <SelectItem key={provider.id} value={provider.id}>
+                          {provider.name}
+                        </SelectItem>
+                      ))}
+                    {providersData?.providers.filter((p) =>
+                      accessLevelsData?.providers[
+                        p.id
+                      ]?.transactionsByProvider.includes("view"),
+                    ).length === 0 && (
+                      <SelectItem value="no" disabled>
+                        No providers available
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            )
+          }
+          <Button
+            className="h-max self-end"
+            onClick={async () => {
+              setDoFetch(true);
+              await refetch();
+            }}
+          >
             <p className="flex-1 text-lg font-light">
               {
                 values[
@@ -484,40 +470,38 @@ export default function TransactionsByProviderPage() {
         </div>
       </div>
       <div className="flex-1 overflow-auto">
-        <Table table={table} />
+        {doFetch && <Table table={table} />}
       </div>
-      <PaginationFooter
-        count={{
-          total: transactionsData?.total ?? 0,
-          firstRowIdx,
-          lastRowIdx,
-        }}
-        items={paginationAndSearch.items ?? "10"}
-        onItemsChange={(items) =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            items,
-            page: "1",
-          })
-        }
-        canPreviousPage={paginationAndSearch.page !== "1"}
-        canNextPage={
-          transactionsData?.activities.length ===
-          Number(paginationAndSearch.items)
-        }
-        onPreviousPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) - 1),
-          })
-        }
-        onNextPage={() =>
-          handlePaginationAndSearchChange({
-            ...paginationAndSearch,
-            page: String(Number(paginationAndSearch.page) + 1),
-          })
-        }
-      />
+      {doFetch && (
+        <PaginationFooter
+          count={{
+            total: transactionsData?.total ?? 0,
+            firstRowIdx,
+            lastRowIdx,
+          }}
+          items={paginationAndSearch.items ?? "10"}
+          onItemsChange={(items) =>
+            setPaginationAndSearch((prev) => ({ ...prev, items, page: "1" }))
+          }
+          canPreviousPage={paginationAndSearch.page !== "1"}
+          canNextPage={
+            transactionsData?.activities.length ===
+            Number(paginationAndSearch.items)
+          }
+          onPreviousPage={() =>
+            setPaginationAndSearch((prev) => ({
+              ...prev,
+              page: String(Number(prev.page) - 1),
+            }))
+          }
+          onNextPage={() =>
+            setPaginationAndSearch((prev) => ({
+              ...prev,
+              page: String(Number(prev.page) + 1),
+            }))
+          }
+        />
+      )}
     </div>
   );
 }
