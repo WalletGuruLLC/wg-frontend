@@ -98,7 +98,7 @@ export default function RevenuePage() {
       endDate,
       type: "OutgoingPayment",
       providerIds: providerId,
-      isRevenue: true,
+      isRevenue: "true",
     }),
     [startDate, endDate, providerId],
   );

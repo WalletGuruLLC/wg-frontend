@@ -170,8 +170,9 @@ export default function TransactionsByUserPage() {
       : undefined,
     type: searchParams.get("type") ?? "",
     providerIds: searchParams.get("providerIds") ?? "",
-    state: searchParams.get("state") ?? "",
-    userType: "USER",
+    state: "COMPLETED",
+    isRevenue: "false",
+    //userType: "USER",
   };
 
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
@@ -444,7 +445,7 @@ export default function TransactionsByUserPage() {
               </SelectContent>
             </Select>
           </div>
-
+          {/*
           <div className="space-y-0">
             <Label className="font-normal">
               {
@@ -494,6 +495,7 @@ export default function TransactionsByUserPage() {
               </SelectContent>
             </Select>
           </div>
+          */}
           {
             /* Provider */
             userData?.type === "PLATFORM" && (
