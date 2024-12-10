@@ -278,6 +278,7 @@ export const transactionsByUserValidator = z.object({
   state: z.string().min(1).optional(),
   userType: z.string().min(1).optional(),
   isRevenue: z.string().optional(),
+  report: z.string().optional(),
 });
 
 export const clearPaymentsValidator = z.object({
@@ -332,6 +333,9 @@ export const transactionsByProviderValidator = z.object({
   state: z.string().min(1).optional(),
   isRevenue: z.string().optional(),
   report: z.string().optional(),
+  percent: z.number().optional(),
+  commission: z.number().optional(),
+  base: z.number().optional(),
 });
 
 export const walletusersValidator = z.object({

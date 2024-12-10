@@ -2307,23 +2307,33 @@ export function useGetTransactionsByProviderQuery(
 
         const isIncoming = t.type === "IncomingPayment";
         const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
-
-        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+        const base = input.base ?? 0;
+        const commission = input.commission ?? 0;
+        const percent = Number(input.percent ?? 0) / 100;
+        const fee = Number(amount.value) * percent + base + commission;
+        const net = Number(amount.value) - fee;
+        const amountString = `${""}${convertAmountWithScale(
           Number(amount.value),
           amount.assetScale,
         )} ${amount.assetCode}`;
-
+        const feeString = `${""}${convertAmountWithScale(
+          Number(fee),
+          amount.assetScale,
+        )} ${amount.assetCode}`;
+        const netString = `${""}${convertAmountWithScale(
+          Number(net),
+          amount.assetScale,
+        )} ${amount.assetCode}`;
         if (!activityId) {
           acc.set(idx.toString(), {
             activityId: undefined,
             startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
             grossSale: amountString,
-            netSale: amountString,
-            provider: isIncoming ? t.senderName : t.receiverName,
-            fee: "0",
-            user:
-              (t.metadata.wgUser ?? isIncoming) ? t.receiverName : t.senderName,
+            netSale: netString,
+            provider: t.receiverName,
+            fee: feeString,
+            user: t.senderName,
             transactions: [],
           });
         } else {
@@ -2333,25 +2343,20 @@ export function useGetTransactionsByProviderQuery(
               startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
               endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
               grossSale: amountString,
-              netSale: amountString,
+              netSale: netString,
               provider: isIncoming ? t.senderName : t.receiverName,
-              fee: "0",
-              user:
-                (t.metadata.wgUser ?? isIncoming)
-                  ? t.receiverName
-                  : t.senderName,
+              fee: feeString,
+              //  user: (t.metadata.wgUser ?? isIncoming) ? t.receiverName : t.senderName,
+              user: t.senderName,
               transactions: [
                 {
                   transactionId: t.id,
                   date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
                   grossSale: amountString,
-                  netSale: amountString,
+                  netSale: netString,
                   provider: isIncoming ? t.senderName : t.receiverName,
-                  fee: "0",
-                  user:
-                    (t.metadata.wgUser ?? isIncoming)
-                      ? t.receiverName
-                      : t.senderName,
+                  fee: feeString,
+                  user: t.senderName,
                 },
               ],
             });
@@ -2364,13 +2369,10 @@ export function useGetTransactionsByProviderQuery(
               transactionId: t.id,
               date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
               grossSale: amountString,
-              netSale: amountString,
+              netSale: netString,
               provider: isIncoming ? t.senderName : t.receiverName,
-              fee: "0",
-              user:
-                (t.metadata.wgUser ?? isIncoming)
-                  ? t.receiverName
-                  : t.senderName,
+              fee: feeString,
+              user: t.senderName,
             });
 
             activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
@@ -2382,6 +2384,16 @@ export function useGetTransactionsByProviderQuery(
 
             activity.grossSale = `${
               accumulatedAmountNumber + amountNumber
+            } ${amount.assetCode}`;
+
+            const accumulatedNetNumber = Number(activity.netSale.split(" ")[0]);
+            activity.netSale = `${
+              accumulatedNetNumber + Number(netString.split(" ")[0])
+            } ${amount.assetCode}`;
+
+            const accumulatedFeeNumber = Number(activity.fee.split(" ")[0]);
+            activity.fee = `${
+              accumulatedFeeNumber + Number(feeString.split(" ")[0])
             } ${amount.assetCode}`;
 
             acc.set(activityId, activity);
