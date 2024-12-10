@@ -2691,7 +2691,7 @@ export function useGetRevenueQuery(
         const groupedRevenues = result.transactions.reduce((acc, t) => {
           const provider = t.senderName;
           const amount = t.incomingAmount;
-           
+
           const amountString = formatCurrency(
             Number(amount?.value ?? 0),
             amount?.assetCode ?? "",
