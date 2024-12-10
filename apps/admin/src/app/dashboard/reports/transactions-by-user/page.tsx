@@ -386,41 +386,42 @@ export default function TransactionsByUserPage() {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="space-y-0">
-            <Label className="font-normal">
-              {
-                values[
-                  "dashboard.reports.sections-transactions-by-user.search.type.label"
-                ]
-              }
-            </Label>
-            <Select
-              onValueChange={(value) =>
-                setFilters((prev) => ({ ...prev, type: value }))
-              }
-              defaultValue={filters.type}
-            >
-              <SelectTrigger
-                className={cn(
-                  "rounded-lg border border-black",
-                  !filters.type && "text-gray-400",
-                )}
+          {userData?.type === "PLATFORM" && (
+            <div className="space-y-0">
+              <Label className="font-normal">
+                {
+                  values[
+                    "dashboard.reports.sections-transactions-by-user.search.type.label"
+                  ]
+                }
+              </Label>
+              <Select
+                onValueChange={(value) =>
+                  setFilters((prev) => ({ ...prev, type: value }))
+                }
+                defaultValue={filters.type}
               >
-                <SelectValue
-                  placeholder={
-                    values[
-                      `dashboard.reports.sections-transactions-by-user.search.type.placeholder`
-                    ]
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="IncomingPayment">Incoming</SelectItem>
-                <SelectItem value="OutgoingPayment">Outgoing</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+                <SelectTrigger
+                  className={cn(
+                    "rounded-lg border border-black",
+                    !filters.type && "text-gray-400",
+                  )}
+                >
+                  <SelectValue
+                    placeholder={
+                      values[
+                        `dashboard.reports.sections-transactions-by-user.search.type.placeholder`
+                      ]
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="IncomingPayment">Incoming</SelectItem>
+                  <SelectItem value="OutgoingPayment">Outgoing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           {
             /* Provider */
             userData?.type === "PLATFORM" && (
