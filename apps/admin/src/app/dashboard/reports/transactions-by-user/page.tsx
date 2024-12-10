@@ -5,7 +5,6 @@ import type { z } from "zod";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-//import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -152,8 +151,6 @@ export default function TransactionsByUserPage() {
   const errors = useErrors();
 
   const searchParams = useSearchParams();
-  // const pathname = usePathname();
-  // const router = useRouter();
 
   const initialPaginationAndSearch: z.infer<
     typeof paginationAndSearchValidator
@@ -175,7 +172,6 @@ export default function TransactionsByUserPage() {
     providerIds: searchParams.get("providerIds") ?? "",
     state: "COMPLETED",
     isRevenue: "false",
-    //userType: "USER",
   };
   const [paginationAndSearch, setPaginationAndSearch] = useState(
     initialPaginationAndSearch,
@@ -231,48 +227,6 @@ export default function TransactionsByUserPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-  /*
-  function handlePaginationAndSearchChange(
-    newPaginationAndSearch: Partial<
-      z.infer<typeof paginationAndSearchValidator>
-    >,
-  ) {
-    const params = new URLSearchParams(searchParams);
-    for (const key in newPaginationAndSearch) {
-      const val =
-        newPaginationAndSearch[key as keyof typeof newPaginationAndSearch];
-      if (val) {
-        params.set(key, val);
-      } else {
-        params.delete(key);
-      }
-    }
-    router.replace(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
-  }
-    */
-  /*
-
-  function handleFiltersChange(
-    newFilters: Partial<z.infer<typeof transactionsByUserValidator>>,
-  ) {
-    const params = new URLSearchParams(searchParams);
-    for (const key in newFilters) {
-      const val = newFilters[key as keyof typeof newFilters];
-      if (val) {
-        if (val instanceof Date) {
-          params.set(key, `${val.getTime()}`);
-        } else params.set(key, val);
-      } else {
-        params.delete(key);
-      }
-    }
-    router.replace(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
-  }
-    */
 
   useEffect(() => {
     if (
@@ -543,11 +497,7 @@ export default function TransactionsByUserPage() {
                   "dashboard.reports.sections-transactions-by-user.user.label"
                 ]
               }
-              :{" "}
-              {transactionsData?.user ??
-                values[
-                  "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected"
-                ]}
+              : {initialFilters.walletAddress}
             </p>
             <p>
               {
