@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -22,18 +22,19 @@ import {
   SimpleTitle,
 } from "~/app/dashboard/_components/dashboard-title";
 import { Button } from "~/components/button";
-import { useAddRefundMutation } from "~/lib/data-access";
+import {
+  useAddRefundMutation,
+  useGetAuthedUserAccessLevelsQuery,
+} from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
-import { useAccessLevelGuard } from "~/lib/hooks";
+//import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
 import { disputeValidator } from "~/lib/validators";
 
 export default function AddDisputePage() {
-  const loading = useAccessLevelGuard({
-    general: {
-      module: "refunds",
-    },
-  });
+  const router = useRouter();
+  const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
   const { values } = useI18n();
   const errors = useErrors();
   const { activityId } = useParams<{ activityId: string }>();
@@ -57,8 +58,10 @@ export default function AddDisputePage() {
       form.reset();
     },
   });
-  if (loading) return null;
-  return (
+  return (isLoadingAccessLevels ||
+    accessLevelsData?.general.disputes.includes("add")) == false ? (
+    void router.replace("/dashboard")
+  ) : (
     <div className="-mt-2">
       <BreadcrumbTitle
         sections={[
