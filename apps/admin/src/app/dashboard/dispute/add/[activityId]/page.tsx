@@ -44,6 +44,7 @@ export default function AddDisputePage() {
       activityId: activityId,
       amount: "",
       description: "",
+      serviceProviderId: activityId,
     },
   });
   const { mutate, isPending } = useAddRefundMutation({
