@@ -32,6 +32,8 @@ import { useI18n } from "~/lib/i18n";
 import { clearPaymentValidator} from '~/lib/validators';
 
 export default function AddClearPage() {
+  const { clearId } = useParams<{ clearId: string }>();
+  const { data: dataClearPayment } =  useGetClearPaymentByIdQuery(clearId);
   const loading = useAccessLevelGuard({
     general: {
       module: "clearPayments",
@@ -48,10 +50,6 @@ export default function AddClearPage() {
     return `${formattedValue} ${code}`;
   };
 
-  const { clearId } = useParams<{ clearId: string }>();
-  // const { data: dataUser } = useGetAuthedUserInfoQuery(undefined);
-  const { data: dataClearPayment } =  useGetClearPaymentByIdQuery(clearId);
-  console.log(dataClearPayment);
 
 
 
@@ -59,10 +57,10 @@ export default function AddClearPage() {
     schema: clearPaymentValidator,
     defaultValues: {
       id: clearId,
-      month: values[(dataClearPayment?.providerRevenues.month ?? "0") as keyof typeof values ],
-      transaction: `$ ${formatCurrency(dataClearPayment?.providerRevenues.value ?? 0, "USD")}`,
-      fees: `$ ${formatCurrency(dataClearPayment?.providerRevenues.fees ?? 0, "USD")}`,
-      amount: `$ ${formatCurrency((dataClearPayment?.providerRevenues.value ?? 0) - (dataClearPayment?.providerRevenues.fees ?? 0), "USD")}`,
+      month: values[(dataClearPayment?.month ?? "0") as keyof typeof values ],
+      transaction: `$ ${formatCurrency(dataClearPayment?.value ?? 0, "USD")}`,
+      fees: `$ ${formatCurrency(dataClearPayment?.fees ?? 0, "USD")}`,
+      amount: `$ ${formatCurrency((dataClearPayment?.value ?? 0) - (dataClearPayment?.fees ?? 0), "USD")}`,
       reference: "",
       notes: "",
     },
@@ -102,16 +100,16 @@ export default function AddClearPage() {
         {values["clear-label"] + " " + clearId}
       </p>
       <p className="mt-6">
-        {values["clear-month"] + " " + values[(dataClearPayment?.providerRevenues.month ?? "0") as keyof typeof values]}
+        {values["clear-month"] + " " + values[(dataClearPayment?.month ?? "0") as keyof typeof values]}
       </p>
       <p className="mt-6">
-        {values["clear-transactions"] + " " + `$ ${formatCurrency(dataClearPayment?.providerRevenues.value ?? 0, "USD")}`}
+        {values["clear-transactions"] + " " + `$ ${formatCurrency(dataClearPayment?.value ?? 0, "USD")}`}
       </p>
       <p className="mt-6">
-        {values["clear-fees"] + " " + `$ ${formatCurrency(dataClearPayment?.providerRevenues.fees ?? 0, "USD")}`}
+        {values["clear-fees"] + " " + `$ ${formatCurrency(dataClearPayment?.fees ?? 0, "USD")}`}
       </p>
       <p className="mt-6">
-        {values["clear-amount"] + " " + `$ ${formatCurrency((dataClearPayment?.providerRevenues.value ?? 0) - (dataClearPayment?.providerRevenues.fees ?? 0), "USD")}`}
+        {values["clear-amount"] + " " + `$ ${formatCurrency((dataClearPayment?.value ?? 0) - (dataClearPayment?.fees ?? 0), "USD")}`}
       </p>
 
       <Form {...form}>
@@ -126,13 +124,13 @@ export default function AddClearPage() {
               render={({ field }) => (
                 <FormItem className="mt-6 w-full pr-8">
                   <FormLabel className="mb-0">
-                    {values["refund-add-amount-label"]}
+                    {values["clear-reference"]}
                   </FormLabel>
                   <FormControl className="-mt-5">
                     <Input
                       className="mt-0"
                       type="number"
-                      placeholder={values["refund-add-amount-placeholder"]}
+                      placeholder={values["clear-reference-placeholder"]}
                       required
                       {...field}
                     />
@@ -148,7 +146,7 @@ export default function AddClearPage() {
               render={({ field }) => (
                 <FormItem className="mt-2 w-full pr-8">
                   <FormLabel className="mb-0">
-                    {values["refund-add-description-label"]}
+                    {values["clear-notes"]}
                   </FormLabel>
                   <FormControl className="-mt-5">
                     <Textarea className="mt-0" required {...field} />

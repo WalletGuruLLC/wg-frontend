@@ -34,6 +34,9 @@ export const reportsDict = {
     "clear-transactions": "Transacciones",
     "clear-fees": "Fees",
     "clear-amount": "Amount",
+    "clear-reference": "Reference number",
+    "clear-reference-placeholder": "Enter the reference number",
+    "clear-notes": "Notes",
   },
   es: {
     "dispute-title": "Disputa",
@@ -66,5 +69,8 @@ export const reportsDict = {
     "clear-transaccions": "Transacciones",
     "clear-fees": "Comisiones",
     "clear-amount": "Monto",
+    "clear-reference": "Número de referencia",
+    "clear-reference-placeholder": "Ingrese el número de referencia",
+    "clear-notes": "Notas",
   },
 } satisfies I18nDictionary;

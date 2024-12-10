@@ -2031,13 +2031,13 @@ export function useGetClearPaymentsQuery(
 
 export function useGetClearPaymentByIdQuery(
    clearPaymentId: string ,
-  options: UseQueryOptions<UseClearPaymentDetailOutput> = {},
+  options: UseQueryOptions<ClearPayment> = {},
 ) {
   return useQuery({
     ...options,
     queryKey: ["clear-payment-by-id", clearPaymentId],
     queryFn: async () => {
-      const result = await customFetch<UseClearPaymentDetailOutput>(
+      const result = await customFetch<ClearPayment>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
         `/api/v1/clear-payments/${clearPaymentId}`,
         {
