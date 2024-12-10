@@ -207,12 +207,17 @@ export default function TransactionsByUserPage() {
   );
   const { mutate: downloadTransactions, isPending: downloading } =
     useDownloadTransactionsByUserMutation({
-      onSuccess: () => {
-        toast.success(
-          values[
-            "dashboard.reports.sections-transactions-by-user.download.success"
-          ],
-        );
+      onSuccess: (data) => {
+        const csvData = data as string;
+        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "transactions.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       },
       onError: (error) => {
         toast.error(errors[error.message], {
