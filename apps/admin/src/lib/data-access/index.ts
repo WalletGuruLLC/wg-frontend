@@ -129,10 +129,10 @@ type ApiComplexAccessLevels = {
   [K in ModuleDatabaseId]: { [P in K]: Record<string, number> };
 }[ModuleDatabaseId][];
 export const ACCESS_LEVELS_BINARY_ORDERED = [
-  "view",
-  "add",
-  "edit",
   "inactive",
+  "edit",
+  "add",
+  "view",
 ] as const;
 export type AccessLevel = (typeof ACCESS_LEVELS_BINARY_ORDERED)[0 | 1 | 2 | 3];
 type ModuleAccessLevels = {
