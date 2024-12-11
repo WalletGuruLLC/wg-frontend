@@ -44,6 +44,7 @@ export default function AddDisputePage() {
       activityId: activityId,
       amount: "",
       description: "",
+      serviceProviderId: activityId,
     },
   });
   const { mutate, isPending } = useAddRefundMutation({
@@ -56,6 +57,7 @@ export default function AddDisputePage() {
       toast.success(values[`dispute.toast.success`]);
       close();
       form.reset();
+      router.replace("/dashboard");
     },
   });
   return (isLoadingAccessLevels ||

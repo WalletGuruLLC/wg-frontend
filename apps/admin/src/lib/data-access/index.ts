@@ -2921,7 +2921,12 @@ export function useAddRefundMutation(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL + "/api/v1/wallets/refunds",
         {
           method: "POST",
-          body: JSON.stringify(input),
+          body: JSON.stringify({
+            activityId: input.activityId,
+            amount: Number(input.amount),
+            description: input.description,
+            serviceProviderId: input.serviceProviderId,
+          }),
         },
       );
     },
