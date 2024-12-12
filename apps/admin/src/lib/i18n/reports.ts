@@ -44,6 +44,7 @@ export const reportsDict = {
     "list-disputes-table-description": "Description",
     "list-disputes-table-date": "Date",
     "list-disputes-table-amount": "Amount",
+    "list-refunds-title": "List Refunds",
   },
   es: {
     "dispute-title": "Disputa",
@@ -86,5 +87,6 @@ export const reportsDict = {
     "list-disputes-table-description": "Descripción",
     "list-disputes-table-date": "Fecha",
     "list-disputes-table-amount": "Monto",
+    "list-refunds-title": "Lista de Reembolsos",
   },
 } satisfies I18nDictionary;
