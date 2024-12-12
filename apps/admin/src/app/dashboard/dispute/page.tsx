@@ -222,7 +222,7 @@ export default function ListDisputesPage() {
         <div className="relative w-1/3">
           <Input
             placeholder={values["wallet-users.search.placeholder"]}
-            className="rounded-full border border-black"
+            className="rounded-none border-transparent border-b-black"
             name="search"
             onChange={(e) =>
               handlePaginationAndSearchChange({
@@ -260,7 +260,7 @@ export default function ListDisputesPage() {
                       <Button
                         variant="outline"
                         className={cn(
-                          "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
+                          "relative h-11 min-w-44 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
                           !filters.startDate && "text-[#A1A1A1]",
                         )}
                       >
@@ -310,7 +310,7 @@ export default function ListDisputesPage() {
                       <Button
                         variant="outline"
                         className={cn(
-                          "relative h-11 min-w-44 justify-start rounded-lg border border-black pl-3 text-left text-sm font-normal",
+                          "relative h-11 min-w-44 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
 
                           !filters.endDate && "text-[#A1A1A1]",
                         )}
