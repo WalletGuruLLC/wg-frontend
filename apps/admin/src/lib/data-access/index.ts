@@ -2046,7 +2046,6 @@ export function useGetClearPaymentByIdQuery(
           method: "GET",
         },
       );
-      console.log(result);
       return result;
     },
   });
