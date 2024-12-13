@@ -69,7 +69,14 @@ const columns = [
     },
     header: () => <ColumnHeader i18nKey="list-disputes-table-user" />,
   }),
-  columnHelper.accessor("wallet", {
+  columnHelper.accessor("nameServiceProvider", {
+    id: "provider",
+    cell: (info) => {
+      return info.getValue();
+    },
+    header: () => <ColumnHeader i18nKey="list-disputes-table-provider" />,
+  }),
+  columnHelper.accessor("walletAddress", {
     id: "wallet",
     cell: (info) => {
       const wallet = info.getValue();
@@ -170,8 +177,10 @@ export default function ListRefundsPage() {
       description: dispute.description,
       amount: dispute.amount,
       id: dispute.id,
-      user: dispute.userName ?? "",
-      wallet: dispute.wallet?.replace(rootWallet?.value ?? "", "") ?? "-",
+      userName: dispute.userName,
+      nameServiceProvider: dispute.nameServiceProvider,
+      walletAddress:
+        dispute.walletAddress?.replace(rootWallet?.value ?? "", "") ?? "-",
     };
   });
   const table = useReactTable({
