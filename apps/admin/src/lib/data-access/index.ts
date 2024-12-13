@@ -24,6 +24,7 @@ import type {
   clearPaymentsValidator,
   clearPaymentValidator,
   detailTransactionValidator,
+  disputesValidator,
   disputeValidator,
   forgotPasswordCodeStepValidator,
   forgotPasswordEmailStepValidator,
@@ -2967,3 +2968,124 @@ export function useAddClearPaymentMutation(
     },
   });
 }
+export interface Dispute {
+  createDate: string;
+  updateDate: string;
+  serviceProviderId: string;
+  activityId: string;
+  description: string;
+  amount: number;
+  id: string;
+  user?: string;
+  wallet?: string;
+}
+
+interface UseGetListDisputesQueryResult {
+  refunds: {
+    items: Dispute[];
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
+interface UseGetDisputesQueryOutput {
+  disputes: Dispute[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+export function useGetListDisputesQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof disputesValidator>,
+  options: UseQueryOptions<UseGetDisputesQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["list-disputes", input],
+    queryFn: async () => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
+      const params = new URLSearchParams({
+        ...input,
+        items: "10",
+        page: "1",
+      } as unknown as Record<string, string>);
+
+      const result = await customFetch<UseGetListDisputesQueryResult>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets/get/refunds` +
+          "?" +
+          params.toString(),
+      );
+      return {
+        disputes: result.refunds.items,
+        total: result.refunds.totalItems,
+        totalPages: result.refunds.totalPages,
+        currentPage: result.refunds.currentPage,
+      };
+    },
+  });
+}
+
+/*
+
+
+export function useGetListDisputesQuery(
+  input: z.infer<typeof paginationAndSearchValidator> &
+    z.infer<typeof disputesValidator>,
+  options: UseQueryOptions<UseGetListDisputesQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["list-disputes", input],
+    queryFn: async () => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+      if (input.startDate)
+        input.startDate = format(
+          input.startDate,
+          "MM/dd/yyyy",
+        ) as unknown as Date;
+      if (input.endDate)
+        input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
+      const params = new URLSearchParams({
+        ...input,
+        items: "10",
+        page: "1",
+      } as unknown as Record<string, string>);
+
+      const result = await customFetch<{
+        refunds: {
+          items: UseGetListDisputesQueryOutput[];
+          totalItems: number;
+          currentPage: number;
+          totalPages: number;
+        };
+      }>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets/get/refunds` +
+          "?" +
+          params.toString(),
+      );
+      return result;
+    },
+  });
+}
+*/

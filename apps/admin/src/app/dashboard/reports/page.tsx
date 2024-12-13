@@ -89,7 +89,7 @@ export default function ReportsPage() {
           )}
           {accessLevelData?.general.refunds.includes("view") && (
             <Link
-              href={`/dashboard/reports/refunds`}
+              href={`/dashboard/refund`}
               className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <FileText size={32} strokeWidth={0.75} color="#3678B1" />
@@ -164,9 +164,9 @@ export default function ReportsPage() {
               </span>
             </Link>
           )}{" "}
-          {accessLevelData?.general.disputes.includes("view") && (
+          {accessLevelData?.general.refunds.includes("view") && (
             <Link
-              href={`/dashboard/reports/disputes`}
+              href={`/dashboard/dispute`}
               className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"
             >
               <FileText size={32} strokeWidth={0.75} color="#3678B1" />
