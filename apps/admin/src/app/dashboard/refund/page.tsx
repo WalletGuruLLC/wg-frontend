@@ -62,7 +62,7 @@ const formatCurrency = (value: number, code: string, scale: number) => {
 const columnHelper = createColumnHelper<Dispute>();
 
 const columns = [
-  columnHelper.accessor("user", {
+  columnHelper.accessor("userName", {
     id: "user",
     cell: (info) => {
       return info.getValue();
@@ -170,7 +170,7 @@ export default function ListRefundsPage() {
       description: dispute.description,
       amount: dispute.amount,
       id: dispute.id,
-      user: dispute.user ?? "",
+      user: dispute.userName ?? "",
       wallet: dispute.wallet?.replace(rootWallet?.value ?? "", "") ?? "-",
     };
   });

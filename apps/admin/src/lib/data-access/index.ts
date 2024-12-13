@@ -2977,8 +2977,9 @@ export interface Dispute {
   description: string;
   amount: number;
   id: string;
-  user?: string;
-  wallet?: string;
+  userName?: string;
+  walletAddress?: string;
+  nameServiceProvider?: string;
 }
 
 interface UseGetListDisputesQueryResult {
