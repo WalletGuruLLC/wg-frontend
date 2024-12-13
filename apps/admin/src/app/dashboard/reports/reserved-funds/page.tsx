@@ -10,7 +10,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { CalendarIcon, Search } from "lucide-react";
+import {
+  CalendarIcon,
+  CircleArrowDown,
+  CircleArrowUp,
+  Search,
+} from "lucide-react";
 
 import { cn } from "@wg-frontend/ui";
 import {
@@ -72,7 +77,7 @@ const columns = [
     cell: (info) => {
       return info.getValue();
     },
-    header: () => <ColumnHeader i18nKey="list-disputes-table-user" />,
+    header: () => <ColumnHeader i18nKey="reserved-funds-provider" />,
   }),
   columnHelper.accessor("ownerUser", {
     id: "wallet",
@@ -83,23 +88,7 @@ const columns = [
       }
       return "-";
     },
-    header: () => <ColumnHeader i18nKey="list-disputes-table-wallet" />,
-  }),
-  columnHelper.accessor("expiresAt", {
-    id: "expiresAt",
-    cell: (info) => {
-      const wallet = info.getValue();
-      return wallet;
-    },
-    header: () => <ColumnHeader i18nKey="list-disputes-table-description" />,
-  }),
-  columnHelper.accessor("createdAt", {
-    id: "createDate",
-    cell: (info) => {
-      const dispute = info.row.original;
-      return `${dispute.createdAt || ""}`.trim() || "-";
-    },
-    header: () => <ColumnHeader i18nKey="list-disputes-table-date" />,
+    header: () => <ColumnHeader i18nKey="reserved-funds-user" />,
   }),
   columnHelper.accessor("incomingAmount", {
     id: "amount",
@@ -108,9 +97,38 @@ const columns = [
       const code = money.assetCode;
       const scale = money.assetScale;
       const amount = Number(money.value);
-      return formatCurrency(amount, code, scale);
+      const status = info.row.original.state;
+      const formated = formatCurrency(amount, code, scale);
+      // return formatCurrency(amount, code, scale);
+      return status === "PENDING" ? (
+        <div className="flex items-center">
+          <CircleArrowUp className="pr-1 text-green-600" />
+          {formated}
+        </div>
+      ) : (
+        <div className="flex items-center">
+          <CircleArrowDown className="pr-1 text-red-600" />
+          {formatCurrency(amount, code, scale)}
+        </div>
+      );
     },
-    header: () => <ColumnHeader i18nKey="list-disputes-table-amount" />,
+    header: () => <ColumnHeader i18nKey="reserved-funds-amount" />,
+  }),
+  columnHelper.accessor("createdAt", {
+    id: "created",
+    cell: (info) => {
+      const wallet = info.getValue();
+      return wallet;
+    },
+    header: () => <ColumnHeader i18nKey="reserved-funds-created" />,
+  }),
+  columnHelper.accessor("expiresAt", {
+    id: "expire",
+    cell: (info) => {
+      const dispute = info.row.original;
+      return `${dispute.expiresAt || ""}`.trim() || "-";
+    },
+    header: () => <ColumnHeader i18nKey="reserved-funds-expire" />,
   }),
 ];
 
@@ -440,13 +458,12 @@ export default function ListDisputesPage() {
                           {values["wallet-users.table.header.state"]}
                         </FormLabel>
                         <Select
-                          value={tempFilters.status}
+                          value={filters.status}
                           onValueChange={(value) => {
-                            field.onChange(value);
-                            setTempFilters((prev) => ({
-                              ...prev,
-                              status: value,
-                            }));
+                            setFilters((prev) => ({ ...prev, status: value }));
+                            handlePaginationAndSearchChange({
+                              ...paginationAndSearch,
+                            });
                           }}
                           defaultValue={field.value}
                         >
@@ -466,22 +483,19 @@ export default function ListDisputesPage() {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value={"0"}>
-                              {values["wallet-users.state0"]}
+                              {values["reserved-funds-state0"]}
                             </SelectItem>
-                            <SelectItem value={"1"}>
-                              {values["wallet-users.state1"]}
+                            <SelectItem value={"PENDING"}>
+                              <div className="flex items-center gap-2">
+                                <CircleArrowUp className="h-4 w-4 text-green-600" />
+                                {values["reserved-funds-state1"]}
+                              </div>
                             </SelectItem>
-                            <SelectItem value={"2"}>
-                              {values["wallet-users.state2"]}
-                            </SelectItem>
-                            <SelectItem value={"3"}>
-                              {values["wallet-users.state3"]}
-                            </SelectItem>
-                            <SelectItem value={"4"}>
-                              {values["wallet-users.state4"]}
-                            </SelectItem>
-                            <SelectItem value={"5"}>
-                              {values["wallet-users.state5"]}
+                            <SelectItem value={"PROCESSING"}>
+                              <div className="flex items-center gap-2">
+                                <CircleArrowDown className="h-4 w-4 text-red-600" />
+                                {values["reserved-funds-state2"]}
+                              </div>
                             </SelectItem>
                           </SelectContent>
                         </Select>
