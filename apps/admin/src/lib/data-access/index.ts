@@ -30,6 +30,7 @@ import type {
   forgotPasswordEmailStepValidator,
   loginValidator,
   paginationAndSearchValidator,
+  reservedFundsValidator,
   resetPasswordIdValidator,
   resetPasswordValidator,
   revenueValidator,
@@ -2045,7 +2046,6 @@ export function useGetClearPaymentByIdQuery(
           method: "GET",
         },
       );
-      console.log(result);
       return result;
     },
   });
@@ -2976,8 +2976,9 @@ export interface Dispute {
   description: string;
   amount: number;
   id: string;
-  user?: string;
-  wallet?: string;
+  userName?: string;
+  walletAddress?: string;
+  nameServiceProvider?: string;
 }
 
 interface UseGetListDisputesQueryResult {
@@ -3040,17 +3041,37 @@ export function useGetListDisputesQuery(
   });
 }
 
-/*
+export interface ReservedFund {
+  type: string;
+  id: string;
+  provider: string;
+  ownerUser: string;
+  state: string;
+  incomingAmount: {
+    value: string;
+    assetCode: string;
+    assetScale: number;
+    _Typename: string;
+  };
+  createdAt: string;
+  expiresAt: string;
+}
 
+interface UseGetReservedFundsQueryOutput {
+  incomingPayments: ReservedFund[];
+  total?: number;
+  totalPages?: number;
+  currentPage?: number;
+}
 
-export function useGetListDisputesQuery(
+export function useGetReservedFundsQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
-    z.infer<typeof disputesValidator>,
-  options: UseQueryOptions<UseGetListDisputesQueryOutput> = {},
+    z.infer<typeof reservedFundsValidator>,
+  options: UseQueryOptions<UseGetReservedFundsQueryOutput> = {},
 ) {
   return useQuery({
     ...options,
-    queryKey: ["list-disputes", input],
+    queryKey: ["reserved-funds", input],
     queryFn: async () => {
       Object.keys(input).forEach((key) =>
         input[key as keyof typeof input] === undefined ||
@@ -3071,21 +3092,18 @@ export function useGetListDisputesQuery(
         page: "1",
       } as unknown as Record<string, string>);
 
-      const result = await customFetch<{
-        refunds: {
-          items: UseGetListDisputesQueryOutput[];
-          totalItems: number;
-          currentPage: number;
-          totalPages: number;
-        };
-      }>(
+      const result = await customFetch<UseGetReservedFundsQueryOutput>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
-          `/api/v1/wallets/get/refunds` +
+          `/api/v1/wallets-rafiki/list-incoming-payments` +
           "?" +
           params.toString(),
       );
-      return result;
+      return {
+        incomingPayments: result.incomingPayments,
+        total: result.total,
+        totalPages: result.totalPages,
+        currentPage: result.currentPage,
+      };
     },
   });
 }
-*/

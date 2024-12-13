@@ -1,6 +1,5 @@
 "use client";
 
-//import type { ReactNode } from "react";
 import type { z } from "zod";
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -62,14 +61,21 @@ const formatCurrency = (value: number, code: string, scale: number) => {
 const columnHelper = createColumnHelper<Dispute>();
 
 const columns = [
-  columnHelper.accessor("user", {
+  columnHelper.accessor("userName", {
     id: "user",
     cell: (info) => {
       return info.getValue();
     },
     header: () => <ColumnHeader i18nKey="list-disputes-table-user" />,
   }),
-  columnHelper.accessor("wallet", {
+  columnHelper.accessor("nameServiceProvider", {
+    id: "provider",
+    cell: (info) => {
+      return info.getValue();
+    },
+    header: () => <ColumnHeader i18nKey="list-disputes-table-provider" />,
+  }),
+  columnHelper.accessor("walletAddress", {
     id: "wallet",
     cell: (info) => {
       const wallet = info.getValue();
@@ -126,15 +132,18 @@ export default function ListRefundsPage() {
     useGetAuthedUserAccessLevelsQuery(undefined);
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  const isPlatformUser = userData?.type === "PLATFORM";
+
   const { data: providersData } = useGetProvidersQuery(
     {
       items: "10",
       type: "PROVIDER",
     },
     {
-      enabled: !isLoadingAccessLevels,
+      enabled: !isLoadingAccessLevels && isPlatformUser,
     },
   );
+
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",
@@ -167,8 +176,10 @@ export default function ListRefundsPage() {
       description: dispute.description,
       amount: dispute.amount,
       id: dispute.id,
-      user: dispute.user ?? "",
-      wallet: dispute.wallet?.replace(rootWallet?.value ?? "", "") ?? "-",
+      userName: dispute.userName,
+      nameServiceProvider: dispute.nameServiceProvider,
+      walletAddress:
+        dispute.walletAddress?.replace(rootWallet?.value ?? "", "") ?? "-",
     };
   });
   const table = useReactTable({
@@ -176,7 +187,7 @@ export default function ListRefundsPage() {
     columns: columns.filter(
       (c) =>
         c.id !== "active" ||
-        accessLevelsData?.general.disputes.includes("inactive"),
+        accessLevelsData?.general.refunds.includes("inactive"),
     ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,

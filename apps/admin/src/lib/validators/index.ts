@@ -291,7 +291,7 @@ export const clearPaymentsValidator = z.object({
 export const detailTransactionValidator = z.object({
   transacctionIds: z.array(z.string()).min(1),
 });
-
+/*
 export const reservedFundsByUserValidator = z.object({
   walletAddress: z
     .string()
@@ -315,7 +315,7 @@ export const reservedFundsByUserValidator = z.object({
   providerIds: z.string().min(1).optional(),
   state: z.string().min(1).optional(),
 });
-
+*/
 export const transactionsByProviderValidator = z.object({
   startDate: z
     .date({
@@ -422,4 +422,27 @@ export const disputesValidator = z.object({
     })
     .optional(),
   serviceProviderId: z.string().min(1).optional(),
+});
+
+export const reservedFundsValidator = z.object({
+  walletAddress: z
+    .string()
+    .min(
+      1,
+      "dashboard.reports.sections-transactions-by-user.search.wallet-address.error",
+    ),
+  startDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      required_error:
+        "dashboard.reports.sections-transactions-by-user.search.period.error",
+    })
+    .optional(),
+  serviceProviderId: z.string().min(1).optional(),
+  status: z.string().optional(),
 });

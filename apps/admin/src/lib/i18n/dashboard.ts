@@ -531,7 +531,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.description":
       "Description",
     "dashboard.reports.sections.clear-payments.header.type": "Type",
-    "dashboard.reports.sections.clear-payments.header.user": "User",
+    "dashboard.reports.sections.clear-payments.header.user": "Wallet",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
     "dashboard.reports.sections.clear-payments.header.reference":
       "Reference number",
@@ -548,7 +548,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.actions.details":
       "Details",
     "dashboard.reports.sections.clear-payments.details.header":
-      "Details Transaction Service",
+      "Details Clear Payments",
     "dashboard.reports.sections.clear-payments.details.date": "Date",
     "dashboard.reports.sections.clear-payments.search-button": "Search",
     "dashboard.reports.sections.clear-payments.header.ammount": "Amount",
@@ -1104,7 +1104,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.description":
       "Descripción",
     "dashboard.reports.sections.clear-payments.header.type": "Tipo",
-    "dashboard.reports.sections.clear-payments.header.user": "Usuario",
+    "dashboard.reports.sections.clear-payments.header.user": "Billetera",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
     "dashboard.reports.sections.clear-payments.header.reference":
       "Número de referencia",
@@ -1119,7 +1119,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.actions.details":
       "Detalles",
     "dashboard.reports.sections.clear-payments.details.header":
-      "Detalles del servicio de transacciones",
+      "Detalles Pagos Realizados",
     "dashboard.reports.sections.clear-payments.details.date": "Fecha",
     "dashboard.reports.sections.clear-payments.search-button": "Buscar",
     "dashboard.reports.sections.clear-payments.header.ammount": "Monto",
