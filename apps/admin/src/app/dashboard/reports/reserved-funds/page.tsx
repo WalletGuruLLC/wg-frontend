@@ -121,7 +121,7 @@ export default function ListDisputesPage() {
   });*/
   const loading = useAccessLevelGuard({
     general: {
-      module: "disputes",
+      module: "reservedFunds",
     },
   });
   const { values } = useI18n();
