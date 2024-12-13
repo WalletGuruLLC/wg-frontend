@@ -164,7 +164,7 @@ export default function ReportsPage() {
               </span>
             </Link>
           )}{" "}
-          {accessLevelData?.general.refunds.includes("view") && (
+          {accessLevelData?.general.disputes.includes("view") && (
             <Link
               href={`/dashboard/dispute`}
               className="flex h-[200px] flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] p-2 text-center"

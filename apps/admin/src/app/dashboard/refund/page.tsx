@@ -176,7 +176,7 @@ export default function ListRefundsPage() {
     columns: columns.filter(
       (c) =>
         c.id !== "active" ||
-        accessLevelsData?.general.disputes.includes("inactive"),
+        accessLevelsData?.general.refunds.includes("inactive"),
     ),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
