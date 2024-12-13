@@ -45,6 +45,7 @@ export const reportsDict = {
     "list-disputes-table-date": "Date",
     "list-disputes-table-amount": "Amount",
     "list-refunds-title": "List Refunds",
+    "reserved-funds-title": "Reserved funds by user",
   },
   es: {
     "dispute-title": "Disputa",
@@ -88,5 +89,6 @@ export const reportsDict = {
     "list-disputes-table-date": "Fecha",
     "list-disputes-table-amount": "Monto",
     "list-refunds-title": "Lista de Reembolsos",
+    "reserved-funds-title": "Fondos Reservados por usuario",
   },
 } satisfies I18nDictionary;
