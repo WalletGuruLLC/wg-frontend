@@ -3094,7 +3094,7 @@ export function useGetReservedFundsQuery(
 
       const result = await customFetch<UseGetReservedFundsQueryOutput>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
-          `/api/v1/wallets/get/list-incoming-payments` +
+          `/api/v1/wallets-rafiki/list-incoming-payments` +
           "?" +
           params.toString(),
       );
