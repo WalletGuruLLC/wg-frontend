@@ -126,15 +126,18 @@ export default function ListRefundsPage() {
     useGetAuthedUserAccessLevelsQuery(undefined);
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  const isPlatformUser = userData?.type === "PLATFORM";
+
   const { data: providersData } = useGetProvidersQuery(
     {
       items: "10",
       type: "PROVIDER",
     },
     {
-      enabled: !isLoadingAccessLevels,
+      enabled: !isLoadingAccessLevels && isPlatformUser,
     },
   );
+
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
     page: searchParams.get("page") ?? "1",
     items: searchParams.get("items") ?? "10",

@@ -226,7 +226,7 @@ export default function ListDisputesPage() {
   return (
     <div className="flex h-[83vh] flex-col space-y-10 pb-4">
       <SimpleTitle
-        title={`${values["list-disputes-title"]}`}
+        title={`${values["reserved-funds-title"]}`}
         showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-3">

@@ -125,13 +125,16 @@ export default function ListDisputesPage() {
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+
+  const isPlatformUser = userData?.type === "PLATFORM";
+
   const { data: providersData } = useGetProvidersQuery(
     {
       items: "10",
-      type: "PLATFORM",
+      type: "PROVIDER",
     },
     {
-      enabled: !isLoadingAccessLevels,
+      enabled: !isLoadingAccessLevels && isPlatformUser,
     },
   );
   const paginationAndSearch: z.infer<typeof paginationAndSearchValidator> = {
