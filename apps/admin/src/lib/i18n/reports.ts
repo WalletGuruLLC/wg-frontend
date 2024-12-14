@@ -54,8 +54,8 @@ export const reportsDict = {
     "reserved-funds-expire": "Expire",
     "reserved-funds-status": "",
     "reserved-funds-state0": "Select...",
-    "reserved-funds-state1": "Added",
-    "reserved-funds-state2": "Withdrawed",
+    "reserved-funds-state1": "Reserved",
+    "reserved-funds-state2": "Utilized",
   },
   es: {
     "dispute-title": "Disputa",
@@ -108,7 +108,7 @@ export const reportsDict = {
     "reserved-funds-expire": "Expira",
     "reserved-funds-status": "",
     "reserved-funds-state0": "Seleccione...",
-    "reserved-funds-state1": "Agregado",
-    "reserved-funds-state2": "Retirado",
+    "reserved-funds-state1": "Reservado",
+    "reserved-funds-state2": "Utilizado",
   },
 } satisfies I18nDictionary;

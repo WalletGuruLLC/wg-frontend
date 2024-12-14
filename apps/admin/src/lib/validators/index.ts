@@ -425,12 +425,6 @@ export const disputesValidator = z.object({
 });
 
 export const reservedFundsValidator = z.object({
-  walletAddress: z
-    .string()
-    .min(
-      1,
-      "dashboard.reports.sections-transactions-by-user.search.wallet-address.error",
-    ),
   startDate: z
     .date({
       required_error:
@@ -443,6 +437,6 @@ export const reservedFundsValidator = z.object({
         "dashboard.reports.sections-transactions-by-user.search.period.error",
     })
     .optional(),
-  serviceProviderId: z.string().min(1).optional(),
+  serviceProviderId: z.string().optional(),
   status: z.string().optional(),
 });
