@@ -48,8 +48,15 @@ export default function Table<TData>({ table }: { table: Table<TData> }) {
         ))}
       </thead>
       <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="h-12 border-b text-lg">
+        {table.getRowModel().rows.map((row, idx) => (
+          /* <tr key={row.id} className="h-12 border-b text-lg">*/
+          <tr
+            key={row.id}
+            className={cn(
+              "h-12 border-b text-lg",
+              idx % 2 === 0 ? "bg-white" : "bg-slate-100",
+            )}
+          >
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id} className="px-4 font-normal">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
