@@ -56,6 +56,10 @@ export const reportsDict = {
     "reserved-funds-state0": "Select...",
     "reserved-funds-state1": "Reserved",
     "reserved-funds-state2": "Utilized",
+    "payments-summary-title": "Payments Summary",
+    "payments-summary-state-cleared": "Cleared",
+    "payments-summary-state-pending": "Pending",
+    "payments-summary.details.header": "Details Payments Summary",
   },
   es: {
     "dispute-title": "Disputa",
@@ -110,5 +114,9 @@ export const reportsDict = {
     "reserved-funds-state0": "Seleccione...",
     "reserved-funds-state1": "Reservado",
     "reserved-funds-state2": "Utilizado",
+    "payments-summary-title": "Pagos Recibidos",
+    "payments-summary-state-cleared": "Pagado",
+    "payments-summary-state-pending": "Pendiente",
+    "payments-summary.details.header": "Detalles Pagos Recibidos",
   },
 } satisfies I18nDictionary;

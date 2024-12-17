@@ -324,7 +324,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.refunds": "Refunds",
     "dashboard.reports.sections.clear-payments": "Clear Payments",
     "dashboard.reports.sections.reservedFunds": "Reserved Funds",
-    "dashboard.reports.sections.paymentSummary": "Clear Payments",
+    "dashboard.reports.sections.paymentSummary": "Payment Summary",
     "dashboard.wallet-users.title": "Management wallet users",
     "dashboard.wallet-users.table.header.name": "Name",
     "dashboard.wallet-users.table.header.wallet": "Wallet",
