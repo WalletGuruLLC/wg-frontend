@@ -1,6 +1,5 @@
 "use client";
 
-//import type { ReactNode } from "react";
 import type { z } from "zod";
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -10,12 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-  CalendarIcon,
-  CircleArrowDown,
-  CircleArrowUp,
-  Search,
-} from "lucide-react";
+import { CalendarIcon, Search } from "lucide-react";
 
 import { cn } from "@wg-frontend/ui";
 import {
@@ -97,17 +91,9 @@ const columns = [
       const code = money.assetCode;
       const scale = money.assetScale;
       const amount = Number(money.value);
-      const status = info.row.original.state;
-      const formated = formatCurrency(amount, code, scale);
-      // return formatCurrency(amount, code, scale);
-      return status === "PENDING" ? (
-        <div className="flex items-center">
-          <CircleArrowUp className="pr-1 text-green-600" />
-          {formated}
-        </div>
-      ) : (
-        <div className="flex items-center">
-          <CircleArrowDown className="pr-1 text-red-600" />
+      const status = String(info.row.original.status);
+      return (
+        <div className={status === "false" ? "text-red-600" : ""}>
           {formatCurrency(amount, code, scale)}
         </div>
       );
@@ -132,11 +118,7 @@ const columns = [
   }),
 ];
 
-export default function ListDisputesPage() {
-  // const settingKey = "url-wallet";
-  /*const { data: rootWallet } = useGetSettingQuery({
-    key: settingKey,
-  });*/
+export default function ReservedFundsPage() {
   const loading = useAccessLevelGuard({
     general: {
       module: "reservedFunds",
@@ -164,7 +146,6 @@ export default function ListDisputesPage() {
     search: searchParams.get("search") ?? "",
   };
   const defaultValues = {
-    walletAddress: "",
     serviceProviderId: searchParams.get("serviceProviderId") ?? "",
     startDate: searchParams.get("startDate")
       ? new Date(Number(searchParams.get("startDate")))
@@ -172,7 +153,7 @@ export default function ListDisputesPage() {
     endDate: searchParams.get("endDate")
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
-    status: searchParams.get("status") ?? "",
+    status: "",
   };
   const [filters, setFilters] = useState(defaultValues);
   const [tempFilters, setTempFilters] = useState(defaultValues);
@@ -182,12 +163,13 @@ export default function ListDisputesPage() {
     ...paginationAndSearch,
     ...filters,
   });
-  const disputesData = (data?.incomingPayments ?? []).map((incoming) => {
+  const incomingData = (data?.incomingPayments ?? []).map((incoming) => {
     return {
       type: incoming.type,
       id: incoming.id,
       provider: incoming.provider,
       ownerUser: incoming.ownerUser,
+      status: incoming.status,
       state: incoming.state,
       incomingAmount: {
         value: incoming.incomingAmount.value,
@@ -200,7 +182,7 @@ export default function ListDisputesPage() {
     };
   });
   const table = useReactTable({
-    data: disputesData,
+    data: incomingData,
     columns: columns.filter(
       (c) =>
         c.id !== "active" ||
@@ -248,7 +230,7 @@ export default function ListDisputesPage() {
         showLoadingIndicator={isLoading}
       />
       <div className="flex flex-row items-center space-x-3">
-        <div className="relative w-1/3">
+        <div className="relative w-1/4">
           <Input
             placeholder={values["wallet-users.search.placeholder"]}
             className="rounded-none border-transparent border-b-black"
@@ -290,11 +272,11 @@ export default function ListDisputesPage() {
                         variant="outline"
                         className={cn(
                           "relative h-11 min-w-44 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
-                          !filters.startDate && "text-[#A1A1A1]",
+                          !tempFilters.startDate && "text-[#A1A1A1]",
                         )}
                       >
-                        {filters.startDate ? (
-                          format(filters.startDate, "yyyy-MM-dd")
+                        {tempFilters.startDate ? (
+                          format(tempFilters.startDate, "yyyy-MM-dd")
                         ) : (
                           <span>yyyy-mm-dd</span>
                         )}
@@ -307,17 +289,17 @@ export default function ListDisputesPage() {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={filters.startDate}
+                        selected={tempFilters.startDate}
                         onSelect={(date) =>
-                          setFilters((prev) => ({
+                          setTempFilters((prev) => ({
                             ...prev,
                             startDate: date ?? undefined,
                           }))
                         }
                         disabled={[
                           {
-                            after: filters.endDate
-                              ? filters.endDate
+                            after: tempFilters.endDate
+                              ? tempFilters.endDate
                               : new Date(),
                           },
                         ]}
@@ -341,11 +323,11 @@ export default function ListDisputesPage() {
                         className={cn(
                           "relative h-11 min-w-44 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
 
-                          !filters.endDate && "text-[#A1A1A1]",
+                          !tempFilters.endDate && "text-[#A1A1A1]",
                         )}
                       >
-                        {filters.endDate ? (
-                          format(filters.endDate, "yyyy-MM-dd")
+                        {tempFilters.endDate ? (
+                          format(tempFilters.endDate, "yyyy-MM-dd")
                         ) : (
                           <span>yyyy-mm-dd</span>
                         )}
@@ -358,16 +340,16 @@ export default function ListDisputesPage() {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={filters.endDate}
+                        selected={tempFilters.endDate}
                         onSelect={(date) =>
-                          setFilters((prev) => ({
+                          setTempFilters((prev) => ({
                             ...prev,
                             endDate: date ?? undefined,
                           }))
                         }
                         disabled={
-                          filters.startDate
-                            ? [{ before: filters.startDate }]
+                          tempFilters.startDate
+                            ? [{ before: tempFilters.startDate }]
                             : []
                         }
                         initialFocus
@@ -394,17 +376,18 @@ export default function ListDisputesPage() {
 
                             <Select
                               onValueChange={(value) =>
-                                setFilters((prev) => ({
+                                setTempFilters((prev) => ({
                                   ...prev,
                                   serviceProviderId: value,
                                 }))
                               }
-                              defaultValue={filters.serviceProviderId}
+                              defaultValue={tempFilters.serviceProviderId}
                             >
                               <SelectTrigger
                                 className={cn(
                                   "rounded-none border-transparent border-b-black",
-                                  !filters.serviceProviderId && "text-gray-400",
+                                  !tempFilters.serviceProviderId &&
+                                    "text-gray-400",
                                 )}
                               >
                                 <SelectValue
@@ -458,12 +441,12 @@ export default function ListDisputesPage() {
                           {values["wallet-users.table.header.state"]}
                         </FormLabel>
                         <Select
-                          value={filters.status}
+                          value={tempFilters.status}
                           onValueChange={(value) => {
-                            setFilters((prev) => ({ ...prev, status: value }));
-                            handlePaginationAndSearchChange({
-                              ...paginationAndSearch,
-                            });
+                            setTempFilters((prev) => ({
+                              ...prev,
+                              status: value,
+                            }));
                           }}
                           defaultValue={field.value}
                         >
@@ -485,17 +468,11 @@ export default function ListDisputesPage() {
                             <SelectItem value={"0"}>
                               {values["reserved-funds-state0"]}
                             </SelectItem>
-                            <SelectItem value={"PENDING"}>
-                              <div className="flex items-center gap-2">
-                                <CircleArrowUp className="h-4 w-4 text-green-600" />
-                                {values["reserved-funds-state1"]}
-                              </div>
+                            <SelectItem value={"true"}>
+                              {values["reserved-funds-state1"]}
                             </SelectItem>
-                            <SelectItem value={"PROCESSING"}>
-                              <div className="flex items-center gap-2">
-                                <CircleArrowDown className="h-4 w-4 text-red-600" />
-                                {values["reserved-funds-state2"]}
-                              </div>
+                            <SelectItem value={"false"}>
+                              {values["reserved-funds-state2"]}
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -523,6 +500,7 @@ export default function ListDisputesPage() {
                     <Button
                       className="mt-7 h-max self-end"
                       onClick={() => {
+                        console.log("temp", tempFilters);
                         form
                           .handleSubmit(() => {
                             setFilters(tempFilters);
@@ -535,6 +513,7 @@ export default function ListDisputesPage() {
                               values["wallet-users.toast.error.filtering"],
                             );
                           });
+                        console.log("filters", filters);
                       }}
                     >
                       <p className="flex-1 text-sm font-light">
@@ -554,7 +533,7 @@ export default function ListDisputesPage() {
       <div>
         <PaginationFooter
           count={{
-            total: data?.total ?? 0,
+            total: data?.totalItems ?? 0,
             firstRowIdx,
             lastRowIdx,
           }}
@@ -568,7 +547,7 @@ export default function ListDisputesPage() {
           }
           canPreviousPage={paginationAndSearch.page !== "1"}
           canNextPage={
-            disputesData.length === Number(paginationAndSearch.items ?? 0)
+            incomingData.length === Number(paginationAndSearch.items ?? 0)
           }
           onPreviousPage={() =>
             handlePaginationAndSearchChange({

@@ -3046,6 +3046,7 @@ export interface ReservedFund {
   id: string;
   provider: string;
   ownerUser: string;
+  status: string;
   state: string;
   incomingAmount: {
     value: string;
@@ -3059,7 +3060,7 @@ export interface ReservedFund {
 
 interface UseGetReservedFundsQueryOutput {
   incomingPayments: ReservedFund[];
-  total?: number;
+  totalItems?: number;
   totalPages?: number;
   currentPage?: number;
 }
@@ -3072,7 +3073,7 @@ export function useGetReservedFundsQuery(
   return useQuery({
     ...options,
     queryKey: ["reserved-funds", input],
-    queryFn: async () => {
+    queryFn: () => {
       Object.keys(input).forEach((key) =>
         input[key as keyof typeof input] === undefined ||
         input[key as keyof typeof input] === ""
@@ -3086,24 +3087,15 @@ export function useGetReservedFundsQuery(
         ) as unknown as Date;
       if (input.endDate)
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
-      const params = new URLSearchParams({
-        ...input,
-        items: "10",
-        page: "1",
-      } as unknown as Record<string, string>);
-
-      const result = await customFetch<UseGetReservedFundsQueryOutput>(
+      const params = new URLSearchParams(
+        input as unknown as Record<string, string>,
+      );
+      return customFetch<UseGetReservedFundsQueryOutput>(
         env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
           `/api/v1/wallets-rafiki/list-incoming-payments` +
           "?" +
           params.toString(),
       );
-      return {
-        incomingPayments: result.incomingPayments,
-        total: result.total,
-        totalPages: result.totalPages,
-        currentPage: result.currentPage,
-      };
     },
   });
 }
