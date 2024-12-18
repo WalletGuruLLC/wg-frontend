@@ -126,8 +126,8 @@ const columns = [
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.frequency" />
     ),
   }),
-  columnHelper.accessor("timeIntervalId", {
-    id: "timeIntervalId",
+  columnHelper.accessor("interval", {
+    id: "interval",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="service-providers.settings.payment-parameters.table.header.interval" />

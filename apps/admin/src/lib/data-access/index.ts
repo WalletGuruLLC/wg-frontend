@@ -1592,6 +1592,7 @@ export interface ProviderPaymentParameter {
   active: boolean;
   frequency: number;
   timeIntervalId: string;
+  interval: string;
   cost: number;
   asset: string;
 }
