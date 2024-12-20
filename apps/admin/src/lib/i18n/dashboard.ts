@@ -36,10 +36,10 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.phone.label": "Phone No.",
     "dashboard.layout.profile-dialog.my-info.save": "Save",
     "dashboard.layout.profile-dialog.my-info.toast.success":
-      "Phone has been changed succesfully",
+      "Phone has been Changed Succesfully",
     "dashboard.layout.profile-dialog.my-info.picture.label":
       "Drop or Upload your picture",
-    "dashboard.layout.profile-dialog.my-info.picture.button": "Choose a file",
+    "dashboard.layout.profile-dialog.my-info.picture.button": "Choose a File",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Search",
     "dashboard.roles.add-button": "Add Role",
@@ -65,29 +65,29 @@ export const dashboardDict = {
       "Role Description cannot contain numbers and must be less than 50 characters",
     "dashboard.roles.edit-dialog.primary-button": "Save",
     "dashboard.roles.edit-dialog.toast.success":
-      "The role has been edited successfully.",
+      "The Role has been Edited Successfully.",
     "dashboard.roles.inactive-dialog.title": "Deactivate Role",
     "dashboard.roles.inactive-dialog.description.first": "Deactiviting ",
     "dashboard.roles.inactive-dialog.description.second":
-      " Role, will remove their access to all system resources. Proceed?",
+      " Role, will Remove their Access to all System Resources. Proceed?",
     "dashboard.roles.inactive-dialog.primary-button": "Yes",
     "dashboard.roles.inactive-dialog.secondary-button": "No",
     "dashboard.roles.inactive-dialog.toast.success":
-      "The role has been deactivated successfully.",
+      "The Role has been Deactivated Successfully.",
     "dashboard.roles.activate-dialog.title": "Activate Role",
-    "dashboard.roles.activate-dialog.description.first": "By activating ",
+    "dashboard.roles.activate-dialog.description.first": "By Activating ",
     "dashboard.roles.activate-dialog.description.second":
-      " Role, you are granting them system privileges. Proceed?",
+      " Role, you are Granting them System Privileges. Proceed?",
     "dashboard.roles.activate-dialog.primary-button": "Yes",
     "dashboard.roles.activate-dialog.secondary-button": "No",
     "dashboard.roles.activate-dialog.toast.success":
-      "The role has been activated successfully.",
-    "dashboard.roles.table.header.role": "Role",
+      "The Role has been Activated Successfully.",
+    "dashboard.roles.table.header.role": "Roles",
     "dashboard.roles.table.header.is-active": "Active",
     "dashboard.roles.table.header.actions": "Actions",
     "dashboard.roles.table.actions.edit": "Edit",
     "dashboard.roles.table.actions.access": "Access",
-    "dashboard.roles.table.items-label": "Items per page:",
+    "dashboard.roles.table.items-label": "Items per Page:",
     "dashboard.roles.table.items-count-separator": " of ",
     "dashboard.roles.role.title": "Access ",
     "dashboard.roles.role.table.modules.header": "Modules",
@@ -133,65 +133,65 @@ export const dashboardDict = {
     "dashboard.users.add-button": "Add User",
     "dashboard.users.add-dialog.title": "Add User",
     "dashboard.users.add-dialog.first-name.label": "First Name",
-    "dashboard.users.add-dialog.first-name.placeholder": "Enter the name",
-    "dashboard.users.add-dialog.first-name.error": "First Name is required",
+    "dashboard.users.add-dialog.first-name.placeholder": "Enter the Name",
+    "dashboard.users.add-dialog.first-name.error": "First Name is Required",
     "dashboard.users.add-dialog.last-name.label": "Last Name",
-    "dashboard.users.add-dialog.last-name.placeholder": "Enter the last name",
-    "dashboard.users.add-dialog.last-name.error": "Last Name is required",
+    "dashboard.users.add-dialog.last-name.placeholder": "Enter the Last Name",
+    "dashboard.users.add-dialog.last-name.error": "Last Name is Required",
     "dashboard.users.add-dialog.email.label": "Email",
-    "dashboard.users.add-dialog.email.placeholder": "Enter the email",
+    "dashboard.users.add-dialog.email.placeholder": "Enter the Email",
     "dashboard.users.add-dialog.email.error":
-      "Email is required and must be a valid email",
+      "Email is Required and Must be a Valid Email",
     "dashboard.users.add-dialog.phone.label": "Phone Number",
     "dashboard.users.add-dialog.phone.code-placeholder": "+00",
     "dashboard.users.add-dialog.phone.phone-placeholder":
-      "Enter your phone number",
-    "dashboard.users.add-dialog.phone.error": "Phone Number is invalid",
+      "Enter the Phone Number",
+    "dashboard.users.add-dialog.phone.error": "Phone Number is Invalid",
     "dashboard.users.add-dialog.role.label": "Role",
     "dashboard.users.add-dialog.role.placeholder": "Select Role",
-    "dashboard.users.add-dialog.role.error": "Role is required",
+    "dashboard.users.add-dialog.role.error": "Role is Required",
     "dashboard.users.add-dialog.primary-button": "Save",
     "dashboard.users.add-dialog.toast.success":
-      "A confirmation email has been sent to the user with the assigned password.",
+      "A Confirmation Email has Been Sent to the User with the Assigned Password.",
     "dashboard.users.edit-dialog.title": "Edit User",
     "dashboard.users.edit-dialog.first-name.label": "First Name",
-    "dashboard.users.edit-dialog.first-name.placeholder": "Enter the name",
-    "dashboard.users.edit-dialog.first-name.error": "First Name is required",
+    "dashboard.users.edit-dialog.first-name.placeholder": "Enter the Name",
+    "dashboard.users.edit-dialog.first-name.error": "First Name is Required",
     "dashboard.users.edit-dialog.last-name.label": "Last Name",
-    "dashboard.users.edit-dialog.last-name.placeholder": "Enter the last name",
-    "dashboard.users.edit-dialog.last-name.error": "Last Name is required",
+    "dashboard.users.edit-dialog.last-name.placeholder": "Enter the Last Name",
+    "dashboard.users.edit-dialog.last-name.error": "Last Name is Required",
     "dashboard.users.edit-dialog.email.label": "Email",
-    "dashboard.users.edit-dialog.email.placeholder": "Enter the email",
+    "dashboard.users.edit-dialog.email.placeholder": "Enter the Email",
     "dashboard.users.edit-dialog.email.error":
-      "Email is required and must be a valid email",
+      "Email is Required and Must Be a Valid Email",
     "dashboard.users.edit-dialog.phone.label": "Phone Number",
     "dashboard.users.edit-dialog.phone.code-placeholder": "+00",
     "dashboard.users.edit-dialog.phone.phone-placeholder":
-      "Enter your phone number",
-    "dashboard.users.edit-dialog.phone.error": "Phone Number is invalid",
+      "Enter the Phone Number",
+    "dashboard.users.edit-dialog.phone.error": "Phone Number is Invalid",
     "dashboard.users.edit-dialog.role.label": "Role",
     "dashboard.users.edit-dialog.role.placeholder": "Select Role",
-    "dashboard.users.edit-dialog.role.error": "Role is required",
+    "dashboard.users.edit-dialog.role.error": "Role is Required",
     "dashboard.users.edit-dialog.primary-button": "Save",
     "dashboard.users.edit-dialog.toast.success":
-      "The User has been edited successfully.",
-    "dashboard.users.inactive-dialog.title": "Deactivate user",
+      "The User has Been Edited Successfully.",
+    "dashboard.users.inactive-dialog.title": "Deactivate User",
     "dashboard.users.inactive-dialog.description":
-      "By inactivating this user, you will revoke the user's access to certain system privileges. Do you want to proceed?",
+      "By Inactivating this User, you will Revoke the User's Access to Certain System Privileges. Do you Want to Proceed?",
     "dashboard.users.inactive-dialog.primary-button": "Yes",
     "dashboard.users.inactive-dialog.secondary-button": "No",
     "dashboard.users.inactive-dialog.toast.success":
-      "The user has been deactivated successfully.",
+      "The User has Been Deactivated Successfully.",
     "dashboard.users.activate-dialog.title": "Activate User",
     "dashboard.users.activate-dialog.description":
-      "By activating this user, you are granting the user access to specific system privileges. Do you want to proceed?",
+      "By Activating this User, You are Granting the User Access to Specific System Privileges. Do you Want to Proceed?",
     "dashboard.users.activate-dialog.primary-button": "Yes",
     "dashboard.users.activate-dialog.secondary-button": "No",
     "dashboard.users.activate-dialog.toast.success":
-      "The user has been activated successfully.",
+      "The User has Been Activated Successfully.",
     "dashboard.users.table.header.first-name": "First Name",
     "dashboard.users.table.header.last-name": "Last Name",
-    "dashboard.users.table.header.email": "Mail",
+    "dashboard.users.table.header.email": "Email",
     "dashboard.users.table.header.phone": "Phone",
     "dashboard.users.table.header.role": "Role",
     "dashboard.users.table.header.is-active": "Active",
@@ -204,55 +204,55 @@ export const dashboardDict = {
     "dashboard.health.status": "Status",
     "dashboard.wallet-management.title": "Registered Wallets",
     "dashboard.wallet-management.search.placeholder": "Search",
-    "dashboard.wallet-management.add-button": "Add new wallet",
-    "dashboard.wallet-management.add-dialog.title": "Create a new wallet",
+    "dashboard.wallet-management.add-button": "Add New Wallet",
+    "dashboard.wallet-management.add-dialog.title": "Create a New Wallet",
     "dashboard.wallet-management.add-dialog.name.label": "Name",
     "dashboard.wallet-management.add-dialog.name.placeholder": "Wallet Name",
     "dashboard.wallet-management.add-dialog.name.error":
-      "Wallet Name is required",
+      "Wallet Name is Required",
     "dashboard.wallet-management.add-dialog.type.label": "Wallet Type",
     "dashboard.wallet-management.add-dialog.type.placeholder": "Wallet Type",
     "dashboard.wallet-management.add-dialog.type.error":
-      "Wallet Type is required",
+      "Wallet Type is Required",
     "dashboard.wallet-management.add-dialog.address.label": "Wallet Address",
     "dashboard.wallet-management.add-dialog.address.placeholder":
       "Wallet Address",
     "dashboard.wallet-management.add-dialog.address.error":
-      "Wallet Address must be a valid URL",
+      "Wallet Address Must be a Valid URL",
     "dashboard.wallet-management.add-dialog.primary-button": "Create",
     "dashboard.wallet-management.add-dialog.toast.success":
-      "The wallet was Successfully created",
+      "The Wallet was Successfully Created",
     "dashboard.wallet-management.edit-dialog.title": "Edit Wallet",
     "dashboard.wallet-management.edit-dialog.name.label": "Name",
     "dashboard.wallet-management.edit-dialog.name.placeholder": "Wallet Name",
     "dashboard.wallet-management.edit-dialog.name.error":
-      "Wallet Name is required",
+      "Wallet Name is Required",
     "dashboard.wallet-management.edit-dialog.type.label": "Wallet Type",
     "dashboard.wallet-management.edit-dialog.type.placeholder": "Wallet Type",
     "dashboard.wallet-management.edit-dialog.type.error":
-      "Wallet Type is required",
+      "Wallet Type is Required",
     "dashboard.wallet-management.edit-dialog.address.label": "Wallet Address",
     "dashboard.wallet-management.edit-dialog.address.placeholder":
       "Wallet Address",
     "dashboard.wallet-management.edit-dialog.address.error":
-      "Wallet Address must be a valid URL",
+      "Wallet Address Must be a Valid URL",
     "dashboard.wallet-management.edit-dialog.primary-button": "Save",
     "dashboard.wallet-management.edit-dialog.toast.success":
-      "The wallet was Successfully edited",
+      "The Wallet was Successfully Edited",
     "dashboard.wallet-management.inactive-dialog.title": "Deactivate Wallet",
     "dashboard.wallet-management.inactive-dialog.description":
-      "Are you sure you want to proceed?",
+      "Are you Sure you Want to Proceed?",
     "dashboard.wallet-management.inactive-dialog.primary-button": "Yes",
     "dashboard.wallet-management.inactive-dialog.secondary-button": "No",
     "dashboard.wallet-management.inactive-dialog.toast.success":
-      "The wallet has been deactivated successfully.",
+      "The Wallet has Been Deactivated Successfully.",
     "dashboard.wallet-management.activate-dialog.title": "Activate Wallet",
     "dashboard.wallet-management.activate-dialog.description":
-      "Activating the wallet will restore transactions and access. Do you want to proceed?",
+      "Activating the Wallet will Restore Transactions and Access. Do you Want to Proceed?",
     "dashboard.wallet-management.activate-dialog.primary-button": "Yes",
     "dashboard.wallet-management.activate-dialog.secondary-button": "No",
     "dashboard.wallet-management.activate-dialog.toast.success":
-      "The wallet has been activated successfully.",
+      "The Wallet has Been Activated Successfully.",
     "dashboard.wallet-management.table.header.name": "Name",
     "dashboard.wallet-management.table.header.address": "Wallet Address",
     "dashboard.wallet-management.table.header.type": "Type",
@@ -268,23 +268,23 @@ export const dashboardDict = {
     "dashboard.settings.wallet-root": "Wallet Root",
     "dashboard.settings.terms-and-conditions.title": "Terms and Conditions",
     "dashboard.settings.terms-and-conditions.label":
-      "Terms and Conditions link",
+      "Terms and Conditions Link",
     "dashboard.settings.terms-and-conditions.placeholder":
       "www.walletguru.com/terms-and-conditions",
-    "dashboard.settings.terms-and-conditions.error": "URL is invalid",
-    "dashboard.settings.privacy-policy.title": "Privacy policy",
-    "dashboard.settings.privacy-policy.label": "Privacy policy link",
+    "dashboard.settings.terms-and-conditions.error": "URL is Invalid",
+    "dashboard.settings.privacy-policy.title": "Privacy Policy",
+    "dashboard.settings.privacy-policy.label": "Privacy Policy Link",
     "dashboard.settings.privacy-policy.placeholder":
       "www.walletguru.com/privacy-policy",
-    "dashboard.settings.privacy-policy.error": "URL is invalid",
+    "dashboard.settings.privacy-policy.error": "URL is Invalid",
     "dashboard.settings.privacy-policy.save": "Save",
     "dashboard.settings.wallet-root.title": "Wallet Root",
-    "dashboard.settings.wallet-root.label": "Wallet Root link",
+    "dashboard.settings.wallet-root.label": "Wallet Root Link",
     "dashboard.settings.wallet-root.placeholder":
       "www.walletguru.com/wallet-root",
     "dashboard.settings.wallet-root.information.label":
       "Please note that it is necessary to modify the environment variable in the environment. The current wallets will not change their URL.",
-    "dashboard.settings.wallet-root.error": "URL is invalid",
+    "dashboard.settings.wallet-root.error": "URL is Invalid",
     "dashboard.settings.wallet-root.save": "Save",
     "dashboard.settings.terms-and-conditions.save": "Save",
     "dashboard.change-password.title": "Change Password",
@@ -295,25 +295,25 @@ export const dashboardDict = {
       "The current password you entered is incorrect. Please check and try again.",
     "dashboard.change-password.form.new-password.label": "New Password",
     "dashboard.change-password.form.new-password.placeholder":
-      "Enter your new password",
+      "Enter your New Password",
     "dashboard.change-password.form.new-password.error":
-      "The new password you entered doesn't meet our requirements. Please try a different one.",
+      "The New Password you Entered Doesn't Meet our Requirements. Please try a Different One.",
     "dashboard.change-password.form.confirm-password.label": "Confirm Password",
     "dashboard.change-password.form.confirm-password.placeholder":
-      "Confirm your new password",
+      "Confirm your New Password",
     "dashboard.change-password.form.confirm-password.error":
-      "The password you entered doesn't match",
+      "The password you Entered Doesn't Match",
     "dashboard.change-password.information-label":
-      "Enter a strong password containing 8 to 12 characters, AT LEAST one number, one alpha character, one upper case character, one lower case access and one special character.",
+      "Enter a strong password of up to 20 characters, including at least one number, uppercase, lowercase, and special character.",
     "dashboard.change-password.primary-button": "Save",
     "dashboard.change-password.toast.success":
-      "Your password has been successfully Updated!",
+      "Your Password has Been Successfully Updated!",
     "dashboard.settings.term-conditions.dialog.toast.success":
-      "The Terms and Conditions have been updated successfully.",
+      "The Terms and Conditions have Been Updated Successfully.",
     "dashboard.settings.privacy-policy.dialog.toast.success":
-      "The Privacy Policy has been updated successfully.",
+      "The Privacy Policy has Been Updated Successfully.",
     "dashboard.settings.wallet-root.dialog.toast.success":
-      "The wallet address have been updated successfully.",
+      "The Wallet Address have Been Updated Successfully.",
     "dashboard.reports.title": "Reports",
     "dashboard.reports.sections.transactions-by-user": "Transactions by User",
     "dashboard.reports.sections.transactions-by-provider":
@@ -325,7 +325,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments": "Clear Payments",
     "dashboard.reports.sections.reservedFunds": "Reserved Funds",
     "dashboard.reports.sections.paymentSummary": "Payment Summary",
-    "dashboard.wallet-users.title": "Management wallet users",
+    "dashboard.wallet-users.title": "Management Wallet Users",
     "dashboard.wallet-users.table.header.name": "Name",
     "dashboard.wallet-users.table.header.wallet": "Wallet",
     "dashboard.wallet-users.table.header.balance": "Balance",
@@ -337,20 +337,20 @@ export const dashboardDict = {
     "dashboard.wallet-users.tooltip.details": "User Detail",
     "dashboard.wallet-users.tooltip.transactions": "View transactions",
     "dashboard.wallet-users.tooltip.validated": "KYC Validated",
-    "dashboard.wallet-users.tooltip.invalid": "KYC no validated",
-    "dashboard.wallet-users.state": "Unknown status",
-    "dashboard.wallet-users.state0": "Account created",
-    "dashboard.wallet-users.state1": "Email verified",
-    "dashboard.wallet-users.state2": "KYC verified",
-    "dashboard.wallet-users.state3": "Profile completed",
-    "dashboard.wallet-users.state4": "Wallet created",
-    "dashboard.wallet-users.state5": "KYC No verified",
+    "dashboard.wallet-users.tooltip.invalid": "KYC Not Verified",
+    "dashboard.wallet-users.state": "Unknown Status",
+    "dashboard.wallet-users.state0": "Account Created",
+    "dashboard.wallet-users.state1": "Email Verified",
+    "dashboard.wallet-users.state2": "KYC Verified",
+    "dashboard.wallet-users.state3": "Profile Completed",
+    "dashboard.wallet-users.state4": "Wallet Created",
+    "dashboard.wallet-users.state5": "KYC No Verified",
     "dashboard.wallet-users.locked-wallet": "Locked Wallet",
     "dashboard.wallet-users.active-wallet": "Active Wallet",
-    "dashboard.wallet-users.no-wallet": "No wallet",
-    "dashboard.wallet-users.select-state": "Select status",
-    "dashboard.wallet-users.select-wallet": "Select wallet",
-    "dashboard.wallet-users.search.placeholder": "Search by name",
+    "dashboard.wallet-users.no-wallet": "No Wallet",
+    "dashboard.wallet-users.select-state": "Select Status",
+    "dashboard.wallet-users.select-wallet": "Select Wallet",
+    "dashboard.wallet-users.search.placeholder": "Search by Name",
     "dashboard.reports.sections.transactions-by-user.header.type": "Type",
     "dashboard.reports.sections.transactions-by-user.header.description":
       "Description",
@@ -367,13 +367,13 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.search-button": "Search",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Amount",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
-      "Enter the wallet address",
+      "Enter the Wallet Address",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
-      "Enter a valid wallet address",
+      "Enter a Valid Wallet Address",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
       "Wallet Address",
     "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
-      "Select a range of time",
+      "Select a Range of Time",
     "dashboard.reports.sections-transactions-by-user.search.period.error":
       "Enter a valid period",
     "dashboard.reports.sections-transactions-by-user.search.start-date.label":
@@ -381,50 +381,50 @@ export const dashboardDict = {
     "dashboard.reports.sections-transactions-by-user.search.end-date.label":
       "End Date",
     "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
-      "Select a type",
+      "Select a Type",
     "dashboard.reports.sections-transactions-by-user.search.type.error":
-      "Enter a valid type",
+      "Enter a valid Type",
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Type",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
-      "Select a state",
+      "Select a Status",
     "dashboard.reports.sections-transactions-by-user.search.state.pending":
       "Pending",
     "dashboard.reports.sections-transactions-by-user.search.state.completed":
       "Completed",
     "dashboard.reports.sections-transactions-by-user.search.state.error":
-      "Enter a valid state",
+      "Enter a Valid State",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
       "Status",
     "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
-      "Select a provider",
+      "Select a Provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.error":
-      "Enter a valid provider",
+      "Enter a Valid provider",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Provider",
     "dashboard.reports.sections-transactions-by-user.user.label": "User",
     "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected":
-      "No Wallet Address selected",
+      "No Wallet Address Selected",
     "dashboard.reports.sections-transactions-by-user.period.label": "Period",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
-      "No start date selected",
+      "No Start Date Selected",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
-      "No end date selected",
+      "No End Date Selected",
     "dashboard.reports.sections-transactions-by-user.download.success":
-      "The report has been downloaded successfully.",
-    "dashboard.wallet-users.inactive-dialog.title": "Deactivate user",
+      "The Report has Been Downloaded Successfully.",
+    "dashboard.wallet-users.inactive-dialog.title": "Deactivate User",
     "dashboard.wallet-users.inactive-dialog.description":
-      "By deactivating this user, you will revoke the user's access to certain system privileges.\n Do you want to proceed?",
+      "By Deactivating this User, you will Revoke the User's Access to Certain System Privileges.\n Do you Want to Proceed?",
     "dashboard.wallet-users.inactive-dialog.primary-button": "Yes",
     "dashboard.wallet-users.inactive-dialog.secondary-button": "No",
     "dashboard.wallet-users.inactive-dialog.toast.success":
-      "The user has been deactivated successfully.",
+      "The User has Been Deactivated Successfully.",
     "dashboard.wallet-users.activate-dialog.title": "Activate User",
     "dashboard.wallet-users.activate-dialog.description":
-      "By activating this user, you are granting the user access to specific system privileges.\n Do you want to proceed?",
+      "By Activating this User, you are Granting the User Access to Specific System Privileges.\n Do you Want to Proceed?",
     "dashboard.wallet-users.activate-dialog.primary-button": "Yes",
     "dashboard.wallet-users.activate-dialog.secondary-button": "No",
     "dashboard.wallet-users.activate-dialog.toast.success":
-      "The user has been activated successfully.",
+      "The User has Been Activated Successfully.",
     "dashboard.reports.sections.transactions-by-provider.header.actions.details":
       "Details",
     "dashboard.reports.sections.transactions-by-provider.header.user": "User",
@@ -442,23 +442,23 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.header.actions":
       "Actions",
     "dashboard.reports.sections-transactions-by-provider.download.success":
-      "The report has been downloaded successfully.",
+      "The Report has Been Downloaded Successfully.",
     "dashboard.reports.sections-transactions-by-provider.search.provider.label":
       "Provider",
     "dashboard.reports.sections-transactions-by-provider.search.provider.placeholder":
-      "Select a provider",
+      "Select a Provider",
     "dashboard.reports.sections.transactions-by-provider.search-button":
       "Search",
     "dashboard.reports.sections-transactions-by-provider.search.end-date.label":
       "End Date",
     "dashboard.reports.sections-transactions-by-provider.search.end-date.placeholder":
-      "yyyy/mm/dd",
+      "yyyy-mm-dd",
     "dashboard.reports.sections-transactions-by-provider.search.start-date.label":
       "Start Date",
     "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
-      "yyyy/mm/dd",
+      "yyyy-mm-dd",
     "dashboard.reports.sections.transactions-by-provider.details.header":
-      "Detail Transactions by period",
+      "Detail Transactions by Period",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Date",
     "dashboard.dispute.button.details": "Dispute",
     "dashboard.refund.button.details": "Refund",
@@ -482,59 +482,59 @@ export const dashboardDict = {
     "dashboard.reports.sections.reserved-funds-by-user.header.ammount":
       "Amount",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.placeholder":
-      "Enter the wallet address",
+      "Enter the Wallet Address",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.error":
-      "Enter a valid wallet address",
+      "Enter a Valid Wallet Address",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.label":
       "Wallet Address",
     "dashboard.reports.sections-reserved-funds-by-user.search.period.placeholder":
-      "Select a range of time",
+      "Select a Range of Time",
     "dashboard.reports.sections-reserved-funds-by-user.search.period.error":
-      "Enter a valid period",
+      "Enter a Valid Period",
     "dashboard.reports.sections-reserved-funds-by-user.search.start-date.label":
       "Start Date",
     "dashboard.reports.sections-reserved-funds-by-user.search.end-date.label":
       "End Date",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.placeholder":
-      "Select a type",
+      "Select a Type",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.error":
-      "Enter a valid type",
+      "Enter a Valid Type",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.label":
       "Type",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.placeholder":
-      "Select a state",
+      "Select a Status",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.pending":
       "Pending",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.completed":
       "Completed",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.error":
-      "Enter a valid state",
+      "Enter a Valid State",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.label":
       "Status",
     "dashboard.reports.sections-reserved-funds-by-user.search.provider.placeholder":
-      "Select a provider",
+      "Select a Provider",
     "dashboard.reports.sections-reserved-funds-by-user.search.provider.error":
-      "Enter a valid provider",
+      "Enter a Valid Provider",
     "dashboard.reports.sections-reserved-funds-by-user.search.provider.label":
       "Provider",
     "dashboard.reports.sections-reserved-funds-by-user.user.label": "User",
     "dashboard.reports.sections-reserved-funds-by-user.period.no-wallet-selected":
-      "No Wallet Address selected",
+      "No Wallet Address Selected",
     "dashboard.reports.sections-reserved-funds-by-user.period.label": "Period",
     "dashboard.reports.sections-reserved-funds-by-user.period.no-start-selected":
-      "No start date selected",
+      "No Start Date Selected",
     "dashboard.reports.sections-reserved-funds-by-user.period.no-end-selected":
-      "No end date selected",
+      "No End Date Selected",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
-      "The report has been downloaded successfully.",
+      "The Report has Been Downloaded Successfully.",
     "dashboard.reports.sections.clear-payments.header.date": "Date",
     "dashboard.reports.sections.clear-payments.header.description":
       "Description",
     "dashboard.reports.sections.clear-payments.header.type": "Type",
     "dashboard.reports.sections.clear-payments.header.user": "Wallet",
-    "dashboard.reports.sections.clear-payments.header.month": "Mes",
+    "dashboard.reports.sections.clear-payments.header.month": "Month",
     "dashboard.reports.sections.clear-payments.header.reference":
-      "Reference number",
+      "Reference Number",
     "dashboard.reports.sections.clear-payments.header.notes": "Notes",
     "dashboard.reports.sections.clear-payments.header.observation":
       "Observation",
@@ -553,51 +553,51 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.search-button": "Search",
     "dashboard.reports.sections.clear-payments.header.ammount": "Amount",
     "dashboard.reports.sections-clear-payments.search.wallet-address.placeholder":
-      "Enter the wallet address",
+      "Enter the Wallet Address",
     "dashboard.reports.sections-clear-payments.search.wallet-address.error":
-      "Enter a valid wallet address",
+      "Enter a Valid Wallet Address",
     "dashboard.reports.sections-clear-payments.search.wallet-address.label":
       "Wallet Address",
     "dashboard.reports.sections-clear-payments.search.period.placeholder":
-      "Select a range of time",
+      "Select a Range of Time",
     "dashboard.reports.sections-clear-payments.search.period.error":
-      "Enter a valid period",
+      "Enter a Valid Period",
     "dashboard.reports.sections-clear-payments.search.start-date.label":
       "Start Date",
     "dashboard.reports.sections-clear-payments.search.end-date.label":
       "End Date",
     "dashboard.reports.sections-clear-paymentsr.search.month.placeholder":
-      "Select a month",
+      "Select a Month",
     "dashboard.reports.sections-clear-payments.search.month.error":
-      "Enter a valid month",
+      "Enter a Valid Month",
     "dashboard.reports.sections-clear-payments.search.month.label": "Month",
     "dashboard.reports.sections-clear-payments.search.year.label": "Year",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
-      "Select a state",
+      "Select a Status",
     "dashboard.reports.sections-clear-payments.search.state.all": "All",
     "dashboard.reports.sections-clear-payments.search.state.pending":
-      "Clear payment",
+      "Clear Payment",
     "dashboard.reports.sections-clear-payments.search.state.completed":
       "Cleared",
     "dashboard.reports.sections-clear-payments.search.state.error":
-      "Enter a valid state",
+      "Enter a Valid State",
     "dashboard.reports.sections-clear-payments.search.state.label": "Status",
     "dashboard.reports.sections-clear-payments.search.provider.placeholder":
-      "Select a provider",
+      "Select a Provider",
     "dashboard.reports.sections-clear-payments.search.provider.error":
-      "Enter a valid provider",
+      "Enter a Valid Provider",
     "dashboard.reports.sections-clear-payments.search.provider.label":
       "Provider",
     "dashboard.reports.sections-clear-payments.user.label": "User",
     "dashboard.reports.sections-clear-payments.period.no-wallet-selected":
-      "No Wallet Address selected",
+      "No Wallet Address Selected",
     "dashboard.reports.sections-clear-payments.period.label": "Period",
     "dashboard.reports.sections-clear-payments.period.no-start-selected":
-      "No start date selected",
+      "No Start Date Selected",
     "dashboard.reports.sections-clear-payments.period.no-end-selected":
-      "No end date selected",
+      "No End Date Selected",
     "dashboard.reports.sections-clear-payments.download.success":
-      "The report has been downloaded successfully.",
+      "The Report has Been Downloaded Successfully.",
   },
   es: {
     "0": "Mes no seleccionado",
@@ -621,9 +621,9 @@ export const dashboardDict = {
     "dashboard.layout.nav.roles": "Roles",
     "dashboard.layout.nav.settings": "Configurar",
     "dashboard.layout.nav.reports": "Reportes",
-    "dashboard.layout.nav.health": "Health Check",
+    "dashboard.layout.nav.health": "Chequeo de Salud",
     "dashboard.layout.nav.wallet-users": "Billeterahabientes",
-    "dashboard.layout.logout": "Cerrar sesión",
+    "dashboard.layout.logout": "Cerrar Sesión",
     "dashboard.layout.profile-dialog.option.my-info": "Mi Información",
     "dashboard.layout.profile-dialog.option.change-password":
       "Cambiar Contraseña",
@@ -633,11 +633,11 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.phone.label": "Teléfono",
     "dashboard.layout.profile-dialog.my-info.save": "Guardar",
     "dashboard.layout.profile-dialog.my-info.toast.success":
-      "El número de telefono ha sido cambiado correctamente",
+      "El Número de Teléfono ha sido Cambiado Correctamente",
     "dashboard.layout.profile-dialog.my-info.picture.label":
       "Arrastre o Suba su foto",
     "dashboard.layout.profile-dialog.my-info.picture.button":
-      "Elija un archivo",
+      "Elija un Archivo",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Buscar",
     "dashboard.roles.add-button": "Crear Rol",
@@ -645,11 +645,11 @@ export const dashboardDict = {
     "dashboard.roles.add-dialog.name.label": "Nombre",
     "dashboard.roles.add-dialog.name.placeholder": "Nombre del Rol",
     "dashboard.roles.add-dialog.name.error":
-      "El nombre del Rol no puede contener números y debe tener menos de 20 caracteres",
+      "El Nombre del Rol no puede Contener Números y debe Tener Menos de 20 Caracteres",
     "dashboard.roles.add-dialog.description.label": "Descripción",
     "dashboard.roles.add-dialog.description.placeholder": "",
     "dashboard.roles.add-dialog.description.error":
-      "El nombre del Rol no puede contener números y debe tener menos de 50 caracteres",
+      "El Nombre del Rol no puede Contener Números y debe Tener Menos de 50 Caracteres",
     "dashboard.roles.add-dialog.primary-button": "Crear",
     "dashboard.roles.add-dialog.toast.success": "Rol Creado Exitosamente",
     "dashboard.roles.edit-dialog.title": "Editar Rol",
@@ -663,29 +663,29 @@ export const dashboardDict = {
       "La descripción del Rol no puede contener números y debe tener menos de 50 caracteres",
     "dashboard.roles.edit-dialog.primary-button": "Guardar",
     "dashboard.roles.edit-dialog.toast.success":
-      "El rol se ha editado exitosamente.",
+      "El Rol se ha Editado Exitosamente.",
     "dashboard.roles.inactive-dialog.title": "Desactivar Rol",
-    "dashboard.roles.inactive-dialog.description.first": "Al desactivar Rol ",
+    "dashboard.roles.inactive-dialog.description.first": "Al Desactivar Rol ",
     "dashboard.roles.inactive-dialog.description.second":
-      " se le quitará el acceso a todos los recursos del sistema. ¿Desea continuar?",
+      " se le Quitará el Acceso a todos los Recursos del Sistema. ¿Desea Continuar?",
     "dashboard.roles.inactive-dialog.primary-button": "Sí",
     "dashboard.roles.inactive-dialog.secondary-button": "No",
     "dashboard.roles.inactive-dialog.toast.success":
-      "El rol se ha desactivado exitosamente.",
+      "El Rol se ha Desactivado Exitosamente.",
     "dashboard.roles.activate-dialog.title": "Activar Rol",
     "dashboard.roles.activate-dialog.description.first": "Al activar Rol ",
     "dashboard.roles.activate-dialog.description.second":
-      " se le otorgarán privilegios en el sistema. ¿Desea continuar?",
+      " se le Otorgarán Privilegios en el Sistema. ¿Desea Continuar?",
     "dashboard.roles.activate-dialog.primary-button": "Sí",
     "dashboard.roles.activate-dialog.secondary-button": "No",
     "dashboard.roles.activate-dialog.toast.success":
-      "El rol se ha activado exitosamente.",
-    "dashboard.roles.table.header.role": "Rol",
+      "El Rol se ha Activado Exitosamente.",
+    "dashboard.roles.table.header.role": "Roles",
     "dashboard.roles.table.header.is-active": "Activo",
     "dashboard.roles.table.header.actions": "Acciones",
     "dashboard.roles.table.actions.edit": "Editar",
     "dashboard.roles.table.actions.access": "Acceder",
-    "dashboard.roles.table.items-label": "Elementos por página:",
+    "dashboard.roles.table.items-label": "Items por página:",
     "dashboard.roles.table.items-count-separator": " de ",
     "dashboard.roles.role.title": "Acceso ",
     "dashboard.roles.role.table.modules.header": "Módulos",
@@ -708,7 +708,7 @@ export const dashboardDict = {
     "dashboard.roles.role.modules.transactionsByUser":
       "Transacciones por Usuario",
     "dashboard.roles.role.modules.transactionsByProvider":
-      "Transacciones por Proveedor",
+      "Transacciones por Periodo",
     "dashboard.roles.role.modules.revenue": "Ingresos",
     "dashboard.roles.role.modules.clearPayments": "Pagos",
     "dashboard.roles.role.modules.reservedFunds": "Fondos Reservados",
@@ -734,62 +734,62 @@ export const dashboardDict = {
     "dashboard.users.add-button": "Agregar Usuario",
     "dashboard.users.add-dialog.title": "Agregar Usuario",
     "dashboard.users.add-dialog.first-name.label": "Nombre",
-    "dashboard.users.add-dialog.first-name.placeholder": "Ingrese el nombre",
-    "dashboard.users.add-dialog.first-name.error": "Nombre es requerido",
+    "dashboard.users.add-dialog.first-name.placeholder": "Ingrese el Nombre",
+    "dashboard.users.add-dialog.first-name.error": "Nombre es Requerido",
     "dashboard.users.add-dialog.last-name.label": "Apellido",
-    "dashboard.users.add-dialog.last-name.placeholder": "Ingrese el apellido",
-    "dashboard.users.add-dialog.last-name.error": "Apellido es requerido",
+    "dashboard.users.add-dialog.last-name.placeholder": "Ingrese el Apellido",
+    "dashboard.users.add-dialog.last-name.error": "Apellido es Rrequerido",
     "dashboard.users.add-dialog.email.label": "Correo",
-    "dashboard.users.add-dialog.email.placeholder": "Ingrese el correo",
+    "dashboard.users.add-dialog.email.placeholder": "Ingrese el Correo",
     "dashboard.users.add-dialog.email.error":
-      "Correo es requerido y debe ser un correo válido",
+      "Correo es Requerido y Debe Ser un Correo Válido",
     "dashboard.users.add-dialog.phone.label": "Número de Teléfono",
     "dashboard.users.add-dialog.phone.code-placeholder": "+00",
     "dashboard.users.add-dialog.phone.phone-placeholder":
-      "Ingrese su número de teléfono",
-    "dashboard.users.add-dialog.phone.error": "Número de Teléfono es invalido",
+      "Ingrese su Número de Teléfono",
+    "dashboard.users.add-dialog.phone.error": "Número de Teléfono es Invalido",
     "dashboard.users.add-dialog.role.label": "Rol",
     "dashboard.users.add-dialog.role.placeholder": "Seleccionar Rol",
-    "dashboard.users.add-dialog.role.error": "Rol es requerido",
+    "dashboard.users.add-dialog.role.error": "Rol es Requerido",
     "dashboard.users.add-dialog.primary-button": "Guardar",
     "dashboard.users.add-dialog.toast.success":
-      "Se ha enviado un correo de confirmación al usuario con la contraseña asignada.",
+      "Se ha Enviado un Correo de Confirmación al Usuario con la Contraseña Asignada.",
     "dashboard.users.edit-dialog.title": "Editar Usuario",
     "dashboard.users.edit-dialog.first-name.label": "Nombre",
-    "dashboard.users.edit-dialog.first-name.placeholder": "Ingrese el nombre",
-    "dashboard.users.edit-dialog.first-name.error": "Nombre es requerido",
+    "dashboard.users.edit-dialog.first-name.placeholder": "Ingrese el Nombre",
+    "dashboard.users.edit-dialog.first-name.error": "Nombre es Requerido",
     "dashboard.users.edit-dialog.last-name.label": "Apellido",
-    "dashboard.users.edit-dialog.last-name.placeholder": "Ingrese el apellido",
-    "dashboard.users.edit-dialog.last-name.error": "Apellido es requerido",
+    "dashboard.users.edit-dialog.last-name.placeholder": "Ingrese el Aapellido",
+    "dashboard.users.edit-dialog.last-name.error": "Apellido es Requerido",
     "dashboard.users.edit-dialog.email.label": "Correo",
     "dashboard.users.edit-dialog.email.placeholder": "Ingrese el correo",
     "dashboard.users.edit-dialog.email.error":
-      "Correo es requerido y debe ser un correo válido",
+      "Correo es Requerido y debe Ser un Correo Válido",
     "dashboard.users.edit-dialog.phone.label": "Número de Teléfono",
     "dashboard.users.edit-dialog.phone.code-placeholder": "+00",
     "dashboard.users.edit-dialog.phone.phone-placeholder":
-      "Ingrese su número de teléfono",
-    "dashboard.users.edit-dialog.phone.error": "Número de Teléfono es invalido",
+      "Ingrese su Número de Teléfono",
+    "dashboard.users.edit-dialog.phone.error": "Número de Teléfono es Invalido",
     "dashboard.users.edit-dialog.role.label": "Rol",
     "dashboard.users.edit-dialog.role.placeholder": "Seleccionar Rol",
-    "dashboard.users.edit-dialog.role.error": "Rol es requerido",
+    "dashboard.users.edit-dialog.role.error": "Rol es Requerido",
     "dashboard.users.edit-dialog.primary-button": "Guardar",
     "dashboard.users.edit-dialog.toast.success":
-      "El Usuario se ha editado exitosamente.",
-    "dashboard.users.inactive-dialog.title": "Desactivar usuario",
+      "El Usuario se ha Editado Exitosamente.",
+    "dashboard.users.inactive-dialog.title": "Desactivar Usuario",
     "dashboard.users.inactive-dialog.description":
-      "Al inactivar este usuario, revocará el acceso del usuario a ciertos privilegios del sistema. ¿Desea continuar?",
+      "Al Desactivar este Usuario, Revocará el Acceso del Usuario a Ciertos Privilegios del Sistema. ¿Desea Continuar?",
     "dashboard.users.inactive-dialog.primary-button": "Sí",
     "dashboard.users.inactive-dialog.secondary-button": "No",
     "dashboard.users.inactive-dialog.toast.success":
-      "El usuario se ha desactivado exitosamente.",
+      "El Usuario se ha Desactivado Exitosamente.",
     "dashboard.users.activate-dialog.title": "Activar Usuario",
     "dashboard.users.activate-dialog.description":
-      "Al activar este usuario, le está otorgando al usuario acceso a privilegios específicos del sistema. ¿Desea continuar?",
+      "Al Activar este Usuario, le está Otorgando al Usuario Acceso a Privilegios Específicos del Sistema. ¿Desea Continuar?",
     "dashboard.users.activate-dialog.primary-button": "Sí",
     "dashboard.users.activate-dialog.secondary-button": "No",
     "dashboard.users.activate-dialog.toast.success":
-      "El usuario se ha activado exitosamente.",
+      "El Usuario se ha Activado Exitosamente.",
     "dashboard.users.table.header.first-name": "Nombre",
     "dashboard.users.table.header.last-name": "Apellido",
     "dashboard.users.table.header.email": "Correo",
@@ -798,68 +798,68 @@ export const dashboardDict = {
     "dashboard.users.table.header.is-active": "Activo",
     "dashboard.users.table.header.actions": "Acciones",
     "dashboard.users.table.actions.edit": "Editar",
-    "dashboard.users.table.items-label": "Elementos por página:",
+    "dashboard.users.table.items-label": "Items por página:",
     "dashboard.users.table.items-count-separator": " de ",
-    "dashboard.health.title": "Health Check",
+    "dashboard.health.title": "Chequeo de Salud",
     "dashboard.health.service": "Servicio",
     "dashboard.health.status": "Estado",
     "dashboard.wallet-management.title": "Billeteras Registradas",
     "dashboard.wallet-management.search.placeholder": "Buscar",
-    "dashboard.wallet-management.add-button": "Agregar nueva billetera",
-    "dashboard.wallet-management.add-dialog.title": "Crear una nueva billetera",
+    "dashboard.wallet-management.add-button": "Agregar Nueva Billetera",
+    "dashboard.wallet-management.add-dialog.title": "Crear una Nueva Billetera",
     "dashboard.wallet-management.add-dialog.name.label": "Nombre",
     "dashboard.wallet-management.add-dialog.name.placeholder":
       "Nombre de la Billetera",
     "dashboard.wallet-management.add-dialog.name.error":
-      "Nombre de la Billetera es requerido",
+      "Nombre de la Billetera es Requerido",
     "dashboard.wallet-management.add-dialog.type.label": "Tipo de Billetera",
     "dashboard.wallet-management.add-dialog.type.placeholder":
       "Tipo de Billetera",
     "dashboard.wallet-management.add-dialog.type.error":
-      "Tipo de Billetera es requerido",
+      "Tipo de Billetera es Requerido",
     "dashboard.wallet-management.add-dialog.address.label":
       "Dirección de la Billetera",
     "dashboard.wallet-management.add-dialog.address.placeholder":
       "Dirección de la Billetera",
     "dashboard.wallet-management.add-dialog.address.error":
-      "Dirección de la Billetera debe ser una URL válida",
+      "Dirección de la Billetera debe Ser una URL Válida",
     "dashboard.wallet-management.add-dialog.primary-button": "Crear",
     "dashboard.wallet-management.add-dialog.toast.success":
-      "La billetera se ha creado exitosamente",
+      "La Billetera se ha Creado Exitosamente",
     "dashboard.wallet-management.edit-dialog.title": "Editar Billetera",
     "dashboard.wallet-management.edit-dialog.name.label": "Nombre",
     "dashboard.wallet-management.edit-dialog.name.placeholder":
       "Nombre de la Billetera",
     "dashboard.wallet-management.edit-dialog.name.error":
-      "Nombre de la Billetera es requerido",
+      "Nombre de la Billetera es Requerido",
     "dashboard.wallet-management.edit-dialog.type.label": "Tipo de Billetera",
     "dashboard.wallet-management.edit-dialog.type.placeholder":
       "Tipo de Billetera",
     "dashboard.wallet-management.edit-dialog.type.error":
-      "Tipo de Billetera es requerido",
+      "Tipo de Billetera es Requerido",
     "dashboard.wallet-management.edit-dialog.address.label":
       "Dirección de la Billetera",
     "dashboard.wallet-management.edit-dialog.address.placeholder":
       "Dirección de la Billetera",
     "dashboard.wallet-management.edit-dialog.address.error":
-      "Dirección de la Billetera debe ser una URL válida",
+      "Dirección de la Billetera debe Ser una URL Válida",
     "dashboard.wallet-management.edit-dialog.primary-button": "Guardar",
     "dashboard.wallet-management.edit-dialog.toast.success":
-      "La billetera se ha editado exitosamente",
+      "La Billetera se ha Editado Exitosamente",
     "dashboard.wallet-management.inactive-dialog.title": "Desactivar Billetera",
     "dashboard.wallet-management.inactive-dialog.description":
-      "Va a desactivar la billetera ¿Desea continuar?",
+      "Va a Desactivar la Billetera ¿Desea continuar?",
     "dashboard.wallet-management.inactive-dialog.primary-button": "Sí",
     "dashboard.wallet-management.inactive-dialog.secondary-button": "No",
     "dashboard.wallet-management.inactive-dialog.toast.success":
-      "La billetera se ha desactivado exitosamente.",
+      "La Billetera se ha Desactivado Exitosamente.",
     "dashboard.wallet-management.activate-dialog.title": "Activar Billetera",
     "dashboard.wallet-management.activate-dialog.description":
-      "Va a activar la billetera. ¿Desea continuar?",
+      "Va a Activar la Billetera. ¿Desea Continuar?",
     "dashboard.wallet-management.activate-dialog.primary-button": "Sí",
     "dashboard.wallet-management.activate-dialog.secondary-button": "No",
     "dashboard.wallet-management.activate-dialog.toast.success":
-      "La billetera se ha activado exitosamente.",
+      "La Billetera se ha Activado Exitosamente.",
     "dashboard.wallet-management.table.header.name": "Nombre",
     "dashboard.wallet-management.table.header.address":
       "Dirección de la Billetera",
@@ -867,64 +867,64 @@ export const dashboardDict = {
     "dashboard.wallet-management.table.header.is-active": "Activo",
     "dashboard.wallet-management.table.header.actions": "Acciones",
     "dashboard.wallet-management.table.actions.edit": "Editar",
-    "dashboard.wallet-management.table.items-label": "Elementos por página:",
+    "dashboard.wallet-management.table.items-label": "Items por página:",
     "dashboard.wallet-management.table.items-count-separator": " de ",
     "dashboard.change-password.title": "Cambiar Contraseña",
     "dashboard.change-password.form.current-password.label":
       "Contraseña Actual",
     "dashboard.change-password.form.current-password.placeholder":
-      "Ingrese su contraseña actual",
+      "Ingrese su Contraseña Actual",
     "dashboard.change-password.form.current-password.error":
-      "La contraseña actual que ingresaste es incorrecta. Por favor verifica e intenta de nuevo.",
+      "La Contraseña Actual que Ingresaste es Incorrecta. Por favor Verifica e Intenta de Nuevo.",
     "dashboard.change-password.form.new-password.label": "Nueva Contraseña",
     "dashboard.change-password.form.new-password.placeholder":
-      "Ingrese su nueva contraseña",
+      "Ingrese su Nueva Contraseña",
     "dashboard.change-password.form.new-password.error":
-      "La nueva contraseña que ingresaste no cumple con nuestros requisitos. Por favor intenta con otra.",
+      "La Nueva Contraseña que Ingresaste no Cumple con Nuestros Requisitos. Por Favor Intenta con Otra.",
     "dashboard.change-password.form.confirm-password.label":
       "Confirmar Contraseña",
     "dashboard.change-password.form.confirm-password.placeholder":
-      "Confirma tu nueva contraseña",
+      "Confirma tu Nueva Contraseña",
     "dashboard.change-password.form.confirm-password.error":
-      "La contraseña que ingresaste no coincide",
+      "La Contraseña que Ingresaste No Coincide",
     "dashboard.change-password.information-label":
-      "Ingresa una contraseña segura que contenga de 8 a 12 caracteres, AL MENOS un número, un carácter alfa, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
+      "Ingresa una contraseña segura que contenga más de 20 caracteres, incluyendo al menos un número, un carácter en mayúscula, un carácter en minúscula y un carácter especial.",
     "dashboard.change-password.primary-button": "Guardar",
     "dashboard.settings.title": "Configuraciones",
     "dashboard.settings.terms-and-conditions": "Términos y condiciones",
     "dashboard.settings.exchange-rates": "Tasas de cambio",
-    "dashboard.settings.privacy-policy": "Política de privacidad",
-    "dashboard.settings.wallet-root": "Billetera base",
-    "dashboard.settings.terms-and-conditions.title": "Términos y condiciones",
+    "dashboard.settings.privacy-policy": "Política de Privacidad",
+    "dashboard.settings.wallet-root": "Billetera Base",
+    "dashboard.settings.terms-and-conditions.title": "Términos y Condiciones",
     "dashboard.settings.terms-and-conditions.label":
-      "Enlace a Términos y condiciones",
+      "Enlace a Términos y Condiciones",
     "dashboard.settings.terms-and-conditions.placeholder":
       "www.walletguru.com/terms-and-conditions",
-    "dashboard.settings.terms-and-conditions.error": "URL no valida",
+    "dashboard.settings.terms-and-conditions.error": "URL No Valida",
     "dashboard.settings.terms-and-conditions.save": "Guardar",
     "dashboard.change-password.toast.success":
-      "¡Tu contraseña ha sido actualizada Exitosamente!",
+      "¡Tu Contraseña ha sido Actualizada Exitosamente!",
     "dashboard.settings.term-conditions.dialog.toast.success":
-      "Los Términos y Condiciones han sido actualizados correctamente.",
+      "Los Términos y Condiciones han Sido Actualizados Correctamente.",
     "dashboard.settings.privacy-policy.dialog.toast.success":
       "La Política de Privacidad ha sido actualizada exitosamente.",
     "dashboard.settings.wallet-root.dialog.toast.success":
-      "La raíz de la billetera ha sido actualizada correctamente.",
-    "dashboard.settings.privacy-policy.title": "Política de privacidad",
+      "La raíz de la billetera ha Sido Actualizada Correctamente.",
+    "dashboard.settings.privacy-policy.title": "Política de Privacidad",
     "dashboard.settings.privacy-policy.label":
-      "Link a la política de privacidad.",
+      "Link a la Política de Privacidad.",
     "dashboard.settings.privacy-policy.placeholder":
       "www.walletguru.com/privacy-policy",
-    "dashboard.settings.privacy-policy.error": "La URL es inválida.",
+    "dashboard.settings.privacy-policy.error": "La URL es Inválida.",
     "dashboard.settings.privacy-policy.save": "Guardar",
-    "dashboard.settings.wallet-root.title": "Billetera base",
-    "dashboard.settings.wallet-root.label": "Link a la billetera base",
+    "dashboard.settings.wallet-root.title": "Billetera Base",
+    "dashboard.settings.wallet-root.label": "Link a la Billetera Base",
     "dashboard.settings.wallet-root.placeholder":
       "www.walletguru.com/wallet-root",
     "dashboard.settings.wallet-root.information.label":
       "Tener en cuenta que es necesario modificar la variable de entorno en el ambiente. Las billeteras actuales no cambiaran su URL.",
-    "dashboard.settings.wallet-root.error": "URL is invalid",
-    "dashboard.settings.wallet-root.save": "Save",
+    "dashboard.settings.wallet-root.error": "La URL es Inválida",
+    "dashboard.settings.wallet-root.save": "Guardar",
     "dashboard.reports.title": "Reportes",
     "dashboard.reports.sections.transactions-by-user":
       "Transacciones por Usuario",
@@ -949,55 +949,55 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-user.header.actions.details":
       "Detalles",
     "dashboard.reports.sections.transactions-by-user.details.header":
-      "Detalles del servicio de transacciones",
+      "Detalles del Servicio de Transacciones",
     "dashboard.reports.sections.transactions-by-user.details.date": "Fecha",
     "dashboard.reports.sections.transactions-by-user.search-button": "Buscar",
     "dashboard.reports.sections.transactions-by-user.header.ammount": "Monto",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder":
-      "Ingrese la dirección de la billetera",
+      "Ingrese la Dirección de la Billetera",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.label":
-      "Dirección de billetera",
+      "Dirección de Billetera",
     "dashboard.reports.sections-transactions-by-user.search.wallet-address.error":
-      "Ingrese una dirección de billetera válida",
+      "Ingrese una Birección de Billetera Válida",
     "dashboard.reports.sections-transactions-by-user.search.period.placeholder":
-      "Seleccione un rango de tiempo",
+      "Seleccione un Rango de Tiempo",
     "dashboard.reports.sections-transactions-by-user.search.period.error":
-      "Ingrese un periodo válido",
+      "Ingrese un Periodo Válido",
     "dashboard.reports.sections-transactions-by-user.search.start-date.label":
-      "Fecha de inicio",
+      "Fecha de Inicio",
     "dashboard.reports.sections-transactions-by-user.search.end-date.label":
-      "Fecha de fin",
+      "Fecha de Fin",
     "dashboard.reports.sections-transactions-by-user.search.type.placeholder":
-      "Seleccione un tipo",
+      "Seleccione un Tipo",
     "dashboard.reports.sections-transactions-by-user.search.type.error":
-      "Ingrese un tipo válido",
+      "Ingrese un Tipo Válido",
     "dashboard.reports.sections-transactions-by-user.search.type.label": "Tipo",
     "dashboard.reports.sections-transactions-by-user.search.state.placeholder":
-      "Seleccione un estado",
+      "Seleccione un Estado",
     "dashboard.reports.sections-transactions-by-user.search.state.pending":
       "Pendiente",
     "dashboard.reports.sections-transactions-by-user.search.state.completed":
       "Completado",
     "dashboard.reports.sections-transactions-by-user.search.state.error":
-      "Ingrese un estado válido",
+      "Ingrese un Estado Válido",
     "dashboard.reports.sections-transactions-by-user.search.state.label":
       "Estado",
     "dashboard.reports.sections-transactions-by-user.search.provider.placeholder":
-      "Seleccione un proveedor",
+      "Seleccione un Proveedor",
     "dashboard.reports.sections-transactions-by-user.search.provider.error":
-      "Ingrese un provider válido",
+      "Ingrese un Provider Válido",
     "dashboard.reports.sections-transactions-by-user.search.provider.label":
       "Proveedor",
     "dashboard.reports.sections-transactions-by-user.user.label": "Usuario",
     "dashboard.reports.sections-transactions-by-user.period.no-wallet-selected":
-      "No se ha seleccionado una dirección de billetera",
+      "No se ha Seleccionado una Dirección de Billetera",
     "dashboard.reports.sections-transactions-by-user.period.label": "Periodo",
     "dashboard.reports.sections-transactions-by-user.period.no-start-selected":
-      "No se ha seleccionado una fecha de inicio",
+      "No se ha Seleccionado una Fecha de Inicio",
     "dashboard.reports.sections-transactions-by-user.period.no-end-selected":
-      "No se ha seleccionado una fecha de fin",
+      "No se ha Seleccionado una Fecha de Fin",
     "dashboard.reports.sections-transactions-by-user.download.success":
-      "El reporte ha sido descargado exitosamente.",
+      "El Reporte ha sido Descargado Exitosamente.",
     "dashboard.reports.sections.transactions-by-provider.header.actions.details":
       "Detalles",
     "dashboard.reports.sections.transactions-by-provider.header.user":
@@ -1016,21 +1016,21 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.header.actions":
       "Acciones",
     "dashboard.reports.sections-transactions-by-provider.download.success":
-      "El reporte ha sido descargado exitosamente.",
+      "El Reporte ha sido Descargado Exitosamente.",
     "dashboard.reports.sections-transactions-by-provider.search.provider.label":
       "Proveedor",
     "dashboard.reports.sections-transactions-by-provider.search.provider.placeholder":
-      "Seleccione un proveedor",
+      "Seleccione un Proveedor",
     "dashboard.reports.sections.transactions-by-provider.search-button":
       "Buscar",
     "dashboard.reports.sections-transactions-by-provider.search.end-date.label":
       "Fecha de Fin",
     "dashboard.reports.sections-transactions-by-provider.search.end-date.placeholder":
-      "yyyy/mm/dd",
+      "yyyy-mm-dd",
     "dashboard.reports.sections-transactions-by-provider.search.start-date.label":
       "Fecha de Inicio",
     "dashboard.reports.sections-transactions-by-provider.search.start-date.placeholder":
-      "yyyy/mm/dd",
+      "yyyy-mm-dd",
     "dashboard.reports.sections.transactions-by-provider.details.header":
       "Detalles de las transacciones por periodo",
     "dashboard.reports.sections.transactions-by-provider.details.date": "Fecha",
@@ -1050,56 +1050,56 @@ export const dashboardDict = {
     "dashboard.reports.sections.reserved-funds-by-user.header.actions.details":
       "Detalles",
     "dashboard.reports.sections.reserved-funds-by-user.details.header":
-      "Detalles del servicio de transacciones",
+      "Detalles del Servicio de Transacciones",
     "dashboard.reports.sections.reserved-funds-by-user.details.date": "Fecha",
     "dashboard.reports.sections.reserved-funds-by-user.search-button": "Buscar",
     "dashboard.reports.sections.reserved-funds-by-user.header.ammount": "Monto",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.placeholder":
-      "Ingrese la dirección de la billetera",
+      "Ingrese la Dirección de la Billetera",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.label":
-      "Dirección de billetera",
+      "Dirección de Billetera",
     "dashboard.reports.sections-reserved-funds-by-user.search.wallet-address.error":
-      "Ingrese una dirección de billetera válida",
+      "Ingrese una Dirección de Billetera Válida",
     "dashboard.reports.sections-reserved-funds-by-user.search.period.placeholder":
-      "Seleccione un rango de tiempo",
+      "Seleccione un Rango de Tiempo",
     "dashboard.reports.sections-reserved-funds-by-user.search.period.error":
-      "Ingrese un periodo válido",
+      "Ingrese un Periodo Válido",
     "dashboard.reports.sections-reserved-funds-by-user.search.start-date.label":
-      "Fecha de inicio",
+      "Fecha de Inicio",
     "dashboard.reports.sections-reserved-funds-by-user.search.end-date.label":
-      "Fecha de fin",
+      "Fecha de Fin",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.placeholder":
-      "Seleccione un tipo",
+      "Seleccione un Tipo",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.error":
-      "Ingrese un tipo válido",
+      "Ingrese un Tipo Válido",
     "dashboard.reports.sections-reserved-funds-by-user.search.type.label":
       "Tipo",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.placeholder":
-      "Seleccione un estado",
+      "Seleccione un Estado",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.pending":
       "Pendiente",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.completed":
       "Completado",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.error":
-      "Ingrese un estado válido",
+      "Ingrese un Estado Válido",
     "dashboard.reports.sections-reserved-funds-by-user.search.state.label":
       "Estado",
     "dashboard.reports.sections-reserved-funds-by-user.search.provider.placeholder":
-      "Seleccione un proveedor",
+      "Seleccione un Proveedor",
     "dashboard.reports.sections-reserved-funds-by-user.search.provider.error":
-      "Ingrese un provider válido",
+      "Ingrese un Proveedor válido",
     "dashboard.reports.sections-reserved-funds-by-user.search.provider.label":
       "Proveedor",
     "dashboard.reports.sections-reserved-funds-by-user.user.label": "Usuario",
     "dashboard.reports.sections-reserved-funds-by-user.period.no-wallet-selected":
-      "No se ha seleccionado una dirección de billetera",
+      "No se ha Seleccionado una Dirección de Billetera",
     "dashboard.reports.sections-reserved-funds-by-user.period.label": "Periodo",
     "dashboard.reports.sections-reserved-funds-by-user.period.no-start-selected":
-      "No se ha seleccionado una fecha de inicio",
+      "No se ha Seleccionado una Fecha de Inicio",
     "dashboard.reports.sections-reserved-funds-by-user.period.no-end-selected":
-      "No se ha seleccionado una fecha de fin",
+      "No se ha Seleccionado una Fecha de Fin",
     "dashboard.reports.sections-reserved-funds-by-user.download.success":
-      "El reporte ha sido descargado exitosamente.",
+      "El reporte ha sido Descargado Exitosamente.",
     "dashboard.reports.sections.clear-payments.header.date": "Fecha",
     "dashboard.reports.sections.clear-payments.header.description":
       "Descripción",
@@ -1107,7 +1107,7 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.header.user": "Billetera",
     "dashboard.reports.sections.clear-payments.header.month": "Mes",
     "dashboard.reports.sections.clear-payments.header.reference":
-      "Número de referencia",
+      "Número de Referencia",
     "dashboard.reports.sections.clear-payments.header.observation":
       "Observación",
     "dashboard.reports.sections.clear-payments.header.provider": "Proveedor",
@@ -1124,50 +1124,50 @@ export const dashboardDict = {
     "dashboard.reports.sections.clear-payments.search-button": "Buscar",
     "dashboard.reports.sections.clear-payments.header.ammount": "Monto",
     "dashboard.reports.sections-clear-payments.search.wallet-address.placeholder":
-      "Ingrese la dirección de la billetera",
+      "Ingrese la Dirección de la Billetera",
     "dashboard.reports.sections-clear-payments.search.wallet-address.label":
-      "Dirección de billetera",
+      "Dirección de Billetera",
     "dashboard.reports.sections-clear-payments.search.wallet-address.error":
-      "Ingrese una dirección de billetera válida",
+      "Ingrese una Dirección de Billetera Válida",
     "dashboard.reports.sections-clear-payments.search.period.placeholder":
-      "Seleccione un rango de tiempo",
+      "Seleccione un Rango de Tiempo",
     "dashboard.reports.sections-clear-payments.search.period.error":
-      "Ingrese un periodo válido",
+      "Ingrese un Periodo Válido",
     "dashboard.reports.sections-clear-payments.search.start-date.label":
-      "Fecha de inicio",
+      "Fecha de Inicio",
     "dashboard.reports.sections-clear-payments.search.end-date.label":
-      "Fecha de fin",
+      "Fecha de Fin",
     "dashboard.reports.sections-clear-payments.search.month.placeholder":
-      "Seleccione un mes",
+      "Seleccione un Mes",
     "dashboard.reports.sections-clear-payments.search.month.error":
-      "Ingrese un mes válido",
+      "Ingrese un Mes Válido",
     "dashboard.reports.sections-clear-payments.search.month.label": "Mes",
     "dashboard.reports.sections-clear-payments.search.year.label": "Año",
     "dashboard.reports.sections-clear-payments.search.state.placeholder":
-      "Seleccione un estado",
+      "Seleccione un Estado",
     "dashboard.reports.sections-clear-payments.search.state.all": "Todos",
     "dashboard.reports.sections-clear-payments.search.state.pending":
       "Pendiente",
     "dashboard.reports.sections-clear-payments.search.state.completed":
       "Completado",
     "dashboard.reports.sections-clear-payments.search.state.error":
-      "Ingrese un estado válido",
+      "Ingrese un Estado Válido",
     "dashboard.reports.sections-clear-payments.search.state.label": "Estado",
     "dashboard.reports.sections-clear-payments.search.provider.placeholder":
-      "Seleccione un proveedor",
+      "Seleccione un Proveedor",
     "dashboard.reports.sections-clear-payments.search.provider.error":
-      "Ingrese un provider válido",
+      "Ingrese un Provider Válido",
     "dashboard.reports.sections-clear-payments.search.provider.label":
       "Proveedor",
     "dashboard.reports.sections-clear-payments.user.label": "Usuario",
     "dashboard.reports.sections-clear-payments.period.no-wallet-selected":
-      "No se ha seleccionado una dirección de billetera",
+      "No se ha Seleccionado una Dirección de Billetera",
     "dashboard.reports.sections-clear-payments.period.label": "Periodo",
     "dashboard.reports.sections-clear-payments.period.no-start-selected":
-      "No se ha seleccionado una fecha de inicio",
+      "No se ha Seleccionado una Fecha de Inicio",
     "dashboard.reports.sections-clear-payments.period.no-end-selected":
-      "No se ha seleccionado una fecha de fin",
+      "No se ha Seleccionado una Fecha de Fin",
     "dashboard.reports.sections-clear-payments.download.success":
-      "El reporte ha sido descargado exitosamente.",
+      "El Reporte ha sido Descargado Exitosamente.",
   },
 } satisfies I18nDictionary;

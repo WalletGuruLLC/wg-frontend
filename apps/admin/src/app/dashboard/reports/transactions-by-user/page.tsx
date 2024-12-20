@@ -618,13 +618,6 @@ const columnsDetails = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
     ),
   }),
-  columnHelperDetails.accessor("amount", {
-    id: "amount",
-    cell: (info) => info.getValue(),
-    header: () => (
-      <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.ammount" />
-    ),
-  }),
 ];
 
 function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
