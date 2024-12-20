@@ -4,7 +4,7 @@ const validPassword = (err?: string) =>
   z
     .string()
     .min(8, err)
-    .max(12, err)
+    .max(20, err)
     .refine((value) => value.match(/[a-z]/), err)
     .refine((value) => value.match(/[A-Z]/), err)
     .refine((value) => value.match(/\d/), err)
