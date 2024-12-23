@@ -52,6 +52,7 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { capitalizeFirstLetter } from "~/lib/utils/capitalize";
 import { Calendar } from "../../_components/dashboard-calendar";
 import Dialog from "../../_components/dashboard-dialog";
 import { SimpleTitle } from "../../_components/dashboard-title";
@@ -116,7 +117,7 @@ const columns = [
   }),
   columnHelper.accessor("status", {
     id: "status",
-    cell: (info) => info.getValue(),
+    cell: (info) => capitalizeFirstLetter(info.getValue()),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
     ),
@@ -198,7 +199,7 @@ export default function TransactionsByUserPage() {
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "99",
+      items: "999999",
       type: "PLATFORM",
     },
     {
@@ -606,7 +607,7 @@ const columnsDetails = [
   }),
   columnHelperDetails.accessor("status", {
     id: "status",
-    cell: (info) => info.getValue(),
+    cell: (info) => capitalizeFirstLetter(info.getValue()),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.state" />
     ),

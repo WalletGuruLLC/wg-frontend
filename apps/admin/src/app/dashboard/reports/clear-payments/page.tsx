@@ -231,7 +231,7 @@ export default function ClearPaymentPage() {
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "99",
+      items: "99999",
       type: "PLATFORM",
     },
     {

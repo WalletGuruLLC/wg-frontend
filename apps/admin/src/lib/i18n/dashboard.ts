@@ -38,7 +38,7 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.toast.success":
       "Phone has been Changed Succesfully",
     "dashboard.layout.profile-dialog.my-info.picture.label":
-      "Drop or Upload your picture",
+      "Drop or Upload your Picture",
     "dashboard.layout.profile-dialog.my-info.picture.button": "Choose a File",
     "dashboard.roles.title": "Roles",
     "dashboard.roles.search.placeholder": "Search",
@@ -635,7 +635,7 @@ export const dashboardDict = {
     "dashboard.layout.profile-dialog.my-info.toast.success":
       "El Número de Teléfono ha sido Cambiado Correctamente",
     "dashboard.layout.profile-dialog.my-info.picture.label":
-      "Arrastre o Suba su foto",
+      "Arrastre o Suba su Foto",
     "dashboard.layout.profile-dialog.my-info.picture.button":
       "Elija un Archivo",
     "dashboard.roles.title": "Roles",

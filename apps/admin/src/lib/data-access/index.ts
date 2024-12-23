@@ -48,6 +48,7 @@ import type {
   updateUserPhoneNumberValidator,
 } from "../validators";
 import { env } from "~/env";
+import { formatCurrency } from "../utils/formatCurrency";
 import customFetch from "./custom-fetch";
 
 interface UseGetAuthedUserInfoQueryOutput {
@@ -2076,7 +2077,7 @@ export function useGetTransactionsByUserQuery(
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
-        items: "99",
+        items: "999999",
         page: "1",
       } as unknown as Record<string, string>);
 
@@ -2098,11 +2099,11 @@ export function useGetTransactionsByUserQuery(
 
         const isIncoming = t.type === "IncomingPayment";
         const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
-
-        const amountString = `${isIncoming ? "" : "-"}${convertAmountWithScale(
+        const amountString = `${isIncoming ? "" : "-"}${formatCurrency(
           Number(amount.value),
+          amount.assetCode,
           amount.assetScale,
-        )} ${amount.assetCode}`;
+        )}`;
 
         if (!activityId) {
           acc.set(idx.toString(), {
@@ -2167,14 +2168,19 @@ export function useGetTransactionsByUserQuery(
             activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
 
             const accumulatedAmountNumber = Number(
-              activity.amount.split(" ")[0],
+              activity.amount.split(" USD")[0],
             );
-            const amountNumber = Number(amountString.split(" ")[0]);
+            const amountNumber = Number(amountString.split(" USD")[0]);
+            /*
+            activity.amount = formatCurrency(
+              accumulatedAmountNumber + amountNumber,
+              amount.assetCode,
+              amount.assetScale,
+            );*/
 
             activity.amount = `${
               accumulatedAmountNumber + amountNumber
             } ${amount.assetCode}`;
-
             acc.set(activityId, activity);
           }
         }
@@ -2315,7 +2321,7 @@ export function useGetTransactionsByProviderQuery(
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
-        items: "99",
+        items: "999999",
         page: "1",
       } as unknown as Record<string, string>);
 
@@ -2342,16 +2348,19 @@ export function useGetTransactionsByProviderQuery(
         const percent = Number(input.percent ?? 0) / 100;
         const fee = Number(amount.value) * percent + base + commission;
         const net = Number(amount.value) - fee;
-        const amountString = `${""}${convertAmountWithScale(
+        const amountString = `${""}${formatCurrency(
           Number(amount.value),
+          amount.assetCode,
           amount.assetScale,
         )} ${amount.assetCode}`;
-        const feeString = `${""}${convertAmountWithScale(
+        const feeString = `${""}${formatCurrency(
           Number(fee),
+          amount.assetCode,
           amount.assetScale,
         )} ${amount.assetCode}`;
-        const netString = `${""}${convertAmountWithScale(
+        const netString = `${""}${formatCurrency(
           Number(net),
+          amount.assetCode,
           amount.assetScale,
         )} ${amount.assetCode}`;
         if (!activityId) {
@@ -2484,10 +2493,6 @@ export function useDownloadTransactionsByProviderMutation(
       );
     },
   });
-}
-
-function convertAmountWithScale(amount: number, scale: number) {
-  return amount / Math.pow(10, scale);
 }
 
 export type UseGetSidebarItemsQueryOutput = {
@@ -2681,13 +2686,6 @@ interface UseGetRevenueQueryOutput {
   total: number;
   totalPages: number;
 }
-const formatCurrency = (value: number, code: string, scale: number) => {
-  const formattedValue = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: scale,
-    maximumFractionDigits: scale,
-  }).format(value / Math.pow(10, scale));
-  return `${formattedValue} ${code}`;
-};
 
 export function useGetRevenueQuery(
   input: z.infer<typeof paginationAndSearchValidator> &
@@ -2714,7 +2712,7 @@ export function useGetRevenueQuery(
           ) as unknown as Date;
         const params = new URLSearchParams({
           ...input,
-          items: "99",
+          items: "999999",
           page: "1",
         } as unknown as Record<string, string>);
 
@@ -2825,7 +2823,7 @@ export function useGetFeeQuery(
           ) as unknown as Date;
         const params = new URLSearchParams({
           ...input,
-          items: "99",
+          items: "999999",
           page: "1",
         } as unknown as Record<string, string>);
 
