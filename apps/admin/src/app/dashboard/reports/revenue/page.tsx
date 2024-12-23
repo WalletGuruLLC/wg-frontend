@@ -119,7 +119,7 @@ export default function RevenuePage() {
 
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "99",
+      items: "999999",
       type: "PLATFORM",
     },
     {

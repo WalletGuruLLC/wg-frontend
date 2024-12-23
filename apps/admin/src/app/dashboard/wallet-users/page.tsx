@@ -43,6 +43,7 @@ import {
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { formatCurrency } from "~/lib/utils/formatCurrency";
 import {
   sendOtpAuthenticationValidator,
   walletusersValidator,
@@ -65,13 +66,6 @@ import {
 } from "../_components/dashboard-tooltip";
 
 const COUNTDOWN_TIME = 60 * 5; // 5 minutes
-const formatCurrency = (value: number, code: string, scale: number) => {
-  const formattedValue = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: scale,
-    maximumFractionDigits: scale,
-  }).format(value / Math.pow(10, scale));
-  return `${formattedValue} ${code}`;
-};
 
 interface User {
   id: string;

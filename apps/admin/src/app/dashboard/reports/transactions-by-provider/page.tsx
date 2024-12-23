@@ -215,7 +215,7 @@ export default function TransactionsByProviderPage() {
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: providersData } = useGetProvidersQuery(
     {
-      items: "99",
+      items: "999999",
       type: "PLATFORM",
     },
     {
