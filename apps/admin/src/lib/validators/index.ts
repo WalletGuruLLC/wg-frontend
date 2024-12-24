@@ -439,4 +439,5 @@ export const reservedFundsValidator = z.object({
     .optional(),
   serviceProviderId: z.string().optional(),
   status: z.string().optional(),
+  walletAddress: z.string().min(1).optional(),
 });

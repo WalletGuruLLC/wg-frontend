@@ -42,9 +42,11 @@ import {
   useGetAuthedUserInfoQuery,
   useGetProvidersQuery,
   useGetReservedFundsQuery,
+  useGetSettingQuery,
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { reservedFundsValidator } from "~/lib/validators";
 import { Calendar } from "../../_components/dashboard-calendar";
 import { FormItem, FormLabel } from "../../_components/dashboard-form";
@@ -54,14 +56,6 @@ import Table, {
   PaginationFooter,
 } from "../../_components/dashboard-table";
 import { SimpleTitle } from "../../_components/dashboard-title";
-
-const formatCurrency = (value: number, code: string, scale: number) => {
-  const formattedValue = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: scale,
-    maximumFractionDigits: scale,
-  }).format(value / Math.pow(10, scale));
-  return `${formattedValue} ${code}`;
-};
 
 const columnHelper = createColumnHelper<ReservedFund>();
 
@@ -119,6 +113,9 @@ const columns = [
 ];
 
 export default function ReservedFundsPage() {
+  const { data: rootWallet } = useGetSettingQuery({
+    key: "url-wallet",
+  });
   const loading = useAccessLevelGuard({
     general: {
       module: "reservedFunds",
@@ -154,7 +151,12 @@ export default function ReservedFundsPage() {
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
     status: "",
+    walletAddress: searchParams.get("walletAddress") ?? "",
   };
+  const form = useForm({
+    schema: reservedFundsValidator,
+    defaultValues: {},
+  });
   const [filters, setFilters] = useState(defaultValues);
   const [tempFilters, setTempFilters] = useState(defaultValues);
   const [filtered, setFiltered] = useState(false);
@@ -211,10 +213,12 @@ export default function ReservedFundsPage() {
       scroll: false,
     });
   }
+  /*
   const form = useForm({
     schema: reservedFundsValidator,
     defaultValues: {},
   });
+  */
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
@@ -229,35 +233,33 @@ export default function ReservedFundsPage() {
         title={`${values["reserved-funds-title"]}`}
         showLoadingIndicator={isLoading}
       />
-      <div className="flex flex-row items-center space-x-3">
-        <div className="relative w-1/4">
-          <Input
-            placeholder={values["wallet-users.search.placeholder"]}
-            className="rounded-none border-transparent border-b-black"
-            name="search"
-            onChange={(e) =>
-              handlePaginationAndSearchChange({
-                ...paginationAndSearch,
-                search: e.target.value,
-                page: "1",
-              })
-            }
-            defaultValue={paginationAndSearch.search}
-          />
-
-          <Search
-            className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform"
-            strokeWidth={0.75}
-          />
-        </div>
-        <div className="relative -top-4 w-2/3">
+      <div className="flex w-full flex-row">
+        <div className="relative -top-4 w-full">
           <Form {...form}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
               }}
             >
-              <div className="flex w-full flex-row flex-wrap space-x-2">
+              <div className="flex space-x-4">
+                <div className="relative mt-7 w-1/4">
+                  <Input
+                    placeholder={values["reserved-funds.search.placeholder"]}
+                    className="rounded-none border-transparent border-b-black"
+                    name="walletAddress"
+                    onChange={(e) =>
+                      setTempFilters((prev) => ({
+                        ...prev,
+                        walletAddress: rootWallet?.value + "/" + e.target.value,
+                      }))
+                    }
+                  />
+
+                  <Search
+                    className="absolute right-4 top-1/2 size-6 -translate-y-1/2 transform pt-0"
+                    strokeWidth={0.75}
+                  />
+                </div>
                 <div className="flex flex-col space-y-1 self-end">
                   <Label className="font-normal">
                     {
@@ -500,7 +502,6 @@ export default function ReservedFundsPage() {
                     <Button
                       className="mt-7 h-max self-end"
                       onClick={() => {
-                        console.log("temp", tempFilters);
                         form
                           .handleSubmit(() => {
                             setFilters(tempFilters);
@@ -513,7 +514,6 @@ export default function ReservedFundsPage() {
                               values["wallet-users.toast.error.filtering"],
                             );
                           });
-                        console.log("filters", filters);
                       }}
                     >
                       <p className="flex-1 text-sm font-light">
