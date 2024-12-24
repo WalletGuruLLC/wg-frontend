@@ -151,12 +151,8 @@ export default function ReservedFundsPage() {
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
     status: "",
-    walletAddress: searchParams.get("walletAddress") ?? "",
+    walletAddress: "",
   };
-  const form = useForm({
-    schema: reservedFundsValidator,
-    defaultValues: {},
-  });
   const [filters, setFilters] = useState(defaultValues);
   const [tempFilters, setTempFilters] = useState(defaultValues);
   const [filtered, setFiltered] = useState(false);
@@ -213,12 +209,12 @@ export default function ReservedFundsPage() {
       scroll: false,
     });
   }
-  /*
+
   const form = useForm({
     schema: reservedFundsValidator,
     defaultValues: {},
   });
-  */
+
   const firstRowIdx =
     Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
     Number(paginationAndSearch.items) +
@@ -247,12 +243,12 @@ export default function ReservedFundsPage() {
                     placeholder={values["reserved-funds.search.placeholder"]}
                     className="rounded-none border-transparent border-b-black"
                     name="walletAddress"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setTempFilters((prev) => ({
                         ...prev,
                         walletAddress: rootWallet?.value + "/" + e.target.value,
-                      }))
-                    }
+                      }));
+                    }}
                   />
 
                   <Search
@@ -366,7 +362,7 @@ export default function ReservedFundsPage() {
                       <FormField
                         control={form.control}
                         name="serviceProviderId"
-                        render={() => (
+                        render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormLabel className="text-gray-400">
                               {
@@ -377,12 +373,13 @@ export default function ReservedFundsPage() {
                             </FormLabel>
 
                             <Select
-                              onValueChange={(value) =>
+                              onValueChange={(value) => {
+                                field.onChange(value);
                                 setTempFilters((prev) => ({
                                   ...prev,
                                   serviceProviderId: value,
-                                }))
-                              }
+                                }));
+                              }}
                               defaultValue={tempFilters.serviceProviderId}
                             >
                               <SelectTrigger
@@ -445,6 +442,7 @@ export default function ReservedFundsPage() {
                         <Select
                           value={tempFilters.status}
                           onValueChange={(value) => {
+                            field.onChange(value);
                             setTempFilters((prev) => ({
                               ...prev,
                               status: value,
