@@ -540,7 +540,8 @@ export default function TransactionsByUserPage() {
             disabled={downloading}
             onClick={() => {
               downloadTransactions({
-                ...paginationAndSearch,
+                items: "999999",
+                page: "1",
                 ...filters,
               });
             }}
