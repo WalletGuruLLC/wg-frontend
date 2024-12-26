@@ -181,7 +181,7 @@ export default function TransactionsByProviderPage() {
     endDate: searchParams.get("endDate")
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
-    providerIds: searchParams.get("providerIds") ?? "",
+    providerIds: searchParams.get("providerIds") ?? "no-select",
     state: "COMPLETED",
     isRevenue: "false",
     report: "period",
@@ -249,6 +249,9 @@ export default function TransactionsByProviderPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
+  const handleReset = () => {
+    setFilters(initialFilters);
+  };
   useEffect(() => {
     if (
       userData?.type === "PROVIDER" &&
@@ -427,6 +430,9 @@ export default function TransactionsByProviderPage() {
                         No providers available
                       </SelectItem>
                     )}
+                    <SelectItem key={1} value={"no-select"}>
+                      Select...
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -445,6 +451,11 @@ export default function TransactionsByProviderPage() {
                   "dashboard.reports.sections.transactions-by-provider.search-button"
                 ]
               }
+            </p>
+          </Button>
+          <Button className="h-max self-end" onClick={handleReset}>
+            <p className="flex-1 text-lg font-light">
+              {values["wallet-users.list.button.reset"]}
             </p>
           </Button>
         </div>

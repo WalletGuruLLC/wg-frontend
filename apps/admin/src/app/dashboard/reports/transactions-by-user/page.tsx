@@ -48,6 +48,7 @@ import {
   useGetDashboardUsersTitleQuery,
   useGetProvidersQuery,
   useGetTransactionsByUserQuery,
+  useGetUserByWalletQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
 import { useAccessLevelGuard } from "~/lib/hooks";
@@ -193,7 +194,7 @@ export default function TransactionsByUserPage() {
       enabled: false,
     },
   );
-
+  const { data: walletUser } = useGetUserByWalletQuery(filters.walletAddress);
   const { data: accessLevelsData, isLoading: isLoadingAccessLevels } =
     useGetAuthedUserAccessLevelsQuery(undefined);
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
@@ -233,7 +234,9 @@ export default function TransactionsByUserPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-
+  const handleReset = () => {
+    setFilters(initialFilters);
+  };
   useEffect(() => {
     if (
       userData?.type === "PROVIDER" &&
@@ -280,7 +283,7 @@ export default function TransactionsByUserPage() {
                   "dashboard.reports.sections-transactions-by-user.search.wallet-address.placeholder"
                 ]
               }
-              defaultValue={filters.walletAddress}
+              value={filters.walletAddress}
               required={true}
               className="rounded-lg border border-black"
               onChange={(e) =>
@@ -495,6 +498,11 @@ export default function TransactionsByUserPage() {
               }
             </p>
           </Button>
+          <Button className="h-max self-end" onClick={handleReset}>
+            <p className="flex-1 text-lg font-light">
+              {values["wallet-users.list.button.reset"]}
+            </p>
+          </Button>
         </div>
         <div className="flex flex-row justify-between">
           <div>
@@ -504,7 +512,7 @@ export default function TransactionsByUserPage() {
                   "dashboard.reports.sections-transactions-by-user.user.label"
                 ]
               }
-              : {initialFilters.walletAddress}
+              : {walletUser?.nameUser}
             </p>
             <p>
               {
@@ -532,7 +540,8 @@ export default function TransactionsByUserPage() {
             disabled={downloading}
             onClick={() => {
               downloadTransactions({
-                ...paginationAndSearch,
+                items: "999999",
+                page: "1",
                 ...filters,
               });
             }}
