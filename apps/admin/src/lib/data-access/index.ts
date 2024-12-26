@@ -3098,3 +3098,32 @@ export function useGetReservedFundsQuery(
     },
   });
 }
+
+export interface UseGetUserByWalletQueryOutput {
+  id: string;
+  name: string;
+  walletType: string;
+  walletAddress: string;
+  active: boolean;
+  providerId: string;
+  nameProvider?: string;
+  nameUser?: string;
+}
+
+export function useGetUserByWalletQuery(
+  walletAddress: string,
+  options: UseQueryOptions<UseGetUserByWalletQueryOutput> = {},
+) {
+  return useQuery({
+    ...options,
+    queryKey: ["wallet-info", walletAddress],
+    queryFn: () => {
+      if (!walletAddress || walletAddress.trim() === "") {
+        throw new Error("Wallet address is required");
+      }
+      return customFetch<UseGetUserByWalletQueryOutput>(
+        `${env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL}/api/v1/wallets/info?address=${encodeURIComponent(walletAddress)}`,
+      );
+    },
+  });
+}
