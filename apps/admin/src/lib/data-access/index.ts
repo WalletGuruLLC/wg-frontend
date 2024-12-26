@@ -1756,8 +1756,7 @@ export function useAddOrEditProviderFeeMutation(
     mutationFn: (input) => {
       return customFetch(
         env.NEXT_PUBLIC_AUTH_MICROSERVICE_URL +
-          "/api/v1/providers/create/fee-configurations/" +
-          input.feeId,
+          "/api/v1/providers/create/fee-configurations",
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -1765,6 +1764,7 @@ export function useAddOrEditProviderFeeMutation(
             base: Number(input.base),
             percent: Number(input.percent),
             serviceProviderId: input.serviceProviderId,
+            feeConfigurationId: input.feeConfigurationId,
           }),
         },
       );

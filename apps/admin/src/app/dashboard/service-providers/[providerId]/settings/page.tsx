@@ -140,7 +140,7 @@ function SetFeeDialog(props: {
       percent: props.fee?.percent ?? "",
       comission: props.fee?.comission ?? "",
       base: props.fee?.base ?? "",
-      feeId: props.fee?.id ?? "",
+      feeConfigurationId: props.fee?.id ?? "",
     },
   });
 
@@ -166,7 +166,7 @@ function SetFeeDialog(props: {
         base: props.fee.base,
         comission: props.fee.comission,
         percent: props.fee.percent,
-        feeId: props.fee.id,
+        feeConfigurationId: props.fee.id,
         serviceProviderId: providerId,
       });
     }

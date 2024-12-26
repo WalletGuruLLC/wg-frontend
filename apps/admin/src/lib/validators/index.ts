@@ -199,7 +199,7 @@ export const addOrEditProviderFeeValidator = z.object({
     .refine((v) => !isNaN(Number(v)), {
       message: "service-providers.settings.fee.dialog.base.error",
     }),
-  feeId: z.string().optional(),
+  feeConfigurationId: z.string().optional(),
   serviceProviderId: z.string().min(1),
 });
 
