@@ -181,7 +181,7 @@ export default function TransactionsByProviderPage() {
     endDate: searchParams.get("endDate")
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
-    providerIds: searchParams.get("providerIds") ?? "no-select",
+    providerIds: "no-select",
     state: "COMPLETED",
     isRevenue: "false",
     report: "period",
@@ -388,12 +388,13 @@ export default function TransactionsByProviderPage() {
                       "dashboard.reports.sections-transactions-by-provider.search.provider.label"
                     ]
                   }
+                  *
                 </Label>
                 <Select
                   onValueChange={(value) =>
                     setFilters((prev) => ({ ...prev, providerIds: value }))
                   }
-                  defaultValue={filters.providerIds}
+                  value={filters.providerIds}
                 >
                   <SelectTrigger
                     className={cn(
