@@ -2179,9 +2179,9 @@ export function useGetTransactionsByUserQuery(
               amount.assetScale,
             );*/
 
-            activity.amount = `${
+            activity.amount = `${(
               accumulatedAmountNumber + amountNumber
-            } ${amount.assetCode}`;
+            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
             acc.set(activityId, activity);
           }
         }
@@ -2349,8 +2349,11 @@ export function useGetTransactionsByProviderQuery(
         const percent = Number(input.percent ?? 0) / 100;
         const fee = Number(amount.value) * percent + base + commission;
         const net = Number(amount.value) - fee;
+        const amountValue = Number(amount.value);
+        const amountValueRounded = amountValue.toFixed(6);
+        console.log(amountValueRounded);
         const amountString = `${""}${formatCurrency(
-          Number(amount.value),
+          Number(amountValueRounded),
           amount.assetCode,
           amount.assetScale,
         )} ${amount.assetCode}`;
@@ -2422,19 +2425,19 @@ export function useGetTransactionsByProviderQuery(
             );
             const amountNumber = Number(amountString.split(" ")[0]);
 
-            activity.grossSale = `${
+            activity.grossSale = `${(
               accumulatedAmountNumber + amountNumber
-            } ${amount.assetCode}`;
+            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
 
             const accumulatedNetNumber = Number(activity.netSale.split(" ")[0]);
-            activity.netSale = `${
+            activity.netSale = `${(
               accumulatedNetNumber + Number(netString.split(" ")[0])
-            } ${amount.assetCode}`;
+            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
 
             const accumulatedFeeNumber = Number(activity.fee.split(" ")[0]);
-            activity.fee = `${
+            activity.fee = `${(
               accumulatedFeeNumber + Number(feeString.split(" ")[0])
-            } ${amount.assetCode}`;
+            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
 
             acc.set(activityId, activity);
           }
@@ -3019,6 +3022,7 @@ export function useGetListDisputesQuery(
         ) as unknown as Date;
       if (input.endDate)
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
+      if (input.walletAddress === "undefined/") input.walletAddress = "";
       const params = new URLSearchParams({
         ...input,
         items: "10",

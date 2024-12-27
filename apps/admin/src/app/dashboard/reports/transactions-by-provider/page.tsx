@@ -131,14 +131,14 @@ const columns = [
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-provider.header.fee" />
     ),
   }),
-  columnHelper.accessor("startDate", {
+  columnHelper.accessor("endDate", {
     id: "startDate",
     cell: (info) => info.getValue(),
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-provider.header.start" />
     ),
   }),
-  columnHelper.accessor("endDate", {
+  columnHelper.accessor("startDate", {
     id: "endDate",
     cell: (info) => info.getValue(),
     header: () => (
