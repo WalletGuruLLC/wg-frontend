@@ -468,7 +468,8 @@ export default function TransactionsByProviderPage() {
             disabled={downloading}
             onClick={() => {
               downloadTransactions({
-                ...paginationAndSearch,
+                items: "999999",
+                page: "1",
                 ...filters,
               });
             }}

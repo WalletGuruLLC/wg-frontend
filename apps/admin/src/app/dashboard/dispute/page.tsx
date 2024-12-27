@@ -39,6 +39,7 @@ import {
 } from "~/lib/data-access";
 import { useAccessLevelGuard } from "~/lib/hooks";
 import { useI18n } from "~/lib/i18n";
+import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { disputeValidator } from "~/lib/validators";
 import { Calendar } from "../_components/dashboard-calendar";
 import { FormItem, FormLabel } from "../_components/dashboard-form";
@@ -48,14 +49,6 @@ import Table, {
   PaginationFooter,
 } from "../_components/dashboard-table";
 import { SimpleTitle } from "../_components/dashboard-title";
-
-const formatCurrency = (value: number, code: string, scale: number) => {
-  const formattedValue = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: scale,
-    maximumFractionDigits: scale,
-  }).format(value / Math.pow(10, scale));
-  return `${formattedValue} ${code}`;
-};
 
 const columnHelper = createColumnHelper<Dispute>();
 
