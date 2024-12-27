@@ -42,6 +42,7 @@ import Table, {
 import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
+  useDownloadDetailsMutation,
   useDownloadTransactionsByUserMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
@@ -636,20 +637,26 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-  useDownloadTransactionsByUserMutation({
-    onSuccess: () => {
-      toast.success(
-        values[
-          "dashboard.reports.sections-transactions-by-user.download.success"
-        ],
-      );
-    },
-    onError: (error) => {
-      toast.error(errors[error.message], {
-        description: "Error code: " + error.message,
-      });
-    },
-  });
+  const { mutate: downloadDetails, isPending: downloaddet } =
+    useDownloadDetailsMutation({
+      onSuccess: (data) => {
+        const csvData = data as string;
+        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "details.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    });
 
   const table = useReactTable({
     data: props.activity.transactions,
@@ -685,8 +692,23 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
                 : values["dashboard.refund.button.details"]}
             </Button>
           </Link>
-          <Button className="px-2" variant="secondary">
-            <Download strokeWidth={0.75} className="size-6" />
+          <Button
+            className="px-2"
+            variant="secondary"
+            disabled={downloaddet}
+            onClick={() => {
+              downloadDetails({
+                items: "999999",
+                page: "1",
+                activityId: props.activity.activityId,
+              });
+            }}
+          >
+            {downloaddet ? (
+              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
+            ) : (
+              <Download strokeWidth={0.75} className="size-6" />
+            )}
           </Button>
         </div>
         <div className="h-[300px] flex-1 overflow-auto">

@@ -44,6 +44,7 @@ import type {
   toggleWalletStatusValidator,
   transactionsByProviderValidator,
   transactionsByUserValidator,
+  transactionsDetailsValidator,
   twoFactorAuthenticationValidator,
   updateUserPhoneNumberValidator,
 } from "../validators";
@@ -3123,6 +3124,33 @@ export function useGetUserByWalletQuery(
       }
       return customFetch<UseGetUserByWalletQueryOutput>(
         `${env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL}/api/v1/wallets/info?address=${encodeURIComponent(walletAddress)}`,
+      );
+    },
+  });
+}
+export function useDownloadDetailsMutation(
+  options: UseMutationOptions<
+    z.infer<typeof paginationAndSearchValidator> &
+      z.infer<typeof transactionsDetailsValidator>,
+    unknown
+  > = {},
+) {
+  return useMutation({
+    ...options,
+    mutationKey: ["download-transactions-detail"],
+    mutationFn: (input) => {
+      Object.keys(input).forEach((key) =>
+        input[key as keyof typeof input] === undefined ||
+        input[key as keyof typeof input] === ""
+          ? delete input[key as keyof typeof input]
+          : {},
+      );
+
+      return customFetch(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/download-transactions-activity` +
+          "?activityId=" +
+          input.activityId,
       );
     },
   });
