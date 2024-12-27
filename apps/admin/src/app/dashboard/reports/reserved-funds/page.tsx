@@ -31,7 +31,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@wg-frontend/ui/select";
-import { toast } from "@wg-frontend/ui/toast";
 
 import type { ReservedFund } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
@@ -151,15 +150,21 @@ export default function ReservedFundsPage() {
       ? new Date(Number(searchParams.get("endDate")))
       : undefined,
     status: "",
-    walletAddress: "",
+    walletAddress: rootWallet?.value + "/",
   };
   const [filters, setFilters] = useState(defaultValues);
   const [tempFilters, setTempFilters] = useState(defaultValues);
-  const [filtered, setFiltered] = useState(false);
 
   const { data, isLoading } = useGetReservedFundsQuery({
     ...paginationAndSearch,
-    ...filters,
+    startDate: filters.startDate,
+    endDate: filters.endDate,
+    serviceProviderId: filters.serviceProviderId,
+    walletAddress:
+      filters.walletAddress === rootWallet?.value + "/"
+        ? ""
+        : filters.walletAddress,
+    status: filters.status,
   });
   const incomingData = (data?.incomingPayments ?? []).map((incoming) => {
     return {
@@ -190,6 +195,10 @@ export default function ReservedFundsPage() {
     manualPagination: true,
   });
 
+  const handleReset = () => {
+    setFilters(defaultValues);
+    setTempFilters(defaultValues);
+  };
   function handlePaginationAndSearchChange(
     newPaginationAndSearch: Partial<
       z.infer<typeof paginationAndSearchValidator>
@@ -238,10 +247,10 @@ export default function ReservedFundsPage() {
               }}
             >
               <div className="flex space-x-4">
-                <div className="relative mt-7 w-1/4">
+                <div className="relative mt-7">
                   <Input
                     placeholder={values["reserved-funds.search.placeholder"]}
-                    className="rounded-none border-transparent border-b-black"
+                    className="min-w-60 rounded-none border-transparent border-b-black"
                     name="walletAddress"
                     onChange={(e) => {
                       setTempFilters((prev) => ({
@@ -249,6 +258,7 @@ export default function ReservedFundsPage() {
                         walletAddress: rootWallet?.value + "/" + e.target.value,
                       }));
                     }}
+                    value={tempFilters.walletAddress.split("/")[3]}
                   />
 
                   <Search
@@ -269,7 +279,7 @@ export default function ReservedFundsPage() {
                       <Button
                         variant="outline"
                         className={cn(
-                          "relative h-11 min-w-44 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
+                          "min-w-30 relative h-11 justify-start rounded-none border-transparent border-b-black pl-1 text-left text-sm font-normal",
                           !tempFilters.startDate && "text-[#A1A1A1]",
                         )}
                       >
@@ -319,7 +329,7 @@ export default function ReservedFundsPage() {
                       <Button
                         variant="outline"
                         className={cn(
-                          "relative h-11 min-w-44 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
+                          "min-w-30 relative h-11 justify-start rounded-none border-transparent border-b-black pl-3 text-left text-sm font-normal",
 
                           !tempFilters.endDate && "text-[#A1A1A1]",
                         )}
@@ -482,43 +492,26 @@ export default function ReservedFundsPage() {
                   />
                 }
                 <div className="flex-1">
-                  {filtered ? (
-                    <Button
-                      className="mt-7 h-max self-end"
-                      onClick={() => {
-                        setFilters(defaultValues);
-                        setTempFilters(defaultValues);
-                        form.reset(defaultValues);
-                        setFiltered(false);
-                      }}
-                    >
-                      <p className="flex-1 text-sm font-light">
-                        {values["wallet-users.list.button.reset"]}
-                      </p>
-                    </Button>
-                  ) : (
-                    <Button
-                      className="mt-7 h-max self-end"
-                      onClick={() => {
-                        form
-                          .handleSubmit(() => {
-                            setFilters(tempFilters);
-                          })()
-                          .then(() => {
-                            setFiltered(true);
-                          })
-                          .catch(() => {
-                            toast.error(
-                              values["wallet-users.toast.error.filtering"],
-                            );
-                          });
-                      }}
-                    >
-                      <p className="flex-1 text-sm font-light">
-                        {values["wallet-users.list.button.filter"]}
-                      </p>
-                    </Button>
-                  )}
+                  <Button
+                    className="mr-2 mt-7 h-max self-end"
+                    onClick={() => {
+                      setFilters(tempFilters);
+                    }}
+                  >
+                    <p className="flex-1 text-sm font-light">
+                      {values["wallet-users.list.button.filter"]}
+                    </p>
+                  </Button>
+                  <Button
+                    className="mt-7 h-max self-end"
+                    onClick={() => {
+                      handleReset();
+                    }}
+                  >
+                    <p className="flex-1 text-sm font-light">
+                      {values["wallet-users.list.button.reset"]}
+                    </p>
+                  </Button>
                 </div>
               </div>
             </form>
