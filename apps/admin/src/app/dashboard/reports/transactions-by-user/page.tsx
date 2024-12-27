@@ -637,6 +637,12 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
+  const { data: accessLevelsData } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
+  const authRefund =
+    userData?.type === "PROVIDER"
+      ? accessLevelsData?.general.refunds.includes("add")
+      : accessLevelsData?.general.disputes.includes("add");
   const { mutate: downloadDetails, isPending: downloaddet } =
     useDownloadDetailsMutation({
       onSuccess: (data) => {
@@ -678,20 +684,24 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
         <h1 className="text-2xl font-light">{props.activity.description}</h1>
         <div className="flex flex-row items-center justify-between">
           Activity ID: {props.activity.activityId}
-          <Link
-            passHref
-            href={
-              userData?.type === "PLATFORM"
-                ? `/dashboard/dispute/add/${props.activity.activityId}`
-                : `/dashboard/refund/add/${props.activity.activityId}`
-            }
-          >
-            <Button className="px-2">
-              {userData?.type === "PLATFORM"
-                ? values["dashboard.dispute.button.details"]
-                : values["dashboard.refund.button.details"]}
-            </Button>
-          </Link>
+          {authRefund === true ? (
+            <Link
+              passHref
+              href={
+                userData?.type === "PLATFORM"
+                  ? `/dashboard/dispute/add/${props.activity.activityId}`
+                  : `/dashboard/refund/add/${props.activity.activityId}`
+              }
+            >
+              <Button className="px-2">
+                {userData?.type === "PLATFORM"
+                  ? values["dashboard.dispute.button.details"]
+                  : values["dashboard.refund.button.details"]}
+              </Button>
+            </Link>
+          ) : (
+            <></>
+          )}
           <Button
             className="px-2"
             variant="secondary"
