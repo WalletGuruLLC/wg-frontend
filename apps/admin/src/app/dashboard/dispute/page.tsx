@@ -25,7 +25,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@wg-frontend/ui/select";
-import { toast } from "@wg-frontend/ui/toast";
 
 import type { Dispute } from "~/lib/data-access";
 import type { paginationAndSearchValidator } from "~/lib/validators";
@@ -149,7 +148,7 @@ export default function ListDisputesPage() {
     search: searchParams.get("search") ?? "",
   };
   const defaultValues = {
-    walletAddress: "",
+    walletAddress: rootWallet?.value + "/",
     serviceProviderId: searchParams.get("serviceProviderId") ?? "",
     startDate: searchParams.get("startDate")
       ? new Date(Number(searchParams.get("startDate")))
@@ -160,11 +159,16 @@ export default function ListDisputesPage() {
   };
   const [filters, setFilters] = useState(defaultValues);
   const [tempFilters, setTempFilters] = useState(defaultValues);
-  const [filtered, setFiltered] = useState(false);
 
   const { data, isLoading } = useGetListDisputesQuery({
     ...paginationAndSearch,
-    ...filters,
+    startDate: filters.startDate,
+    endDate: filters.endDate,
+    serviceProviderId: filters.serviceProviderId,
+    walletAddress:
+      filters.walletAddress === rootWallet?.value + "/"
+        ? ""
+        : filters.walletAddress,
   });
   const disputesData = (data?.disputes ?? []).map((dispute) => {
     return {
@@ -191,7 +195,10 @@ export default function ListDisputesPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-
+  const handleReset = () => {
+    setFilters(defaultValues);
+    setTempFilters(defaultValues);
+  };
   function handlePaginationAndSearchChange(
     newPaginationAndSearch: Partial<
       z.infer<typeof paginationAndSearchValidator>
@@ -232,17 +239,16 @@ export default function ListDisputesPage() {
       <div className="flex flex-row items-center space-x-3">
         <div className="relative w-1/3">
           <Input
-            placeholder={values["wallet-users.search.placeholder"]}
+            placeholder={values["reserved-funds.search.placeholder"]}
             className="rounded-none border-transparent border-b-black"
-            name="search"
+            name="walletAddress"
             onChange={(e) =>
-              handlePaginationAndSearchChange({
-                ...paginationAndSearch,
-                search: e.target.value,
-                page: "1",
-              })
+              setTempFilters((prev) => ({
+                ...prev,
+                walletAddress: rootWallet?.value + "/" + e.target.value,
+              }))
             }
-            defaultValue={paginationAndSearch.search}
+            value={tempFilters.walletAddress.split("/")[3]}
           />
 
           <Search
@@ -431,43 +437,26 @@ export default function ListDisputesPage() {
                   )
                 }
                 <div className="flex-1">
-                  {filtered ? (
-                    <Button
-                      className="mt-7 h-max self-end"
-                      onClick={() => {
-                        setFilters(defaultValues);
-                        setTempFilters(defaultValues);
-                        form.reset(defaultValues);
-                        setFiltered(false);
-                      }}
-                    >
-                      <p className="flex-1 text-sm font-light">
-                        {values["wallet-users.list.button.reset"]}
-                      </p>
-                    </Button>
-                  ) : (
-                    <Button
-                      className="mt-7 h-max self-end"
-                      onClick={() => {
-                        form
-                          .handleSubmit(() => {
-                            setFilters(tempFilters);
-                          })()
-                          .then(() => {
-                            setFiltered(true);
-                          })
-                          .catch(() => {
-                            toast.error(
-                              values["wallet-users.toast.error.filtering"],
-                            );
-                          });
-                      }}
-                    >
-                      <p className="flex-1 text-sm font-light">
-                        {values["wallet-users.list.button.filter"]}
-                      </p>
-                    </Button>
-                  )}
+                  <Button
+                    className="mr-2 mt-7 h-max self-end"
+                    onClick={() => {
+                      setFilters(tempFilters);
+                    }}
+                  >
+                    <p className="flex-1 text-sm font-light">
+                      {values["wallet-users.list.button.filter"]}
+                    </p>
+                  </Button>
+                  <Button
+                    className="mt-7 h-max self-end"
+                    onClick={() => {
+                      handleReset();
+                    }}
+                  >
+                    <p className="flex-1 text-sm font-light">
+                      {values["wallet-users.list.button.reset"]}
+                    </p>
+                  </Button>
                 </div>
               </div>
             </form>
