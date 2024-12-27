@@ -42,6 +42,7 @@ import Table, {
 import { Button } from "~/components/button";
 import { SelectTrigger } from "~/components/select";
 import {
+  useDownloadDetailsMutation,
   useDownloadTransactionsByUserMutation,
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
@@ -636,20 +637,32 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
   const [isOpen, _, __, toggle] = useBooleanHandlers();
 
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
-  useDownloadTransactionsByUserMutation({
-    onSuccess: () => {
-      toast.success(
-        values[
-          "dashboard.reports.sections-transactions-by-user.download.success"
-        ],
-      );
-    },
-    onError: (error) => {
-      toast.error(errors[error.message], {
-        description: "Error code: " + error.message,
-      });
-    },
-  });
+  const { data: accessLevelsData } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
+  const authRefund =
+    userData?.type === "PROVIDER"
+      ? accessLevelsData?.general.refunds.includes("add")
+      : accessLevelsData?.general.disputes.includes("add");
+  const { mutate: downloadDetails, isPending: downloaddet } =
+    useDownloadDetailsMutation({
+      onSuccess: (data) => {
+        const csvData = data as string;
+        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "details.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+      onError: (error) => {
+        toast.error(errors[error.message], {
+          description: "Error code: " + error.message,
+        });
+      },
+    });
 
   const table = useReactTable({
     data: props.activity.transactions,
@@ -671,22 +684,41 @@ function DetailsDialog(props: { activity: Activity; trigger: ReactNode }) {
         <h1 className="text-2xl font-light">{props.activity.description}</h1>
         <div className="flex flex-row items-center justify-between">
           Activity ID: {props.activity.activityId}
-          <Link
-            passHref
-            href={
-              userData?.type === "PLATFORM"
-                ? `/dashboard/dispute/add/${props.activity.activityId}`
-                : `/dashboard/refund/add/${props.activity.activityId}`
-            }
+          {authRefund === true ? (
+            <Link
+              passHref
+              href={
+                userData?.type === "PLATFORM"
+                  ? `/dashboard/dispute/add/${props.activity.activityId}`
+                  : `/dashboard/refund/add/${props.activity.activityId}`
+              }
+            >
+              <Button className="px-2">
+                {userData?.type === "PLATFORM"
+                  ? values["dashboard.dispute.button.details"]
+                  : values["dashboard.refund.button.details"]}
+              </Button>
+            </Link>
+          ) : (
+            <></>
+          )}
+          <Button
+            className="px-2"
+            variant="secondary"
+            disabled={downloaddet}
+            onClick={() => {
+              downloadDetails({
+                items: "999999",
+                page: "1",
+                activityId: props.activity.activityId,
+              });
+            }}
           >
-            <Button className="px-2">
-              {userData?.type === "PLATFORM"
-                ? values["dashboard.dispute.button.details"]
-                : values["dashboard.refund.button.details"]}
-            </Button>
-          </Link>
-          <Button className="px-2" variant="secondary">
-            <Download strokeWidth={0.75} className="size-6" />
+            {downloaddet ? (
+              <Loader2 strokeWidth={0.75} className="size-6 animate-spin" />
+            ) : (
+              <Download strokeWidth={0.75} className="size-6" />
+            )}
           </Button>
         </div>
         <div className="h-[300px] flex-1 overflow-auto">

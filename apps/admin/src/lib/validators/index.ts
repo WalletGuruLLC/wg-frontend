@@ -279,8 +279,11 @@ export const transactionsByUserValidator = z.object({
   userType: z.string().min(1).optional(),
   isRevenue: z.string().optional(),
   report: z.string().optional(),
+  activityId: z.string().optional(),
 });
-
+export const transactionsDetailsValidator = z.object({
+  activityId: z.string().min(1).optional(),
+});
 export const clearPaymentsValidator = z.object({
   year: z.string().optional(),
   month: z.string().optional(),
