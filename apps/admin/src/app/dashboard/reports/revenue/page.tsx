@@ -247,9 +247,9 @@ export default function RevenuePage() {
                   <SelectContent>
                     {providersData?.providers
                       .filter((p) =>
-                        accessLevelsData?.providers[
-                          p.id
-                        ]?.transactionsByUser.includes("view"),
+                        accessLevelsData?.providers[p.id]?.revenue.includes(
+                          "view",
+                        ),
                       )
                       .map((provider) => (
                         <SelectItem key={provider.id} value={provider.id}>
@@ -257,9 +257,9 @@ export default function RevenuePage() {
                         </SelectItem>
                       ))}
                     {providersData?.providers.filter((p) =>
-                      accessLevelsData?.providers[
-                        p.id
-                      ]?.transactionsByUser.includes("view"),
+                      accessLevelsData?.providers[p.id]?.revenue.includes(
+                        "view",
+                      ),
                     ).length === 0 && (
                       <SelectItem value="no" disabled>
                         No providers available
