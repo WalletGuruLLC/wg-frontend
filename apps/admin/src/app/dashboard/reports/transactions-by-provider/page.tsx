@@ -44,6 +44,7 @@ import {
   useGetAuthedUserAccessLevelsQuery,
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
+  useGetProviderFeeQuery,
   useGetProvidersQuery,
   useGetTransactionsByProviderQuery,
 } from "~/lib/data-access";
@@ -194,7 +195,8 @@ export default function TransactionsByProviderPage() {
   );
   const [filters, setFilters] = useState(initialFilters);
   const [doFetch, setDoFetch] = useState(false);
-
+  const providerId = filters.providerIds ?? "";
+  const { data: fees } = useGetProviderFeeQuery({ providerId });
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
   const {
     data: transactionsData,
@@ -203,7 +205,15 @@ export default function TransactionsByProviderPage() {
   } = useGetTransactionsByProviderQuery(
     {
       ...paginationAndSearch,
-      ...filters,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      providerIds: filters.providerIds,
+      state: filters.state,
+      isRevenue: filters.isRevenue,
+      report: filters.report,
+      percent: fees?.percent,
+      commission: fees?.comission,
+      base: fees?.base,
     },
     {
       enabled: false,
