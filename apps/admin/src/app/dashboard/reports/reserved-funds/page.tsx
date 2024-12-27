@@ -412,7 +412,7 @@ export default function ReservedFundsPage() {
                                   .filter((p) =>
                                     accessLevelsData?.providers[
                                       p.id
-                                    ]?.disputes.includes("view"),
+                                    ]?.reservedFunds.includes("view"),
                                   )
                                   .map((provider) => (
                                     <SelectItem
@@ -425,7 +425,7 @@ export default function ReservedFundsPage() {
                                 {providersData?.providers.filter((p) =>
                                   accessLevelsData?.providers[
                                     p.id
-                                  ]?.disputes.includes("view"),
+                                  ]?.reservedFunds.includes("view"),
                                 ).length === 0 && (
                                   <SelectItem value="no" disabled>
                                     No providers available

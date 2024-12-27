@@ -3091,6 +3091,7 @@ export function useGetReservedFundsQuery(
         ) as unknown as Date;
       if (input.endDate)
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
+      if (input.walletAddress === "undefined/") input.walletAddress = "";
       const params = new URLSearchParams(
         input as unknown as Record<string, string>,
       );
