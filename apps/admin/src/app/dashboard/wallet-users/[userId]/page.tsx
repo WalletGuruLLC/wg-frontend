@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   ArrowRightLeft,
   Asterisk,
@@ -25,6 +25,7 @@ import { toast } from "@wg-frontend/ui/toast";
 
 import { Button } from "~/components/button";
 import {
+  useGetAuthedUserAccessLevelsQuery,
   useGetSettingQuery,
   useGetWalletUserQuery,
   useResetPasswordIdMutation,
@@ -46,6 +47,8 @@ export default function UserDetailsPage() {
   const { values } = useI18n();
   const { userId } = useParams<{ userId: string }>();
   const { data: dataUser, isLoading } = useGetWalletUserQuery(userId);
+  const { data: accessLevelsData } =
+    useGetAuthedUserAccessLevelsQuery(undefined);
   const walletId = dataUser?.wallet?.id ?? "";
   const isWalletActive = dataUser?.wallet?.active ?? true;
   const walletAddress = dataUser?.wallet?.walletAddress
@@ -54,12 +57,14 @@ export default function UserDetailsPage() {
   const form = useForm({
     schema: walletuserDetailValidator,
   });
-
+  const router = useRouter();
   useEffect(() => {
     if (dataUser) {
       form.reset(dataUser);
     }
   }, [dataUser, form]);
+  if (!accessLevelsData?.general.walletUsers.includes("view"))
+    void router.replace("/dashboard/wallet-users");
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -247,42 +252,46 @@ export default function UserDetailsPage() {
               </div>
             </form>
           </Form>
-          <div className="mt-8 flex w-full justify-center space-x-4">
-            <div>
-              <ResetDialog
-                id={userId}
-                trigger={
+          {accessLevelsData?.general.walletUsers.includes("edit") ? (
+            <div className="mt-8 flex w-full justify-center space-x-4">
+              <div>
+                <ResetDialog
+                  id={userId}
+                  trigger={
+                    <Button type="submit">
+                      <p className="flex-1 text-base font-light">
+                        {values[`wallet-users.details.button.reset`]}
+                      </p>
+
+                      <Asterisk strokeWidth={0.75} className="size-6" />
+                    </Button>
+                  }
+                />
+              </div>
+              <div>
+                <LockDialog id={walletId} lock={isWalletActive} />
+              </div>
+              <div>
+                <Link
+                  key={"transactions"}
+                  href={`/dashboard/reports/transactions-by-user?walletAddress=${walletAddress}`}
+                >
                   <Button type="submit">
                     <p className="flex-1 text-base font-light">
-                      {values[`wallet-users.details.button.reset`]}
+                      {values[`wallet-users.details.button.transactions`]}
                     </p>
 
-                    <Asterisk strokeWidth={0.75} className="size-6" />
+                    <ArrowRightLeft
+                      strokeWidth={0.75}
+                      className="-mt-1 ml-1 size-5"
+                    />
                   </Button>
-                }
-              />
+                </Link>
+              </div>
             </div>
-            <div>
-              <LockDialog id={walletId} lock={isWalletActive} />
-            </div>
-            <div>
-              <Link
-                key={"transactions"}
-                href={`/dashboard/reports/transactions-by-user?walletAddress=${walletAddress}`}
-              >
-                <Button type="submit">
-                  <p className="flex-1 text-base font-light">
-                    {values[`wallet-users.details.button.transactions`]}
-                  </p>
-
-                  <ArrowRightLeft
-                    strokeWidth={0.75}
-                    className="-mt-1 ml-1 size-5"
-                  />
-                </Button>
-              </Link>
-            </div>
-          </div>
+          ) : (
+            <></>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -195,7 +195,7 @@ const columns = [
 export default function ClearPaymentPage() {
   const loading = useAccessLevelGuard({
     general: {
-      module: "transactionsByUser",
+      module: "clearPayments",
     },
   });
   const { values } = useI18n();
