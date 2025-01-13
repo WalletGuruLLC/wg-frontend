@@ -61,6 +61,7 @@ export const reportsDict = {
     "payments-summary-state-cleared": "Cleared",
     "payments-summary-state-pending": "Pending",
     "payments-summary.details.header": "Details Payments Summary",
+    "reserved-funds-wallet": "Wallet",
   },
   es: {
     "dispute-title": "Disputa",
@@ -120,5 +121,6 @@ export const reportsDict = {
     "payments-summary-state-cleared": "Pagado",
     "payments-summary-state-pending": "Pendiente",
     "payments-summary.details.header": "Detalles Pagos Recibidos",
+    "reserved-funds-wallet": "Billetera",
   },
 } satisfies I18nDictionary;

@@ -67,15 +67,22 @@ const columns = [
     header: () => <ColumnHeader i18nKey="reserved-funds-provider" />,
   }),
   columnHelper.accessor("ownerUser", {
+    id: "user",
+    cell: (info) => {
+      return info.getValue();
+    },
+    header: () => <ColumnHeader i18nKey="reserved-funds-user" />,
+  }),
+  columnHelper.accessor("senderUrl", {
     id: "wallet",
     cell: (info) => {
       const wallet = info.getValue();
       if (wallet) {
-        return wallet.replace("/", "");
+        return wallet.split("/")[3];
       }
       return "-";
     },
-    header: () => <ColumnHeader i18nKey="reserved-funds-user" />,
+    header: () => <ColumnHeader i18nKey="reserved-funds-wallet" />,
   }),
   columnHelper.accessor("incomingAmount", {
     id: "amount",
@@ -182,6 +189,7 @@ export default function ReservedFundsPage() {
       },
       createdAt: incoming.createdAt,
       expiresAt: incoming.expiresAt,
+      senderUrl: incoming.senderUrl,
     };
   });
   const table = useReactTable({

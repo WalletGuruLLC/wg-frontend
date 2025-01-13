@@ -3060,6 +3060,7 @@ export interface ReservedFund {
   };
   createdAt: string;
   expiresAt: string;
+  senderUrl: string;
 }
 
 interface UseGetReservedFundsQueryOutput {
