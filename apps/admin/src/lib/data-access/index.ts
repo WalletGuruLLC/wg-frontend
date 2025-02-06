@@ -2295,6 +2295,128 @@ export function useGetTotalTransactionsByUser(
                 : transaction.senderName,
             transactions: [],
           });
+        } else {
+          const amountTransaction =
+            "receiveAmount" in transaction
+              ? transaction.receiveAmount
+              : { assetScale: 6, assetCode: "USD", value: "0" };
+
+          const transactionDate = format(
+            transaction.createdAt,
+            "yyyy-MM-dd HH:mm:ss",
+          );
+
+          // Buscar si ya existe una actividad con el mismo activityId
+          const existingActivity = activities.find(
+            (activity) =>
+              activity.activityId === transaction.metadata.activityId,
+          );
+
+          if (existingActivity) {
+            // Actualizar startDate si es menor
+            if (transactionDate < existingActivity.startDate) {
+              existingActivity.startDate = transactionDate;
+            }
+
+            // Actualizar endDate si es mayor
+            if (transactionDate > existingActivity.endDate) {
+              existingActivity.endDate = transactionDate;
+            }
+            // Actualizar el amount sumando el valor de la transacción actual
+            const accumulatedAmountNumber = Number(
+              existingActivity.amount.split(" ")[0],
+            );
+            const amountNumber = Number(
+              formatCurrency(
+                Number(amountTransaction.value),
+                amountTransaction.assetCode,
+                amountTransaction.assetScale,
+              ).split(" ")[0],
+            );
+            existingActivity.amount = `${(
+              accumulatedAmountNumber + amountNumber
+            ).toFixed(amountTransaction.assetScale)} ${
+              amountTransaction.assetCode
+            }`;
+            // Agregar la transacción al array de transactions
+            existingActivity.transactions.push({
+              transactionId: transaction.id,
+              type: "Service",
+              description:
+                transaction.receiverName +
+                " - " +
+                transaction.metadata.contentName,
+              date: transactionDate,
+              status: transaction.state,
+              amount: formatCurrency(
+                Number(amountTransaction.value),
+                amountTransaction.assetCode,
+                amountTransaction.assetScale,
+              ),
+            });
+          } else {
+            // Si no existe, agregar una nueva actividad
+            activities.push({
+              activityId: transaction.metadata.activityId,
+              type: "Service",
+              description:
+                transaction.receiverName +
+                " - " +
+                transaction.metadata.contentName,
+              startDate: transactionDate,
+              endDate: transactionDate,
+              status: transaction.state,
+              amount: formatCurrency(
+                Number(amountTransaction.value),
+                amountTransaction.assetCode,
+                amountTransaction.assetScale,
+              ),
+              user:
+                transaction.type === "IncomingPayment"
+                  ? transaction.receiverName
+                  : transaction.senderName,
+              transactions: [
+                {
+                  transactionId: transaction.id,
+                  type: "Service",
+                  description:
+                    transaction.receiverName +
+                    " - " +
+                    transaction.metadata.contentName,
+                  date: transactionDate,
+                  status: transaction.state,
+                  amount: formatCurrency(
+                    Number(amountTransaction.value),
+                    amountTransaction.assetCode,
+                    amountTransaction.assetScale,
+                  ),
+                },
+              ], // Iniciar con la transacción actual
+            });
+          }
+          /*
+          activities.push({
+            activityId: transaction.metadata.activityId,
+            type: "Service",
+            description:
+              transaction.receiverName +
+              " - " +
+              transaction.metadata.contentName,
+            startDate: format(transaction.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(transaction.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: transaction.state,
+            amount: formatCurrency(
+              Number(amountTransaction.value),
+              amountTransaction.assetCode,
+              amountTransaction.assetScale,
+            ),
+
+            user:
+              transaction.type === "IncomingPayment"
+                ? transaction.receiverName
+                : transaction.senderName,
+            transactions: [],
+          });*/
         }
       });
       console.log("activities", activities);
