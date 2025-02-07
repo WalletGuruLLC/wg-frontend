@@ -140,7 +140,12 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.actions" />
     ),
-    cell: (info) => <Actions activity={info.row.original} />,
+    cell: (info) =>
+      info.row.original.activityId != "undefined" ? (
+        <Actions activity={info.row.original} />
+      ) : (
+        <></>
+      ),
   }),
 ];
 
