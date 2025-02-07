@@ -158,9 +158,7 @@ export default function TransactionsByUserPage() {
   const initialPaginationAndSearch: z.infer<
     typeof paginationAndSearchValidator
   > = {
-    //page: searchParams.get("page") ?? "1",
     page: "1",
-    // items: searchParams.get("items") ?? "10",
     items: "10",
     search: searchParams.get("search") ?? "",
   };
@@ -237,7 +235,10 @@ export default function TransactionsByUserPage() {
     Number(paginationFront.items) * Number(paginationFront.page) -
     Number(paginationFront.items) +
     1;
-  const lastRowIdx = firstRowIdx + Number(paginationFront.items) - 1;
+  const lastRowIdx = Math.min(
+    firstRowIdx + Number(paginationFront.items) - 1,
+    transactionsData?.activities.length ?? 0,
+  );
 
   const paginatedData = transactionsData?.activities.slice(
     (Number(paginationFront.page) - 1) * Number(paginationFront.items),
@@ -606,8 +607,8 @@ export default function TransactionsByUserPage() {
           }
           canPreviousPage={paginationFront.page !== "1"}
           canNextPage={
-            transactionsData?.activities.length ===
-            Number(paginationFront.items)
+            Number(paginationFront.page) * Number(paginationFront.items) <=
+            (transactionsData?.total ?? 0)
           }
           onPreviousPage={() =>
             setPaginationFront((prev) => ({
