@@ -2054,7 +2054,7 @@ export function useGetClearPaymentByIdQuery(
   });
 }
 
-export function useGetTransactionsByUserQuery(
+export function useGetTotalTransactionsByUser(
   input: z.infer<typeof paginationAndSearchValidator> &
     z.infer<typeof transactionsByUserValidator>,
   options: UseQueryOptions<UseGetTransactionsByUserQueryOutput> = {},
@@ -2078,7 +2078,7 @@ export function useGetTransactionsByUserQuery(
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
-        items: "999999",
+        items: "10",
         page: "1",
       } as unknown as Record<string, string>);
 
@@ -2093,113 +2093,154 @@ export function useGetTransactionsByUserQuery(
           "?" +
           params.toString(),
       );
+      const newParams = new URLSearchParams({
+        ...input,
+        items: result.total.toString(),
+        page: "1",
+      } as unknown as Record<string, string>);
+      const resultJson = await customFetch<{
+        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
+        currentPage: number;
+        total: number;
+        totalPages: number;
+      }>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/list-transactions` +
+          "?" +
+          newParams.toString(),
+      );
+      const activities: Activity[] = [];
+      resultJson.transactions.forEach((transaction) => {
+        if (transaction.metadata.type !== "PROVIDER") {
+          const amountTransaction =
+            transaction.type === "IncomingPayment"
+              ? transaction.incomingAmount
+              : transaction.receiveAmount;
+          activities.push({
+            activityId: "undefined",
+            type:
+              transaction.type === "IncomingPayment"
+                ? "Transfer Received"
+                : "Transfer Sent",
+            description:
+              transaction.type === "IncomingPayment"
+                ? transaction.senderName
+                : transaction.receiverName,
+            startDate: format(transaction.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(transaction.createdAt, "yyyy-MM-dd HH:mm:ss"),
+            status: transaction.state,
+            amount: formatCurrency(
+              Number(amountTransaction.value),
+              amountTransaction.assetCode,
+              amountTransaction.assetScale,
+            ),
 
-      // Group by activity id
-      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
-        const activityId = t.metadata.activityId;
-
-        const isIncoming = t.type === "IncomingPayment";
-        const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
-        const amountString = `${isIncoming ? "" : "-"}${formatCurrency(
-          Number(amount.value),
-          amount.assetCode,
-          amount.assetScale,
-        )}`;
-
-        if (!activityId) {
-          acc.set(idx.toString(), {
-            activityId: undefined,
-            type: isIncoming ? "Transfer Received" : "Transfer Sent",
-            description: isIncoming ? t.senderName : t.receiverName,
-            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            status: t.state,
-            amount: amountString,
-            user: isIncoming ? t.receiverName : t.senderName,
+            user:
+              transaction.type === "IncomingPayment"
+                ? transaction.receiverName
+                : transaction.senderName,
             transactions: [],
           });
         } else {
-          const isProvider = t.metadata.type === "PROVIDER";
-          const type = isProvider
-            ? "Service"
-            : isIncoming
-              ? "Transfer Received"
-              : "Transfer Sent";
-          const description = isProvider
-            ? (t.metadata.contentName ?? "Unknown content")
-            : isIncoming
-              ? t.senderName
-              : t.receiverName;
+          const amountTransaction =
+            "receiveAmount" in transaction
+              ? transaction.receiveAmount
+              : { assetScale: 6, assetCode: "USD", value: "0" };
 
-          if (!acc.has(activityId)) {
-            acc.set(activityId, {
-              activityId,
-              type,
-              description,
-              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              status: t.state,
-              amount: amountString,
-              user: t.metadata.wgUser ?? "",
+          const transactionDate = format(
+            transaction.createdAt,
+            "yyyy-MM-dd HH:mm:ss",
+          );
+          const existingActivity = activities.find(
+            (activity) =>
+              activity.activityId === transaction.metadata.activityId,
+          );
+
+          if (existingActivity) {
+            if (transactionDate < existingActivity.startDate) {
+              existingActivity.startDate = transactionDate;
+            }
+
+            if (transactionDate > existingActivity.endDate) {
+              existingActivity.endDate = transactionDate;
+            }
+            const accumulatedAmountNumber = Number(
+              existingActivity.amount.split(" ")[0],
+            );
+            const amountNumber = Number(
+              formatCurrency(
+                Number(amountTransaction.value),
+                amountTransaction.assetCode,
+                amountTransaction.assetScale,
+              ).split(" ")[0],
+            );
+            existingActivity.amount = `${(
+              accumulatedAmountNumber + amountNumber
+            ).toFixed(amountTransaction.assetScale)} ${
+              amountTransaction.assetCode
+            }`;
+            existingActivity.transactions.push({
+              transactionId: transaction.id,
+              type: "Service",
+              description:
+                transaction.receiverName +
+                " - " +
+                transaction.metadata.contentName,
+              date: transactionDate,
+              status: transaction.state,
+              amount: formatCurrency(
+                Number(amountTransaction.value),
+                amountTransaction.assetCode,
+                amountTransaction.assetScale,
+              ),
+            });
+          } else {
+            activities.push({
+              activityId: transaction.metadata.activityId,
+              type: "Service",
+              description:
+                transaction.receiverName +
+                " - " +
+                transaction.metadata.contentName,
+              startDate: transactionDate,
+              endDate: transactionDate,
+              status: transaction.state,
+              amount: formatCurrency(
+                Number(amountTransaction.value),
+                amountTransaction.assetCode,
+                amountTransaction.assetScale,
+              ),
+              user:
+                transaction.type === "IncomingPayment"
+                  ? transaction.receiverName
+                  : transaction.senderName,
               transactions: [
                 {
-                  transactionId: t.id,
-                  type,
-                  description,
-                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-                  status: t.state,
-                  amount: amountString,
+                  transactionId: transaction.id,
+                  type: "Service",
+                  description:
+                    transaction.receiverName +
+                    " - " +
+                    transaction.metadata.contentName,
+                  date: transactionDate,
+                  status: transaction.state,
+                  amount: formatCurrency(
+                    Number(amountTransaction.value),
+                    amountTransaction.assetCode,
+                    amountTransaction.assetScale,
+                  ),
                 },
               ],
             });
-          } else {
-            const activity = acc.get(activityId);
-
-            if (!activity) return acc;
-
-            activity.transactions.push({
-              transactionId: t.id,
-              type,
-              description,
-              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              status: t.state,
-              amount: amountString,
-            });
-
-            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
-
-            const accumulatedAmountNumber = Number(
-              activity.amount.split(" USD")[0],
-            );
-            const amountNumber = Number(amountString.split(" USD")[0]);
-            /*
-            activity.amount = formatCurrency(
-              accumulatedAmountNumber + amountNumber,
-              amount.assetCode,
-              amount.assetScale,
-            );*/
-
-            activity.amount = `${(
-              accumulatedAmountNumber + amountNumber
-            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
-            acc.set(activityId, activity);
           }
         }
-
-        return acc;
-      }, new Map<string, Activity>());
-
-      const activities = Array.from(groupedActivities.values());
-
+      });
       return {
-        activities: activities.slice(
-          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
-          +(input.page ?? 1) * +(input.items ?? 10),
-        ),
-        currentPage: +(input.page ?? 1),
+        activities: activities,
+        currentPage: 1,
         total: activities.length,
-        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
-        user: activities[0]?.user ?? "No data",
+        totalPages: 1,
+        user: "No data",
       };
     },
   });
@@ -2351,7 +2392,6 @@ export function useGetTransactionsByProviderQuery(
         const net = Number(amount.value) - fee;
         const amountValue = Number(amount.value);
         const amountValueRounded = amountValue.toFixed(6);
-        console.log(amountValueRounded);
         const amountString = `${""}${formatCurrency(
           Number(amountValueRounded),
           amount.assetCode,

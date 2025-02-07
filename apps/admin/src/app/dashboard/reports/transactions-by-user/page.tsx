@@ -48,7 +48,7 @@ import {
   useGetAuthedUserInfoQuery,
   useGetDashboardUsersTitleQuery,
   useGetProvidersQuery,
-  useGetTransactionsByUserQuery,
+  useGetTotalTransactionsByUser,
   useGetUserByWalletQuery,
 } from "~/lib/data-access";
 import { useErrors } from "~/lib/data-access/errors";
@@ -140,7 +140,12 @@ const columns = [
     header: () => (
       <ColumnHeader i18nKey="dashboard.reports.sections.transactions-by-user.header.actions" />
     ),
-    cell: (info) => <Actions activity={info.row.original} />,
+    cell: (info) =>
+      info.row.original.activityId != "undefined" ? (
+        <Actions activity={info.row.original} />
+      ) : (
+        <></>
+      ),
   }),
 ];
 
@@ -158,8 +163,8 @@ export default function TransactionsByUserPage() {
   const initialPaginationAndSearch: z.infer<
     typeof paginationAndSearchValidator
   > = {
-    page: searchParams.get("page") ?? "1",
-    items: searchParams.get("items") ?? "10",
+    page: "1",
+    items: "10",
     search: searchParams.get("search") ?? "",
   };
 
@@ -176,9 +181,11 @@ export default function TransactionsByUserPage() {
     state: "COMPLETED",
     isRevenue: "false",
   };
-  const [paginationAndSearch, setPaginationAndSearch] = useState(
-    initialPaginationAndSearch,
-  );
+  const paginationAndSearch = initialPaginationAndSearch;
+  const [paginationFront, setPaginationFront] = useState({
+    page: "1",
+    items: "10",
+  });
   const [filters, setFilters] = useState(initialFilters);
   const [doFetch, setDoFetch] = useState(false);
   const { data: title } = useGetDashboardUsersTitleQuery(undefined);
@@ -186,7 +193,7 @@ export default function TransactionsByUserPage() {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsByUserQuery(
+  } = useGetTotalTransactionsByUser(
     {
       ...paginationAndSearch,
       ...filters,
@@ -229,11 +236,28 @@ export default function TransactionsByUserPage() {
       },
     });
 
+  const firstRowIdx =
+    Number(paginationFront.items) * Number(paginationFront.page) -
+    Number(paginationFront.items) +
+    1;
+  const lastRowIdx = Math.min(
+    firstRowIdx + Number(paginationFront.items) - 1,
+    transactionsData?.activities.length ?? 0,
+  );
+
+  const paginatedData = transactionsData?.activities.slice(
+    (Number(paginationFront.page) - 1) * Number(paginationFront.items),
+    Number(paginationFront.page) * Number(paginationFront.items),
+  );
+
   const table = useReactTable({
-    data: transactionsData?.activities ?? [],
+    data: paginatedData ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
+    pageCount: Math.ceil(
+      (transactionsData?.total ?? 0) / Number(paginationFront.items),
+    ),
   });
   const handleReset = () => {
     setFilters(initialFilters);
@@ -248,12 +272,29 @@ export default function TransactionsByUserPage() {
         providerIds: userData.serviceProviderId,
       }));
   }, [filters, userData]);
+  useEffect(() => {
+    if (doFetch) {
+      setPaginationFront((prev) => ({
+        ...prev,
+        page: "1",
+      }));
+    }
+  }, [doFetch]);
 
-  const firstRowIdx =
-    Number(paginationAndSearch.items) * Number(paginationAndSearch.page) -
-    Number(paginationAndSearch.items) +
-    1;
-  const lastRowIdx = firstRowIdx + table.getRowModel().rows.length - 1;
+  useEffect(() => {
+    if (doFetch) {
+      table.setOptions((prev) => ({
+        ...prev,
+        data: paginatedData ?? [],
+      }));
+    }
+  }, [
+    paginationFront.page,
+    paginationFront.items,
+    doFetch,
+    paginatedData,
+    table,
+  ]);
 
   if (loading) return null;
 
@@ -565,23 +606,23 @@ export default function TransactionsByUserPage() {
             firstRowIdx,
             lastRowIdx,
           }}
-          items={paginationAndSearch.items ?? "10"}
+          items={paginationFront.items}
           onItemsChange={(items) =>
-            setPaginationAndSearch((prev) => ({ ...prev, items, page: "1" }))
+            setPaginationFront((prev) => ({ ...prev, items, page: "1" }))
           }
-          canPreviousPage={paginationAndSearch.page !== "1"}
+          canPreviousPage={paginationFront.page !== "1"}
           canNextPage={
-            transactionsData?.activities.length ===
-            Number(paginationAndSearch.items)
+            Number(paginationFront.page) * Number(paginationFront.items) <=
+            (transactionsData?.total ?? 0)
           }
           onPreviousPage={() =>
-            setPaginationAndSearch((prev) => ({
+            setPaginationFront((prev) => ({
               ...prev,
               page: String(Number(prev.page) - 1),
             }))
           }
           onNextPage={() =>
-            setPaginationAndSearch((prev) => ({
+            setPaginationFront((prev) => ({
               ...prev,
               page: String(Number(prev.page) + 1),
             }))
