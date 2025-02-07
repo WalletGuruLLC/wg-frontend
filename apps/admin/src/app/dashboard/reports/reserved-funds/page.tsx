@@ -546,7 +546,9 @@ export default function ReservedFundsPage() {
           }
           canPreviousPage={paginationAndSearch.page !== "1"}
           canNextPage={
-            incomingData.length === Number(paginationAndSearch.items ?? 0)
+            Number(paginationAndSearch.page) *
+              Number(paginationAndSearch.items) <
+            (data?.totalItems ?? 0)
           }
           onPreviousPage={() =>
             handlePaginationAndSearchChange({
