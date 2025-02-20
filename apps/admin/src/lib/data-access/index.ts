@@ -2314,6 +2314,7 @@ export interface ActivityProvider {
   user: string;
   activityId?: string;
   provider: string;
+  content: string;
   grossSale: string;
   netSale: string;
   fee: string;
@@ -2363,7 +2364,7 @@ export function useGetTransactionsByProviderQuery(
         input.endDate = format(input.endDate, "MM/dd/yyyy") as unknown as Date;
       const params = new URLSearchParams({
         ...input,
-        items: "999999",
+        items: "10",
         page: "1",
       } as unknown as Record<string, string>);
 
@@ -2378,11 +2379,26 @@ export function useGetTransactionsByProviderQuery(
           "?" +
           params.toString(),
       );
-
+      const newParams = new URLSearchParams({
+        ...input,
+        items: result.total.toString(),
+        page: "1",
+      } as unknown as Record<string, string>);
+      const resultJson = await customFetch<{
+        transactions: (ApiIncomingTransaction | ApiOutgoingTransaction)[];
+        currentPage: number;
+        total: number;
+        totalPages: number;
+      }>(
+        env.NEXT_PUBLIC_WALLET_MICROSERVICE_URL +
+          `/api/v1/wallets-rafiki/list-transactions` +
+          "?" +
+          newParams.toString(),
+      );
       // Group by activity id
-      const groupedActivities = result.transactions.reduce((acc, t, idx) => {
+      const groupedActivities: ActivityProvider[] = [];
+      resultJson.transactions.forEach((t) => {
         const activityId = t.metadata.activityId;
-
         const isIncoming = t.type === "IncomingPayment";
         const amount = isIncoming ? t.incomingAmount : t.receiveAmount;
         const base = input.base ?? 0;
@@ -2391,111 +2407,113 @@ export function useGetTransactionsByProviderQuery(
         const fee = Number(amount.value) * percent + base + commission;
         const net = Number(amount.value) - fee;
         const amountValue = Number(amount.value);
-        const amountValueRounded = amountValue.toFixed(6);
-        const amountString = `${""}${formatCurrency(
-          Number(amountValueRounded),
-          amount.assetCode,
-          amount.assetScale,
-        )} ${amount.assetCode}`;
-        const feeString = `${""}${formatCurrency(
-          Number(fee),
-          amount.assetCode,
-          amount.assetScale,
-        )} ${amount.assetCode}`;
-        const netString = `${""}${formatCurrency(
-          Number(net),
-          amount.assetCode,
-          amount.assetScale,
-        )} ${amount.assetCode}`;
-        if (!activityId) {
-          acc.set(idx.toString(), {
-            activityId: undefined,
-            startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-            grossSale: amountString,
-            netSale: netString,
-            provider: t.receiverName,
-            fee: feeString,
+        const transactionDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+        const existingActivity = groupedActivities.find(
+          (activity) => activity.activityId === activityId,
+        );
+        if (existingActivity) {
+          if (transactionDate < existingActivity.startDate) {
+            existingActivity.startDate = transactionDate;
+          }
+
+          if (transactionDate > existingActivity.endDate) {
+            existingActivity.endDate = transactionDate;
+          }
+          const accumulatedFeeNumber = Number(
+            existingActivity.fee.split(" ")[0],
+          );
+          const accumulatedNetNumber = Number(
+            existingActivity.netSale.split(" ")[0],
+          );
+          const accumulatedAmountNumber = Number(
+            existingActivity.grossSale.split(" ")[0],
+          );
+          const feeNumber = Number(
+            formatCurrency(
+              Number(fee),
+              amount.assetCode,
+              amount.assetScale,
+            ).split(" ")[0],
+          );
+          existingActivity.fee = `${(accumulatedFeeNumber + feeNumber).toFixed(
+            amount.assetScale,
+          )} ${amount.assetCode}`;
+          const netNumber = Number(
+            formatCurrency(
+              Number(net),
+              amount.assetCode,
+              amount.assetScale,
+            ).split(" ")[0],
+          );
+          existingActivity.netSale = `${(
+            accumulatedNetNumber + netNumber
+          ).toFixed(amount.assetScale)} ${amount.assetCode}`;
+          const amountNumber = Number(
+            formatCurrency(
+              Number(amountValue),
+              amount.assetCode,
+              amount.assetScale,
+            ).split(" ")[0],
+          );
+          existingActivity.grossSale = `${(
+            accumulatedAmountNumber + amountNumber
+          ).toFixed(amount.assetScale)} ${amount.assetCode}`;
+          existingActivity.transactions.push({
+            transactionId: t.id,
             user: t.senderName,
-            transactions: [],
+            provider: t.receiverName,
+            date: transactionDate,
+            fee: formatCurrency(fee, amount.assetCode, amount.assetScale),
+            grossSale: formatCurrency(
+              amountValue,
+              amount.assetCode,
+              amount.assetScale,
+            ),
+            netSale: formatCurrency(net, amount.assetCode, amount.assetScale),
           });
         } else {
-          if (!acc.has(activityId)) {
-            acc.set(activityId, {
-              activityId,
-              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              grossSale: amountString,
-              netSale: netString,
-              provider: isIncoming ? t.senderName : t.receiverName,
-              fee: feeString,
-              //  user: (t.metadata.wgUser ?? isIncoming) ? t.receiverName : t.senderName,
-              user: t.senderName,
-              transactions: [
-                {
-                  transactionId: t.id,
-                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-                  grossSale: amountString,
-                  netSale: netString,
-                  provider: isIncoming ? t.senderName : t.receiverName,
-                  fee: feeString,
-                  user: t.senderName,
-                },
-              ],
-            });
-          } else {
-            const activity = acc.get(activityId);
-
-            if (!activity) return acc;
-
-            activity.transactions.push({
-              transactionId: t.id,
-              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              grossSale: amountString,
-              netSale: netString,
-              provider: isIncoming ? t.senderName : t.receiverName,
-              fee: feeString,
-              user: t.senderName,
-            });
-
-            activity.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
-
-            const accumulatedAmountNumber = Number(
-              activity.grossSale.split(" ")[0],
-            );
-            const amountNumber = Number(amountString.split(" ")[0]);
-
-            activity.grossSale = `${(
-              accumulatedAmountNumber + amountNumber
-            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
-
-            const accumulatedNetNumber = Number(activity.netSale.split(" ")[0]);
-            activity.netSale = `${(
-              accumulatedNetNumber + Number(netString.split(" ")[0])
-            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
-
-            const accumulatedFeeNumber = Number(activity.fee.split(" ")[0]);
-            activity.fee = `${(
-              accumulatedFeeNumber + Number(feeString.split(" ")[0])
-            ).toFixed(amount.assetScale)} ${amount.assetCode}`;
-
-            acc.set(activityId, activity);
-          }
+          groupedActivities.push({
+            activityId: t.metadata.activityId,
+            user: t.senderName,
+            provider: t.receiverName,
+            grossSale: formatCurrency(
+              amountValue,
+              amount.assetCode,
+              amount.assetScale,
+            ),
+            netSale: formatCurrency(net, amount.assetCode, amount.assetScale),
+            fee: formatCurrency(fee, amount.assetCode, amount.assetScale),
+            startDate: transactionDate,
+            endDate: transactionDate,
+            content: t.metadata.contentName ?? "",
+            transactions: [
+              {
+                transactionId: t.id,
+                user: t.senderName,
+                provider: t.receiverName,
+                date: transactionDate,
+                fee: formatCurrency(fee, amount.assetCode, amount.assetScale),
+                grossSale: formatCurrency(
+                  amountValue,
+                  amount.assetCode,
+                  amount.assetScale,
+                ),
+                netSale: formatCurrency(
+                  net,
+                  amount.assetCode,
+                  amount.assetScale,
+                ),
+              },
+            ],
+          });
         }
-
-        return acc;
       }, new Map<string, ActivityProvider>());
-
       const activities = Array.from(groupedActivities.values());
-
       return {
-        activities: activities.slice(
-          (+(input.page ?? 1) - 1) * +(input.items ?? 10),
-          +(input.page ?? 1) * +(input.items ?? 10),
-        ),
-        currentPage: +(input.page ?? 1),
+        activities: groupedActivities,
+        currentPage: 1,
         total: activities.length,
-        totalPages: Math.ceil(activities.length / +(input.items ?? 10)),
+        totalPages: 1,
       };
     },
   });

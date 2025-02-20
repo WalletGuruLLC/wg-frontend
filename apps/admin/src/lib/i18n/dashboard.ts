@@ -430,6 +430,8 @@ export const dashboardDict = {
     "dashboard.reports.sections.transactions-by-provider.header.user": "User",
     "dashboard.reports.sections.transactions-by-provider.header.provider":
       "Provider",
+    "dashboard.reports.sections.transactions-by-provider.header.content":
+      "Content",
     "dashboard.reports.sections.transactions-by-provider.header.gross-sale":
       "Gross Sale",
     "dashboard.reports.sections.transactions-by-provider.header.net-sale":
@@ -1004,6 +1006,8 @@ export const dashboardDict = {
       "Usuario",
     "dashboard.reports.sections.transactions-by-provider.header.provider":
       "Proveedor",
+    "dashboard.reports.sections.transactions-by-provider.header.content":
+      "Contenido",
     "dashboard.reports.sections.transactions-by-provider.header.gross-sale":
       "Venta Bruta",
     "dashboard.reports.sections.transactions-by-provider.header.net-sale":
