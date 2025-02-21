@@ -74,7 +74,7 @@ function Actions({
         {value}
       </Button>
       {accessLevelsData?.general.serviceProviders.includes("view") &&
-        !["serviceProviders", "wallets"].includes(module) && (
+        !["wallets"].includes(module) && (
           <Link href={`/dashboard/roles/${roleId}/${module}`}>
             <Button className="font-normal no-underline" variant="link">
               {values["dashboard.roles.role.table.actions.details"]}
