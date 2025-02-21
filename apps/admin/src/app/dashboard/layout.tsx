@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -123,9 +124,7 @@ const NAV = [
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
   const loading = useAuthGuard();
-
   const { data, isLoading } = useGetAuthedUserAccessLevelsQuery(undefined);
-
   const { data: userData } = useGetAuthedUserInfoQuery(undefined);
   const { data: sidebarData } = useGetSidebarItemsQuery(undefined);
 
@@ -146,6 +145,31 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
       window.location.href = "/login"; // not using nextjs router because it does not invalidate the login page cache and i need to force the user to login again
     },
   });
+  React.useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        mutate(null);
+      }, 450000); // 15 minutes
+    };
+
+    const handleActivity = () => {
+      resetTimer();
+    };
+
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+
+    resetTimer();
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("keydown", handleActivity);
+    };
+  }, [mutate]);
 
   if (loading || isLoading) return null;
 
