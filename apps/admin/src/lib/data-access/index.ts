@@ -2790,58 +2790,64 @@ export function useGetRevenueQuery(
             params.toString(),
         );
         let accumulatedAmountNumber = 0;
-        const groupedRevenues = result.transactions.reduce((acc, t) => {
-          const provider = t.senderName;
-          const amount = t.incomingAmount;
+        const groupedRevenues = result.transactions.reduce(
+          (acc, t, index, array) => {
+            if (index === array.length - 1) {
+              accumulatedAmountNumber += Number(t.incomingAmount?.value ?? 0);
+            }
+            const provider = t.senderName;
+            const amount = t.incomingAmount;
 
-          const amountString = formatCurrency(
-            Number(amount?.value ?? 0),
-            amount?.assetCode ?? "",
-            amount?.assetScale ?? 0,
-          );
-          const description = t.senderName;
-
-          if (!acc.has(provider)) {
-            acc.set(provider, {
-              provider,
-              startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              amount: amountString,
-              transactions: [
-                {
-                  transactionId: t.id,
-                  description,
-                  date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-                  status: t.state,
-                  amount: amountString,
-                },
-              ],
-            });
-          } else {
-            const providerId = acc.get(provider);
-
-            if (!providerId) return acc;
-
-            providerId.transactions.push({
-              transactionId: t.id,
-              description,
-              date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
-              status: t.state,
-              amount: amountString,
-            });
-
-            providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
-            accumulatedAmountNumber += Number(amount?.value ?? 0);
-            providerId.amount = formatCurrency(
-              accumulatedAmountNumber,
-              t.incomingAmount?.assetCode ?? "",
-              t.incomingAmount?.assetScale ?? 0,
+            const amountString = formatCurrency(
+              Number(amount?.value ?? 0),
+              amount?.assetCode ?? "",
+              amount?.assetScale ?? 0,
             );
+            const description = t.senderName;
 
-            acc.set(provider, providerId);
-          }
-          return acc;
-        }, new Map<string, Revenue>());
+            if (!acc.has(provider)) {
+              acc.set(provider, {
+                provider,
+                startDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                endDate: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                amount: amountString,
+                transactions: [
+                  {
+                    transactionId: t.id,
+                    description,
+                    date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                    status: t.state,
+                    amount: amountString,
+                  },
+                ],
+              });
+            } else {
+              const providerId = acc.get(provider);
+
+              if (!providerId) return acc;
+
+              providerId.transactions.push({
+                transactionId: t.id,
+                description,
+                date: format(t.createdAt, "yyyy-MM-dd HH:mm:ss"),
+                status: t.state,
+                amount: amountString,
+              });
+
+              providerId.endDate = format(t.createdAt, "yyyy-MM-dd HH:mm:ss");
+              accumulatedAmountNumber += Number(amount?.value ?? 0);
+              providerId.amount = formatCurrency(
+                accumulatedAmountNumber,
+                t.incomingAmount?.assetCode ?? "",
+                t.incomingAmount?.assetScale ?? 0,
+              );
+
+              acc.set(provider, providerId);
+            }
+            return acc;
+          },
+          new Map<string, Revenue>(),
+        );
         const revenues = Array.from(groupedRevenues.values());
         return {
           revenues: revenues.slice(
