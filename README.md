@@ -33,6 +33,7 @@ tooling
 - [Node.js](https://nodejs.org/en/download/) `v20.15`
 - [pnpm](https://pnpm.io/installation) `v9.1.1`
 - (Optional) [Docker](https://docs.docker.com/get-docker/) `v27 or higher`
+- [Create resources of aws](https://github.com/ErgonStreamGH/wg-infra) `Wg infra`
 
 ## Quick Start
 
